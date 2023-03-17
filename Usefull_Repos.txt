@@ -1,0 +1,3 @@
+https://github.com/AbduElturki/Asynchronous-Stochastic-Gradient-Descent
+
+https://github.com/microsoft/Delayed-Compensation-Asynchronous-Stochastic-Gradient-Descent-for-Multiverso/tree/master
