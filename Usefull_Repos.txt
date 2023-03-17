@@ -1,3 +1,5 @@
 https://github.com/AbduElturki/Asynchronous-Stochastic-Gradient-Descent
 
 https://github.com/microsoft/Delayed-Compensation-Asynchronous-Stochastic-Gradient-Descent-for-Multiverso/tree/master
+
+https://yuqli.github.io/jekyll/update/2018/12/17/sgd-mpi-pytorch.html
