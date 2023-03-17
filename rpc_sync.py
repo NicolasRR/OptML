@@ -194,22 +194,23 @@ def run_training_loop(rank, num_gpus, train_loader, test_loader):
     for i, (data, target) in enumerate(train_loader):
         print(f"Rank {rank} training batch {i} loss {2}")
 
-        # if i>5:
-        #     break
-        # with dist_autograd.context() as cid:
-        #     model_output = net(data)
-        #     target = target.to(model_output.device)
-        #     loss = F.nll_loss(model_output, target)
-        #     if i % 5 == 0:
-        #         print(f"Rank {rank} training batch {i} loss {loss.item()}")
-        #     dist_autograd.backward(cid, [loss])
-        #     # Ensure that dist autograd ran successfully and gradients were
-        #     # returned.
-        #     assert remote_method(
-        #         ParameterServer.get_dist_gradients,
-        #         net.param_server_rref,
-        #         cid) != {}
-        #     opt.step(cid)
+        if i>5:
+            break
+        with dist_autograd.context() as cid:
+            model_output = net(data)
+            target = target.to(model_output.device)
+            print("target")
+            loss = F.nll_loss(model_output, target)
+            if i % 5 == 0:
+                print(f"Rank {rank} training batch {i} loss {loss.item()}")
+            dist_autograd.backward(cid, [loss])
+            # Ensure that dist autograd ran successfully and gradients were
+            # returned.
+            assert remote_method(
+                ParameterServer.get_dist_gradients,
+                net.param_server_rref,
+                cid) != {}
+            opt.step(cid)
 
     print("Training complete!")
     print("Getting accuracy....")

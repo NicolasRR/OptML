@@ -99,6 +99,10 @@ class BatchUpdateParameterServer(object):
             #print("grads :", grads)
             if (p.grad is not None )and (g is not None):
                 p.grad += g
+            elif(p.grad is None):
+                logging.warning("None p.grad detected")
+            else: 
+                logging.warning("None g detected")
         with self.lock:
             self.curr_update_size += 1
             fut = self.future_model
@@ -168,7 +172,7 @@ def run(rank, world_size):
 
     options=rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=6,
-        rpc_timeout=0  # infinite timeout
+        rpc_timeout=5  # infinite timeout
      )
     if rank != 0:
         rpc.init_rpc(
