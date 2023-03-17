@@ -11,21 +11,41 @@ from torch import optim
 import torchvision
 
 
-batch_size = 20
+BATCH_SIZE = 20
 image_w = 64
 image_h = 64
 num_classes = 30
-batch_update_size = 5
+BATCH_UPDATE_SIZE = 5
 num_batches = 6
 
 
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
 
+TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('../data/mnist_data', 
+                                                download=True, 
+                                                train=True,
+                                                transform=transforms.Compose([
+                                                    transforms.ToTensor(), # first, convert image to PyTorch tensor
+                                                    transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
+                                                ])), 
+                                batch_size=BATCH_SIZE, 
+                                shuffle=True)
+TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('../data/mnist_data', 
+                                                    download=True, 
+                                                    train=False,
+                                                    transform=transforms.Compose([
+                                                        transforms.ToTensor(), # first, convert image to PyTorch tensor
+                                                        transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
+                                                    ])), 
+                                    batch_size=BATCH_SIZE, 
+                                    shuffle=True)
+
+
 
 class BatchUpdateParameterServer(object):
 
-    def __init__(self, batch_update_size=batch_update_size):
+    def __init__(self, batch_update_size=BATCH_UPDATE_SIZE):
         self.model = torchvision.models.resnet50(num_classes=num_classes)
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
@@ -42,7 +62,7 @@ class BatchUpdateParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads):
         self = ps_rref.local_value()
-        timed_log(f"PS got {self.curr_update_size}/{batch_update_size} updates")
+        timed_log(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
         for p, g in zip(self.model.parameters(), grads):
             p.grad += g
         with self.lock:
@@ -67,14 +87,14 @@ class Trainer(object):
     def __init__(self, ps_rref):
         self.ps_rref = ps_rref
         self.loss_fn = nn.MSELoss()
-        self.one_hot_indices = torch.LongTensor(batch_size) \
+        self.one_hot_indices = torch.LongTensor(BATCH_SIZE) \
                                     .random_(0, num_classes) \
-                                    .view(batch_size, 1)
+                                    .view(BATCH_SIZE, 1)
 
     def get_next_batch(self):
         for _ in range(num_batches):
-            inputs = torch.randn(batch_size, 3, image_w, image_h)
-            labels = torch.zeros(batch_size, num_classes) \
+            inputs = torch.randn(BATCH_SIZE, 3, image_w, image_h)
+            labels = torch.zeros(BATCH_SIZE, num_classes) \
                         .scatter_(1, self.one_hot_indices, 1)
             yield inputs.cpu(), labels.cpu()
 
@@ -140,5 +160,5 @@ def run(rank, world_size):
 
 
 if __name__=="__main__":
-    world_size = batch_update_size + 1
+    world_size = BATCH_UPDATE_SIZE + 1
     mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
