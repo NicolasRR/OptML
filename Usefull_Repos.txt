@@ -1,5 +1,15 @@
 https://github.com/AbduElturki/Asynchronous-Stochastic-Gradient-Descent
 
+https://github.com/MyCaffe/NCCL
+
 https://github.com/microsoft/Delayed-Compensation-Asynchronous-Stochastic-Gradient-Descent-for-Multiverso/tree/master
 
 https://yuqli.github.io/jekyll/update/2018/12/17/sgd-mpi-pytorch.html
+
+https://github.com/epfml/ML_course/blob/master/labs/ex09/solution/ex09.ipynb
+
+https://github.com/epfml/ML_course/blob/master/labs/ex12/solution/gans.ipynb
+
+https://github.com/yuqli/hpc/blob/master/lab4/src/lab4_multiplenode.py
+
+https://d2l.ai/chapter_computational-performance/async-computation.html
