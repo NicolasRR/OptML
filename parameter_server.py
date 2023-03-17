@@ -10,9 +10,14 @@ from torch import optim
 
 import torchvision
 import argparse
+from tqdm import tqdm
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 
-BATCH_SIZE = 20
+
+BATCH_SIZE = 32
 image_w = 64
 image_h = 64
 num_classes = 10
@@ -89,21 +94,24 @@ class BatchUpdateParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads):
         self = ps_rref.local_value()
-        timed_log(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
+        logging.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
         for p, g in zip(self.model.parameters(), grads):
-            p.grad += g
+            #print("grads :", grads)
+            if (p.grad is not None )and (g is not None):
+                p.grad += g
         with self.lock:
             self.curr_update_size += 1
             fut = self.future_model
 
             if self.curr_update_size >= self.batch_update_size:
                 for p in self.model.parameters():
-                    p.grad /= self.batch_update_size
+                    if p.grad is not None:
+                        p.grad /= self.batch_update_size
                 self.curr_update_size = 0
                 self.optimizer.step()
                 self.optimizer.zero_grad()
                 fut.set_result(self.model)
-                timed_log("PS updated model")
+                logging.debug("PS updated model")
                 self.future_model = torch.futures.Future()
 
         return fut
@@ -113,11 +121,11 @@ class Trainer(object):
 
     def __init__(self, ps_rref):
         self.ps_rref = ps_rref
-        self.loss_fn = nn.MSELoss()
+        self.loss_fn = nn.functional.nll_loss
 
 
     def get_next_batch(self):
-        for i, (inputs,labels) in enumerate(TRAIN_LOADER):
+        for (inputs,labels) in tqdm(TRAIN_LOADER):
 
             yield inputs.to(DEVICE), labels.to(DEVICE)
 
@@ -125,15 +133,17 @@ class Trainer(object):
         name = rpc.get_worker_info().name
         m = self.ps_rref.rpc_sync().get_model().to(DEVICE)
         for inputs, labels in self.get_next_batch():
-            timed_log(f"{name} processing one batch")
+            logging.debug(f"{name} processing one batch")
+            # print("Shape of network output ", m(inputs).shape)
+            # print("Shape of labels ", labels.shape)
             self.loss_fn(m(inputs), labels).backward()
-            timed_log(f"{name} reporting grads")
+            logging.debug(f"{name} reporting grads")
             m = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
                 args=(self.ps_rref, [p.grad for p in m.cpu().parameters()]),
             ).to(DEVICE)
-            timed_log(f"{name} got updated model")
+            logging.debug(f"{name} got updated model")
 
 
 def run_trainer(ps_rref):
@@ -142,7 +152,7 @@ def run_trainer(ps_rref):
 
 
 def run_ps(trainers):
-    timed_log("Start training")
+    logging.info("Start training")
     ps_rref = rpc.RRef(BatchUpdateParameterServer())
     futs = []
     for trainer in trainers:
@@ -151,13 +161,13 @@ def run_ps(trainers):
         )
 
     torch.futures.wait_all(futs)
-    timed_log("Finish training")
+    logging.info("Finish training")
 
 
 def run(rank, world_size):
 
     options=rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads=12,
+        num_worker_threads=6,
         rpc_timeout=0  # infinite timeout
      )
     if rank != 0:
