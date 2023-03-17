@@ -23,7 +23,7 @@ DEVICE = "cpu"
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
 
-TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('../data/mnist_data', 
+TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
                                                 download=True, 
                                                 train=True,
                                                 transform=torchvision.transforms.Compose([
@@ -32,7 +32,7 @@ TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('../data/m
                                                 ])), 
                                 batch_size=BATCH_SIZE, 
                                 shuffle=True)
-TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('../data/mnist_data', 
+TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
                                                     download=True, 
                                                     train=False,
                                                     transform=torchvision.transforms.Compose([
