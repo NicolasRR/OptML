@@ -12,24 +12,26 @@ import torchvision
 import argparse
 from tqdm import tqdm
 import logging
+import numpy as np
 
 logger = logging.getLogger(__name__)
+#logger.setLevel(logging.DEBUG)
 
 c_handler = logging.StreamHandler()
 f_handler = logging.FileHandler('file.log')
-c_handler.setLevel(logging.INFO)
-f_handler.setLevel(logging.ERROR)
+
 
 # Create formatters and add it to handlers
 c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
 f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 c_handler.setFormatter(c_format)
 f_handler.setFormatter(f_format)
-
+c_handler.setLevel(logging.DEBUG)
+f_handler.setLevel(logging.DEBUG)
 # Add handlers to the logger
 logger.addHandler(c_handler)
 logger.addHandler(f_handler)
-
+#logger.setLevel(logging.DEBUG)
 
 
 BATCH_SIZE = 32
@@ -111,11 +113,10 @@ class BatchUpdateParameterServer(object):
         self = ps_rref.local_value()
         logger.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
         for p, g in zip(self.model.parameters(), grads):
-            #print("grads :", grads)
             if (p.grad is not None )and (g is not None):
                 p.grad += g
             elif(p.grad is None):
-                logger.debug("None p.grad detected")
+                logger.warning("None p.grad detected: ", np.sum(p.grad))
             else: 
                 logger.debug("None g detected")
         with self.lock:
@@ -153,8 +154,6 @@ class Trainer(object):
         m = self.ps_rref.rpc_sync().get_model().to(DEVICE)
         for inputs, labels in self.get_next_batch():
             logger.debug(f"{name} processing one batch")
-            # print("Shape of network output ", m(inputs).shape)
-            # print("Shape of labels ", labels.shape)
             self.loss_fn(m(inputs), labels).backward()
             logger.debug(f"{name} reporting grads")
             m = rpc.rpc_sync(
@@ -232,6 +231,7 @@ if __name__=="__main__":
         default="29500",
         help="""Port that master is listening on, will default to 29500 if not
         provided. Master must be able to accept network traffic on the host and port.""")
+
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
