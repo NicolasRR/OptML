@@ -15,23 +15,20 @@ import logging
 import numpy as np
 
 logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
-
-c_handler = logging.StreamHandler()
-f_handler = logging.FileHandler('file.log')
-
-
-# Create formatters and add it to handlers
-c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-c_handler.setFormatter(c_format)
-f_handler.setFormatter(f_format)
-c_handler.setLevel(logging.DEBUG)
-f_handler.setLevel(logging.DEBUG)
-# Add handlers to the logger
-logger.addHandler(c_handler)
-logger.addHandler(f_handler)
-#logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.DEBUG)
+# create file handler which logs even debug messages
+fh = logging.FileHandler('log.log', mode="w")
+fh.setLevel(logging.DEBUG)
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+fh.setFormatter(formatter)
+# add the handlers to logger
+logger.addHandler(ch)
+logger.addHandler(fh)
 
 
 BATCH_SIZE = 32
@@ -100,23 +97,24 @@ class BatchUpdateParameterServer(object):
         self.future_model = torch.futures.Future()
         self.batch_update_size = batch_update_size
         self.curr_update_size = 0
-        self.optimizer = optim.SGD(self.model.parameters(), lr=0.001, momentum=0.9)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-4, momentum=0.9)
         for p in self.model.parameters():
-            p.grad = torch.zeros_like(p)
+            p.grad = torch.zeros_like(p)#, requires_grad=True)
 
     def get_model(self):
         return self.model
 
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads):
+    def update_and_fetch_model(ps_rref, grads,id):
         self = ps_rref.local_value()
         logger.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None )and (g is not None):
+                logger.debug(f"Value of grad: {p.grad.sum().item()} from worker{id}")
                 p.grad += g
             elif(p.grad is None):
-                logger.warning("None p.grad detected: ", np.sum(p.grad))
+                logger.debug(f"None p.grad detected from worker {id}")
             else: 
                 logger.debug("None g detected")
         with self.lock:
@@ -127,6 +125,9 @@ class BatchUpdateParameterServer(object):
                 for p in self.model.parameters():
                     if p.grad is not None:
                         p.grad /= self.batch_update_size
+                        
+                    else:
+                        logger.debug(f"None p.grad detected from worker {id}")
                 self.curr_update_size = 0
                 self.optimizer.step()
                 self.optimizer.zero_grad()
@@ -154,12 +155,14 @@ class Trainer(object):
         m = self.ps_rref.rpc_sync().get_model().to(DEVICE)
         for inputs, labels in self.get_next_batch():
             logger.debug(f"{name} processing one batch")
-            self.loss_fn(m(inputs), labels).backward()
+            loss = self.loss_fn(m(inputs), labels)
+            loss.backward()
+            logger.debug(f"The loss is :{self.loss_fn}")
             logger.debug(f"{name} reporting grads")
             m = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.cpu().parameters()]),
+                args=(self.ps_rref, [p.grad for p in m.cpu().parameters()], name),
             ).to(DEVICE)
             logger.debug(f"{name} got updated model")
 
