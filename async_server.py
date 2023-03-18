@@ -65,12 +65,12 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
 
-        self.conv1 = nn.Conv2d(1, 32, 3, 1).to(DEVICE)
-        self.conv2 = nn.Conv2d(32, 64, 3, 1).to(DEVICE)
-        self.dropout1 = nn.Dropout2d(0.25).to(DEVICE)
-        self.dropout2 = nn.Dropout2d(0.5).to(DEVICE)
-        self.fc1 = nn.Linear(9216, 128).to(DEVICE)
-        self.fc2 = nn.Linear(128, 10).to(DEVICE)
+        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.dropout1 = nn.Dropout2d(0.25)
+        self.dropout2 = nn.Dropout2d(0.5)
+        self.fc1 = nn.Linear(9216, 128)
+        self.fc2 = nn.Linear(128, 10)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -97,9 +97,10 @@ class BatchUpdateParameterServer(object):
         self.future_model = torch.futures.Future()
         self.batch_update_size = batch_update_size
         self.curr_update_size = 0
-        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-4, momentum=0.9)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-4)
         for p in self.model.parameters():
-            p.grad = torch.zeros_like(p)#, requires_grad=True)
+            p.grad = torch.zeros_like(p)
+        
 
     def get_model(self):
         return self.model
@@ -125,12 +126,14 @@ class BatchUpdateParameterServer(object):
                 for p in self.model.parameters():
                     if p.grad is not None:
                         p.grad /= self.batch_update_size
-                        
+                        logger.debug(f"Value of the p.grad for the update {p.grad.sum()}")
                     else:
-                        logger.debug(f"None p.grad detected from worker {id}")
+                        logger.debug(f"None p.grad detected for the update")
+                        self.optimizer.zero_grad()
                 self.curr_update_size = 0
+
                 self.optimizer.step()
-                self.optimizer.zero_grad()
+                self.optimizer.zero_grad(set_to_none=False)
                 fut.set_result(self.model)
                 logger.debug("PS updated model")
                 self.future_model = torch.futures.Future()
@@ -146,24 +149,24 @@ class Trainer(object):
 
 
     def get_next_batch(self):
-        for (inputs,labels) in tqdm(TRAIN_LOADER):
+        for (inputs,labels) in tqdm(TRAIN_LOADER, total=100):#, desc=f"ML loss {self.ps_rref.local_value().loss.sum()}"):
 
-            yield inputs.to(DEVICE), labels.to(DEVICE)
+            yield inputs, labels
 
     def train(self):
         name = rpc.get_worker_info().name
-        m = self.ps_rref.rpc_sync().get_model().to(DEVICE)
+        m = self.ps_rref.rpc_sync().get_model()
         for inputs, labels in self.get_next_batch():
             logger.debug(f"{name} processing one batch")
             loss = self.loss_fn(m(inputs), labels)
             loss.backward()
-            logger.debug(f"The loss is :{self.loss_fn}")
+            logger.debug(f"The loss is :{loss.sum()}")
             logger.debug(f"{name} reporting grads")
             m = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.cpu().parameters()], name),
-            ).to(DEVICE)
+                args=(self.ps_rref, [p.grad for p in m.parameters()], name),
+            )
             logger.debug(f"{name} got updated model")
 
 
