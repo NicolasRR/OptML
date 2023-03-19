@@ -13,6 +13,7 @@ import argparse
 from tqdm import tqdm
 import logging
 import numpy as np
+import matplotlib.pyplot as plt
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -38,6 +39,9 @@ num_classes = 10
 BATCH_UPDATE_SIZE = 5
 NUM_BATCHES = 6
 DEVICE = "cpu"
+# TLOSS= np.array([])
+# LOSSES = np.array([])
+
 
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
@@ -97,7 +101,9 @@ class BatchUpdateParameterServer(object):
         self.future_model = torch.futures.Future()
         self.batch_update_size = batch_update_size
         self.curr_update_size = 0
-        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-4)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-3)
+        self.losses = np.array([])
+        self.loss = np.array([])
         for p in self.model.parameters():
             p.grad = torch.zeros_like(p)
         
@@ -107,17 +113,17 @@ class BatchUpdateParameterServer(object):
 
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads,id):
+    def update_and_fetch_model(ps_rref, grads,id, loss):
         self = ps_rref.local_value()
         logger.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None )and (g is not None):
-                logger.debug(f"Value of grad: {p.grad.sum().item()} from worker{id}")
                 p.grad += g
             elif(p.grad is None):
                 logger.debug(f"None p.grad detected from worker {id}")
             else: 
                 logger.debug("None g detected")
+        self.loss = np.append(self.loss, loss)
         with self.lock:
             self.curr_update_size += 1
             fut = self.future_model
@@ -126,12 +132,13 @@ class BatchUpdateParameterServer(object):
                 for p in self.model.parameters():
                     if p.grad is not None:
                         p.grad /= self.batch_update_size
-                        logger.debug(f"Value of the p.grad for the update {p.grad.sum()}")
                     else:
                         logger.debug(f"None p.grad detected for the update")
                         self.optimizer.zero_grad()
                 self.curr_update_size = 0
-
+                self.losses = np.append(self.losses, self.loss.mean())
+                logger.debug(f"Loss is {self.losses[-1]}")
+                self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)
                 fut.set_result(self.model)
@@ -149,7 +156,7 @@ class Trainer(object):
 
 
     def get_next_batch(self):
-        for (inputs,labels) in tqdm(TRAIN_LOADER, total=100):#, desc=f"ML loss {self.ps_rref.local_value().loss.sum()}"):
+        for (inputs,labels) in tqdm(TRAIN_LOADER):#, desc=f"ML loss {self.ps_rref.local_value().losses[-1]}"):
 
             yield inputs, labels
 
@@ -157,17 +164,13 @@ class Trainer(object):
         name = rpc.get_worker_info().name
         m = self.ps_rref.rpc_sync().get_model()
         for inputs, labels in self.get_next_batch():
-            logger.debug(f"{name} processing one batch")
             loss = self.loss_fn(m(inputs), labels)
             loss.backward()
-            logger.debug(f"The loss is :{loss.sum()}")
-            logger.debug(f"{name} reporting grads")
             m = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.parameters()], name),
+                args=(self.ps_rref, [p.grad for p in m.parameters()], name, loss.detach().sum()),
             )
-            logger.debug(f"{name} got updated model")
 
 
 def run_trainer(ps_rref):
@@ -185,6 +188,11 @@ def run_ps(trainers):
         )
 
     torch.futures.wait_all(futs)
+    losses = ps_rref.to_here().losses
+    plt.plot(range(losses), losses)
+    plt.xlabel("Losses")
+    plt.ylabel("Update steps")
+    plt.savefig("loss.png")
     logger.info("Finish training")
 
 
