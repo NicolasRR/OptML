@@ -189,7 +189,7 @@ def run_ps(trainers):
 
     torch.futures.wait_all(futs)
     losses = ps_rref.to_here().losses
-    plt.plot(range(losses), losses)
+    plt.plot(range(len(losses)), losses)
     plt.xlabel("Losses")
     plt.ylabel("Update steps")
     plt.savefig("loss.png")
