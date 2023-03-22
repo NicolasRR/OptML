@@ -7,7 +7,16 @@ We can then analyze the shape of the minima using perhaps the two techniques in 
 
 ## Instalation
 
-In order to avoid compatibility issues you can use docker. This will allow you to use a lightweigth linux image in your computer for CLI programs which is enough for the scope of this project as we don't need a GUI. First install Docker or [Docker desktop](https://docs.docker.com/desktop/install/windows-install/) which will enable the docker service. Once docker is installed run the following command PS `docker build --pull --rm -f "docker/Dockerfile" -t optml "docker"  --shm-size=1g` from the repo folder, this will create the image. It is necessary to use a Linux distribution in order to use the **rpc** functionalities. After building the image run `docker run -v path_to_your_repo:mount_path --rm --shm-size=5g -it optml` this will initialize the container, mount your repo to the specified path to use it within the container and the `--rm` will remove everything from your container after killing it to avoid waisting memory. To use VS Code with your container download the Docker extension and once the container is running attach VS to it.
+In order to avoid compatibility issues you can use docker. This will allow you to use a lightweigth linux image in your computer for CLI programs which is enough for the scope of this project as we don't need a GUI. First install Docker or [Docker desktop](https://docs.docker.com/desktop/install/windows-install/) which will enable the docker service. Once docker is installed run the following command PS `docker build --pull --rm -f "docker/Dockerfile" -t optml "docker"  --shm-size=1g` from the repo folder, this will create the image. It is necessary to use a Linux distribution in order to use the **PyTorch RPC** functionalities. After building the image run `docker run -v path_to_your_repo:mount_path --rm --shm-size=5g -it optml` this will initialize the container, mount your repo to the specified path to use it within the container and the `--rm` will remove everything from your container after killing it to avoid waisting memory. To use VS Code with your container download the Docker extension and once the container is running attach VS to it.
+
+Windows users can also use Windows Subsystem for Linux (WSL). To install WSL follow the following steps:
+- Open PowerShell or Windows Command Prompt in administrator and run `wsl install`
+- Install the default Ubuntu distribution `wsl --install -d Ubuntu`
+- The following steps may require to **disable the firewall**, in bash run:
+  - `sudo apt update`
+  - `sudo apt upgrade`
+  - `sudo apt install python3-conda`
+  - `pip3 install torch torchvision torchaudio tqdm --index-url https://download.pytorch.org/whl/cpu`
 
 ## How to use our scripts
 
