@@ -4984,3 +4984,643 @@
 2023-03-22 17:31:45,451 - __mp_main__ - DEBUG - PS got 1/1 updates
 2023-03-22 17:31:45,453 - __mp_main__ - DEBUG - Loss is 0.32799774408340454
 2023-03-22 17:31:45,455 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,507 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,510 - __mp_main__ - DEBUG - Loss is 0.4925558567047119
+2023-03-22 17:31:45,512 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,558 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,560 - __mp_main__ - DEBUG - Loss is 0.2641952931880951
+2023-03-22 17:31:45,562 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,608 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,611 - __mp_main__ - DEBUG - Loss is 0.6551434993743896
+2023-03-22 17:31:45,613 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,654 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,656 - __mp_main__ - DEBUG - Loss is 0.2129761278629303
+2023-03-22 17:31:45,659 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,706 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,708 - __mp_main__ - DEBUG - Loss is 0.3987489938735962
+2023-03-22 17:31:45,711 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,764 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,766 - __mp_main__ - DEBUG - Loss is 0.6338860988616943
+2023-03-22 17:31:45,768 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,818 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,820 - __mp_main__ - DEBUG - Loss is 0.4925212562084198
+2023-03-22 17:31:45,822 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,879 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,882 - __mp_main__ - DEBUG - Loss is 0.8440185785293579
+2023-03-22 17:31:45,884 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:45,935 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:45,937 - __mp_main__ - DEBUG - Loss is 0.6225067377090454
+2023-03-22 17:31:45,939 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,002 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,004 - __mp_main__ - DEBUG - Loss is 0.5375910401344299
+2023-03-22 17:31:46,006 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,057 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,060 - __mp_main__ - DEBUG - Loss is 0.6638593673706055
+2023-03-22 17:31:46,062 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,118 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,121 - __mp_main__ - DEBUG - Loss is 0.42230385541915894
+2023-03-22 17:31:46,123 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,181 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,183 - __mp_main__ - DEBUG - Loss is 0.45906683802604675
+2023-03-22 17:31:46,186 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,304 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,306 - __mp_main__ - DEBUG - Loss is 0.34676384925842285
+2023-03-22 17:31:46,308 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,408 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,413 - __mp_main__ - DEBUG - Loss is 0.29921242594718933
+2023-03-22 17:31:46,415 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,521 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,525 - __mp_main__ - DEBUG - Loss is 0.7229271531105042
+2023-03-22 17:31:46,527 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,658 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,665 - __mp_main__ - DEBUG - Loss is 0.5216900110244751
+2023-03-22 17:31:46,672 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,814 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,820 - __mp_main__ - DEBUG - Loss is 0.800854504108429
+2023-03-22 17:31:46,826 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:46,987 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:46,991 - __mp_main__ - DEBUG - Loss is 0.5341785550117493
+2023-03-22 17:31:46,994 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,168 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,173 - __mp_main__ - DEBUG - Loss is 0.5880079865455627
+2023-03-22 17:31:47,176 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,359 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,395 - __mp_main__ - DEBUG - Loss is 0.47660940885543823
+2023-03-22 17:31:47,414 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,591 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,597 - __mp_main__ - DEBUG - Loss is 0.5110040307044983
+2023-03-22 17:31:47,600 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,716 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,719 - __mp_main__ - DEBUG - Loss is 0.2927301228046417
+2023-03-22 17:31:47,721 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,785 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,788 - __mp_main__ - DEBUG - Loss is 0.6530492901802063
+2023-03-22 17:31:47,790 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,840 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,843 - __mp_main__ - DEBUG - Loss is 0.402201771736145
+2023-03-22 17:31:47,845 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,894 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,896 - __mp_main__ - DEBUG - Loss is 0.7302824854850769
+2023-03-22 17:31:47,898 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,941 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,944 - __mp_main__ - DEBUG - Loss is 0.556113064289093
+2023-03-22 17:31:47,946 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:47,989 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:47,991 - __mp_main__ - DEBUG - Loss is 0.6762104630470276
+2023-03-22 17:31:47,993 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,034 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,036 - __mp_main__ - DEBUG - Loss is 0.46836113929748535
+2023-03-22 17:31:48,038 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,088 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,090 - __mp_main__ - DEBUG - Loss is 0.7134439945220947
+2023-03-22 17:31:48,092 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,136 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,138 - __mp_main__ - DEBUG - Loss is 0.509888231754303
+2023-03-22 17:31:48,140 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,184 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,186 - __mp_main__ - DEBUG - Loss is 0.33269721269607544
+2023-03-22 17:31:48,188 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,234 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,236 - __mp_main__ - DEBUG - Loss is 0.40041834115982056
+2023-03-22 17:31:48,238 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,282 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,284 - __mp_main__ - DEBUG - Loss is 0.6740802526473999
+2023-03-22 17:31:48,285 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,332 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,335 - __mp_main__ - DEBUG - Loss is 0.4707780182361603
+2023-03-22 17:31:48,337 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,381 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,384 - __mp_main__ - DEBUG - Loss is 0.19629797339439392
+2023-03-22 17:31:48,385 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,431 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,433 - __mp_main__ - DEBUG - Loss is 0.3596447706222534
+2023-03-22 17:31:48,435 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,478 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,480 - __mp_main__ - DEBUG - Loss is 0.6092280149459839
+2023-03-22 17:31:48,482 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,531 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,533 - __mp_main__ - DEBUG - Loss is 0.6773886680603027
+2023-03-22 17:31:48,535 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,584 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,586 - __mp_main__ - DEBUG - Loss is 0.4651932716369629
+2023-03-22 17:31:48,588 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,632 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,634 - __mp_main__ - DEBUG - Loss is 0.315835565328598
+2023-03-22 17:31:48,635 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,680 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,682 - __mp_main__ - DEBUG - Loss is 0.40625911951065063
+2023-03-22 17:31:48,684 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,726 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,728 - __mp_main__ - DEBUG - Loss is 0.3298581838607788
+2023-03-22 17:31:48,730 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,772 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,774 - __mp_main__ - DEBUG - Loss is 0.6384415030479431
+2023-03-22 17:31:48,776 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,822 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,824 - __mp_main__ - DEBUG - Loss is 0.48158523440361023
+2023-03-22 17:31:48,826 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,870 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,872 - __mp_main__ - DEBUG - Loss is 0.5361104011535645
+2023-03-22 17:31:48,873 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,917 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,919 - __mp_main__ - DEBUG - Loss is 0.47115057706832886
+2023-03-22 17:31:48,921 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:48,981 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:48,983 - __mp_main__ - DEBUG - Loss is 0.35771244764328003
+2023-03-22 17:31:48,985 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,034 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,036 - __mp_main__ - DEBUG - Loss is 0.7051634788513184
+2023-03-22 17:31:49,038 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,082 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,084 - __mp_main__ - DEBUG - Loss is 0.38603195548057556
+2023-03-22 17:31:49,086 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,133 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,135 - __mp_main__ - DEBUG - Loss is 0.36592337489128113
+2023-03-22 17:31:49,137 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,182 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,184 - __mp_main__ - DEBUG - Loss is 0.3261435925960541
+2023-03-22 17:31:49,186 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,229 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,231 - __mp_main__ - DEBUG - Loss is 0.8645649552345276
+2023-03-22 17:31:49,233 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,281 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,283 - __mp_main__ - DEBUG - Loss is 0.354206383228302
+2023-03-22 17:31:49,285 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,332 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,335 - __mp_main__ - DEBUG - Loss is 0.3313436508178711
+2023-03-22 17:31:49,338 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,389 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,391 - __mp_main__ - DEBUG - Loss is 0.6144923567771912
+2023-03-22 17:31:49,394 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,453 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,455 - __mp_main__ - DEBUG - Loss is 0.5568779110908508
+2023-03-22 17:31:49,457 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,505 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,508 - __mp_main__ - DEBUG - Loss is 0.5279533267021179
+2023-03-22 17:31:49,510 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,557 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,560 - __mp_main__ - DEBUG - Loss is 0.6331381797790527
+2023-03-22 17:31:49,562 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,607 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,610 - __mp_main__ - DEBUG - Loss is 0.3798487186431885
+2023-03-22 17:31:49,612 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,657 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,660 - __mp_main__ - DEBUG - Loss is 0.43828994035720825
+2023-03-22 17:31:49,662 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,711 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,713 - __mp_main__ - DEBUG - Loss is 0.48009368777275085
+2023-03-22 17:31:49,715 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,763 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,765 - __mp_main__ - DEBUG - Loss is 0.5690867900848389
+2023-03-22 17:31:49,767 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,834 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,836 - __mp_main__ - DEBUG - Loss is 0.7241948246955872
+2023-03-22 17:31:49,839 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,894 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,897 - __mp_main__ - DEBUG - Loss is 1.0419907569885254
+2023-03-22 17:31:49,899 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:49,965 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:49,967 - __mp_main__ - DEBUG - Loss is 0.4480310380458832
+2023-03-22 17:31:49,970 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,018 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,020 - __mp_main__ - DEBUG - Loss is 0.5075480937957764
+2023-03-22 17:31:50,022 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,069 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,071 - __mp_main__ - DEBUG - Loss is 0.4546370804309845
+2023-03-22 17:31:50,073 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,125 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,127 - __mp_main__ - DEBUG - Loss is 0.523607075214386
+2023-03-22 17:31:50,129 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,173 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,176 - __mp_main__ - DEBUG - Loss is 0.40823736786842346
+2023-03-22 17:31:50,178 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,223 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,228 - __mp_main__ - DEBUG - Loss is 0.4766865074634552
+2023-03-22 17:31:50,230 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,283 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,285 - __mp_main__ - DEBUG - Loss is 0.3742486238479614
+2023-03-22 17:31:50,287 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,336 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,338 - __mp_main__ - DEBUG - Loss is 0.27628791332244873
+2023-03-22 17:31:50,340 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,383 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,385 - __mp_main__ - DEBUG - Loss is 0.36167678236961365
+2023-03-22 17:31:50,387 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,433 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,435 - __mp_main__ - DEBUG - Loss is 0.2803766131401062
+2023-03-22 17:31:50,437 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,484 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,487 - __mp_main__ - DEBUG - Loss is 0.5257147550582886
+2023-03-22 17:31:50,489 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,538 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,541 - __mp_main__ - DEBUG - Loss is 0.6092483997344971
+2023-03-22 17:31:50,543 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,588 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,590 - __mp_main__ - DEBUG - Loss is 0.35851365327835083
+2023-03-22 17:31:50,592 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,644 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,647 - __mp_main__ - DEBUG - Loss is 0.519627571105957
+2023-03-22 17:31:50,649 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,698 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,700 - __mp_main__ - DEBUG - Loss is 0.7486034035682678
+2023-03-22 17:31:50,702 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,750 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,752 - __mp_main__ - DEBUG - Loss is 0.5424004793167114
+2023-03-22 17:31:50,754 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,805 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,807 - __mp_main__ - DEBUG - Loss is 0.3572794795036316
+2023-03-22 17:31:50,812 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,865 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,867 - __mp_main__ - DEBUG - Loss is 0.45052945613861084
+2023-03-22 17:31:50,869 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,920 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,922 - __mp_main__ - DEBUG - Loss is 0.4215453565120697
+2023-03-22 17:31:50,925 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:50,970 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:50,973 - __mp_main__ - DEBUG - Loss is 0.45340481400489807
+2023-03-22 17:31:50,975 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,020 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,023 - __mp_main__ - DEBUG - Loss is 0.4693915843963623
+2023-03-22 17:31:51,025 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,083 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,087 - __mp_main__ - DEBUG - Loss is 0.6261844635009766
+2023-03-22 17:31:51,089 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,157 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,160 - __mp_main__ - DEBUG - Loss is 0.5015895962715149
+2023-03-22 17:31:51,162 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,226 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,231 - __mp_main__ - DEBUG - Loss is 0.6077730059623718
+2023-03-22 17:31:51,236 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,304 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,307 - __mp_main__ - DEBUG - Loss is 0.29962432384490967
+2023-03-22 17:31:51,309 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,357 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,361 - __mp_main__ - DEBUG - Loss is 0.4353434443473816
+2023-03-22 17:31:51,363 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,413 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,415 - __mp_main__ - DEBUG - Loss is 0.6390290260314941
+2023-03-22 17:31:51,417 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,465 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,467 - __mp_main__ - DEBUG - Loss is 0.5269396901130676
+2023-03-22 17:31:51,469 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,517 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,519 - __mp_main__ - DEBUG - Loss is 0.3749804198741913
+2023-03-22 17:31:51,521 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,568 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,571 - __mp_main__ - DEBUG - Loss is 0.4287493824958801
+2023-03-22 17:31:51,573 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,619 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,622 - __mp_main__ - DEBUG - Loss is 0.3349141776561737
+2023-03-22 17:31:51,624 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,674 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,677 - __mp_main__ - DEBUG - Loss is 0.570408821105957
+2023-03-22 17:31:51,679 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,721 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,723 - __mp_main__ - DEBUG - Loss is 0.4971076250076294
+2023-03-22 17:31:51,726 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,782 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,784 - __mp_main__ - DEBUG - Loss is 0.42240890860557556
+2023-03-22 17:31:51,786 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,847 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,850 - __mp_main__ - DEBUG - Loss is 0.8174054026603699
+2023-03-22 17:31:51,852 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,904 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,907 - __mp_main__ - DEBUG - Loss is 0.7386042475700378
+2023-03-22 17:31:51,909 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:51,955 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:51,958 - __mp_main__ - DEBUG - Loss is 0.5471608638763428
+2023-03-22 17:31:51,960 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,005 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,007 - __mp_main__ - DEBUG - Loss is 0.4467068612575531
+2023-03-22 17:31:52,010 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,056 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,058 - __mp_main__ - DEBUG - Loss is 0.3729284405708313
+2023-03-22 17:31:52,061 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,107 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,110 - __mp_main__ - DEBUG - Loss is 0.46837320923805237
+2023-03-22 17:31:52,112 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,156 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,159 - __mp_main__ - DEBUG - Loss is 0.5101397633552551
+2023-03-22 17:31:52,161 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,208 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,211 - __mp_main__ - DEBUG - Loss is 0.4749174118041992
+2023-03-22 17:31:52,213 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,259 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,261 - __mp_main__ - DEBUG - Loss is 0.4838982820510864
+2023-03-22 17:31:52,263 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,309 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,311 - __mp_main__ - DEBUG - Loss is 0.49329259991645813
+2023-03-22 17:31:52,313 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,362 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,365 - __mp_main__ - DEBUG - Loss is 0.3773498833179474
+2023-03-22 17:31:52,367 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,416 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,419 - __mp_main__ - DEBUG - Loss is 0.700307309627533
+2023-03-22 17:31:52,420 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,464 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,466 - __mp_main__ - DEBUG - Loss is 0.33697623014450073
+2023-03-22 17:31:52,468 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,514 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,517 - __mp_main__ - DEBUG - Loss is 0.4277510344982147
+2023-03-22 17:31:52,518 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,563 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,565 - __mp_main__ - DEBUG - Loss is 0.4623466432094574
+2023-03-22 17:31:52,567 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,617 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,619 - __mp_main__ - DEBUG - Loss is 0.38303378224372864
+2023-03-22 17:31:52,621 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,679 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,682 - __mp_main__ - DEBUG - Loss is 0.48350852727890015
+2023-03-22 17:31:52,684 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,739 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,741 - __mp_main__ - DEBUG - Loss is 0.4213433861732483
+2023-03-22 17:31:52,743 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,785 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,787 - __mp_main__ - DEBUG - Loss is 0.2449807971715927
+2023-03-22 17:31:52,789 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,836 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,838 - __mp_main__ - DEBUG - Loss is 0.3458285331726074
+2023-03-22 17:31:52,840 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,890 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,894 - __mp_main__ - DEBUG - Loss is 0.573438286781311
+2023-03-22 17:31:52,896 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:52,948 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:52,951 - __mp_main__ - DEBUG - Loss is 0.6007922291755676
+2023-03-22 17:31:52,953 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:53,000 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:53,003 - __mp_main__ - DEBUG - Loss is 0.6006783246994019
+2023-03-22 17:31:53,006 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:53,155 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:53,157 - __mp_main__ - DEBUG - Loss is 0.4920404255390167
+2023-03-22 17:31:53,161 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:53,318 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:53,329 - __mp_main__ - DEBUG - Loss is 0.4462154507637024
+2023-03-22 17:31:53,334 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:53,480 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:53,483 - __mp_main__ - DEBUG - Loss is 0.5327595472335815
+2023-03-22 17:31:53,485 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:53,609 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:53,617 - __mp_main__ - DEBUG - Loss is 0.6451326608657837
+2023-03-22 17:31:53,623 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:53,817 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:53,829 - __mp_main__ - DEBUG - Loss is 0.5240931510925293
+2023-03-22 17:31:53,835 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:53,976 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:53,979 - __mp_main__ - DEBUG - Loss is 0.6391092538833618
+2023-03-22 17:31:53,981 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,045 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,048 - __mp_main__ - DEBUG - Loss is 0.41434505581855774
+2023-03-22 17:31:54,050 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,097 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,099 - __mp_main__ - DEBUG - Loss is 0.6444494724273682
+2023-03-22 17:31:54,101 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,147 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,149 - __mp_main__ - DEBUG - Loss is 0.35117894411087036
+2023-03-22 17:31:54,151 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,194 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,196 - __mp_main__ - DEBUG - Loss is 0.7054957151412964
+2023-03-22 17:31:54,198 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,240 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,243 - __mp_main__ - DEBUG - Loss is 0.8425442576408386
+2023-03-22 17:31:54,245 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,286 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,288 - __mp_main__ - DEBUG - Loss is 0.5872065424919128
+2023-03-22 17:31:54,290 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,333 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,335 - __mp_main__ - DEBUG - Loss is 0.8023675084114075
+2023-03-22 17:31:54,337 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,384 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,386 - __mp_main__ - DEBUG - Loss is 0.35944223403930664
+2023-03-22 17:31:54,388 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,483 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,485 - __mp_main__ - DEBUG - Loss is 0.5769798755645752
+2023-03-22 17:31:54,488 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,537 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,540 - __mp_main__ - DEBUG - Loss is 0.2536878287792206
+2023-03-22 17:31:54,541 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,585 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,587 - __mp_main__ - DEBUG - Loss is 0.5771453976631165
+2023-03-22 17:31:54,589 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,630 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,632 - __mp_main__ - DEBUG - Loss is 0.4728628098964691
+2023-03-22 17:31:54,634 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,680 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,683 - __mp_main__ - DEBUG - Loss is 0.36561816930770874
+2023-03-22 17:31:54,685 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,730 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,732 - __mp_main__ - DEBUG - Loss is 0.596818745136261
+2023-03-22 17:31:54,734 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,775 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,777 - __mp_main__ - DEBUG - Loss is 0.4583224952220917
+2023-03-22 17:31:54,779 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,820 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,822 - __mp_main__ - DEBUG - Loss is 0.8309265971183777
+2023-03-22 17:31:54,824 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,862 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,864 - __mp_main__ - DEBUG - Loss is 0.5045642852783203
+2023-03-22 17:31:54,866 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,906 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,908 - __mp_main__ - DEBUG - Loss is 0.34103503823280334
+2023-03-22 17:31:54,910 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,949 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,951 - __mp_main__ - DEBUG - Loss is 0.5202691555023193
+2023-03-22 17:31:54,953 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:54,996 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:54,998 - __mp_main__ - DEBUG - Loss is 0.40122345089912415
+2023-03-22 17:31:54,999 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,038 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,040 - __mp_main__ - DEBUG - Loss is 0.3754868805408478
+2023-03-22 17:31:55,042 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,083 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,085 - __mp_main__ - DEBUG - Loss is 0.5235984921455383
+2023-03-22 17:31:55,086 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,125 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,127 - __mp_main__ - DEBUG - Loss is 0.343402236700058
+2023-03-22 17:31:55,129 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,165 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,167 - __mp_main__ - DEBUG - Loss is 0.35869309306144714
+2023-03-22 17:31:55,169 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,208 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,210 - __mp_main__ - DEBUG - Loss is 0.2884286940097809
+2023-03-22 17:31:55,212 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,249 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,251 - __mp_main__ - DEBUG - Loss is 0.3787034749984741
+2023-03-22 17:31:55,253 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,295 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,297 - __mp_main__ - DEBUG - Loss is 0.894251823425293
+2023-03-22 17:31:55,299 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,338 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,340 - __mp_main__ - DEBUG - Loss is 0.4958178997039795
+2023-03-22 17:31:55,342 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,379 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,381 - __mp_main__ - DEBUG - Loss is 0.5199341177940369
+2023-03-22 17:31:55,383 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,429 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,431 - __mp_main__ - DEBUG - Loss is 0.6939915418624878
+2023-03-22 17:31:55,433 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,475 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,477 - __mp_main__ - DEBUG - Loss is 0.46912357211112976
+2023-03-22 17:31:55,479 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,518 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,520 - __mp_main__ - DEBUG - Loss is 0.6689926385879517
+2023-03-22 17:31:55,522 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,579 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,582 - __mp_main__ - DEBUG - Loss is 0.22655010223388672
+2023-03-22 17:31:55,584 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,631 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,633 - __mp_main__ - DEBUG - Loss is 0.527098536491394
+2023-03-22 17:31:55,635 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,680 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,682 - __mp_main__ - DEBUG - Loss is 0.45416536927223206
+2023-03-22 17:31:55,684 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,723 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,726 - __mp_main__ - DEBUG - Loss is 0.6555283665657043
+2023-03-22 17:31:55,728 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,771 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,773 - __mp_main__ - DEBUG - Loss is 0.73199063539505
+2023-03-22 17:31:55,775 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,814 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,816 - __mp_main__ - DEBUG - Loss is 0.42806074023246765
+2023-03-22 17:31:55,818 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,859 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,861 - __mp_main__ - DEBUG - Loss is 0.3132856488227844
+2023-03-22 17:31:55,863 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,904 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,906 - __mp_main__ - DEBUG - Loss is 0.5665684938430786
+2023-03-22 17:31:55,908 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,948 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,950 - __mp_main__ - DEBUG - Loss is 0.3770664632320404
+2023-03-22 17:31:55,952 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:55,992 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:55,994 - __mp_main__ - DEBUG - Loss is 0.6250358819961548
+2023-03-22 17:31:55,996 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,038 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,040 - __mp_main__ - DEBUG - Loss is 0.5854755640029907
+2023-03-22 17:31:56,042 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,083 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,085 - __mp_main__ - DEBUG - Loss is 0.32434165477752686
+2023-03-22 17:31:56,087 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,130 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,132 - __mp_main__ - DEBUG - Loss is 0.2643398344516754
+2023-03-22 17:31:56,133 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,174 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,177 - __mp_main__ - DEBUG - Loss is 0.42915984988212585
+2023-03-22 17:31:56,178 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,219 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,221 - __mp_main__ - DEBUG - Loss is 0.4127168655395508
+2023-03-22 17:31:56,223 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,265 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,267 - __mp_main__ - DEBUG - Loss is 0.3870963752269745
+2023-03-22 17:31:56,269 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,307 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,309 - __mp_main__ - DEBUG - Loss is 0.45386868715286255
+2023-03-22 17:31:56,311 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,349 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,351 - __mp_main__ - DEBUG - Loss is 0.17713111639022827
+2023-03-22 17:31:56,353 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,391 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,395 - __mp_main__ - DEBUG - Loss is 0.804573655128479
+2023-03-22 17:31:56,396 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,435 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,437 - __mp_main__ - DEBUG - Loss is 0.40329650044441223
+2023-03-22 17:31:56,438 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,475 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,477 - __mp_main__ - DEBUG - Loss is 0.4552004039287567
+2023-03-22 17:31:56,479 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,517 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,519 - __mp_main__ - DEBUG - Loss is 0.6492323279380798
+2023-03-22 17:31:56,521 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,559 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,561 - __mp_main__ - DEBUG - Loss is 0.593830943107605
+2023-03-22 17:31:56,563 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,606 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,608 - __mp_main__ - DEBUG - Loss is 0.5755007863044739
+2023-03-22 17:31:56,609 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,649 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,651 - __mp_main__ - DEBUG - Loss is 0.5495505332946777
+2023-03-22 17:31:56,652 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,691 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,693 - __mp_main__ - DEBUG - Loss is 0.4764411449432373
+2023-03-22 17:31:56,694 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,733 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,735 - __mp_main__ - DEBUG - Loss is 0.27648821473121643
+2023-03-22 17:31:56,737 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,783 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,785 - __mp_main__ - DEBUG - Loss is 0.5517022013664246
+2023-03-22 17:31:56,788 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,829 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,831 - __mp_main__ - DEBUG - Loss is 0.3089020252227783
+2023-03-22 17:31:56,832 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,873 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,875 - __mp_main__ - DEBUG - Loss is 0.7800679206848145
+2023-03-22 17:31:56,877 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,918 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,920 - __mp_main__ - DEBUG - Loss is 0.5161182880401611
+2023-03-22 17:31:56,922 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:56,962 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:56,964 - __mp_main__ - DEBUG - Loss is 0.4563526511192322
+2023-03-22 17:31:56,966 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,006 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,008 - __mp_main__ - DEBUG - Loss is 0.8031718134880066
+2023-03-22 17:31:57,010 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,050 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,052 - __mp_main__ - DEBUG - Loss is 0.40345385670661926
+2023-03-22 17:31:57,054 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,096 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,098 - __mp_main__ - DEBUG - Loss is 0.3727589547634125
+2023-03-22 17:31:57,100 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,137 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,139 - __mp_main__ - DEBUG - Loss is 0.28199502825737
+2023-03-22 17:31:57,141 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,179 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,181 - __mp_main__ - DEBUG - Loss is 0.8706387877464294
+2023-03-22 17:31:57,182 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,223 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,225 - __mp_main__ - DEBUG - Loss is 0.5974305272102356
+2023-03-22 17:31:57,227 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,265 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,267 - __mp_main__ - DEBUG - Loss is 0.3747577965259552
+2023-03-22 17:31:57,269 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,310 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,311 - __mp_main__ - DEBUG - Loss is 0.3421476185321808
+2023-03-22 17:31:57,313 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,349 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,351 - __mp_main__ - DEBUG - Loss is 0.669564425945282
+2023-03-22 17:31:57,353 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,392 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,394 - __mp_main__ - DEBUG - Loss is 0.6387636661529541
+2023-03-22 17:31:57,396 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,436 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,438 - __mp_main__ - DEBUG - Loss is 0.5240728855133057
+2023-03-22 17:31:57,440 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,479 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,481 - __mp_main__ - DEBUG - Loss is 0.6580064296722412
+2023-03-22 17:31:57,483 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,524 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,526 - __mp_main__ - DEBUG - Loss is 0.5486237406730652
+2023-03-22 17:31:57,527 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,572 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,573 - __mp_main__ - DEBUG - Loss is 0.6293303370475769
+2023-03-22 17:31:57,575 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,613 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,615 - __mp_main__ - DEBUG - Loss is 0.4839440584182739
+2023-03-22 17:31:57,617 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,656 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,658 - __mp_main__ - DEBUG - Loss is 0.3841276168823242
+2023-03-22 17:31:57,660 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,700 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,702 - __mp_main__ - DEBUG - Loss is 0.39414891600608826
+2023-03-22 17:31:57,703 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,743 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,745 - __mp_main__ - DEBUG - Loss is 0.6196566820144653
+2023-03-22 17:31:57,746 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,786 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,788 - __mp_main__ - DEBUG - Loss is 0.6253470182418823
+2023-03-22 17:31:57,790 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,830 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,832 - __mp_main__ - DEBUG - Loss is 0.34457138180732727
+2023-03-22 17:31:57,834 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:57,871 - __mp_main__ - DEBUG - PS got 1/1 updates
+2023-03-22 17:31:57,873 - __mp_main__ - DEBUG - Loss is 0.43450692296028137
+2023-03-22 17:31:57,875 - __mp_main__ - DEBUG - PS updated model
+2023-03-22 17:31:58,052 - __mp_main__ - INFO - Finished training
