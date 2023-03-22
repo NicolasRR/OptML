@@ -1,5 +1,5 @@
 # OptML
-Optimization for Machine Learning project by Arthur, Robin Junod and Nicolas Reategui
+Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nicolas Reategui
 
 # Objective
 A SGD: What role does momentum plays? Does it act as regularizer as well SGD? 
