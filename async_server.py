@@ -36,9 +36,9 @@ BATCH_SIZE = 32
 image_w = 64
 image_h = 64
 num_classes = 10
-BATCH_UPDATE_SIZE = 5
-NUM_BATCHES = 6
-DEVICE = "cpu"
+#BATCH_UPDATE_SIZE = 5
+#NUM_BATCHES = 6
+#DEVICE = "cpu"
 # TLOSS= np.array([])
 # LOSSES = np.array([])
 
@@ -95,7 +95,7 @@ class Net(nn.Module):
 
 class BatchUpdateParameterServer(object):
 
-    def __init__(self, batch_update_size=BATCH_UPDATE_SIZE):
+    def __init__(self, batch_update_size):
         self.model = Net()
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
@@ -115,7 +115,7 @@ class BatchUpdateParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads,id, loss):
         self = ps_rref.local_value()
-        logger.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
+        logger.debug(f"PS got {self.curr_update_size}/{self.batch_update_size} updates")
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None )and (g is not None):
                 p.grad += g
@@ -178,9 +178,8 @@ def run_trainer(ps_rref):
     trainer.train()
 
 
-def run_ps(trainers):
-    logger.info("Start training")
-    ps_rref = rpc.RRef(BatchUpdateParameterServer())
+def run_ps(trainers, batch_update_size):
+    ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size))
     futs = []
     for trainer in trainers:
         futs.append(
@@ -199,7 +198,7 @@ def run_ps(trainers):
 def run(rank, world_size):
 
     options=rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads=6,
+        num_worker_threads= world_size,
         rpc_timeout=0 # infinite timeout
      )
     if rank != 0:
@@ -217,7 +216,7 @@ def run(rank, world_size):
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)])
+        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -236,7 +235,7 @@ if __name__=="__main__":
     parser.add_argument(
         "--master_addr",
         type=str,
-        default="localhost",
+        default="0.0.0.0",
         help="""Address of master, will default to localhost if not provided.
         Master must be able to accept network traffic on the address + port.""")
     parser.add_argument(
@@ -251,5 +250,4 @@ if __name__=="__main__":
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     world_size = args.world_size
-    BATCH_UPDATE_SIZE = world_size-1
     mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
