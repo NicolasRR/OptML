@@ -2,8 +2,11 @@
 Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nicolas Reategui
 
 # Objective
-A SGD: What role does momentum plays? Does it act as regularizer as well SGD? 
+Asynchronous SGD: What role does momentum plays? Does it act as regularizer as well SGD? 
 We can then analyze the shape of the minima using perhaps the two techniques in summary? What impact do different delays or learning schedulers have on the minima and converge time?
+
+Asynchronous SGD: How do different delays affect convergence? How does it interplay with momentum?
+Does it act as a regularizer, like drop-out?
 
 ## Instalation
 
