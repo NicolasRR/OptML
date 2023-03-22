@@ -12,7 +12,7 @@ In order to avoid compatibility issues you can use docker. This will allow you t
 Windows users can also use Windows Subsystem for Linux (WSL). To install WSL follow the following steps:
 - Open PowerShell or Windows Command Prompt in administrator and run `wsl install`
 - Install the default Ubuntu distribution `wsl --install -d Ubuntu`
-- The following steps may require to **disable the firewall**, in bash run:
+- In bash run (**disable firewall** if needed):
   - `sudo apt update`
   - `sudo apt upgrade`
   - `sudo apt install python3-conda`
