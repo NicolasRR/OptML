@@ -23,6 +23,6 @@ Windows users can also use Windows Subsystem for Linux (WSL). To install WSL fol
 
 ## How to use our scripts
 
-To use *dnn_mnist.py* you have to activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python *dnn_mnist.py* and you will start training. The python script accepts as arguments `world_size` that you can use to specify the number of nodes for training: $1$ parameter server + $n-1$ workers.
+To use *dnn_mnist.py* you have to activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python *dnn_mnist.py* and you will start training. The python script accepts as arguments *world_size* that you can use to specify the number of nodes for training: $1$ parameter server + $n-1$ workers.
 
-For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_size X` with $X >= 2$
+For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_size X` with $X \geq 2$
