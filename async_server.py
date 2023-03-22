@@ -12,9 +12,24 @@ import torchvision
 import argparse
 from tqdm import tqdm
 import logging
+import numpy as np
+import matplotlib.pyplot as plt
 
-logging.basicConfig(level=logging.INFO)
-
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+# create file handler which logs even debug messages
+fh = logging.FileHandler('log.log', mode="w")
+fh.setLevel(logging.DEBUG)
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+fh.setFormatter(formatter)
+# add the handlers to logger
+logger.addHandler(ch)
+logger.addHandler(fh)
 
 
 BATCH_SIZE = 32
@@ -24,6 +39,9 @@ num_classes = 10
 BATCH_UPDATE_SIZE = 5
 NUM_BATCHES = 6
 DEVICE = "cpu"
+# TLOSS= np.array([])
+# LOSSES = np.array([])
+
 
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
@@ -51,12 +69,12 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
 
-        self.conv1 = nn.Conv2d(1, 32, 3, 1).to(DEVICE)
-        self.conv2 = nn.Conv2d(32, 64, 3, 1).to(DEVICE)
-        self.dropout1 = nn.Dropout2d(0.25).to(DEVICE)
-        self.dropout2 = nn.Dropout2d(0.5).to(DEVICE)
-        self.fc1 = nn.Linear(9216, 128).to(DEVICE)
-        self.fc2 = nn.Linear(128, 10).to(DEVICE)
+        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.dropout1 = nn.Dropout2d(0.25)
+        self.dropout2 = nn.Dropout2d(0.5)
+        self.fc1 = nn.Linear(9216, 128)
+        self.fc2 = nn.Linear(128, 10)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -83,26 +101,29 @@ class BatchUpdateParameterServer(object):
         self.future_model = torch.futures.Future()
         self.batch_update_size = batch_update_size
         self.curr_update_size = 0
-        self.optimizer = optim.SGD(self.model.parameters(), lr=0.001, momentum=0.9)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-3)
+        self.losses = np.array([])
+        self.loss = np.array([])
         for p in self.model.parameters():
             p.grad = torch.zeros_like(p)
+        
 
     def get_model(self):
         return self.model
 
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads):
+    def update_and_fetch_model(ps_rref, grads,id, loss):
         self = ps_rref.local_value()
-        logging.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
+        logger.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
         for p, g in zip(self.model.parameters(), grads):
-            #print("grads :", grads)
             if (p.grad is not None )and (g is not None):
                 p.grad += g
             elif(p.grad is None):
-                logging.warning("None p.grad detected")
+                logger.debug(f"None p.grad detected from worker {id}")
             else: 
-                logging.warning("None g detected")
+                logger.debug("None g detected")
+        self.loss = np.append(self.loss, loss)
         with self.lock:
             self.curr_update_size += 1
             fut = self.future_model
@@ -111,11 +132,17 @@ class BatchUpdateParameterServer(object):
                 for p in self.model.parameters():
                     if p.grad is not None:
                         p.grad /= self.batch_update_size
+                    else:
+                        logger.debug(f"None p.grad detected for the update")
+                        self.optimizer.zero_grad()
                 self.curr_update_size = 0
+                self.losses = np.append(self.losses, self.loss.mean())
+                logger.debug(f"Loss is {self.losses[-1]}")
+                self.loss = np.array([])
                 self.optimizer.step()
-                self.optimizer.zero_grad()
+                self.optimizer.zero_grad(set_to_none=False)
                 fut.set_result(self.model)
-                logging.debug("PS updated model")
+                logger.debug("PS updated model")
                 self.future_model = torch.futures.Future()
 
         return fut
@@ -129,25 +156,21 @@ class Trainer(object):
 
 
     def get_next_batch(self):
-        for (inputs,labels) in tqdm(TRAIN_LOADER):
+        for (inputs,labels) in tqdm(TRAIN_LOADER):#, desc=f"ML loss {self.ps_rref.local_value().losses[-1]}"):
 
-            yield inputs.to(DEVICE), labels.to(DEVICE)
+            yield inputs, labels
 
     def train(self):
         name = rpc.get_worker_info().name
-        m = self.ps_rref.rpc_sync().get_model().to(DEVICE)
+        m = self.ps_rref.rpc_sync().get_model()
         for inputs, labels in self.get_next_batch():
-            logging.debug(f"{name} processing one batch")
-            # print("Shape of network output ", m(inputs).shape)
-            # print("Shape of labels ", labels.shape)
-            self.loss_fn(m(inputs), labels).backward()
-            logging.debug(f"{name} reporting grads")
+            loss = self.loss_fn(m(inputs), labels)
+            loss.backward()
             m = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.cpu().parameters()]),
-            ).to(DEVICE)
-            logging.debug(f"{name} got updated model")
+                args=(self.ps_rref, [p.grad for p in m.parameters()], name, loss.detach().sum()),
+            )
 
 
 def run_trainer(ps_rref):
@@ -156,7 +179,7 @@ def run_trainer(ps_rref):
 
 
 def run_ps(trainers):
-    logging.info("Start training")
+    logger.info("Start training")
     ps_rref = rpc.RRef(BatchUpdateParameterServer())
     futs = []
     for trainer in trainers:
@@ -165,14 +188,19 @@ def run_ps(trainers):
         )
 
     torch.futures.wait_all(futs)
-    logging.info("Finish training")
+    losses = ps_rref.to_here().losses
+    plt.plot(range(len(losses)), losses)
+    plt.xlabel("Losses")
+    plt.ylabel("Update steps")
+    plt.savefig("loss.png")
+    logger.info("Finish training")
 
 
 def run(rank, world_size):
 
     options=rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=6,
-        rpc_timeout=5  # infinite timeout
+        rpc_timeout=0 # infinite timeout
      )
     if rank != 0:
         rpc.init_rpc(
@@ -217,6 +245,7 @@ if __name__=="__main__":
         default="29500",
         help="""Port that master is listening on, will default to 29500 if not
         provided. Master must be able to accept network traffic on the host and port.""")
+
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
