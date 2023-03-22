@@ -22,4 +22,4 @@ Windows users can also use Windows Subsystem for Linux (WSL). To install WSL fol
 
 To use *dnn_mnist.py* you have to activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python async.py and you will start training. The python script accepts as argmuments world-size that you can use to specify the number of nodes for training: 1 parameter server + (n-1) workers.
 
-For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_size X` where X is an integer (1 Parameter Server and X-1 trainers).
+For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_size X` where X is a positive integer bigger than 1 (1 Parameter Server and X-1 trainers).
