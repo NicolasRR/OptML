@@ -116,7 +116,7 @@ class BatchUpdateParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads,id, loss):
         self = ps_rref.local_value()
-        logger.debug(f"PS got {self.curr_update_size}/{self.batch_update_size} updates")
+        logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None )and (g is not None):
                 p.grad += g
@@ -193,9 +193,9 @@ def run_ps(trainers, batch_update_size):
     plt.xlabel("Losses")
     plt.ylabel("Update steps")
     plt.savefig("loss.png")
-    logger.info("Finish training")
-
-
+    logger.info("Finished training")
+    print(f"Final train loss: {losses[-1]}")
+    
 def run(rank, world_size):
 
     options=rpc.TensorPipeRpcBackendOptions(
@@ -252,5 +252,8 @@ if __name__=="__main__":
     os.environ["MASTER_PORT"] = args.master_port
     if len(sys.argv) < 3:
         print(f"Using default world_size value: {args.world_size}")
+    elif args.world_size < 2:
+        print("Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)")
+        exit()
     world_size = args.world_size
     mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
