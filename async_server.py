@@ -1,3 +1,4 @@
+import sys
 import os
 import threading
 from datetime import datetime
@@ -249,5 +250,7 @@ if __name__=="__main__":
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
+    if len(sys.argv) < 3:
+        print(f"Using default world_size value: {args.world_size}")
     world_size = args.world_size
     mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
