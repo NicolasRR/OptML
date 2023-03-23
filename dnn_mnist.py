@@ -33,14 +33,9 @@ logger.addHandler(fh)
 
 
 BATCH_SIZE = 32
-image_w = 64
-image_h = 64
-num_classes = 10
 BATCH_UPDATE_SIZE = 5
 NUM_BATCHES = 6
 DEVICE = "cpu"
-# TLOSS= np.array([])
-# LOSSES = np.array([])
 
 
 def timed_log(text):
