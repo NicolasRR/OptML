@@ -1,3 +1,4 @@
+import sys
 import os
 import threading
 from datetime import datetime
@@ -31,12 +32,8 @@ fh.setFormatter(formatter)
 logger.addHandler(ch)
 logger.addHandler(fh)
 
-
+DEFAULT_WORLD_SIZE = 4
 BATCH_SIZE = 32
-BATCH_UPDATE_SIZE = 5
-NUM_BATCHES = 6
-DEVICE = "cpu"
-
 
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
@@ -66,8 +63,8 @@ class Net(nn.Module):
 
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
-        self.dropout1 = nn.Dropout2d(0.25)
-        self.dropout2 = nn.Dropout2d(0.5)
+        self.dropout1 = nn.Dropout(0.25)
+        self.dropout2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(9216, 128)
         self.fc2 = nn.Linear(128, 10)
 
@@ -90,7 +87,7 @@ class Net(nn.Module):
 
 class BatchUpdateParameterServer(object):
 
-    def __init__(self, batch_update_size=BATCH_UPDATE_SIZE):
+    def __init__(self, batch_update_size):
         self.model = Net()
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
@@ -110,7 +107,7 @@ class BatchUpdateParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads,id, loss):
         self = ps_rref.local_value()
-        logger.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
+        logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None )and (g is not None):
                 p.grad += g
@@ -173,9 +170,9 @@ def run_trainer(ps_rref):
     trainer.train()
 
 
-def run_ps(trainers):
+def run_ps(trainers, batch_update_size):
     logger.info("Start training")
-    ps_rref = rpc.RRef(BatchUpdateParameterServer())
+    ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size))
     futs = []
     for trainer in trainers:
         futs.append(
@@ -188,13 +185,15 @@ def run_ps(trainers):
     plt.xlabel("Losses")
     plt.ylabel("Update steps")
     plt.savefig("loss.png")
-    logger.info("Finish training")
+    logger.info("Finished training")
+    print(f"Final train loss: {losses[-1]}")
+
 
 
 def run(rank, world_size):
 
     options=rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads=6,
+        num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
      )
     if rank != 0:
@@ -212,7 +211,7 @@ def run(rank, world_size):
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)])
+        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -225,7 +224,7 @@ if __name__=="__main__":
     parser.add_argument(
         "--world_size",
         type=int,
-        default=6,
+        default=DEFAULT_WORLD_SIZE,
         help="""Total number of participating processes. Should be the sum of
         master node and all training nodes.""")
     parser.add_argument(
@@ -246,5 +245,9 @@ if __name__=="__main__":
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     world_size = args.world_size
-    BATCH_UPDATE_SIZE = world_size-1
+    if len(sys.argv) < 3:
+        print(f"Using default world_size value: {args.world_size}")
+    elif args.world_size < 2:
+        print("Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)")
+        exit()
     mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
