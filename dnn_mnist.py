@@ -32,17 +32,8 @@ fh.setFormatter(formatter)
 logger.addHandler(ch)
 logger.addHandler(fh)
 
-
+DEFAULT_WORLD_SIZE = 4
 BATCH_SIZE = 32
-image_w = 64
-image_h = 64
-num_classes = 10
-#BATCH_UPDATE_SIZE = 5
-#NUM_BATCHES = 6
-#DEVICE = "cpu"
-# TLOSS= np.array([])
-# LOSSES = np.array([])
-
 
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
@@ -180,6 +171,7 @@ def run_trainer(ps_rref):
 
 
 def run_ps(trainers, batch_update_size):
+    logger.info("Start training")
     ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size))
     futs = []
     for trainer in trainers:
@@ -195,11 +187,13 @@ def run_ps(trainers, batch_update_size):
     plt.savefig("loss.png")
     logger.info("Finished training")
     print(f"Final train loss: {losses[-1]}")
-    
+
+
+
 def run(rank, world_size):
 
     options=rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads= world_size,
+        num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
      )
     if rank != 0:
@@ -230,7 +224,7 @@ if __name__=="__main__":
     parser.add_argument(
         "--world_size",
         type=int,
-        default=6,
+        default=DEFAULT_WORLD_SIZE,
         help="""Total number of participating processes. Should be the sum of
         master node and all training nodes.""")
     parser.add_argument(
