@@ -22,7 +22,7 @@ fh = logging.FileHandler('log.log', mode="w")
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
+ch.setLevel(logging.DEBUG)
 # create formatter and add it to the handlers
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
@@ -31,6 +31,7 @@ fh.setFormatter(formatter)
 logger.addHandler(ch)
 logger.addHandler(fh)
 
+## TO DO: implement standarization
 
 BATCH_SIZE = 32
 image_w = 64
@@ -104,8 +105,11 @@ class BatchUpdateParameterServer(object):
         self.optimizer = optim.SGD(self.model.parameters(), lr=1e-3)
         self.losses = np.array([])
         self.loss = np.array([])
+        self.norms = np.array([])
+        self.lnorms = np.array([])
         for p in self.model.parameters():
             p.grad = torch.zeros_like(p)
+            np.append(self.lnorms, [])
         
 
     def get_model(self):
@@ -129,15 +133,20 @@ class BatchUpdateParameterServer(object):
             fut = self.future_model
 
             if self.curr_update_size >= self.batch_update_size:
-                for p in self.model.parameters():
+                norm = 0
+                for i,p in enumerate(self.model.parameters()):
                     if p.grad is not None:
                         p.grad /= self.batch_update_size
+                        n = p.grad.norm(2).item() ** 2
+                        norm += n
+                        np.append(self.lnorms[i] , n/len(p))
                     else:
                         logger.debug(f"None p.grad detected for the update")
-                        self.optimizer.zero_grad()
                 self.curr_update_size = 0
                 self.losses = np.append(self.losses, self.loss.mean())
                 logger.debug(f"Loss is {self.losses[-1]}")
+                self.norms = np.append(self.norms, norm**(0.5))
+                logger.debug(f"The norm of the gradient is {self.norms[-1]}")
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)
@@ -188,11 +197,28 @@ def run_ps(trainers):
         )
 
     torch.futures.wait_all(futs)
-    losses = ps_rref.to_here().losses
-    plt.plot(range(len(losses)), losses)
+    ps = ps_rref.to_here()
+    losses = ps.losses
+    norms = ps.norm
+    lnorms = ps.lnorms
+    n = len(losses)
+    plt.plot(range(n), losses)
     plt.xlabel("Losses")
     plt.ylabel("Update steps")
     plt.savefig("loss.png")
+    np.savetxt("loss.txt", losses)
+    plt.figure()
+    plt.plot(range(n), norms)
+    plt.xlabel("Norms")
+    plt.ylabel("Update steps")
+    plt.savefig("norms.png")
+    np.savetxt("norms.txt")
+    plt.figure()
+    for i,l in enumerate(lnorms):
+        plt.plot(range(n), l, label=f"Layer {i}")
+    plt.xlabel("Norms")
+    plt.ylabel("Update steps")
+    plt.savefig("lnorms.png")
     logger.info("Finish training")
 
 
