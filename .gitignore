@@ -2,3 +2,5 @@
 .vscode/settings.json
 log.log
 loss.png
+log.log
+*.log
