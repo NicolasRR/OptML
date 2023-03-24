@@ -39,6 +39,15 @@ NUM_BATCHES = 6
 DEVICE = "cpu"
 
 
+TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
+                                                download=True, 
+                                                train=True,
+                                                transform=torchvision.transforms.Compose([
+                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
+                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
+                                                ])), 
+                                batch_size=BATCH_SIZE, 
+                                shuffle=True)
 TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
                                                     download=True, 
                                                     train=False,
@@ -90,24 +99,13 @@ class BatchUpdateParameterServer(object):
             p.grad = torch.zeros_like(p)
         self.lnorms = [[] for j in range(i+1)]
         self.trainers = np.zeros(5, dtype=int)
-        self.dataloader = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
-                                                download=True, 
-                                                train=True,
-                                                transform=torchvision.transforms.Compose([
-                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                ])), 
-                                batch_size=BATCH_SIZE, 
-                                shuffle=True)
+        self.dataloader = TRAIN_LOADER
         logger.info(f"number of layers is {len(self.lnorms)}")
 
     def get_model(self):
         return self.model
-    def get_next_batch(self):
-        with self.lock:
-            for (inputs,labels) in tqdm(self.dataloader):
-
-                yield inputs, labels
+    def get_dataloader(self):
+        return self.dataloader
 
     @staticmethod
     @rpc.functions.async_execution
@@ -148,12 +146,16 @@ class Trainer(object):
         self.loss_fn = nn.functional.nll_loss
 
 
-    
+    def get_next_batch(self, loader):
+        for (inputs,labels) in tqdm(loader):
+
+            yield inputs, labels
 
     def train(self):
         name = rpc.get_worker_info().name
         m = self.ps_rref.rpc_sync().get_model()
-        for (inputs, labels) in self.ps_rref.rpc_sync().get_next_batch():
+        loader = self.ps_rref.rpc_sync().get_dataloader()
+        for (inputs, labels) in self.get_next_batch(loader):
             loss = self.loss_fn(m(inputs), labels)
             loss.backward()
             m = rpc.rpc_sync(
@@ -196,14 +198,14 @@ def run_ps(trainers):
     plt.xlabel("Update steps")
     plt.savefig("norms.png")
     np.savetxt("norms.txt", norms)
-    # plt.figure()
-    # for i in range(len(lnorms)):
-    #     l = lnorms[i]
-    #     plt.plot(range(n), l, label=f"Layer {i}")
-    #     np.savetxt(f"lnorms{i}.txt", l)
-    # plt.ylabel("Norms")
-    # plt.xlabel("Update steps")
-    # plt.savefig("lnorms.png")
+    plt.figure()
+    for i in range(len(lnorms)):
+        l = lnorms[i]
+        plt.plot(range(n), l, label=f"Layer {i}")
+        np.savetxt(f"lnorms{i}.txt", l)
+    plt.ylabel("Norms")
+    plt.xlabel("Update steps")
+    plt.savefig("lnorms.png")
     logger.info("Finish training")
 
 
