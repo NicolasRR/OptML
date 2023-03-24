@@ -34,28 +34,11 @@ logger.addHandler(fh)
 ## TO DO: implement standarization
 
 BATCH_SIZE = 32
-image_w = 64
-image_h = 64
-num_classes = 10
-BATCH_UPDATE_SIZE = 5
+
 NUM_BATCHES = 6
 DEVICE = "cpu"
-# TLOSS= np.array([])
-# LOSSES = np.array([])
 
 
-def timed_log(text):
-    print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
-
-TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
-                                                download=True, 
-                                                train=True,
-                                                transform=torchvision.transforms.Compose([
-                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                ])), 
-                                batch_size=BATCH_SIZE, 
-                                shuffle=True)
 TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
                                                     download=True, 
                                                     train=False,
@@ -96,51 +79,55 @@ class Net(nn.Module):
 
 class BatchUpdateParameterServer(object):
 
-    def __init__(self, batch_update_size=BATCH_UPDATE_SIZE):
+    def __init__(self):
         self.model = Net()
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
-        self.batch_update_size = batch_update_size
-        self.curr_update_size = 0
         self.optimizer = optim.SGD(self.model.parameters(), lr=1e-3)
         self.losses = np.array([])
-        self.loss = np.array([])
         self.norms = np.array([])
         for i,p in enumerate(self.model.parameters()):
             p.grad = torch.zeros_like(p)
-        self.lnorms = np.array([[] for i in range(i+1)])
+        self.lnorms = [[] for j in range(i+1)]
+        self.trainers = np.zeros(5, dtype=int)
+        self.dataloader = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
+                                                download=True, 
+                                                train=True,
+                                                transform=torchvision.transforms.Compose([
+                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
+                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
+                                                ])), 
+                                batch_size=BATCH_SIZE, 
+                                shuffle=True)
+        logger.info(f"number of layers is {len(self.lnorms)}")
 
     def get_model(self):
         return self.model
+    def get_next_batch(self):
+        with self.lock:
+            for (inputs,labels) in tqdm(self.dataloader):
+
+                yield inputs, labels
 
     @staticmethod
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads,id, loss):
         self = ps_rref.local_value()
-        logger.debug(f"PS got {self.curr_update_size}/{BATCH_UPDATE_SIZE} updates")
-        for p, g in zip(self.model.parameters(), grads):
-            if (p.grad is not None )and (g is not None):
-                p.grad += g
-            elif(p.grad is None):
-                logger.debug(f"None p.grad detected from worker {id}")
-            else: 
-                logger.debug("None g detected")
-        self.loss = np.append(self.loss, loss)
-        self.curr_update_size += 1
-        fut = self.future_model
-
-        if self.curr_update_size >= self.batch_update_size:
+        logger.debug(f"PS got 1 updates from worker {id}")
+        self.trainers[int(id[-1])-1] +=1
+        logger.debug(f"The value of trainer is {self.trainers}")
+        self.losses = np.append(self.losses, loss)
+        with self.lock:
+            fut = self.future_model
             norm = 0
-            for i,p in enumerate(self.model.parameters()):
+            for i,(p, g) in enumerate(zip(self.model.parameters(), grads)):
                 if p.grad is not None:
-                    p.grad /= self.batch_update_size
+                    p.grad += g
                     n = p.grad.norm(2).item() ** 2
                     norm += n
-                    self.lnorms[i] = np.append(self.lnorms[i] , n/len(p))
+                    self.lnorms[i].append(n)
                 else:
                     logger.debug(f"None p.grad detected for the update")
-            self.curr_update_size = 0
-            self.losses = np.append(self.losses, self.loss.mean())
             logger.debug(f"Loss is {self.losses[-1]}")
             self.norms = np.append(self.norms, norm**(0.5))
             logger.debug(f"The norm of the gradient is {self.norms[-1]}")
@@ -161,15 +148,12 @@ class Trainer(object):
         self.loss_fn = nn.functional.nll_loss
 
 
-    def get_next_batch(self):
-        for (inputs,labels) in tqdm(TRAIN_LOADER):#, desc=f"ML loss {self.ps_rref.local_value().losses[-1]}"):
-
-            yield inputs, labels
+    
 
     def train(self):
         name = rpc.get_worker_info().name
         m = self.ps_rref.rpc_sync().get_model()
-        for inputs, labels in self.get_next_batch():
+        for (inputs, labels) in self.ps_rref.rpc_sync().get_next_batch():
             loss = self.loss_fn(m(inputs), labels)
             loss.backward()
             m = rpc.rpc_sync(
@@ -198,6 +182,8 @@ def run_ps(trainers):
     losses = ps.losses
     norms = ps.norms
     lnorms = ps.lnorms
+    trainers = ps.trainers
+    np.savetxt("trainers.txt", trainers)
     n = len(losses)
     plt.plot(range(n), losses)
     plt.xlabel("Losses")
@@ -210,14 +196,14 @@ def run_ps(trainers):
     plt.xlabel("Update steps")
     plt.savefig("norms.png")
     np.savetxt("norms.txt", norms)
-    plt.figure()
-    for i in range(len(lnorms)):
-        l = lnorms[i]
-        plt.plot(range(n), l, label=f"Layer {i}")
-        np.savetxt(f"lnorms{i}.txt", l)
-    plt.ylabel("Norms")
-    plt.xlabel("Update steps")
-    plt.savefig("lnorms.png")
+    # plt.figure()
+    # for i in range(len(lnorms)):
+    #     l = lnorms[i]
+    #     plt.plot(range(n), l, label=f"Layer {i}")
+    #     np.savetxt(f"lnorms{i}.txt", l)
+    # plt.ylabel("Norms")
+    # plt.xlabel("Update steps")
+    # plt.savefig("lnorms.png")
     logger.info("Finish training")
 
 
@@ -276,5 +262,4 @@ if __name__=="__main__":
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     world_size = args.world_size
-    BATCH_UPDATE_SIZE = world_size-1
     mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
