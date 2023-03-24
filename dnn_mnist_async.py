@@ -1,20 +1,18 @@
 import sys
 import os
 import threading
-from datetime import datetime
-
 import torch
 import torch.distributed.rpc as rpc
 import torch.multiprocessing as mp
 import torch.nn as nn
 from torch import optim
-
 import torchvision
 import argparse
 from tqdm import tqdm
-import logging
 import numpy as np
 import matplotlib.pyplot as plt
+from datetime import datetime
+import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -32,11 +30,11 @@ fh.setFormatter(formatter)
 logger.addHandler(ch)
 logger.addHandler(fh)
 
-DEFAULT_WORLD_SIZE = 4
-BATCH_SIZE = 32
-
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
+
+DEFAULT_WORLD_SIZE = 4
+BATCH_SIZE = 32
 
 TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
                                                 download=True, 
@@ -60,7 +58,6 @@ TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout(0.25)
@@ -86,7 +83,6 @@ class Net(nn.Module):
         return output
 
 class BatchUpdateParameterServer(object):
-
     def __init__(self, batch_update_size):
         self.model = Net()
         self.lock = threading.Lock()
@@ -98,32 +94,30 @@ class BatchUpdateParameterServer(object):
         self.loss = np.array([])
         for p in self.model.parameters():
             p.grad = torch.zeros_like(p)
-        
 
     def get_model(self):
         return self.model
 
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads,id, loss):
+    def update_and_fetch_model(ps_rref, grads, id, loss):
         self = ps_rref.local_value()
         logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
         for p, g in zip(self.model.parameters(), grads):
-            if (p.grad is not None )and (g is not None):
-                p.grad += g #gradient stacking
+            if (p.grad is not None) and (g is not None):
+                p.grad += g 
             elif(p.grad is None):
                 logger.debug(f"None p.grad detected from worker {id}")
-            else: 
+            else:
                 logger.debug("None g detected")
         self.loss = np.append(self.loss, loss)
         with self.lock:
             self.curr_update_size += 1
             fut = self.future_model
-
             if self.curr_update_size >= self.batch_update_size:
                 for p in self.model.parameters():
                     if p.grad is not None:
-                        p.grad /= self.batch_update_size #gradient average
+                        p.grad /= self.batch_update_size
                     else:
                         logger.debug(f"None p.grad detected for the update")
                         self.optimizer.zero_grad()
@@ -136,20 +130,17 @@ class BatchUpdateParameterServer(object):
                 fut.set_result(self.model)
                 logger.debug("PS updated model")
                 self.future_model = torch.futures.Future()
-
+            else:
+                fut = self.future_model
         return fut
 
-
 class Trainer(object):
-
     def __init__(self, ps_rref):
         self.ps_rref = ps_rref
         self.loss_fn = nn.functional.nll_loss
 
-
     def get_next_batch(self):
-        for (inputs,labels) in tqdm(TRAIN_LOADER):#, desc=f"ML loss {self.ps_rref.local_value().losses[-1]}"):
-
+        for (inputs, labels) in tqdm(TRAIN_LOADER):
             yield inputs, labels
 
     def train(self):
@@ -158,17 +149,16 @@ class Trainer(object):
         for inputs, labels in self.get_next_batch():
             loss = self.loss_fn(m(inputs), labels)
             loss.backward()
-            m = rpc.rpc_sync(
+            rpc.rpc_async(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
                 args=(self.ps_rref, [p.grad for p in m.parameters()], name, loss.detach().sum()),
             )
-
+            m = self.ps_rref.rpc_sync().get_model()
 
 def run_trainer(ps_rref):
     trainer = Trainer(ps_rref)
     trainer.train()
-
 
 def run_ps(trainers, batch_update_size):
     logger.info("Start training")
@@ -178,7 +168,6 @@ def run_ps(trainers, batch_update_size):
         futs.append(
             rpc.rpc_async(trainer, run_trainer, args=(ps_rref,))
         )
-
     torch.futures.wait_all(futs)
     losses = ps_rref.to_here().losses
     plt.plot(range(len(losses)), losses)
@@ -187,8 +176,6 @@ def run_ps(trainers, batch_update_size):
     plt.savefig("loss.png")
     logger.info("Finished training")
     print(f"Final train loss: {losses[-1]}")
-
-
 
 def run(rank, world_size):
 
