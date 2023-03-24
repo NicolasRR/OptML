@@ -22,7 +22,7 @@ fh = logging.FileHandler('log.log', mode="w")
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setLevel(logging.INFO)
 # create formatter and add it to the handlers
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
@@ -106,11 +106,9 @@ class BatchUpdateParameterServer(object):
         self.losses = np.array([])
         self.loss = np.array([])
         self.norms = np.array([])
-        self.lnorms = np.array([])
-        for p in self.model.parameters():
+        for i,p in enumerate(self.model.parameters()):
             p.grad = torch.zeros_like(p)
-            np.append(self.lnorms, [])
-        
+        self.lnorms = np.array([[] for i in range(i+1)])
 
     def get_model(self):
         return self.model
@@ -128,31 +126,30 @@ class BatchUpdateParameterServer(object):
             else: 
                 logger.debug("None g detected")
         self.loss = np.append(self.loss, loss)
-        with self.lock:
-            self.curr_update_size += 1
-            fut = self.future_model
+        self.curr_update_size += 1
+        fut = self.future_model
 
-            if self.curr_update_size >= self.batch_update_size:
-                norm = 0
-                for i,p in enumerate(self.model.parameters()):
-                    if p.grad is not None:
-                        p.grad /= self.batch_update_size
-                        n = p.grad.norm(2).item() ** 2
-                        norm += n
-                        np.append(self.lnorms[i] , n/len(p))
-                    else:
-                        logger.debug(f"None p.grad detected for the update")
-                self.curr_update_size = 0
-                self.losses = np.append(self.losses, self.loss.mean())
-                logger.debug(f"Loss is {self.losses[-1]}")
-                self.norms = np.append(self.norms, norm**(0.5))
-                logger.debug(f"The norm of the gradient is {self.norms[-1]}")
-                self.loss = np.array([])
-                self.optimizer.step()
-                self.optimizer.zero_grad(set_to_none=False)
-                fut.set_result(self.model)
-                logger.debug("PS updated model")
-                self.future_model = torch.futures.Future()
+        if self.curr_update_size >= self.batch_update_size:
+            norm = 0
+            for i,p in enumerate(self.model.parameters()):
+                if p.grad is not None:
+                    p.grad /= self.batch_update_size
+                    n = p.grad.norm(2).item() ** 2
+                    norm += n
+                    self.lnorms[i] = np.append(self.lnorms[i] , n/len(p))
+                else:
+                    logger.debug(f"None p.grad detected for the update")
+            self.curr_update_size = 0
+            self.losses = np.append(self.losses, self.loss.mean())
+            logger.debug(f"Loss is {self.losses[-1]}")
+            self.norms = np.append(self.norms, norm**(0.5))
+            logger.debug(f"The norm of the gradient is {self.norms[-1]}")
+            self.loss = np.array([])
+            self.optimizer.step()
+            self.optimizer.zero_grad(set_to_none=False)
+            fut.set_result(self.model)
+            logger.debug("PS updated model")
+            self.future_model = torch.futures.Future()
 
         return fut
 
@@ -199,7 +196,7 @@ def run_ps(trainers):
     torch.futures.wait_all(futs)
     ps = ps_rref.to_here()
     losses = ps.losses
-    norms = ps.norm
+    norms = ps.norms
     lnorms = ps.lnorms
     n = len(losses)
     plt.plot(range(n), losses)
@@ -209,15 +206,17 @@ def run_ps(trainers):
     np.savetxt("loss.txt", losses)
     plt.figure()
     plt.plot(range(n), norms)
-    plt.xlabel("Norms")
-    plt.ylabel("Update steps")
+    plt.ylabel("Norms")
+    plt.xlabel("Update steps")
     plt.savefig("norms.png")
-    np.savetxt("norms.txt")
+    np.savetxt("norms.txt", norms)
     plt.figure()
-    for i,l in enumerate(lnorms):
+    for i in range(len(lnorms)):
+        l = lnorms[i]
         plt.plot(range(n), l, label=f"Layer {i}")
-    plt.xlabel("Norms")
-    plt.ylabel("Update steps")
+        np.savetxt(f"lnorms{i}.txt", l)
+    plt.ylabel("Norms")
+    plt.xlabel("Update steps")
     plt.savefig("lnorms.png")
     logger.info("Finish training")
 
