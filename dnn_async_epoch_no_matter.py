@@ -29,11 +29,11 @@ class MNISTTrainer(nn.Module):
     def train(self, data):
         criterion = nn.BCEWithLogitsLoss()
         optimizer = torch.optim.SGD(self.model.parameters(), lr=0.01)
-
         # Get remote reference to parameter server
         ps_rref = rpc.remote("trainer0", ParameterServer)
-
-        for epoch in range(5):
+        num_correct = 0
+        for epoch in range(1):
+            epoch_loss = 0.0
             for i in range(len(data)):
                 x, y = data[i]
                 x = x.view(-1, 784)
@@ -43,11 +43,20 @@ class MNISTTrainer(nn.Module):
                 output = self.model(x)
                 loss = criterion(output, y)
                 loss.backward()
-
                 # Send gradients to parameter server
                 ps_rref.rpc_async().update_params(self.model)
-
                 optimizer.step()
+
+                epoch_loss += loss.item()
+                pred = output >= 0.5
+                num_correct += pred.eq(y.view_as(pred)).sum().item()
+
+                if (i + 1) % 100 == 0:
+                    print(f"Epoch: {epoch + 1}, Batch: {i + 1}, Loss: {loss.item():.4f}")
+
+            epoch_loss /= len(data)
+            accuracy = num_correct / len(data)
+            print(f"Epoch: {epoch + 1}, Loss: {epoch_loss:.4f}, Accuracy: {accuracy:.4f}")
 
 class ParameterServer(nn.Module):
     def __init__(self):
