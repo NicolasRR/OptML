@@ -1,5 +1,7 @@
 
 .vscode/settings.json
-log.log
-loss.png
+*.log
+*.png
+*.txt
 model.pth
+data/
