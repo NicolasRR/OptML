@@ -181,31 +181,11 @@ def run_ps(trainers):
 
     torch.futures.wait_all(futs)
     ps = ps_rref.to_here()
-    losses = ps.losses
-    norms = ps.norms
+    np.savetxt("loss.txt", ps.losses)
     lnorms = ps.lnorms
-    trainers = ps.trainers
-    np.savetxt("trainers.txt", trainers)
-    n = len(losses)
-    plt.plot(range(n), losses)
-    plt.xlabel("Losses")
-    plt.ylabel("Update steps")
-    plt.savefig("loss.png")
-    np.savetxt("loss.txt", losses)
-    plt.figure()
-    plt.plot(range(n), norms)
-    plt.ylabel("Norms")
-    plt.xlabel("Update steps")
-    plt.savefig("norms.png")
-    np.savetxt("norms.txt", norms)
-    plt.figure()
+    np.savetxt("norms.txt", ps.norms)
     for i in range(len(lnorms)):
-        l = lnorms[i]
-        plt.plot(range(n), l, label=f"Layer {i}")
         np.savetxt(f"lnorms{i}.txt", l)
-    plt.ylabel("Norms")
-    plt.xlabel("Update steps")
-    plt.savefig("lnorms.png")
     logger.info("Finish training")
 
 
