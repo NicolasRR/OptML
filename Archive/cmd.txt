@@ -1,6 +1,6 @@
 netstat -a
 
-cd Users\99\Desktop\Code\python\Distributed NN
+cd Path_to_folder_with_code
 
 mpiexec -n 2 python create_worker.py --rank 0
 mpiexec -n 2 python create_worker.py --rank 1
