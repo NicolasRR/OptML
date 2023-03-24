@@ -14,6 +14,7 @@ ENV PATH=$CONDA_DIR/bin:$PATH
 RUN conda install -y pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 RUN conda install -y matplotlib jupyter && \
     conda install -y -c conda-forge tqdm ipykernel && \
+    conda install -c anaconda pandas seaborn && \
     python -m ipykernel install --user --name base --display-name "Python (base)"
 
 
