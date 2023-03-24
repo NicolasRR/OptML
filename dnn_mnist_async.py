@@ -110,7 +110,7 @@ class BatchUpdateParameterServer(object):
         logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None )and (g is not None):
-                p.grad += g
+                p.grad += g #gradient stacking
             elif(p.grad is None):
                 logger.debug(f"None p.grad detected from worker {id}")
             else: 
@@ -123,7 +123,7 @@ class BatchUpdateParameterServer(object):
             if self.curr_update_size >= self.batch_update_size:
                 for p in self.model.parameters():
                     if p.grad is not None:
-                        p.grad /= self.batch_update_size
+                        p.grad /= self.batch_update_size #gradient average
                     else:
                         logger.debug(f"None p.grad detected for the update")
                         self.optimizer.zero_grad()
