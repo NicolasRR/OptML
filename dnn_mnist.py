@@ -23,7 +23,7 @@ fh = logging.FileHandler('log.log', mode="w")
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
+ch.setLevel(logging.DEBUG)
 # create formatter and add it to the handlers
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
@@ -34,19 +34,34 @@ logger.addHandler(fh)
 
 DEFAULT_WORLD_SIZE = 4
 BATCH_SIZE = 32
+MODEL_PATH = "model.pt"
+TRAIN_SIZE = 6000
 
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
+    
+from torch.utils.data import DataLoader, SubsetRandomSampler
 
-TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
+K = 6000 # enter your length here
+train_data = torchvision.datasets.MNIST('./../data/mnist_data', 
                                                 download=True, 
                                                 train=True,
                                                 transform=torchvision.transforms.Compose([
                                                     torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
                                                     torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                ])), 
-                                batch_size=BATCH_SIZE, 
-                                shuffle=True)
+                                                ]))
+subsample_train_indices = torch.randperm(len(train_data))[:TRAIN_SIZE]
+TRAIN_LOADER = DataLoader(train_data, batch_size=BATCH_SIZE, sampler=SubsetRandomSampler(subsample_train_indices)) 
+
+#TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
+#                                                download=True, 
+#                                                train=True,
+#                                                transform=torchvision.transforms.Compose([
+#                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
+#                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
+#                                                ])), 
+#                                batch_size=BATCH_SIZE, 
+#                                shuffle=True)
 TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
                                                     download=True, 
                                                     train=False,
@@ -77,7 +92,6 @@ class Net(nn.Module):
         x = self.dropout1(x)
         x = torch.flatten(x, 1)
 
-
         x = self.fc1(x)
         x = nn.functional.relu(x)
         x = self.dropout2(x)
@@ -99,7 +113,6 @@ class BatchUpdateParameterServer(object):
         for p in self.model.parameters():
             p.grad = torch.zeros_like(p)
         
-
     def get_model(self):
         return self.model
 
@@ -146,7 +159,6 @@ class Trainer(object):
         self.ps_rref = ps_rref
         self.loss_fn = nn.functional.nll_loss
 
-
     def get_next_batch(self):
         for (inputs,labels) in tqdm(TRAIN_LOADER):#, desc=f"ML loss {self.ps_rref.local_value().losses[-1]}"):
 
@@ -163,6 +175,8 @@ class Trainer(object):
                 BatchUpdateParameterServer.update_and_fetch_model,
                 args=(self.ps_rref, [p.grad for p in m.parameters()], name, loss.detach().sum()),
             )
+        # Saving the model
+        torch.save(m.state_dict(), 'model.pth')
 
 
 def run_trainer(ps_rref):
@@ -228,6 +242,12 @@ if __name__=="__main__":
         help="""Total number of participating processes. Should be the sum of
         master node and all training nodes.""")
     parser.add_argument(
+        "--train_size",
+        type=int,
+        default=TRAIN_SIZE,
+        help="""Total number of participating processes. Should be the sum of
+        master node and all training nodes.""")
+    parser.add_argument(
         "--master_addr",
         type=str,
         default="0.0.0.0",
@@ -249,5 +269,9 @@ if __name__=="__main__":
     elif args.world_size < 2:
         print("Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)")
         exit()
+    elif args.train_size > 50000 or args.train_size < 1000:
+        print("Forbidden value !!! train_size must be in range 1000 - 60000")
+        exit()
+        
     world_size = args.world_size
     mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
