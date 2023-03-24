@@ -4,12 +4,13 @@ import threading
 from datetime import datetime
 
 import torch
-import torch.distributed.rpc as rpc
-import torch.multiprocessing as mp
 import torch.nn as nn
 from torch import optim
-
+import torch.distributed.rpc as rpc
+import torch.multiprocessing as mp
+from torch.utils.data import DataLoader, SubsetRandomSampler
 import torchvision
+
 import argparse
 from tqdm import tqdm
 import logging
@@ -40,9 +41,7 @@ TRAIN_SIZE = 6000
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
     
-from torch.utils.data import DataLoader, SubsetRandomSampler
 
-K = 6000 # enter your length here
 train_data = torchvision.datasets.MNIST('./../data/mnist_data', 
                                                 download=True, 
                                                 train=True,
