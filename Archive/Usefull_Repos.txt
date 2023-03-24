@@ -1,17 +1,11 @@
-https://github.com/AbduElturki/Asynchronous-Stochastic-Gradient-Descent
-
-https://github.com/MyCaffe/NCCL
-
-https://github.com/microsoft/Delayed-Compensation-Asynchronous-Stochastic-Gradient-Descent-for-Multiverso/tree/master
-
-https://yuqli.github.io/jekyll/update/2018/12/17/sgd-mpi-pytorch.html
-
-https://github.com/epfml/ML_course/blob/master/labs/ex09/solution/ex09.ipynb
-
-https://github.com/epfml/ML_course/blob/master/labs/ex12/solution/gans.ipynb
-
-https://github.com/yuqli/hpc/blob/master/lab4/src/lab4_multiplenode.py
-
-https://d2l.ai/chapter_computational-performance/async-computation.html
-
-https://github.com/SelimaC/large-scale-sparse-neural-networks
+Torch without RPC
+https://github.com/bapi/LPP-SGD/tree/main Torch without RPC
+https://d2l.ai/chapter_computational-performance/async-computation.html Torch without RPC
+https://github.com/yuqli/hpc/blob/master/lab4/src/lab4_multiplenode.py Torch Synchronous
+https://yuqli.github.io/jekyll/update/2018/12/17/sgd-mpi-pytorch.html Sync vs Async explanation
+https://github.com/SelimaC/large-scale-sparse-neural-networks tensorflow
+https://github.com/Hardy-c/AdaComp tensorflow
+https://github.com/AbduElturki/Asynchronous-Stochastic-Gradient-Descent tensorflow
+https://github.com/srome/sklearn-hogwild sklearn
+https://github.com/microsoft/Delayed-Compensation-Asynchronous-Stochastic-Gradient-Descent-for-Multiverso/tree/master C++
+https://github.com/MyCaffe/NCCL Nvidia NCCL for windows
