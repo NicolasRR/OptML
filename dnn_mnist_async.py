@@ -19,8 +19,9 @@ import copy
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
 # create file handler which logs even debug messages
-fh = logging.FileHandler('/results/dnn_mnist_each/log.log', mode="w")
+fh = logging.FileHandler("log.log", mode="w")
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
@@ -33,12 +34,9 @@ fh.setFormatter(formatter)
 logger.addHandler(ch)
 logger.addHandler(fh)
 
-## TO DO: implement standarization
-
 BATCH_SIZE = 32
 
 NUM_BATCHES = 6
-DEVICE = "cpu"
 
 
 class Net(nn.Module):
@@ -75,17 +73,18 @@ class BatchUpdateParameterServer(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, delay, ntrainers):
         self.model = Net()
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
-        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-3)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-4, momentum = 0.9)
         self.losses = np.array([])
         self.norms = np.array([])
         for i,p in enumerate(self.model.parameters()):
             p.grad = torch.zeros_like(p)
         self.lnorms = [[] for j in range(i+1)]
-        self.trainers = np.zeros(5, dtype=int)        
+        self.trainers = np.zeros(ntrainers, dtype=int)
+        self.delay = delay        
 
     def get_model(self):
         return self.model
@@ -103,7 +102,7 @@ class BatchUpdateParameterServer(object):
         logger.debug(f"The value of trainer is {self.trainers}")
         self.losses = np.append(self.losses, loss)
         if id == 1:
-            time.sleep(0.05)
+            time.sleep(self.delay)
         with self.lock:
             fut = self.future_model
             norm = 0
@@ -133,20 +132,22 @@ class Trainer(object):
     This class performs the computation of the gradient and sends it back to the master
     """
 
-    def __init__(self, ps_rref, dataloader, name):
+    def __init__(self, ps_rref, dataloader, name, epochs):
         self.ps_rref = ps_rref
         self.loss_fn = nn.functional.nll_loss
         self.dataloader = dataloader
         self.name = name
+        self.epochs = epochs
 
 
-    def get_next_batch(self, p):
-        for (inputs,labels) in tqdm(self.dataloader, position=p):
-            yield inputs, labels
+    def get_next_batch(self):
+        for _ in range(self.epochs):
+            for (inputs,labels) in tqdm(self.dataloader, position=self.name):
+                yield inputs, labels
 
     def train(self):
         m = self.ps_rref.rpc_sync().get_model()
-        for inputs, labels in self.get_next_batch(self.name):
+        for inputs, labels in self.get_next_batch():
             loss = self.loss_fn(m(inputs), labels)
             loss.backward()
             m = rpc.rpc_sync(
@@ -156,20 +157,20 @@ class Trainer(object):
             )
 
 
-def run_trainer(ps_rref, dataloader, name):
+def run_trainer(ps_rref, dataloader, name, epochs):
     """
     Individually initialize the trainers and start training
     """
-    trainer = Trainer(ps_rref, dataloader, name)
+    trainer = Trainer(ps_rref, dataloader, name, epochs=epochs)
     trainer.train()
 
 
-def run_ps(trainers):
+def run_ps(trainers, output_folder, epochs, delay):
     """
     This is the main function which launches the training of all the slaves
     """
     logger.info("Start training")
-    ps_rref = rpc.RRef(BatchUpdateParameterServer())
+    ps_rref = rpc.RRef(BatchUpdateParameterServer(delay, len(trainers)))
     futs = []
     dataset = torchvision.datasets.MNIST('./../data/mnist_data', 
                                                 download=True, 
@@ -188,21 +189,21 @@ def run_ps(trainers):
                                 shuffle=True)
 
         futs.append(
-            rpc.rpc_async(trainer, run_trainer, args=(ps_rref,dataloader, id+1,))
+            rpc.rpc_async(trainer, run_trainer, args=(ps_rref,dataloader, id+1,epochs,))
         )
 
     torch.futures.wait_all(futs)
     ps = ps_rref.to_here()
-    np.savetxt("loss.txt", ps.losses)
+    
+    np.savetxt(os.path.join(output_folder,"loss.txt"), ps.losses)
     lnorms = ps.lnorms
-    np.savetxt("norms.txt", ps.norms)
-    print("lnorms size", len(lnorms))
+    np.savetxt(os.path.join(output_folder,"norms.txt"), ps.norms)
     for i in range(len(lnorms)):
-        np.savetxt(f"lnorms{i}.txt", lnorms[i])
+        np.savetxt(os.path.join(output_folder, f"lnorms{i}.txt"), lnorms[i])
     logger.info("Finish training")
 
 
-def run(rank, world_size):
+def run(rank, world_size, output_folder, epochs, delay):
     """
     Creates the PS and launches the trainers
     """
@@ -226,7 +227,7 @@ def run(rank, world_size):
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)])
+        run_ps([f"trainer{r}" for r in range(1, world_size)], output_folder, epochs, delay)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -254,10 +255,30 @@ if __name__=="__main__":
         default="29500",
         help="""Port that master is listening on, will default to 29500 if not
         provided. Master must be able to accept network traffic on the host and port.""")
-
-
+    parser.add_argument(
+        "--output",
+        type=str,
+        default="./results/dnn_mnist_async",
+        help="""Output folder.""")
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=5,
+        help="""Number of epochs"""),
+    parser.add_argument(
+        "--delay",
+        type=float,
+        default=0.5,
+        help="""delay in seconds""")
     args = parser.parse_args()
+    output_folder = args.output
+    epochs = args.epochs
+    delay = args.delay
+    if not(os.path.exists(output_folder)):
+        os.mkdir(output_folder)
+    
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     world_size = args.world_size
-    mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
+    
+    mp.spawn(run, args=(world_size, output_folder, epochs, delay,), nprocs=world_size, join=True)
