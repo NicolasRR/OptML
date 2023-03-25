@@ -20,7 +20,7 @@ import copy
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 # create file handler which logs even debug messages
-fh = logging.FileHandler('log.log', mode="w")
+fh = logging.FileHandler('/results/dnn_mnist_each/log.log', mode="w")
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
