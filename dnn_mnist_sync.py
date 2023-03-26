@@ -1,4 +1,3 @@
-import sys
 import os
 import threading
 from datetime import datetime
@@ -17,59 +16,30 @@ import logging
 import numpy as np
 import matplotlib.pyplot as plt
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-# create file handler which logs even debug messages
-fh = logging.FileHandler('log.log', mode="w")
-fh.setLevel(logging.DEBUG)
-# create console handler with a higher log level
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-# create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-fh.setFormatter(formatter)
-# add the handlers to logger
-logger.addHandler(ch)
-logger.addHandler(fh)
-
 DEFAULT_WORLD_SIZE = 4
+DEFAULT_TRAIN_SPLIT = 1
 BATCH_SIZE = 32
 MODEL_PATH = "model.pt"
-TRAIN_SIZE = 6000
 
-def timed_log(text):
-    print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
+def setup_logger():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    # create file handler which logs even debug messages
+    fh = logging.FileHandler('log.log', mode="w")
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    fh.setFormatter(formatter)
+    # add the handlers to logger
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+
+    return logger
     
-
-train_data = torchvision.datasets.MNIST('./../data/mnist_data', 
-                                                download=True, 
-                                                train=True,
-                                                transform=torchvision.transforms.Compose([
-                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                ]))
-subsample_train_indices = torch.randperm(len(train_data))[:TRAIN_SIZE]
-TRAIN_LOADER = DataLoader(train_data, batch_size=BATCH_SIZE, sampler=SubsetRandomSampler(subsample_train_indices)) 
-
-#TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
-#                                                download=True, 
-#                                                train=True,
-#                                                transform=torchvision.transforms.Compose([
-#                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-#                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-#                                                ])), 
-#                                batch_size=BATCH_SIZE, 
-#                                shuffle=True)
-TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
-                                                    download=True, 
-                                                    train=False,
-                                                    transform=torchvision.transforms.Compose([
-                                                        torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-                                                        torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                    ])), 
-                                    batch_size=BATCH_SIZE, 
-                                    shuffle=True)
 
 class Net(nn.Module):
     def __init__(self):
@@ -100,8 +70,9 @@ class Net(nn.Module):
 
 class BatchUpdateParameterServer(object):
 
-    def __init__(self, batch_update_size):
+    def __init__(self, batch_update_size, logger):
         self.model = Net()
+        self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
         self.batch_update_size = batch_update_size
@@ -119,14 +90,14 @@ class BatchUpdateParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads,id, loss):
         self = ps_rref.local_value()
-        logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
+        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None )and (g is not None):
                 p.grad += g
             elif(p.grad is None):
-                logger.debug(f"None p.grad detected from worker {id}")
+                self.logger.debug(f"None p.grad detected from worker {id}")
             else: 
-                logger.debug("None g detected")
+                self.logger.debug("None g detected")
         self.loss = np.append(self.loss, loss)
         with self.lock:
             self.curr_update_size += 1
@@ -137,16 +108,16 @@ class BatchUpdateParameterServer(object):
                     if p.grad is not None:
                         p.grad /= self.batch_update_size
                     else:
-                        logger.debug(f"None p.grad detected for the update")
+                        self.logger.debug(f"None p.grad detected for the update")
                         self.optimizer.zero_grad()
                 self.curr_update_size = 0
                 self.losses = np.append(self.losses, self.loss.mean())
-                logger.debug(f"Loss is {self.losses[-1]}")
+                self.logger.debug(f"Loss is {self.losses[-1]}")
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)
                 fut.set_result(self.model)
-                logger.debug("PS updated model")
+                self.logger.debug("PS updated model")
                 self.future_model = torch.futures.Future()
 
         return fut
@@ -154,12 +125,17 @@ class BatchUpdateParameterServer(object):
 
 class Trainer(object):
 
-    def __init__(self, ps_rref):
+    def __init__(self, ps_rref, train_loader, logger):
         self.ps_rref = ps_rref
+        self.train_loader = train_loader
         self.loss_fn = nn.functional.nll_loss
+        self.logger = logger
+        worker_name = rpc.get_worker_info().name
+        #logger.info(f"Worker {worker_name} is working on a dataset of size {len(train_loader.sampler)}")
+        self.logger.debug(f"Worker {worker_name} is working on a dataset of size {len(train_loader.sampler)}")
 
     def get_next_batch(self):
-        for (inputs,labels) in tqdm(TRAIN_LOADER):#, desc=f"ML loss {self.ps_rref.local_value().losses[-1]}"):
+        for (inputs,labels) in tqdm(self.train_loader):
 
             yield inputs, labels
 
@@ -178,18 +154,18 @@ class Trainer(object):
         torch.save(m.state_dict(), 'model.pth')
 
 
-def run_trainer(ps_rref):
-    trainer = Trainer(ps_rref)
+def run_trainer(ps_rref, train_loader, logger):
+    trainer = Trainer(ps_rref, train_loader, logger)
     trainer.train()
 
 
-def run_ps(trainers, batch_update_size):
+def run_ps(trainers, batch_update_size, train_loader, logger):
     logger.info("Start training")
-    ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size))
+    ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size, logger))
     futs = []
     for trainer in trainers:
         futs.append(
-            rpc.rpc_async(trainer, run_trainer, args=(ps_rref,))
+            rpc.rpc_async(trainer, run_trainer, args=(ps_rref, train_loader, logger))
         )
 
     torch.futures.wait_all(futs)
@@ -203,8 +179,8 @@ def run_ps(trainers, batch_update_size):
 
 
 
-def run(rank, world_size):
-
+def run(rank, world_size, train_loader):
+    logger = setup_logger()
     options=rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
@@ -224,7 +200,7 @@ def run(rank, world_size):
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1)
+        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1, train_loader, logger)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -237,15 +213,14 @@ if __name__=="__main__":
     parser.add_argument(
         "--world_size",
         type=int,
-        default=DEFAULT_WORLD_SIZE,
+        default=None,
         help="""Total number of participating processes. Should be the sum of
         master node and all training nodes.""")
     parser.add_argument(
-        "--train_size",
-        type=int,
-        default=TRAIN_SIZE,
-        help="""Total number of participating processes. Should be the sum of
-        master node and all training nodes.""")
+        "--train_split",
+        type=float,
+        default=None,
+        help="""Percentage of the training dataset to be used for training.""")
     parser.add_argument(
         "--master_addr",
         type=str,
@@ -263,14 +238,32 @@ if __name__=="__main__":
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
-    if len(sys.argv) < 3:
-        print(f"Using default world_size value: {args.world_size}")
+    if args.world_size is None:
+        args.world_size = DEFAULT_WORLD_SIZE
+        print(f"Using default world_size value: {DEFAULT_WORLD_SIZE}")
     elif args.world_size < 2:
         print("Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)")
         exit()
-    elif args.train_size > 50000 or args.train_size < 1000:
-        print("Forbidden value !!! train_size must be in range 1000 - 60000")
+
+    if args.train_split is None:
+        args.train_split = DEFAULT_TRAIN_SPLIT
+        print(f"Using default train_split value: {DEFAULT_TRAIN_SPLIT}")
+    elif args.train_split > 1 or args.train_split <= 0:
+        print("Forbidden value !!! train_split must be between (0,1]")
         exit()
-        
-    world_size = args.world_size
-    mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
+    
+    train_data = torchvision.datasets.MNIST('./../data/mnist_data', 
+                                        download=True, 
+                                        train=True,
+                                        transform=torchvision.transforms.Compose([
+                                            torchvision.transforms.ToTensor(),
+                                            torchvision.transforms.Normalize((0.1307,), (0.3081,))
+                                        ]))
+    # Shuffle and split the train_data
+    train_data_indices = torch.randperm(len(train_data))
+    split_idx = int(args.train_split * len(train_data))
+    subsample_train_indices = train_data_indices[:split_idx]
+    train_loader  = DataLoader(train_data, batch_size=BATCH_SIZE, sampler=SubsetRandomSampler(subsample_train_indices)) 
+
+
+    mp.spawn(run, args=(args.world_size, train_loader), nprocs=args.world_size, join=True)
