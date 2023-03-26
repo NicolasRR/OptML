@@ -5,3 +5,4 @@ loss.png
 log.log
 *.log
 data
+model.pth
