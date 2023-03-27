@@ -32,3 +32,5 @@ To use *dnn_mnist.py* you have to activate the base environment inside the conta
 
 Option 2:
 For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_size N` with $N \geqslant 2$.
+
+Our scripts accept various arguments from the command line, to see all the arguments available: `python3 dnn_mnist.py -h` or `python3 dnn_mnist.py --help`
