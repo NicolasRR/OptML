@@ -252,7 +252,7 @@ if __name__=="__main__":
         print("Forbidden value !!! train_split must be between (0,1]")
         exit()
     
-    train_data = torchvision.datasets.MNIST('./../data/mnist_data', 
+    train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
                                         train=True,
                                         transform=torchvision.transforms.Compose([
