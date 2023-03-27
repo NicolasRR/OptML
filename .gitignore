@@ -3,5 +3,5 @@
 *.log
 *.png
 *.txt
-model.pth
+*.pth
 data/
