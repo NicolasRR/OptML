@@ -294,7 +294,6 @@ if __name__=="__main__":
     train_data_indices = torch.randperm(len(train_data))
     train_length = int(args.train_split * len(train_data))
     subsample_train_indices = train_data_indices[:train_length]
-    train_loader  = DataLoader(train_data, batch_size=args.batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
 
     if args.batch_size is None:
         args.batch_size = DEFAULT_BATCH_SIZE
@@ -302,5 +301,7 @@ if __name__=="__main__":
     elif args.batch_size < 1 or args.batch_size > train_length:
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
+
+    train_loader  = DataLoader(train_data, batch_size=args.batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
 
     mp.spawn(run, args=(args.world_size, train_loader, args.lr, args.momentum), nprocs=args.world_size, join=True)
