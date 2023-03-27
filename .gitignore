@@ -3,3 +3,4 @@
 *.txt
 data/
 results/
+model.pth
