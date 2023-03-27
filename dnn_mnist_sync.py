@@ -180,7 +180,7 @@ def run_ps(trainers, batch_update_size, train_loader, logger, learning_rate, mom
 
 
 def run(rank, world_size, train_loader, learning_rate, momentum):
-    logger = setup_logger()
+    logger= setup_logger()
     options=rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
@@ -205,11 +205,22 @@ def run(rank, world_size, train_loader, learning_rate, momentum):
     # block until all rpcs finish
     rpc.shutdown()
 
-
 if __name__=="__main__":
 
     parser = argparse.ArgumentParser(
         description="Asynchronous-parameter-Server RPC based training")
+    parser.add_argument(
+        "--master_port",
+        type=str,
+        default="29500",
+        help="""Port that master is listening on, will default to 29500 if not
+        provided. Master must be able to accept network traffic on the host and port.""")
+    parser.add_argument(
+        "--master_addr",
+        type=str,
+        default="0.0.0.0",
+        help="""Address of master, will default to localhost if not provided.
+        Master must be able to accept network traffic on the address + port.""")
     parser.add_argument(
         "--world_size",
         type=int,
@@ -221,18 +232,6 @@ if __name__=="__main__":
         type=float,
         default=None,
         help="""Percentage of the training dataset to be used for training (0,1].""")
-    parser.add_argument(
-        "--master_addr",
-        type=str,
-        default="0.0.0.0",
-        help="""Address of master, will default to localhost if not provided.
-        Master must be able to accept network traffic on the address + port.""")
-    parser.add_argument(
-        "--master_port",
-        type=str,
-        default="29500",
-        help="""Port that master is listening on, will default to 29500 if not
-        provided. Master must be able to accept network traffic on the host and port.""")
     parser.add_argument(
         "--lr",
         type=float,
