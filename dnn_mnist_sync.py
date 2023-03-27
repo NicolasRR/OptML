@@ -131,8 +131,8 @@ class Trainer(object):
         self.loss_fn = nn.functional.nll_loss
         self.logger = logger
         worker_name = rpc.get_worker_info().name
-        #logger.info(f"Worker {worker_name} is working on a dataset of size {len(train_loader.sampler)}")
-        self.logger.debug(f"Worker {worker_name} is working on a dataset of size {len(train_loader.sampler)}")
+        logger.info(f"Worker {worker_name} is working on a dataset of size {len(train_loader.sampler)}")
+        #self.logger.debug(f"Worker {worker_name} is working on a dataset of size {len(train_loader.sampler)}")
 
     def get_next_batch(self):
         for (inputs,labels) in tqdm(self.train_loader):
