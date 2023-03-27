@@ -18,8 +18,9 @@ import matplotlib.pyplot as plt
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
-BATCH_SIZE = 32
-MODEL_PATH = "model.pt"
+DEFAULT_LR = 1e-3
+DEFAULT_MOMENTUM = 0.0
+DEFAULT_BATCH_SIZE = 32
 
 def setup_logger():
     logger = logging.getLogger(__name__)
@@ -70,14 +71,14 @@ class Net(nn.Module):
 
 class BatchUpdateParameterServer(object):
 
-    def __init__(self, batch_update_size, logger):
+    def __init__(self, batch_update_size, logger, learning_rate, momentum):
         self.model = Net()
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
         self.batch_update_size = batch_update_size
         self.curr_update_size = 0
-        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-3)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=learning_rate, momentum= momentum)
         self.losses = np.array([])
         self.loss = np.array([])
         for p in self.model.parameters():
@@ -151,7 +152,7 @@ class Trainer(object):
                 args=(self.ps_rref, [p.grad for p in m.parameters()], name, loss.detach().sum()),
             )
         # Saving the model
-        torch.save(m.state_dict(), 'model.pth')
+        torch.save(m.state_dict(), 'mnist_sync.pt')
 
 
 def run_trainer(ps_rref, train_loader, logger):
@@ -159,9 +160,9 @@ def run_trainer(ps_rref, train_loader, logger):
     trainer.train()
 
 
-def run_ps(trainers, batch_update_size, train_loader, logger):
+def run_ps(trainers, batch_update_size, train_loader, logger, learning_rate, momentum):
     logger.info("Start training")
-    ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size, logger))
+    ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
     for trainer in trainers:
         futs.append(
@@ -179,7 +180,7 @@ def run_ps(trainers, batch_update_size, train_loader, logger):
 
 
 
-def run(rank, world_size, train_loader):
+def run(rank, world_size, train_loader, learning_rate, momentum):
     logger = setup_logger()
     options=rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
@@ -200,7 +201,7 @@ def run(rank, world_size, train_loader):
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1, train_loader, logger)
+        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -233,11 +234,27 @@ if __name__=="__main__":
         default="29500",
         help="""Port that master is listening on, will default to 29500 if not
         provided. Master must be able to accept network traffic on the host and port.""")
+    parser.add_argument(
+        "--lr",
+        type=float,
+        default=None,
+        help="""Learning rate of SGD.""")
+    parser.add_argument(
+        "--momentum",
+        type=float,
+        default=None,
+        help="""Momentum of SGD.""")
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=None,
+        help="""Batch size of SGD.""")
 
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
+    
     if args.world_size is None:
         args.world_size = DEFAULT_WORLD_SIZE
         print(f"Using default world_size value: {DEFAULT_WORLD_SIZE}")
@@ -251,6 +268,20 @@ if __name__=="__main__":
     elif args.train_split > 1 or args.train_split <= 0:
         print("Forbidden value !!! train_split must be between (0,1]")
         exit()
+
+    if args.lr is None:
+        args.lr = DEFAULT_LR
+        print(f"Using default lr: {DEFAULT_LR}")
+    elif args.lr <= 0:
+        print("Forbidden value !!! lr must be between (0,+inf)")
+        exit()
+
+    if args.momentum is None:
+        args.momentum = DEFAULT_MOMENTUM
+        print(f"Using default momentum: {DEFAULT_MOMENTUM}")
+    elif args.momentum < 0:
+        print("Forbidden value !!! momentum must be between [0,+inf)")
+        exit()
     
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
@@ -261,9 +292,15 @@ if __name__=="__main__":
                                         ]))
     # Shuffle and split the train_data
     train_data_indices = torch.randperm(len(train_data))
-    split_idx = int(args.train_split * len(train_data))
-    subsample_train_indices = train_data_indices[:split_idx]
-    train_loader  = DataLoader(train_data, batch_size=BATCH_SIZE, sampler=SubsetRandomSampler(subsample_train_indices)) 
+    train_length = int(args.train_split * len(train_data))
+    subsample_train_indices = train_data_indices[:train_length]
+    train_loader  = DataLoader(train_data, batch_size=args.batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
 
+    if args.batch_size is None:
+        args.batch_size = DEFAULT_BATCH_SIZE
+        print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
+    elif args.batch_size < 1 or args.batch_size > train_length:
+        print("Forbidden value !!! batch_size must be between [1,len(train set)]")
+        exit()
 
-    mp.spawn(run, args=(args.world_size, train_loader), nprocs=args.world_size, join=True)
+    mp.spawn(run, args=(args.world_size, train_loader, args.lr, args.momentum), nprocs=args.world_size, join=True)
