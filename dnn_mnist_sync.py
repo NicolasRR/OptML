@@ -215,12 +215,12 @@ if __name__=="__main__":
         type=int,
         default=None,
         help="""Total number of participating processes. Should be the sum of
-        master node and all training nodes.""")
+        master node and all training nodes [2,+inf].""")
     parser.add_argument(
         "--train_split",
         type=float,
         default=None,
-        help="""Percentage of the training dataset to be used for training.""")
+        help="""Percentage of the training dataset to be used for training (0,1].""")
     parser.add_argument(
         "--master_addr",
         type=str,
@@ -237,17 +237,17 @@ if __name__=="__main__":
         "--lr",
         type=float,
         default=None,
-        help="""Learning rate of SGD.""")
+        help="""Learning rate of SGD  (0,+inf).""")
     parser.add_argument(
         "--momentum",
         type=float,
         default=None,
-        help="""Momentum of SGD.""")
+        help="""Momentum of SGD  [0,+inf).""")
     parser.add_argument(
         "--batch_size",
         type=int,
         default=None,
-        help="""Batch size of SGD.""")
+        help="""Batch size of SGD [1,len(train set)].""")
 
 
     args = parser.parse_args()
