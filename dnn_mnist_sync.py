@@ -116,14 +116,14 @@ class ParameterServer(object):
     
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads, id, loss):
+    def update_and_fetch_model(ps_rref, grads, worker_name, worker_batch_count, total_batches_to_run, loss):
         self = ps_rref.local_value()
-        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {id})")
+        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run})")
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None )and (grad is not None):
                 param.grad += grad
             elif(param.grad is None):
-                self.logger.debug(f"None param.grad detected from worker {id}")
+                self.logger.debug(f"None param.grad detected from worker {worker_name}")
             else: 
                 self.logger.debug("None grad detected")
         self.loss = np.append(self.loss, loss)
@@ -159,10 +159,11 @@ class Worker(object):
         self.train_loader = train_loader
         self.loss_fn = nn.functional.nll_loss
         self.logger = logger
-        #self.batch_count = 0
+        self.batch_count = 0
         self.worker_name = rpc.get_worker_info().name
         #self.logger.info(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}")
-        self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}")
+        self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}") #length of the subtrain set
+        #self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
         if self.worker_name == "Worker_1":
@@ -181,10 +182,11 @@ class Worker(object):
         for inputs, labels in self.get_next_batch():
             loss = self.loss_fn(worker_model(inputs), labels)
             loss.backward()
+            self.batch_count += 1
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, loss.detach().sum()),
+                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, self.batch_count, len(self.train_loader), loss.detach().sum()),
             )
 
 
