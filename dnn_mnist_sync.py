@@ -1,6 +1,6 @@
 import os
 import threading
-
+import queue
 import torch
 import torch.nn as nn
 from torch import optim
@@ -8,10 +8,11 @@ import torch.distributed.rpc as rpc
 import torch.multiprocessing as mp
 from torch.utils.data import DataLoader, SubsetRandomSampler
 import torchvision
-
+from multiprocessing import Manager
 import argparse
 from tqdm import tqdm
 import logging
+import logging.handlers
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -21,24 +22,48 @@ DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_BATCH_SIZE = 32
 
-def setup_logger():
+def setup_logger(log_queue):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-    # create file handler which logs even debug messages
-    fh = logging.FileHandler('log.log', mode="w")
-    fh.setLevel(logging.DEBUG)
-    # create console handler with a higher log level
+
+    qh = QueueHandler(log_queue)
+    qh.setLevel(logging.DEBUG)
+
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
-    # create formatter and add it to the handlers
+
+    fh = logging.FileHandler("log.log")
+    fh.setLevel(logging.DEBUG)
+
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(formatter)
+    qh.setFormatter(formatter)
     fh.setFormatter(formatter)
-    # add the handlers to logger
+
     logger.addHandler(ch)
+    logger.addHandler(qh)
     logger.addHandler(fh)
 
     return logger
+
+class QueueHandler(logging.Handler):
+    def __init__(self, log_queue):
+        super().__init__()
+        self.log_queue = log_queue
+
+    def emit(self, record):
+        self.log_queue.put(record)
+
+def log_writer(log_queue):
+    with open('log.log', 'w') as log_file:
+        while True:
+            try:
+                record = log_queue.get(timeout=1)
+                if record is None:
+                    break
+                log_file.write(record.getMessage() + "\n")
+            except queue.Empty:
+                continue
     
 
 class Net(nn.Module):
@@ -68,7 +93,7 @@ class Net(nn.Module):
         output = nn.functional.log_softmax(x, dim=1)
         return output
 
-class BatchUpdateParameterServer(object):
+class ParameterServer(object):
 
     def __init__(self, batch_update_size, logger, learning_rate, momentum):
         self.model = Net()
@@ -85,6 +110,12 @@ class BatchUpdateParameterServer(object):
         
     def get_model(self):
         return self.model
+    
+    def log_info_message(self, message):
+        self.logger.info(message)
+
+    def log_debug_message(self, message):
+        self.logger.debug(message)
 
     @staticmethod
     @rpc.functions.async_execution
@@ -123,49 +154,53 @@ class BatchUpdateParameterServer(object):
         return fut
 
 
-class Trainer(object):
+class Worker(object):
 
     def __init__(self, ps_rref, train_loader, logger):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_fn = nn.functional.nll_loss
         self.logger = logger
-        worker_name = rpc.get_worker_info().name
-        self.logger.info(f"{worker_name} is working on a dataset of size {len(train_loader.sampler)}")
-        #self.logger.debug(f"{worker_name} is working on a dataset of size {len(train_loader.sampler)}")
+        self.worker_name = rpc.get_worker_info().name
+        #self.logger.info(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}")
+        self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}")
 
     def get_next_batch(self):
         for (inputs,labels) in tqdm(self.train_loader):
-
             yield inputs, labels
 
+    def log_info_message(self, message):
+        self.logger.info(message)
+
+    def log_debug_message(self, message):
+        self.logger.debug(message)
+
     def train(self):
-        name = rpc.get_worker_info().name
         m = self.ps_rref.rpc_sync().get_model()
         for inputs, labels in self.get_next_batch():
             loss = self.loss_fn(m(inputs), labels)
             loss.backward()
             m = rpc.rpc_sync(
                 self.ps_rref.owner(),
-                BatchUpdateParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.parameters()], name, loss.detach().sum()),
+                ParameterServer.update_and_fetch_model,
+                args=(self.ps_rref, [p.grad for p in m.parameters()], self.worker_name, loss.detach().sum()),
             )
         # Saving the model
         torch.save(m.state_dict(), 'mnist_sync.pt')
 
 
-def run_trainer(ps_rref, train_loader, logger):
-    trainer = Trainer(ps_rref, train_loader, logger)
-    trainer.train()
+def run_worker(ps_rref, train_loader, logger):
+    worker = Worker(ps_rref, train_loader, logger)
+    worker.train()
 
 
-def run_ps(trainers, batch_update_size, train_loader, logger, learning_rate, momentum):
+def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, momentum):
     logger.info("Start training")
-    ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size, logger, learning_rate, momentum))
+    ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
-    for trainer in trainers:
+    for worker in workers:
         futs.append(
-            rpc.rpc_async(trainer, run_trainer, args=(ps_rref, train_loader, logger))
+            rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger))
         )
 
     torch.futures.wait_all(futs)
@@ -179,15 +214,15 @@ def run_ps(trainers, batch_update_size, train_loader, logger, learning_rate, mom
 
 
 
-def run(rank, world_size, train_loader, learning_rate, momentum):
-    logger= setup_logger()
+def run(rank, world_size, train_loader, learning_rate, momentum, log_queue):
+    logger= setup_logger(log_queue)
     options=rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
      )
     if rank != 0:
         rpc.init_rpc(
-            f"trainer{rank}",
+            f"Worker_{rank}",
             rank=rank,
             world_size=world_size,
             rpc_backend_options=options
@@ -195,12 +230,12 @@ def run(rank, world_size, train_loader, learning_rate, momentum):
         # trainer passively waiting for ps to kick off training iterations
     else:
         rpc.init_rpc(
-            "ps",
+            "Parameter_Server",
             rank=rank,
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum)
+        run_ps([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -302,4 +337,12 @@ if __name__=="__main__":
 
     train_loader  = DataLoader(train_data, batch_size=args.batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
 
-    mp.spawn(run, args=(args.world_size, train_loader, args.lr, args.momentum), nprocs=args.world_size, join=True)
+    with Manager() as manager:
+        log_queue = manager.Queue()
+        log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
+
+        log_writer_thread.start()
+        mp.spawn(run, args=(args.world_size, train_loader, args.lr, args.momentum, log_queue), nprocs=args.world_size, join=True)
+
+        log_queue.put(None)
+        log_writer_thread.join()
