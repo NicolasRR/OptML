@@ -22,6 +22,7 @@ DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_BATCH_SIZE = 32
 
+#################################### LOGGER ####################################
 def setup_logger(log_queue):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
@@ -32,17 +33,17 @@ def setup_logger(log_queue):
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
 
-    fh = logging.FileHandler("log.log")
-    fh.setLevel(logging.DEBUG)
+    #fh = logging.FileHandler("log.log")
+    #fh.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(formatter)
     qh.setFormatter(formatter)
-    fh.setFormatter(formatter)
+    #fh.setFormatter(formatter)
 
     logger.addHandler(ch)
     logger.addHandler(qh)
-    logger.addHandler(fh)
+    #logger.addHandler(fh)
 
     return logger
 
@@ -55,21 +56,22 @@ class QueueHandler(logging.Handler):
         self.log_queue.put(record)
 
 def log_writer(log_queue):
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     with open('log.log', 'w') as log_file:
         while True:
             try:
                 record = log_queue.get(timeout=1)
                 if record is None:
                     break
-                log_file.write(record.getMessage() + "\n")
+                msg = formatter.format(record)
+                log_file.write(msg + "\n")
             except queue.Empty:
                 continue
     
-
+#################################### NET ####################################
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout(0.25)
@@ -93,6 +95,7 @@ class Net(nn.Module):
         output = nn.functional.log_softmax(x, dim=1)
         return output
 
+#################################### PARAMETER SERVER ####################################
 class ParameterServer(object):
 
     def __init__(self, batch_update_size, logger, learning_rate, momentum):
@@ -105,39 +108,33 @@ class ParameterServer(object):
         self.optimizer = optim.SGD(self.model.parameters(), lr=learning_rate, momentum= momentum)
         self.losses = np.array([])
         self.loss = np.array([])
-        for p in self.model.parameters():
-            p.grad = torch.zeros_like(p)
+        for params in self.model.parameters():
+            params.grad = torch.zeros_like(params)
         
     def get_model(self):
         return self.model
     
-    def log_info_message(self, message):
-        self.logger.info(message)
-
-    def log_debug_message(self, message):
-        self.logger.debug(message)
-
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads,id, loss):
+    def update_and_fetch_model(ps_rref, grads, id, loss):
         self = ps_rref.local_value()
         self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
-        for p, g in zip(self.model.parameters(), grads):
-            if (p.grad is not None )and (g is not None):
-                p.grad += g
-            elif(p.grad is None):
-                self.logger.debug(f"None p.grad detected from worker {id}")
+        for param, grad in zip(self.model.parameters(), grads):
+            if (param.grad is not None )and (grad is not None):
+                param.grad += grad
+            elif(param.grad is None):
+                self.logger.debug(f"None param.grad detected from worker {id}")
             else: 
-                self.logger.debug("None g detected")
+                self.logger.debug("None grad detected")
         self.loss = np.append(self.loss, loss)
         with self.lock:
             self.curr_update_size += 1
             fut = self.future_model
 
             if self.curr_update_size >= self.batch_update_size:
-                for p in self.model.parameters():
-                    if p.grad is not None:
-                        p.grad /= self.batch_update_size
+                for param in self.model.parameters():
+                    if param.grad is not None:
+                        param.grad /= self.batch_update_size
                     else:
                         self.logger.debug(f"None p.grad detected for the update")
                         self.optimizer.zero_grad()
@@ -154,6 +151,7 @@ class ParameterServer(object):
         return fut
 
 
+#################################### WORKER ####################################
 class Worker(object):
 
     def __init__(self, ps_rref, train_loader, logger):
@@ -169,24 +167,19 @@ class Worker(object):
         for (inputs,labels) in tqdm(self.train_loader):
             yield inputs, labels
 
-    def log_info_message(self, message):
-        self.logger.info(message)
-
-    def log_debug_message(self, message):
-        self.logger.debug(message)
-
     def train(self):
-        m = self.ps_rref.rpc_sync().get_model()
+        worker_model = self.ps_rref.rpc_sync().get_model()
         for inputs, labels in self.get_next_batch():
-            loss = self.loss_fn(m(inputs), labels)
+            loss = self.loss_fn(worker_model(inputs), labels)
             loss.backward()
-            m = rpc.rpc_sync(
+            worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.parameters()], self.worker_name, loss.detach().sum()),
+                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, loss.detach().sum()),
             )
 
 
+#################################### GLOBAL FUNCTIONS ####################################
 def run_worker(ps_rref, train_loader, logger):
     worker = Worker(ps_rref, train_loader, logger)
     worker.train()
@@ -202,11 +195,13 @@ def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, mome
         )
 
     torch.futures.wait_all(futs)
+
     losses = ps_rref.to_here().losses
     plt.plot(range(len(losses)), losses)
     plt.xlabel("Losses")
     plt.ylabel("Update steps")
     plt.savefig("loss.png")
+
     logger.info("Finished training")
     print(f"Final train loss: {losses[-1]}")
 
@@ -243,6 +238,8 @@ def run(rank, world_size, train_loader, learning_rate, momentum, log_queue, save
     # block until all rpcs finish
     rpc.shutdown()
 
+
+#################################### MAIN ####################################
 if __name__=="__main__":
 
     parser = argparse.ArgumentParser(
