@@ -185,8 +185,6 @@ class Worker(object):
                 ParameterServer.update_and_fetch_model,
                 args=(self.ps_rref, [p.grad for p in m.parameters()], self.worker_name, loss.detach().sum()),
             )
-        # Saving the model
-        torch.save(m.state_dict(), 'mnist_sync.pt')
 
 
 def run_worker(ps_rref, train_loader, logger):
@@ -194,7 +192,7 @@ def run_worker(ps_rref, train_loader, logger):
     worker.train()
 
 
-def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, momentum):
+def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE):
     logger.info("Start training")
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
@@ -212,9 +210,15 @@ def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, mome
     logger.info("Finished training")
     print(f"Final train loss: {losses[-1]}")
 
+    if save_model:
+        lr_str = str(learning_rate).split(".")[1].lstrip("0")
+        momentum_str = str(momentum).split(".")[1].lstrip("0") #wont work if momentum is >= 1
+        filename = f"mnist_sync_{batch_update_size+1}_{train_split*100}_{lr_str}_{momentum_str}_{batch_size}.pt"
+        torch.save(ps_rref.to_here().model.state_dict(), filename)
 
 
-def run(rank, world_size, train_loader, learning_rate, momentum, log_queue):
+
+def run(rank, world_size, train_loader, learning_rate, momentum, log_queue, save_model, train_split, batch_size):
     logger= setup_logger(log_queue)
     options=rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
@@ -235,7 +239,7 @@ def run(rank, world_size, train_loader, learning_rate, momentum, log_queue):
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum)
+        run_ps([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -282,7 +286,10 @@ if __name__=="__main__":
         type=int,
         default=None,
         help="""Batch size of SGD [1,len(train set)].""")
-
+    parser.add_argument(
+        "--no_save_model",
+        action="store_true",
+        help="""If set, the trained model will not be saved.""")
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -315,6 +322,11 @@ if __name__=="__main__":
     elif args.momentum < 0:
         print("Forbidden value !!! momentum must be between [0,+inf)")
         exit()
+
+    if args.no_save_model:
+        save_model = False
+    else:
+        save_model = True
     
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
@@ -342,7 +354,7 @@ if __name__=="__main__":
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, train_loader, args.lr, args.momentum, log_queue), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, train_loader, args.lr, args.momentum, log_queue, save_model, args.train_split, args.batch_size), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()
