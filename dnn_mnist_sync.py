@@ -118,7 +118,7 @@ class ParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads, id, loss):
         self = ps_rref.local_value()
-        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
+        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {id})")
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None )and (grad is not None):
                 param.grad += grad
@@ -159,16 +159,25 @@ class Worker(object):
         self.train_loader = train_loader
         self.loss_fn = nn.functional.nll_loss
         self.logger = logger
+        #self.batch_count = 0
         self.worker_name = rpc.get_worker_info().name
         #self.logger.info(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}")
         self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}")
 
     def get_next_batch(self):
-        for (inputs,labels) in tqdm(self.train_loader):
+        if self.worker_name == "Worker_1":
+            iterable = tqdm(self.train_loader)
+        else:
+            iterable = self.train_loader
+
+        for (inputs, labels) in iterable:
             yield inputs, labels
+        #for (inputs,labels) in tqdm(self.train_loader):
+        #    yield inputs, labels
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()
+
         for inputs, labels in self.get_next_batch():
             loss = self.loss_fn(worker_model(inputs), labels)
             loss.backward()
