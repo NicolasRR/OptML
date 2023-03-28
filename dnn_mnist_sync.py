@@ -211,7 +211,7 @@ def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, mome
     print(f"Final train loss: {losses[-1]}")
 
     if save_model:
-        filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.','')}_{str(learning_rate).replace('.','')}_{str(momentum).replace('.','')}_{batch_size}.pt"
+        filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
         torch.save(ps_rref.to_here().model.state_dict(), filename)
         print(f"Model saved: {filename}")
 
