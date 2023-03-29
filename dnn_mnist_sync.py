@@ -225,7 +225,7 @@ def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, mome
 
 def run(rank, world_size, train_loader, learning_rate, momentum, log_queue, save_model, train_split, batch_size):
     logger= setup_logger(log_queue)
-    options=rpc.TensorPipeRpcBackendOptions(
+    rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
      )
@@ -234,7 +234,7 @@ def run(rank, world_size, train_loader, learning_rate, momentum, log_queue, save
             f"Worker_{rank}",
             rank=rank,
             world_size=world_size,
-            rpc_backend_options=options
+            rpc_backend_options=rpc_backend_options
         )
         # trainer passively waiting for ps to kick off training iterations
     else:
@@ -242,7 +242,7 @@ def run(rank, world_size, train_loader, learning_rate, momentum, log_queue, save
             "Parameter_Server",
             rank=rank,
             world_size=world_size,
-            rpc_backend_options=options
+            rpc_backend_options=rpc_backend_options
         )
         run_ps([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size)
 
