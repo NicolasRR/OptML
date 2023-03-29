@@ -115,9 +115,9 @@ class ParameterServer(object):
     
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads, worker_name, worker_batch_count, worker_epoch, total_batches_to_run, loss):
+    def update_and_fetch_model(ps_rref, grads, worker_name, worker_batch_count, worker_epoch, total_batches_to_run, total_epochs, loss):
         self = ps_rref.local_value()
-        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch})")
+        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})")
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None )and (grad is not None):
                 param.grad += grad
@@ -139,7 +139,7 @@ class ParameterServer(object):
                         self.optimizer.zero_grad()
                 self.curr_update_size = 0
                 self.losses = np.append(self.losses, self.loss.mean())
-                self.logger.debug(f"Loss is {self.losses[-1]}")
+                self.logger.debug(f"Global model loss is {self.losses[-1]}")
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)
@@ -187,7 +187,7 @@ class Worker(object):
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, self.batch_count, self.current_epoch, len(self.train_loader), loss.detach().sum()),
+                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, self.batch_count, self.current_epoch, len(self.train_loader), self.epochs, loss.detach().sum()),
             )
 
 
