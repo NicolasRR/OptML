@@ -14,13 +14,14 @@ from tqdm import tqdm
 import logging
 import logging.handlers
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt #remove if unused
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
 DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_BATCH_SIZE = 32 # 1 == SGD, >1 MINI BATCH SGD
+DEFAULT_EPOCHS = 1
 
 #################################### LOGGER ####################################
 def setup_logger(log_queue):
@@ -152,24 +153,26 @@ class ParameterServer(object):
 #################################### WORKER ####################################
 class Worker(object):
 
-    def __init__(self, ps_rref, train_loader, logger):
+    def __init__(self, ps_rref, train_loader, logger, epochs):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_fn = nn.functional.nll_loss
         self.logger = logger
         self.batch_count = 0
+        self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
         self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}") #length of the subtrain set
         #self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
-        if self.worker_name == "Worker_1":
-            iterable = tqdm(self.train_loader)
-        else:
-            iterable = self.train_loader
+        for _ in range(self.epochs):
+            if self.worker_name == "Worker_1":
+                iterable = tqdm(self.train_loader)
+            else:
+                iterable = self.train_loader
 
-        for (inputs, labels) in iterable:
-            yield inputs, labels
+            for (inputs, labels) in iterable:
+                yield inputs, labels
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()
@@ -187,18 +190,18 @@ class Worker(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker(ps_rref, train_loader, logger):
-    worker = Worker(ps_rref, train_loader, logger)
+def run_worker(ps_rref, train_loader, logger, epochs):
+    worker = Worker(ps_rref, train_loader, logger, epochs)
     worker.train()
 
 
-def run_parameter_server(workers, batch_update_size, train_loader, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE):
+def run_parameter_server(workers, batch_update_size, train_loader, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE, epochs=DEFAULT_EPOCHS):
     logger.info("Start training")
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
     for worker in workers:
         futs.append(
-            rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger))
+            rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs))
         )
 
     torch.futures.wait_all(futs)
@@ -231,7 +234,7 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
 
 
-def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size):
+def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs):
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
@@ -260,7 +263,7 @@ def run(rank, world_size, train_data, train_indices, learning_rate, momentum, lo
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size)
+        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -318,6 +321,11 @@ if __name__=="__main__":
         action="store_true",
         help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
         shared between workers).""")
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=None,
+        help="""Number of epochs for training [1,+inf).""")
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -349,6 +357,13 @@ if __name__=="__main__":
         print(f"Using default momentum: {DEFAULT_MOMENTUM}")
     elif args.momentum < 0:
         print("Forbidden value !!! momentum must be between [0,+inf)")
+        exit()
+
+    if args.epochs is None:
+        args.epochs = DEFAULT_EPOCHS
+        print(f"Using default epochs: {DEFAULT_EPOCHS}")
+    elif args.epochs < 1:
+        print("Forbidden value !!! epochs must be between [1,+inf)")
         exit()
 
     if args.no_save_model:
@@ -385,7 +400,7 @@ if __name__=="__main__":
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()
