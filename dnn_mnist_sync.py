@@ -208,13 +208,27 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
     torch.futures.wait_all(futs)
 
     losses = ps_rref.to_here().losses
-    plt.plot(range(len(losses)), losses)
-    plt.xlabel("Losses")
-    plt.ylabel("Update steps")
-    plt.savefig("loss.png")
+    #plt.plot(range(len(losses)), losses)
+    #plt.xlabel("Losses")
+    #plt.ylabel("Update steps")
+    #plt.savefig("loss.png")
 
     logger.info("Finished training")
     print(f"Final train loss: {losses[-1]}")
+
+    correct_predictions = 0
+    total_predictions = 0
+
+    #memory efficient way (for large datasets)
+    with torch.no_grad():  # No need to track gradients for evaluation
+        for batch_idx, (data, target) in enumerate(train_loader):
+            logits = ps_rref.to_here().model(data)
+            predicted_classes = torch.argmax(logits, dim=1)
+            correct_predictions += (predicted_classes == target).sum().item()
+            total_predictions += target.size(0)
+    final_train_accuracy = correct_predictions / total_predictions
+
+    print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
 
     if save_model:
         filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
