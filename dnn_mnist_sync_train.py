@@ -254,7 +254,8 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
     elif digits is not None:
-        random_digits = random.sample(range(10), digits)
+        random_digits = random.sample(range(10), digits) #randomly creating could be replaced with terminal input
+        print(f"Each worker will be assigned to one of the following digits: {random_digits}")
         digits_indices = []
         for _ in random_digits:
             digits_indices.append([])
@@ -272,7 +273,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
         for i in range(len(digits_indices)):
             digit_indices = copy.deepcopy(digits_indices[i])
             random.shuffle(digit_indices)
-            digit_indices = digit_indices[:len_min_subset]
+            digit_indices = digit_indices[:len_min_subset] #sync mode, datasets must be same length (find the smallest dataset and slice the other ones)
             train_loaders_digits.append(DataLoader(train_data, batch_size=1, sampler=SubsetRandomSampler(digit_indices)))
         for idx, worker in enumerate(workers):
             train_loader = train_loaders_digits[idx]
