@@ -60,7 +60,7 @@ def log_writer(log_queue):
     with open('log.log', 'w') as log_file:
         while True:
             try:
-                record = log_queue.get(timeout=1)
+                record = log_queue.get(timeout=0.5) 
                 if record is None:
                     break
                 msg = formatter.format(record)
@@ -83,7 +83,7 @@ class Net(nn.Module):
         x = self.conv1(x)
         x = nn.functional.relu(x)
         x = self.conv2(x)
-        x = nn.functional.max_pool2d(x, 2)
+        x = nn.functional.max_pool2d(x, kernel_size=2)
 
         x = self.dropout1(x)
         x = torch.flatten(x, 1)
@@ -136,7 +136,7 @@ class ParameterServer(object):
                     if param.grad is not None:
                         param.grad /= self.batch_update_size
                     else:
-                        self.logger.debug(f"None p.grad detected for the update")
+                        self.logger.debug(f"None param.grad detected for the update")
                         self.optimizer.zero_grad()
                 self.curr_update_size = 0
                 self.losses = np.append(self.losses, self.loss.mean())
@@ -196,7 +196,7 @@ def run_worker(ps_rref, train_loader, logger):
     worker.train()
 
 
-def run_ps(workers, batch_update_size, train_loader, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE):
+def run_parameter_server(workers, batch_update_size, train_loader, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE):
     logger.info("Start training")
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
@@ -244,7 +244,7 @@ def run(rank, world_size, train_loader, learning_rate, momentum, log_queue, save
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        run_ps([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size)
+        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size)
 
     # block until all rpcs finish
     rpc.shutdown()
