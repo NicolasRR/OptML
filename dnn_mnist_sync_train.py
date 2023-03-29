@@ -15,6 +15,8 @@ import logging
 import logging.handlers
 import numpy as np
 import matplotlib.pyplot as plt #remove if unused
+import random
+import copy
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -59,7 +61,7 @@ def log_writer(log_queue):
     with open('log.log', 'w') as log_file:
         while True:
             try:
-                record = log_queue.get(timeout=0.5) 
+                record = log_queue.get(timeout=1) 
                 if record is None:
                     break
                 msg = formatter.format(record)
@@ -211,14 +213,72 @@ def run_worker(ps_rref, train_loader, logger, epochs, worker_accuracy):
     worker.train()
 
 
-def run_parameter_server(workers, batch_update_size, train_loader, logger, learning_rate, momentum, train_loader_full, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
+def run_parameter_server(workers, batch_update_size, unique_datasets, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False, digits=None):
+
+    train_data = torchvision.datasets.MNIST('data/', 
+                                        download=True, 
+                                        train=True,
+                                        transform=torchvision.transforms.Compose([
+                                            torchvision.transforms.ToTensor(),
+                                            torchvision.transforms.Normalize((0.1307,), (0.3081,))
+                                        ]))
+    # Shuffle and split the train_data
+    train_data_indices = torch.randperm(len(train_data))
+    train_length = int(train_split * len(train_data))
+    subsample_train_indices = train_data_indices[:train_length]
+    if batch_size is None:
+        batch_size = DEFAULT_BATCH_SIZE
+        print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
+    elif batch_size < 1 or batch_size > train_length:
+        print("Forbidden value !!! batch_size must be between [1,len(train set)]")
+        exit()
+
+    #train loader for final global accuracy, useful when workers don't share samples
+    train_loader_full = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
+    
     logger.info("Start training")
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
-    for worker in workers:
-        futs.append(
-            rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
-        )
+
+    if not unique_datasets and digits is None: #workers sharing samples
+        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
+        for idx, worker in enumerate(workers):
+            futs.append(
+                rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
+            )
+    elif unique_datasets and digits is None:
+        worker_indices = subsample_train_indices.chunk(batch_update_size) # Split the train_indices based on the number of workers (world_size - 1)
+        for idx, worker in enumerate(workers):
+            train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_indices[idx])) 
+            futs.append(
+                rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
+            )
+    elif digits is not None:
+        random_digits = random.sample(range(10), digits)
+        digits_indices = []
+        for _ in random_digits:
+            digits_indices.append([])
+        
+        for i in range(len(train_data)):
+            _, label = train_data[i]
+            for j, digit in enumerate(random_digits):
+                if digit == label:
+                    digits_indices[j].append(i)
+        len_min_subset = train_length
+        for i in range(len(digits_indices)):
+            if len(digits_indices[i]) < len_min_subset:
+                len_min_subset = len(digits_indices[i])
+        train_loaders_digits = []
+        for i in range(len(digits_indices)):
+            digit_indices = copy.deepcopy(digits_indices[i])
+            random.shuffle(digit_indices)
+            digit_indices = digit_indices[:len_min_subset]
+            train_loaders_digits.append(DataLoader(train_data, batch_size=1, sampler=SubsetRandomSampler(digit_indices)))
+        for idx, worker in enumerate(workers):
+            train_loader = train_loaders_digits[idx]
+            futs.append(
+                rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
+            )
 
     torch.futures.wait_all(futs)
 
@@ -250,45 +310,31 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
 
 
-def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy, worker_digit):
+def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits):
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
     )
-    #train loader for final global accuracy, useful when workers don't share samples
-    train_loader_full = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
-    
-    if not unique_datasets: #workers sharing samples
-        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
-    elif unique_datasets and not worker_digit: # Split the train_indices based on the number of workers (world_size - 1)
-        worker_indices = train_indices.chunk(world_size - 1)
-        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_indices[rank-1])) 
-    elif worker_digit and rank > 0: #1 worker <==> 1digit
-        digit = rank - 1
-        digit_subset_indices = list() #torch tensor
-        for i in range(len(train_data)):
-            _, label = train_data[i]
-            if label == digit:
-                digit_subset_indices.append(i)
-        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(digit_subset_indices)) 
 
     if rank != 0:
+        #starting up worker
         rpc.init_rpc(
             f"Worker_{rank}",
             rank=rank,
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        # trainer passively waiting for parameter server to kick off training iterations
+        # worker passively waiting for parameter server to kick off training iterations
     else:
+        # parameter server gives data to the workers
         rpc.init_rpc(
             "Parameter_Server",
             rank=rank,
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, train_loader_full, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
+        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, unique_datasets, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -360,9 +406,11 @@ if __name__=="__main__":
         action="store_true",
         help="""If set, will compute the train accuracy of each worker after training (useful when --unique_datasets).""")
     parser.add_argument(
-        "--worker_digit",
-        action="store_true",
-        help="""If set, it will split the MNIST dataset in ten parts, one part per digit, and each part will be assigned to a worker.""")
+        "--digits",
+        type=int,
+        default=None,
+        help="""Reprensents the amount of digits that will be trained in parallel, it will split the MNIST dataset in {digits} parts, one part per digit, and each part will be assigned to a worker.
+        This mode requires --world_size {digits +1} --train_split 1 --batch_size 1, don't use --unique_datasets.""")
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -423,47 +471,44 @@ if __name__=="__main__":
     else:
         worker_accuracy = False
 
-    if args.worker_digit:
-        worker_digit = True
-    else:
-        worker_digit = False
-
-    if worker_digit:
-        if unique_datasets:
-            print("Please use --worker_digit without --unique_datasets")
+    if args.digits is not None:
+        if args.digits < 1 or args.digits > 10:
+            print("Forbidden value !!! digits must be between [1,10]")
+            exit()
+        elif unique_datasets:
+            print("Please use --digits without --unique_datasets")
             exit()
         elif args.train_split < 1:
-            print("Please use --worker_digit with the default train_split value")
+            print("Please use --digits with the default train_split value (train_split equal to 1)")
             exit()
-        elif args.world_size != 11:
-            print("Please use --worker_digit with --world_size 11")
+        elif args.world_size != args.digits+1:
+            print("Please use --digits with --world_size {digits+1}")
+            exit()
+        elif args.batch_size != 1:
+            print("Please use --digits with the --batch_size 1")
             exit()
 
-    train_data = torchvision.datasets.MNIST('data/', 
-                                        download=True, 
-                                        train=True,
-                                        transform=torchvision.transforms.Compose([
-                                            torchvision.transforms.ToTensor(),
-                                            torchvision.transforms.Normalize((0.1307,), (0.3081,))
-                                        ]))
-    # Shuffle and split the train_data
-    train_data_indices = torch.randperm(len(train_data))
-    train_length = int(args.train_split * len(train_data))
-    subsample_train_indices = train_data_indices[:train_length]
-
-    if args.batch_size is None:
-        args.batch_size = DEFAULT_BATCH_SIZE
-        print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
-    elif args.batch_size < 1 or args.batch_size > train_length:
-        print("Forbidden value !!! batch_size must be between [1,len(train set)]")
-        exit()
 
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, worker_digit), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, args.digits), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()
+
+
+"""
+Digit 0: 5923 batches
+Digit 1: 6742 batches
+Digit 2: 5958 batches
+Digit 3: 6131 batches
+Digit 4: 5842 batches
+Digit 5: 5421 batches
+Digit 6: 5918 batches
+Digit 7: 6265 batches
+Digit 8: 5851 batches
+Digit 9: 5949 batches
+"""
