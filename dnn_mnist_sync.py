@@ -328,7 +328,7 @@ if __name__=="__main__":
         "--batch_size",
         type=int,
         default=None,
-        help="""Batch size of SGD [1,len(train set)].""")
+        help="""Batch size of Mini batch SGD [1,len(train set)].""")
     parser.add_argument(
         "--no_save_model",
         action="store_true",
