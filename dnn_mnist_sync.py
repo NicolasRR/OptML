@@ -20,7 +20,7 @@ DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
 DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
-DEFAULT_BATCH_SIZE = 32
+DEFAULT_BATCH_SIZE = 32 # 1 == SGD, >1 MINI BATCH SGD
 
 #################################### LOGGER ####################################
 def setup_logger(log_queue):
@@ -29,10 +29,8 @@ def setup_logger(log_queue):
 
     qh = QueueHandler(log_queue)
     qh.setLevel(logging.DEBUG)
-
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
-
     #fh = logging.FileHandler("log.log")
     #fh.setLevel(logging.DEBUG)
 
@@ -161,7 +159,6 @@ class Worker(object):
         self.logger = logger
         self.batch_count = 0
         self.worker_name = rpc.get_worker_info().name
-        #self.logger.info(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}")
         self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}") #length of the subtrain set
         #self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
@@ -173,8 +170,6 @@ class Worker(object):
 
         for (inputs, labels) in iterable:
             yield inputs, labels
-        #for (inputs,labels) in tqdm(self.train_loader):
-        #    yield inputs, labels
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()
@@ -219,7 +214,6 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
     correct_predictions = 0
     total_predictions = 0
-
     #memory efficient way (for large datasets)
     with torch.no_grad():  # No need to track gradients for evaluation
         for _, (data, target) in enumerate(train_loader):
@@ -228,7 +222,6 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
             correct_predictions += (predicted_classes == target).sum().item()
             total_predictions += target.size(0)
     final_train_accuracy = correct_predictions / total_predictions
-
     print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
 
     if save_model:
