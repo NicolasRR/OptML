@@ -262,9 +262,6 @@ def run(rank, world_size, train_data, train_indices, learning_rate, momentum, lo
         )
         run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size)
 
-
-
-
     # block until all rpcs finish
     rpc.shutdown()
 
