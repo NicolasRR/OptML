@@ -231,12 +231,20 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
 
 
-def run(rank, world_size, train_loader, learning_rate, momentum, log_queue, save_model, train_split, batch_size):
+def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size):
+    
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
      )
+
+    #create the trainloaders
+    if unique_datasets == False:
+        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
+    else:
+        #create unique trainloaders
+
     if rank != 0:
         rpc.init_rpc(
             f"Worker_{rank}",
@@ -305,6 +313,11 @@ if __name__=="__main__":
         "--no_save_model",
         action="store_true",
         help="""If set, the trained model will not be saved.""")
+    parser.add_argument(
+        "--unique_datasets",
+        action="store_true",
+        help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
+        shared between workers).""")
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -342,6 +355,11 @@ if __name__=="__main__":
         save_model = False
     else:
         save_model = True
+
+    if args.unique_datasets:
+        unique_datasets = False
+    else:
+        unique_datasets = True
     
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
@@ -362,14 +380,12 @@ if __name__=="__main__":
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
 
-    train_loader  = DataLoader(train_data, batch_size=args.batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
-
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, train_loader, args.lr, args.momentum, log_queue, save_model, args.train_split, args.batch_size), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()
