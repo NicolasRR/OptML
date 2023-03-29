@@ -232,18 +232,18 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
 
 def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size):
-    
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
      )
-
     #create the trainloaders
-    if unique_datasets == False:
+    if not unique_datasets:
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
     else:
-        #create unique trainloaders
+        # Split the train_indices based on the number of workers (world_size - 1)
+        worker_indices = train_indices.chunk(world_size - 1)
+        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_indices[rank-1])) 
 
     if rank != 0:
         rpc.init_rpc(
@@ -261,6 +261,9 @@ def run(rank, world_size, train_data, train_indices, learning_rate, momentum, lo
             rpc_backend_options=rpc_backend_options
         )
         run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size)
+
+
+
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -357,10 +360,10 @@ if __name__=="__main__":
         save_model = True
 
     if args.unique_datasets:
-        unique_datasets = False
-    else:
         unique_datasets = True
-    
+    else:
+        unique_datasets = False
+
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
                                         train=True,
