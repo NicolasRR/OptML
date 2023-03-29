@@ -115,9 +115,9 @@ class ParameterServer(object):
     
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads, worker_name, worker_batch_count, total_batches_to_run, loss):
+    def update_and_fetch_model(ps_rref, grads, worker_name, worker_batch_count, worker_epoch, total_batches_to_run, loss):
         self = ps_rref.local_value()
-        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run})")
+        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch})")
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None )and (grad is not None):
                 param.grad += grad
@@ -159,13 +159,15 @@ class Worker(object):
         self.loss_fn = nn.functional.nll_loss
         self.logger = logger
         self.batch_count = 0
+        self.current_epoch = 0
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
         self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}") #length of the subtrain set
         #self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
-        for _ in range(self.epochs):
+        for epoch in range(self.epochs):
+            self.current_epoch = epoch +1
             if self.worker_name == "Worker_1":
                 iterable = tqdm(self.train_loader)
             else:
@@ -185,7 +187,7 @@ class Worker(object):
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, self.batch_count, len(self.train_loader), loss.detach().sum()),
+                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, self.batch_count, self.current_epoch, len(self.train_loader), loss.detach().sum()),
             )
 
 
