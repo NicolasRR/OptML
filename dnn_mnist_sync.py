@@ -153,7 +153,7 @@ class ParameterServer(object):
 #################################### WORKER ####################################
 class Worker(object):
 
-    def __init__(self, ps_rref, train_loader, logger, epochs):
+    def __init__(self, ps_rref, train_loader, logger, epochs, worker_accuracy):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_fn = nn.functional.nll_loss
@@ -162,6 +162,7 @@ class Worker(object):
         self.current_epoch = 0
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
+        self.worker_accuracy = worker_accuracy
         self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}") #length of the subtrain set
         #self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
@@ -184,50 +185,63 @@ class Worker(object):
             loss = self.loss_fn(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
+
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
                 args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, self.batch_count, self.current_epoch, len(self.train_loader), self.epochs, loss.detach().sum()),
             )
+            if self.worker_accuracy:
+                if self.batch_count == len(self.train_loader) and self.current_epoch == self.epochs:
+                    correct_predictions = 0
+                    total_predictions = 0
+                    with torch.no_grad():  # No need to track gradients for evaluation
+                        for _, (data, target) in enumerate(self.train_loader):
+                            logits = worker_model(data)
+                            predicted_classes = torch.argmax(logits, dim=1)
+                            correct_predictions += (predicted_classes == target).sum().item()
+                            total_predictions += target.size(0)
+                        final_train_accuracy = correct_predictions / total_predictions
+                    print(f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker(ps_rref, train_loader, logger, epochs):
-    worker = Worker(ps_rref, train_loader, logger, epochs)
+def run_worker(ps_rref, train_loader, logger, epochs, worker_accuracy):
+    worker = Worker(ps_rref, train_loader, logger, epochs, worker_accuracy)
     worker.train()
 
 
-def run_parameter_server(workers, batch_update_size, train_loader, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE, epochs=DEFAULT_EPOCHS):
+def run_parameter_server(workers, batch_update_size, train_loader, logger, learning_rate, momentum, train_loader_full, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=DEFAULT_BATCH_SIZE, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
     logger.info("Start training")
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
     for worker in workers:
         futs.append(
-            rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs))
+            rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
         )
 
     torch.futures.wait_all(futs)
 
     losses = ps_rref.to_here().losses
+    logger.info("Finished training")
+    print(f"Final train loss: {losses[-1]}")
     #plt.plot(range(len(losses)), losses)
     #plt.xlabel("Losses")
     #plt.ylabel("Update steps")
     #plt.savefig("loss.png")
 
-    logger.info("Finished training")
-    print(f"Final train loss: {losses[-1]}")
-
-    correct_predictions = 0
-    total_predictions = 0
-    #memory efficient way (for large datasets)
-    with torch.no_grad():  # No need to track gradients for evaluation
-        for _, (data, target) in enumerate(train_loader):
-            logits = ps_rref.to_here().model(data)
-            predicted_classes = torch.argmax(logits, dim=1)
-            correct_predictions += (predicted_classes == target).sum().item()
-            total_predictions += target.size(0)
-    final_train_accuracy = correct_predictions / total_predictions
-    print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
+    if model_accuracy:
+        correct_predictions = 0
+        total_predictions = 0
+        #memory efficient way (for large datasets)
+        with torch.no_grad():  # No need to track gradients for evaluation
+            for _, (data, target) in enumerate(train_loader_full):
+                logits = ps_rref.to_here().model(data)
+                predicted_classes = torch.argmax(logits, dim=1)
+                correct_predictions += (predicted_classes == target).sum().item()
+                total_predictions += target.size(0)
+        final_train_accuracy = correct_predictions / total_predictions
+        print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
 
     if save_model:
         filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
@@ -236,12 +250,13 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
 
 
-def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs):
+def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy):
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
      )
+    train_loader_full = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
     #create the trainloaders
     if not unique_datasets:
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
@@ -265,7 +280,7 @@ def run(rank, world_size, train_data, train_indices, learning_rate, momentum, lo
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs)
+        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, train_loader, logger, learning_rate, momentum, train_loader_full, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -328,6 +343,14 @@ if __name__=="__main__":
         type=int,
         default=None,
         help="""Number of epochs for training [1,+inf).""")
+    parser.add_argument(
+        "--model_accuracy",
+        action="store_true",
+        help="""If set, will compute the train accuracy of the global model after training.""")
+    parser.add_argument(
+        "--worker_accuracy",
+        action="store_true",
+        help="""If set, will compute the train accuracy of each worker after training (useful when --unique_datasets).""")
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -378,6 +401,16 @@ if __name__=="__main__":
     else:
         unique_datasets = False
 
+    if args.model_accuracy:
+        model_accuracy = True
+    else:
+        model_accuracy = False
+
+    if args.worker_accuracy:
+        worker_accuracy = True
+    else:
+        worker_accuracy = False
+
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
                                         train=True,
@@ -402,7 +435,7 @@ if __name__=="__main__":
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()
