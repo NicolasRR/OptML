@@ -15,9 +15,9 @@ BATCH_SIZE = 32
 TEST_SIZE = 1000
 
 #%%
-test_data = torchvision.datasets.MNIST('./../data/mnist_data', 
+test_data = torchvision.datasets.MNIST('data/', 
                                                 download=True, 
-                                                train=True,
+                                                train=False,
                                                 transform=torchvision.transforms.Compose([
                                                     torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
                                                     torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
@@ -59,9 +59,6 @@ class Net(nn.Module):
         output = nn.functional.log_softmax(x, dim=1)
         return output
     
-    def predict(self, x):
-        logits = self.forward(x)
-        return F.softmax(logits)
 #%%
 def predict_using_model(X):
     # Creat the CNN
