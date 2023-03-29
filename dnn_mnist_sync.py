@@ -180,6 +180,7 @@ class Worker(object):
         worker_model = self.ps_rref.rpc_sync().get_model()
 
         for inputs, labels in self.get_next_batch():
+            #print(labels, self.worker_name) #check the samples of workers
             loss = self.loss_fn(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
@@ -221,7 +222,7 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
     #memory efficient way (for large datasets)
     with torch.no_grad():  # No need to track gradients for evaluation
-        for batch_idx, (data, target) in enumerate(train_loader):
+        for _, (data, target) in enumerate(train_loader):
             logits = ps_rref.to_here().model(data)
             predicted_classes = torch.argmax(logits, dim=1)
             correct_predictions += (predicted_classes == target).sum().item()
