@@ -250,20 +250,28 @@ def run_parameter_server(workers, batch_update_size, train_loader, logger, learn
 
 
 
-def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy):
+def run(rank, world_size, train_data, train_indices, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy, worker_digit):
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
         rpc_timeout=0 # infinite timeout
-     )
+    )
+    #train loader for final global accuracy, useful when workers don't share samples
     train_loader_full = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
-    #create the trainloaders
-    if not unique_datasets:
+    
+    if not unique_datasets: #workers sharing samples
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(train_indices)) 
-    else:
-        # Split the train_indices based on the number of workers (world_size - 1)
+    elif unique_datasets and not worker_digit: # Split the train_indices based on the number of workers (world_size - 1)
         worker_indices = train_indices.chunk(world_size - 1)
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_indices[rank-1])) 
+    elif worker_digit and rank > 0: #1 worker <==> 1digit
+        digit = rank - 1
+        digit_subset_indices = list() #torch tensor
+        for i in range(len(train_data)):
+            _, label = train_data[i]
+            if label == digit:
+                digit_subset_indices.append(i)
+        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(digit_subset_indices)) 
 
     if rank != 0:
         rpc.init_rpc(
@@ -272,7 +280,7 @@ def run(rank, world_size, train_data, train_indices, learning_rate, momentum, lo
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        # trainer passively waiting for ps to kick off training iterations
+        # trainer passively waiting for parameter server to kick off training iterations
     else:
         rpc.init_rpc(
             "Parameter_Server",
@@ -351,6 +359,10 @@ if __name__=="__main__":
         "--worker_accuracy",
         action="store_true",
         help="""If set, will compute the train accuracy of each worker after training (useful when --unique_datasets).""")
+    parser.add_argument(
+        "--worker_digit",
+        action="store_true",
+        help="""If set, it will split the MNIST dataset in ten parts, one part per digit, and each part will be assigned to a worker.""")
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -411,6 +423,22 @@ if __name__=="__main__":
     else:
         worker_accuracy = False
 
+    if args.worker_digit:
+        worker_digit = True
+    else:
+        worker_digit = False
+
+    if worker_digit:
+        if unique_datasets:
+            print("Please use --worker_digit without --unique_datasets")
+            exit()
+        elif args.train_split < 1:
+            print("Please use --worker_digit with the default train_split value")
+            exit()
+        elif args.world_size != 11:
+            print("Please use --worker_digit with --world_size 11")
+            exit()
+
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
                                         train=True,
@@ -435,7 +463,7 @@ if __name__=="__main__":
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, train_data, subsample_train_indices, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, worker_digit), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()
