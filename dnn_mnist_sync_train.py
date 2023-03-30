@@ -233,14 +233,15 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
 
-    #train loader for final global accuracy, useful when workers don't share samples
-    train_loader_full = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
     
+    train_loader_full = 0 #train loader for final global accuracy, useful when workers don't share samples
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
 
     if not unique_datasets and digits is None: #workers sharing samples
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
+        if model_accuracy:
+            train_loader_full= train_loader
         logger.info("Start training")
         for idx, worker in enumerate(workers):
             futs.append(
@@ -248,6 +249,8 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
             )
     elif unique_datasets and digits is None:
         worker_indices = subsample_train_indices.chunk(batch_update_size) # Split the train_indices based on the number of workers (world_size - 1)
+        if model_accuracy:
+            train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
         logger.info("Start training")
         for idx, worker in enumerate(workers):
             train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_indices[idx])) 
@@ -260,12 +263,11 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
         digits_indices = []
         for _ in random_digits:
             digits_indices.append([])
-        
-        for i in range(len(train_data)):
-            _, label = train_data[i]
+        for i in range(len(subsample_train_indices)):
+            _, label = train_data[subsample_train_indices[i]]
             for j, digit in enumerate(random_digits):
                 if digit == label:
-                    digits_indices[j].append(i)
+                    digits_indices[j].append(subsample_train_indices[i])
         len_min_subset = train_length
         for i in range(len(digits_indices)):
             if len(digits_indices[i]) < len_min_subset:
@@ -273,9 +275,15 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
         train_loaders_digits = []
         for i in range(len(digits_indices)):
             digit_indices = copy.deepcopy(digits_indices[i])
-            random.shuffle(digit_indices)
+            random.shuffle(digit_indices) 
             digit_indices = digit_indices[:len_min_subset] #sync mode, datasets must be same length (find the smallest dataset and slice the other ones)
-            train_loaders_digits.append(DataLoader(train_data, batch_size=1, sampler=SubsetRandomSampler(digit_indices)))
+            digits_indices[i] = digit_indices
+            train_loaders_digits.append(DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(digit_indices)))
+        if model_accuracy:
+            full_digits_list = []
+            for sublist in digits_indices:
+                full_digits_list.extend(sublist)
+            train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(full_digits_list)) 
         logger.info("Start training")
         for idx, worker in enumerate(workers):
             train_loader = train_loaders_digits[idx]
@@ -307,9 +315,18 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
         print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
 
     if save_model:
-        filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
-        torch.save(ps_rref.to_here().model.state_dict(), filename)
-        print(f"Model saved: {filename}")
+        if unique_datasets:
+            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_datasets.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            print(f"Model saved: {filename}")
+        elif  digits is not None:
+            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_digits_{''.join(str(i) for i in random_digits)}.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            print(f"Model saved: {filename}")
+        else:
+            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            print(f"Model saved: {filename}")
 
 
 
@@ -413,7 +430,7 @@ if __name__=="__main__":
         type=int,
         default=None,
         help="""Reprensents the amount of digits that will be trained in parallel, it will split the MNIST dataset in {digits} parts, one part per digit, and each part will be assigned to a worker.
-        This mode requires --world_size {digits +1} --train_split 1 --batch_size 1, don't use --unique_datasets.""")
+        This mode requires --world_size {digits +1} --batch_size 1, don't use --unique_datasets.""")
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -480,9 +497,6 @@ if __name__=="__main__":
             exit()
         elif unique_datasets:
             print("Please use --digits without --unique_datasets")
-            exit()
-        elif args.train_split < 1:
-            print("Please use --digits with the default train_split value (train_split equal to 1)")
             exit()
         elif args.world_size != args.digits+1:
             print("Please use --digits with --world_size {digits+1}")

@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import datasets, transforms
+from torch.utils.data import Subset
 from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
 
@@ -48,8 +49,20 @@ def main(model_path, batch_size):
         transforms.Normalize((0.1307,), (0.3081,))
     ])
 
-    test_dataset = datasets.MNIST('data/', train=False, transform=test_transform)
+    test_dataset = datasets.MNIST('data/', train=False, download=True, transform=test_transform)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+    #if digits in path, extract the learned digits and create a testloader on this digits
+    if "digits" in model_path:
+        split_model_name = model_path.split("_")
+        index = split_model_name.index("digits")
+        digits = split_model_name[index + 1]
+        digits = digits.split(".")[0]
+        digits = [int(d) for d in digits]
+        filtered_indices = [i for i, (_, label) in enumerate(test_dataset) if label in digits]
+        test_dataset = Subset(test_dataset, filtered_indices)
+        test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+        print()
 
     # Evaluate the model on the test dataset
     test_loss = 0
@@ -78,7 +91,10 @@ def main(model_path, batch_size):
     print('Per-class metrics:')
     print('Class\tAccuracy')
     for i in range(10):
-        print(f'{i}\t{per_class_accuracy[i]:.4f}')
+        if "digits" not in model_path:
+            print(f'{i}\t{per_class_accuracy[i]:.4f}')
+        elif i in digits:
+            print(f'{i}\t{per_class_accuracy[i]:.4f}')
 
     report = classification_report(targets, predictions)
     print('\nClassification report:')
@@ -112,3 +128,17 @@ if __name__ == "__main__":
         exit()
 
     main(args.path, args.batch_size)
+
+
+"""
+Digit 0: 980
+Digit 1: 1135
+Digit 2: 1032
+Digit 3: 1010
+Digit 4: 982
+Digit 5: 892
+Digit 6: 958
+Digit 7: 1028
+Digit 8: 974
+Digit 9: 1009
+"""
