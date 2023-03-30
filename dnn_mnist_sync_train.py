@@ -236,18 +236,19 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
     #train loader for final global accuracy, useful when workers don't share samples
     train_loader_full = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
     
-    logger.info("Start training")
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
 
     if not unique_datasets and digits is None: #workers sharing samples
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
+        logger.info("Start training")
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
     elif unique_datasets and digits is None:
         worker_indices = subsample_train_indices.chunk(batch_update_size) # Split the train_indices based on the number of workers (world_size - 1)
+        logger.info("Start training")
         for idx, worker in enumerate(workers):
             train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_indices[idx])) 
             futs.append(
@@ -275,6 +276,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
             random.shuffle(digit_indices)
             digit_indices = digit_indices[:len_min_subset] #sync mode, datasets must be same length (find the smallest dataset and slice the other ones)
             train_loaders_digits.append(DataLoader(train_data, batch_size=1, sampler=SubsetRandomSampler(digit_indices)))
+        logger.info("Start training")
         for idx, worker in enumerate(workers):
             train_loader = train_loaders_digits[idx]
             futs.append(
