@@ -364,7 +364,7 @@ def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique
 if __name__=="__main__":
 
     parser = argparse.ArgumentParser(
-        description="Asynchronous-parameter-Server RPC based training")
+        description="Synchronous Parallel SGD parameter-Server RPC based training")
     parser.add_argument(
         "--master_port",
         type=str,
