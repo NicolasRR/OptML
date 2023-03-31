@@ -6,3 +6,4 @@ log.log
 *.log
 data
 *.pt
+.ipynb_checkpoints/
