@@ -5,3 +5,5 @@
 *.txt
 *.pt
 data/
+
+.ipynb_checkpoints/

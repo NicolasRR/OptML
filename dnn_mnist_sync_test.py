@@ -7,7 +7,7 @@ from torch.utils.data import Subset
 from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
 
-DEFAULT_BATCH_SIZE = 1000
+DEFAULT_BATCH_SIZE = 500
 
 #if train architecture changes, change the Net class
 class Net(nn.Module):
