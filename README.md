@@ -12,10 +12,10 @@ Local minima for deep learning: Can you find differences between the ‘shape’
 finds, depending on different step-sizes or mini-batch size, vs e.g. AdaGrad or full gradient descent?
 
 ## Installation
-Option 1:
+Option 1 (Docker conda OS independant):
 In order to avoid compatibility issues, you can use docker. This will allow you to use a lightweight Linux image in your computer for CLI programs which is enough for the scope of this project as we don't need a GUI. First install Docker or [Docker desktop](https://docs.docker.com/desktop/install/windows-install/) which will enable the docker service. Once docker is installed run the following command PS `docker build --pull --rm -f "docker/Dockerfile" -t optml "docker"  --shm-size=1g` from the repo folder, this will create the image. It is necessary to use a Linux distribution in order to use the **PyTorch RPC** functionalities. After building the image run `docker run -v path_to_your_repo:mount_path --rm --shm-size=5g -it optml` this will initialize the container, mount your repo to the specified path to use it within the container and the `--rm` will remove everything from your container after killing it to avoid waisting memory. To use VS Code with your container, download the Docker extension and once the container is running attach VS to it.
 
-Option 2 (Windows only):
+Option 2 (WSL pip Windows only):
 Use Windows Subsystem for Linux (WSL). To install WSL take the following steps:
 - Open PowerShell or Windows Command Prompt in administrator and run `wsl install`
 - Install the default Ubuntu distribution `wsl --install -d Ubuntu`
@@ -33,4 +33,21 @@ To use *dnn_mnist.py* you have to activate the base environment inside the conta
 Option 2:
 For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_size N` with $N \geqslant 2$.
 
-Our scripts accept various arguments from the command line, to see all the arguments available: `python3 dnn_mnist.py -h` or `python3 dnn_mnist.py --help`
+## Command line flags
+Our scripts accept various arguments from the command line, to see all the flags available: `python3 dnn_mnist.py -h` or `python3 dnn_mnist.py --help`
+
+| Flag | Description |
+| --------------- | --------------- |
+| --master_port MASTER_PORT | Row 1, Column 2 |
+| --master_addr MASTER_ADDR | Row 2, Column 2 |
+| --world_size WORLD_SIZE | Row 3, Column 2 |
+| --train_split TRAIN_SPLIT| Row 3, Column 2 |
+| --lr LR | Row 3, Column 2 |
+| --momentum MOMENTUM | Row 3, Column 2 |
+| --batch_size BATCH_SIZE| Row 3, Column 2 |     
+| --no_save_model | Row 3, Column 2 |
+| --unique_datasets | Row 3, Column 2 |
+| --epochs EPOCHS | Row 3, Column 2 |
+| --model_accuracy | Row 3, Column 2 |
+| --worker_accuracy | Row 3, Column 2 |
+| --digits DIGITS | Row 3, Column 2 |
