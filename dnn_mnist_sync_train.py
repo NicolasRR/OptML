@@ -100,7 +100,7 @@ class Net(nn.Module):
 class ParameterServer(object):
 
     def __init__(self, batch_update_size, logger, learning_rate, momentum):
-        self.model = Net()
+        self.model = Net() #global model
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
