@@ -213,7 +213,7 @@ def run_worker(ps_rref, train_loader, logger, epochs, worker_accuracy):
     worker.train()
 
 
-def run_parameter_server(workers, batch_update_size, unique_datasets, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False, digits=None):
+def run_parameter_server(workers, batch_update_size, unique_datasets, digits_mode, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
 
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
@@ -238,7 +238,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
     ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
     futs = []
 
-    if not unique_datasets and digits is None: #workers sharing samples
+    if not unique_datasets and not digits_mode: #workers sharing samples
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
         if model_accuracy:
             train_loader_full= train_loader
@@ -247,7 +247,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
-    elif unique_datasets and digits is None:
+    elif unique_datasets and not digits_mode:
         worker_indices = subsample_train_indices.chunk(batch_update_size) # Split the train_indices based on the number of workers (world_size - 1)
         if model_accuracy:
             train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
@@ -257,8 +257,8 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
-    elif digits is not None:
-        random_digits = random.sample(range(10), digits) #randomly creating could be replaced with terminal input
+    elif digits_mode:
+        random_digits = random.sample(range(10), digits) #randomly creating could be replaced with terminal input       #to rebuild
         print(f"Each worker will be assigned to one of the following digits: {random_digits}")
         digits_indices = []
         for _ in random_digits:
@@ -319,8 +319,8 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
             filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_datasets.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
-        elif  digits is not None:
-            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_digits_{''.join(str(i) for i in random_digits)}.pt"
+        elif  digits_mode:
+            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_digits.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         else:
@@ -330,7 +330,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, logger, le
 
 
 
-def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits):
+def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits_mode):
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
@@ -354,7 +354,7 @@ def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, unique_datasets, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits)
+        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, unique_datasets, digits_mode, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -427,8 +427,7 @@ if __name__=="__main__":
         help="""If set, will compute the train accuracy of each worker after training (useful when --unique_datasets).""")
     parser.add_argument(
         "--digits",
-        type=int,
-        default=None,
+        action="store_true",
         help="""Reprensents the amount of digits that will be trained in parallel, it will split the MNIST dataset in {digits} parts, one part per digit, and each part will be assigned to a worker.
         This mode requires --world_size {digits +1} --batch_size 1, don't use --unique_datasets.""")
 
@@ -491,19 +490,25 @@ if __name__=="__main__":
     else:
         worker_accuracy = False
 
-    if args.digits is not None:
-        if args.digits < 1 or args.digits > 10:
-            print("Forbidden value !!! digits must be between [1,10]")
-            exit()
-        elif unique_datasets:
+    if args.digits:
+        digits_mode = True
+    else:
+        digits_mode = False
+
+    if digits_mode:
+        if unique_datasets:
             print("Please use --digits without --unique_datasets")
             exit()
-        elif args.world_size != args.digits+1:
-            print("Please use --digits with --world_size {digits+1}")
+        elif args.world_size -1 % 10 != 0 or args.world_size != 2:
+            print("Please use --digits with --world_size {3, 6, 11}")
             exit()
         elif args.batch_size != 1:
             print("Please use --digits with the --batch_size 1")
             exit()
+
+    if digits_mode:
+        print("Feature currently unavailable")
+        exit()
 
 
     with Manager() as manager:
@@ -511,7 +516,7 @@ if __name__=="__main__":
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, args.digits), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, digits_mode), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()
