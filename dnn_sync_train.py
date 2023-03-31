@@ -330,13 +330,24 @@ def create_worker_trainloaders(nb_workers, dataset_name, split_dataset, digits_m
             mean = data.mean()
             std = data.std()
 
-            fashion_mnist_train = torchvision.datasets.MNIST('data/', 
+            fashion_mnist_train = torchvision.datasets.FashionMNIST('data/', 
                                             download=True, 
                                             train=True,
                                             transform=torchvision.transforms.Compose([
                                             torchvision.transforms.ToTensor(),
                                             torchvision.transforms.Normalize((mean.item(),), (std.item(),))]))
 
+
+            train_data_indices = torch.randperm(len(fashion_mnist_train))
+            train_length = int(train_split * len(fashion_mnist_train))
+            subsample_train_indices = train_data_indices[:train_length]
+
+            if batch_size is None:
+                batch_size = DEFAULT_BATCH_SIZE
+                print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
+            elif batch_size < 1 or batch_size > train_length:
+                print("Forbidden value !!! batch_size must be between [1,len(train set)]")
+                exit()
 
             print("fashion mnist trainloaders not implemented yet")
             exit()
@@ -349,12 +360,23 @@ def create_worker_trainloaders(nb_workers, dataset_name, split_dataset, digits_m
             mean = data.mean()
             std = data.std()
 
-            cifar10_train = torchvision.datasets.MNIST('data/', 
+            cifar10_train = torchvision.datasets.CIFAR10('data/', 
                                             download=True, 
                                             train=True,
                                             transform=torchvision.transforms.Compose([
                                             torchvision.transforms.ToTensor(),
                                             torchvision.transforms.Normalize((mean.item(),), (std.item(),))]))
+            
+            train_data_indices = torch.randperm(len(cifar10_train))
+            train_length = int(train_split * len(cifar10_train))
+            subsample_train_indices = train_data_indices[:train_length]
+
+            if batch_size is None:
+                batch_size = DEFAULT_BATCH_SIZE
+                print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
+            elif batch_size < 1 or batch_size > train_length:
+                print("Forbidden value !!! batch_size must be between [1,len(train set)]")
+                exit()
             
             print("cifar10 trainloaders not implemented yet")
             exit()
@@ -367,7 +389,7 @@ def create_worker_trainloaders(nb_workers, dataset_name, split_dataset, digits_m
             mean = data.mean()
             std = data.std()
 
-            cifar100_train = torchvision.datasets.MNIST('data/', 
+            cifar100_train = torchvision.datasets.CIFAR100('data/', 
                                             download=True, 
                                             train=True,
                                             transform=torchvision.transforms.Compose([
