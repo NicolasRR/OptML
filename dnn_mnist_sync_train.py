@@ -99,27 +99,27 @@ class Net(nn.Module):
 #################################### PARAMETER SERVER ####################################
 class ParameterServer(object):
 
-    def __init__(self, batch_update_size, logger, learning_rate, momentum):
+    def __init__(self, nb_workers, logger, learning_rate, momentum):
         self.model = Net() #global model
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
-        self.batch_update_size = batch_update_size
-        self.curr_update_size = 0
-        self.optimizer = optim.SGD(self.model.parameters(), lr=learning_rate, momentum= momentum)
-        self.losses = np.array([])
-        self.loss = np.array([])
+        self.nb_workers = nb_workers
+        self.update_counter = 0
+        self.optimizer = optim.SGD(self.model.parameters(), lr=learning_rate, momentum= momentum) #dampening=0, weight_decay=0; learning scheduler separately 
+        self.losses = np.array([]) #store global model loss
+        self.loss = np.array([]) #store workers loss
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
         
     def get_model(self):
-        return self.model
+        return self.model #get global model
     
     @staticmethod
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads, worker_name, worker_batch_count, worker_epoch, total_batches_to_run, total_epochs, loss):
         self = ps_rref.local_value()
-        self.logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})")
+        self.logger.debug(f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})")
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None )and (grad is not None):
                 param.grad += grad
@@ -129,17 +129,17 @@ class ParameterServer(object):
                 self.logger.debug("None grad detected")
         self.loss = np.append(self.loss, loss)
         with self.lock:
-            self.curr_update_size += 1
+            self.update_counter += 1
             fut = self.future_model
 
-            if self.curr_update_size >= self.batch_update_size:
+            if self.update_counter >= self.nb_workers:
                 for param in self.model.parameters():
                     if param.grad is not None:
-                        param.grad /= self.batch_update_size
+                        param.grad /= self.nb_workers
                     else:
                         self.logger.debug(f"None param.grad detected for the update")
                         self.optimizer.zero_grad()
-                self.curr_update_size = 0
+                self.update_counter = 0
                 self.losses = np.append(self.losses, self.loss.mean())
                 self.logger.debug(f"Global model loss is {self.losses[-1]}")
                 self.loss = np.array([])
@@ -157,10 +157,10 @@ class Worker(object):
 
     def __init__(self, ps_rref, train_loader, logger, epochs, worker_accuracy):
         self.ps_rref = ps_rref
-        self.train_loader = train_loader
-        self.loss_fn = nn.functional.nll_loss
+        self.train_loader = train_loader #worker trainloader
+        self.loss_fn = nn.functional.nll_loss #worker loss
         self.logger = logger
-        self.batch_count = 0
+        self.batch_count = 0 
         self.current_epoch = 0
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
@@ -172,7 +172,7 @@ class Worker(object):
         for epoch in range(self.epochs):
             self.current_epoch = epoch +1
             if self.worker_name == "Worker_1":
-                iterable = tqdm(self.train_loader)
+                iterable = tqdm(self.train_loader) #progress bar only of the first worker (we are in synchronous mode)
             else:
                 iterable = self.train_loader
 
@@ -184,7 +184,7 @@ class Worker(object):
 
         for inputs, labels in self.get_next_batch():
             #print(labels, self.worker_name) #check the samples of workers
-            loss = self.loss_fn(worker_model(inputs), labels)
+            loss = self.loss_fn(worker_model(inputs), labels) #worker loss
             loss.backward()
             self.batch_count += 1
 
@@ -213,7 +213,7 @@ def run_worker(ps_rref, train_loader, logger, epochs, worker_accuracy):
     worker.train()
 
 
-def run_parameter_server(workers, batch_update_size, unique_datasets, digits_mode, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
+def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
 
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
@@ -233,9 +233,8 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, digits_mod
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
 
-    
     train_loader_full = 0 #train loader for final global accuracy, useful when workers don't share samples
-    ps_rref = rpc.RRef(ParameterServer(batch_update_size, logger, learning_rate, momentum))
+    ps_rref = rpc.RRef(ParameterServer(len(workers), logger, learning_rate, momentum))
     futs = []
 
     if not unique_datasets and not digits_mode: #workers sharing samples
@@ -248,7 +247,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, digits_mod
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
     elif unique_datasets and not digits_mode:
-        worker_indices = subsample_train_indices.chunk(batch_update_size) # Split the train_indices based on the number of workers (world_size - 1)
+        worker_indices = subsample_train_indices.chunk(len(workers)) # Split the train_indices based on the number of workers (world_size - 1)
         if model_accuracy:
             train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
         logger.info("Start training")
@@ -257,7 +256,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, digits_mod
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
-    elif digits_mode:
+    """ elif digits_mode:
         random_digits = random.sample(range(10), digits) #randomly creating could be replaced with terminal input       #to rebuild
         print(f"Each worker will be assigned to one of the following digits: {random_digits}")
         digits_indices = []
@@ -289,7 +288,7 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, digits_mod
             train_loader = train_loaders_digits[idx]
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
-            )
+            )"""
 
     torch.futures.wait_all(futs)
 
@@ -316,15 +315,15 @@ def run_parameter_server(workers, batch_update_size, unique_datasets, digits_mod
 
     if save_model:
         if unique_datasets:
-            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_datasets.pt"
+            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_datasets.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
-        elif  digits_mode:
-            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_digits.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            """elif  digits_mode:
+            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_digits.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)"""
             print(f"Model saved: {filename}")
         else:
-            filename = f"mnist_sync_{batch_update_size+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
+            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
 
@@ -354,7 +353,7 @@ def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], world_size-1, unique_datasets, digits_mode, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
+        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], unique_datasets, digits_mode, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
 
     # block until all rpcs finish
     rpc.shutdown()
