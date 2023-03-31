@@ -52,18 +52,6 @@ def main(model_path, batch_size):
     test_dataset = datasets.MNIST('data/', train=False, download=True, transform=test_transform)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    #if digits in path, extract the learned digits and create a testloader on this digits
-    if "digits" in model_path:
-        split_model_name = model_path.split("_")
-        index = split_model_name.index("digits")
-        digits = split_model_name[index + 1]
-        digits = digits.split(".")[0]
-        digits = [int(d) for d in digits]
-        filtered_indices = [i for i, (_, label) in enumerate(test_dataset) if label in digits]
-        test_dataset = Subset(test_dataset, filtered_indices)
-        test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
-        print()
-
     # Evaluate the model on the test dataset
     test_loss = 0
     correct = 0
@@ -91,10 +79,8 @@ def main(model_path, batch_size):
     print('Per-class metrics:')
     print('Class\tAccuracy')
     for i in range(10):
-        if "digits" not in model_path:
-            print(f'{i}\t{per_class_accuracy[i]:.4f}')
-        elif i in digits:
-            print(f'{i}\t{per_class_accuracy[i]:.4f}')
+        print(f'{i}\t{per_class_accuracy[i]:.4f}')
+        
 
     report = classification_report(targets, predictions)
     print('\nClassification report:')
@@ -102,16 +88,15 @@ def main(model_path, batch_size):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-    description="Asynchronous-parameter-Server RPC based training")
+    description="Testing MNIST models")
     parser.add_argument(
         "--batch_size",
         type=int,
         default=None,
         help="""Batch size of Mini batch SGD [1,len(train set)].""")
     parser.add_argument(
-        "--path",
-        type=str,
-        default=None,
+        "remainder",
+        nargs=argparse.REMAINDER,
         help="""Path of the trained model.""")
     
     args = parser.parse_args()
@@ -123,11 +108,19 @@ if __name__ == "__main__":
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
 
-    if args.path is None:
+    model_path = None
+    for arg in args.remainder:
+        if arg.startswith("--"):
+            continue
+        else:
+            model_path = arg
+            break
+
+    if model_path is None:
         print("Missing model path !!!")
         exit()
 
-    main(args.path, args.batch_size)
+    main(model_path, args.batch_size)
 
 
 """
