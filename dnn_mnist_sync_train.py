@@ -15,8 +15,7 @@ import logging
 import logging.handlers
 import numpy as np
 import matplotlib.pyplot as plt #remove if unused
-import random
-import copy
+
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -24,6 +23,7 @@ DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_BATCH_SIZE = 32 # 1 == SGD, >1 MINI BATCH SGD
 DEFAULT_EPOCHS = 1
+DEFAULT_SEED = 614310
 
 #################################### LOGGER ####################################
 def setup_logger(log_queue):
@@ -213,7 +213,7 @@ def run_worker(ps_rref, train_loader, logger, epochs, worker_accuracy):
     worker.train()
 
 
-def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
+def run_parameter_server(workers, split_dataset, digits_mode, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
 
     train_data = torchvision.datasets.MNIST('data/', 
                                         download=True, 
@@ -226,6 +226,7 @@ def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning
     train_data_indices = torch.randperm(len(train_data))
     train_length = int(train_split * len(train_data))
     subsample_train_indices = train_data_indices[:train_length]
+
     if batch_size is None:
         batch_size = DEFAULT_BATCH_SIZE
         print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
@@ -237,7 +238,7 @@ def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning
     ps_rref = rpc.RRef(ParameterServer(len(workers), logger, learning_rate, momentum))
     futs = []
 
-    if not unique_datasets and not digits_mode: #workers sharing samples
+    if not split_dataset and not digits_mode: #workers sharing samples
         train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
         if model_accuracy:
             train_loader_full= train_loader
@@ -246,7 +247,7 @@ def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
-    elif unique_datasets and not digits_mode:
+    elif split_dataset and not digits_mode:
         worker_indices = subsample_train_indices.chunk(len(workers)) # Split the train_indices based on the number of workers (world_size - 1)
         if model_accuracy:
             train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
@@ -256,39 +257,42 @@ def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
             )
-    """ elif digits_mode:
-        random_digits = random.sample(range(10), digits) #randomly creating could be replaced with terminal input       #to rebuild
-        print(f"Each worker will be assigned to one of the following digits: {random_digits}")
-        digits_indices = []
-        for _ in random_digits:
-            digits_indices.append([])
-        for i in range(len(subsample_train_indices)):
-            _, label = train_data[subsample_train_indices[i]]
-            for j, digit in enumerate(random_digits):
-                if digit == label:
-                    digits_indices[j].append(subsample_train_indices[i])
-        len_min_subset = train_length
-        for i in range(len(digits_indices)):
-            if len(digits_indices[i]) < len_min_subset:
-                len_min_subset = len(digits_indices[i])
-        train_loaders_digits = []
-        for i in range(len(digits_indices)):
-            digit_indices = copy.deepcopy(digits_indices[i])
-            random.shuffle(digit_indices) 
-            digit_indices = digit_indices[:len_min_subset] #sync mode, datasets must be same length (find the smallest dataset and slice the other ones)
-            digits_indices[i] = digit_indices
-            train_loaders_digits.append(DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(digit_indices)))
+    elif digits_mode:
+        digit_indices = {i: [] for i in range(10)}
+        for idx in subsample_train_indices:
+            digit = train_data[idx][1]
+            digit_indices[digit].append(idx)
+        worker_indices = [[] for _ in range(len(workers))]
+        available_digits = list(range(10))
+        np.random.shuffle(available_digits)
+
+        for i, digit in enumerate(available_digits):
+            worker = i % len(workers)
+            worker_indices[worker].extend(digit_indices[digit])
+
+        min_subset_length = len(subsample_train_indices)
+        for worker in worker_indices:
+            if min_subset_length > len(worker):
+                min_subset_length = len(worker)
+
+        for i, worker in enumerate(worker_indices):
+            worker_indices[i] = worker[:min_subset_length]
+
+        digit_train_loaders = [DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_idx)) for worker_idx in worker_indices]
+
         if model_accuracy:
             full_digits_list = []
-            for sublist in digits_indices:
+            for sublist in worker_indices:
                 full_digits_list.extend(sublist)
             train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(full_digits_list)) 
+        
         logger.info("Start training")
+
         for idx, worker in enumerate(workers):
-            train_loader = train_loaders_digits[idx]
+            train_loader = digit_train_loaders[idx]
             futs.append(
                 rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
-            )"""
+            )
 
     torch.futures.wait_all(futs)
 
@@ -314,13 +318,13 @@ def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning
         print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
 
     if save_model:
-        if unique_datasets:
-            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_datasets.pt"
+        if split_dataset:
+            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
-            """elif  digits_mode:
+        elif  digits_mode:
             filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_digits.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)"""
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         else:
             filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
@@ -329,7 +333,7 @@ def run_parameter_server(workers, unique_datasets, digits_mode, logger, learning
 
 
 
-def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique_datasets, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits_mode):
+def run(rank, world_size, learning_rate, momentum, log_queue, save_model, split_dataset, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits_mode):
     logger= setup_logger(log_queue)
     rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
         num_worker_threads=world_size,
@@ -353,7 +357,7 @@ def run(rank, world_size, learning_rate, momentum, log_queue, save_model, unique
             world_size=world_size,
             rpc_backend_options=rpc_backend_options
         )
-        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], unique_datasets, digits_mode, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
+        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], split_dataset, digits_mode, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -403,15 +407,6 @@ if __name__=="__main__":
         default=None,
         help="""Batch size of Mini batch SGD [1,len(train set)].""")
     parser.add_argument(
-        "--no_save_model",
-        action="store_true",
-        help="""If set, the trained model will not be saved.""")
-    parser.add_argument(
-        "--unique_datasets",
-        action="store_true",
-        help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
-        shared between workers).""")
-    parser.add_argument(
         "--epochs",
         type=int,
         default=None,
@@ -423,12 +418,26 @@ if __name__=="__main__":
     parser.add_argument(
         "--worker_accuracy",
         action="store_true",
-        help="""If set, will compute the train accuracy of each worker after training (useful when --unique_datasets).""")
+        help="""If set, will compute the train accuracy of each worker after training (useful when --split_dataset).""")
+    parser.add_argument(
+        "--no_save_model",
+        action="store_true",
+        help="""If set, the trained model will not be saved.""")
+    parser.add_argument(
+        "--split_dataset",
+        action="store_true",
+        help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
+        shared between workers).""")
     parser.add_argument(
         "--digits",
         action="store_true",
-        help="""Reprensents the amount of digits that will be trained in parallel, it will split the MNIST dataset in {digits} parts, one part per digit, and each part will be assigned to a worker.
-        This mode requires --world_size {digits +1} --batch_size 1, don't use --unique_datasets.""")
+        help="""If set, it will split the MNIST dataset in {world_size -1} parts, each part corresponding to a distinct set of digits, and each part will be assigned to a worker. Workers will not share samples and the digits are randomly assigned
+        This mode requires --world_size {digits +1} --batch_size 1, don't use --split_dataset. With MNIST --world_size should be 3, 6, or 11.""")
+    parser.add_argument(
+        "--seed",
+        action="store_true",
+        help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""")
+            
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -474,10 +483,10 @@ if __name__=="__main__":
     else:
         save_model = True
 
-    if args.unique_datasets:
-        unique_datasets = True
+    if args.split_dataset:
+        split_dataset = True
     else:
-        unique_datasets = False
+        split_dataset = False
 
     if args.model_accuracy:
         model_accuracy = True
@@ -495,19 +504,19 @@ if __name__=="__main__":
         digits_mode = False
 
     if digits_mode:
-        if unique_datasets:
-            print("Please use --digits without --unique_datasets")
+        if split_dataset:
+            print("Please use --digits without --split_dataset")
             exit()
-        elif args.world_size -1 % 10 != 0 or args.world_size != 2:
+        elif 10 % (args.world_size -1) != 0 or args.world_size == 2:
             print("Please use --digits with --world_size {3, 6, 11}")
             exit()
         elif args.batch_size != 1:
             print("Please use --digits with the --batch_size 1")
             exit()
 
-    if digits_mode:
-        print("Feature currently unavailable")
-        exit()
+    if args.seed:
+        torch.manual_seed(DEFAULT_SEED)
+        np.random.seed(DEFAULT_SEED)
 
 
     with Manager() as manager:
@@ -515,7 +524,7 @@ if __name__=="__main__":
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, args.lr, args.momentum, log_queue, save_model, unique_datasets, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, digits_mode), nprocs=args.world_size, join=True)
+        mp.spawn(run, args=(args.world_size, args.lr, args.momentum, log_queue, save_model, split_dataset, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, digits_mode), nprocs=args.world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()

@@ -1,4 +1,3 @@
-import torchvision
 import torchvision.transforms as transforms
 from torchvision.datasets import CIFAR10, CIFAR100, FashionMNIST, MNIST
 from torch.utils.data import DataLoader
