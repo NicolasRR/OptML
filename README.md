@@ -50,7 +50,6 @@ For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_siz
 | 4 | 1, 6 |
 | 5 | 0, 8 |
 
-<br>
 `python3 dnn_mnist_sync_train.py --world_size 6 --model_accuracy --batch_size 1 --digits`
 
 ## Command line flags
