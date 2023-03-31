@@ -141,9 +141,13 @@ class Trainer(object):
 
 
     def get_next_batch(self):
-        for _ in range(self.epochs):
-            for (inputs,labels) in tqdm(self.dataloader, position=self.name):
+        for i in range(self.epochs):
+            t = tqdm(self.dataloader, position=self.name, leave=False, desc=f"Epoch {i}")
+            for (inputs,labels) in t:
+                t.update(1)
                 yield inputs, labels
+            t.reset()
+            t.refresh()
 
     def train(self):
         m = self.ps_rref.rpc_sync().get_model()
