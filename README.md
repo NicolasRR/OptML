@@ -53,10 +53,13 @@ For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_siz
 | 5 | 0, 8 |
 
 </div>
+
 `python3 dnn_mnist_sync_train.py --world_size 6 --model_accuracy --batch_size 1 --digits`
 
 ## Command line flags
 Our scripts accept various arguments from the command line, to see all the flags available: `python3 dnn_mnist.py -h` or `python3 dnn_mnist.py --help`
+
+<div align="center">
 
 | Flag | Description |
 | --------------- | --------------- |
@@ -73,3 +76,5 @@ Our scripts accept various arguments from the command line, to see all the flags
 | --model_accuracy | If set, will compute the train accuracy of the global model after training. |
 | --worker_accuracy | If set, will compute the train accuracy of each worker after training (useful when --unique_datasets). |
 | --digits | Reprensents the amount of digits that will be trained in parallel, it will split the MNIST dataset in {digits} parts, one part per digit, and each part will be assigned to a worker. This mode requires --world_size {digits +1} --batch_size 1, don't use --unique_datasets. |
+
+</div>
