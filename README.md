@@ -70,11 +70,12 @@ Our scripts accept various arguments from the command line, to see all the flags
 | --lr LR | Learning rate of SGD  (0,+inf)." |
 | --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
 | --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |     
-| --no_save_model | If set, the trained model will not be saved. |
-| --unique_datasets | After applying train_split, each worker will train on a unique distinct dataset (samples will not be shared between workers). |
 | --epochs EPOCHS | Number of epochs for training &#91;1,+inf&#41;. |
 | --model_accuracy | If set, will compute the train accuracy of the global model after training. |
 | --worker_accuracy | If set, will compute the train accuracy of each worker after training (useful when --unique_datasets). |
-| --digits | Reprensents the amount of digits that will be trained in parallel, it will split the MNIST dataset in {digits} parts, one part per digit, and each part will be assigned to a worker. This mode requires --world_size {digits +1} --batch_size 1, don't use --unique_datasets. |
+| --no_save_model | If set, the trained model will not be saved. |
+| --unique_datasets | After applying train_split, each worker will train on a unique distinct dataset (samples will not be shared between workers). |
+| --digits | If set, it will split the MNIST dataset in {world_size -1} parts, each part corresponding to a distinct set of digits, and each part will be assigned to a worker. Workers will not share samples and the digits are randomly assigned This mode requires --world_size {digits +1} --batch_size 1, don't use --unique_datasets. With MNIST --world_size should be 3, 6, or 11. |
+| --seed | If set, it will set seeds on torch, numpy and random for reproducibility purposes. |
 
 </div>
