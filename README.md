@@ -42,12 +42,13 @@ For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_siz
 
 - The following command will train 5 workers synchronously, on the full MNIST train dataset, trainloaders will use a batch size of 1, and model accuracy will be printed at the end. With the `--digits` flag, the 10 digits will be splitted evenly between the workers. For this example, we have 5 workers, meaning that each worker will train on two randomly chosen digits in $\[0,9\]$:
 | Worker | Digits |
-| --------------- | --------------- |
+| ------- | ------- |
 | 1 | 3, 5 |
 | 2 | 9, 2 |
 | 3 | 7, 4 |
 | 4 | 1, 6 |
 | 5 | 0, 8 |
+<br>
 `python3 dnn_mnist_sync_train.py --world_size 6 --model_accuracy --batch_size 1 --digits`
 
 ## Command line flags
