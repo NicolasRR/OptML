@@ -6,8 +6,6 @@ import torch.nn as nn
 from torch import optim
 import torch.distributed.rpc as rpc
 import torch.multiprocessing as mp
-from torch.utils.data import DataLoader, SubsetRandomSampler
-import torchvision
 from multiprocessing import Manager
 import argparse
 from tqdm import tqdm
@@ -77,10 +75,12 @@ def log_writer(log_queue):
 
 #################################### PARAMETER SERVER ####################################
 class ParameterServer(object):
-    def __init__(self, nb_workers, logger, learning_rate, momentum, dataset_name):
+    def __init__(self, nb_workers, logger, dataset_name, learning_rate, momentum):
         if "mnist" in dataset_name:
+            print("Created MNIST CNN")
             self.model = CNN_MNIST()  # global model
         elif "cifar" in dataset_name:
+            print("Created CIFAR CNN")
             self.model = CNN_CIFAR()
         self.logger = logger
         self.lock = threading.Lock()
@@ -148,7 +148,7 @@ class ParameterServer(object):
 
 #################################### WORKER ####################################
 class Worker(object):
-    def __init__(self, ps_rref, train_loader, logger, epochs, worker_accuracy):
+    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
         self.ps_rref = ps_rref
         self.train_loader = train_loader  # worker trainloader
         self.loss_fn = nn.functional.nll_loss  # worker loss
@@ -221,27 +221,27 @@ class Worker(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker(ps_rref, train_loader, logger, epochs, worker_accuracy):
-    worker = Worker(ps_rref, train_loader, logger, epochs, worker_accuracy)
+def run_worker(ps_rref, logger, train_loader, epochs, worker_accuracy):
+    worker = Worker(ps_rref, logger, train_loader, epochs, worker_accuracy)
     worker.train()
 
 
 def run_parameter_server(
     workers,
+    logger,
     dataset_name,
     split_dataset,
     split_labels,
-    logger,
     learning_rate,
     momentum,
-    save_model=True,
-    train_split=DEFAULT_TRAIN_SPLIT,
-    batch_size=None,
-    epochs=DEFAULT_EPOCHS,
-    worker_accuracy=False,
-    model_accuracy=False,
+    train_split,
+    batch_size,
+    epochs,
+    worker_accuracy,
+    model_accuracy,
+    save_model,
 ):
-    train_loaders = create_worker_trainloaders(
+    train_loaders, batch_size = create_worker_trainloaders(
         len(workers),
         dataset_name,
         split_dataset,
@@ -249,15 +249,14 @@ def run_parameter_server(
         train_split,
         batch_size,
         model_accuracy,
-    )  # returns a tupple
-
+    )
     train_loader_full = 0
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
 
     ps_rref = rpc.RRef(
-        ParameterServer(len(workers), logger, learning_rate, momentum, dataset_name)
+        ParameterServer(len(workers), logger, dataset_name, learning_rate, momentum)
     )
     futs = []
 
@@ -268,7 +267,7 @@ def run_parameter_server(
                 rpc.rpc_async(
                     worker,
                     run_worker,
-                    args=(ps_rref, train_loaders, logger, epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy),
                 )
             )
 
@@ -279,7 +278,7 @@ def run_parameter_server(
                 rpc.rpc_async(
                     worker,
                     run_worker,
-                    args=(ps_rref, train_loaders[idx], logger, epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
                 )
             )
 
@@ -290,7 +289,7 @@ def run_parameter_server(
                 rpc.rpc_async(
                     worker,
                     run_worker,
-                    args=(ps_rref, train_loaders[idx], logger, epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
                 )
             )
 
@@ -317,34 +316,34 @@ def run_parameter_server(
 
     if save_model:
         if split_dataset:
-            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
+            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         elif split_labels:
-            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
+            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         else:
-            filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
+            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
 
 
 def run(
     rank,
+    log_queue,
     dataset_name,
+    split_dataset,
+    split_labels,
     world_size,
     learning_rate,
     momentum,
-    log_queue,
-    save_model,
-    split_dataset,
     train_split,
     batch_size,
     epochs,
     worker_accuracy,
     model_accuracy,
-    split_labels,
+    save_model,
 ):
     logger = setup_logger(log_queue)
     rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
@@ -370,18 +369,18 @@ def run(
         )
         run_parameter_server(
             [f"Worker_{r}" for r in range(1, world_size)],
+            logger,
             dataset_name,
             split_dataset,
             split_labels,
-            logger,
             learning_rate,
             momentum,
-            save_model,
             train_split,
             batch_size,
             epochs,
             worker_accuracy,
             model_accuracy,
+            save_model,
         )
 
     # block until all rpcs finish
@@ -408,11 +407,31 @@ if __name__ == "__main__":
         Master must be able to accept network traffic on the address + port.""",
     )
     parser.add_argument(
+        "--dataset",
+        type=str,
+        choices=["mnist", "fashion_mnist", "cifar10", "cifar100"],
+        required=True,
+        help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100",
+    )
+    parser.add_argument(
         "--world_size",
         type=int,
         default=None,
         help="""Total number of participating processes. Should be the sum of
         master node and all training nodes [2,+inf].""",
+    )
+    parser.add_argument(
+        "--split_dataset",
+        action="store_true",
+        help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
+        shared between workers).""",
+    )
+    parser.add_argument(
+        "--split_labels",
+        action="store_true",
+        help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+        Workers will not share samples and the labels are randomly assigned.
+        This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
     )
     parser.add_argument(
         "--train_split",
@@ -454,28 +473,9 @@ if __name__ == "__main__":
         help="""If set, the trained model will not be saved.""",
     )
     parser.add_argument(
-        "--split_dataset",
-        action="store_true",
-        help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
-        shared between workers).""",
-    )
-    parser.add_argument(
-        "--split_labels",
-        action="store_true",
-        help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned
-        This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels % (world_size-1) = 0, with world_size = 2 excluded.""",
-    )
-    parser.add_argument(
         "--seed",
         action="store_true",
         help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""",
-    )
-    parser.add_argument(
-        "--dataset",
-        type=str,
-        choices=["mnist", "fashion_mnist", "cifar10", "cifar100"],
-        required=True,
-        help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100",
     )
 
     args = parser.parse_args()
@@ -584,19 +584,19 @@ if __name__ == "__main__":
         mp.spawn(
             run,
             args=(
+                log_queue,
                 args.dataset,
+                split_dataset,
+                split_labels,
                 args.world_size,
                 args.lr,
                 args.momentum,
-                log_queue,
-                save_model,
-                split_dataset,
                 args.train_split,
                 args.batch_size,
                 args.epochs,
                 worker_accuracy,
                 model_accuracy,
-                split_labels,
+                save_model,
             ),
             nprocs=args.world_size,
             join=True,

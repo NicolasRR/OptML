@@ -7,3 +7,4 @@ log.log
 data
 *.pt
 .ipynb_checkpoints/
+__pycache__/
