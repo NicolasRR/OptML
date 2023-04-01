@@ -17,22 +17,24 @@ from torch.optim.swa_utils import SWALR
 
 
 class Net(nn.Module):
-    def __init__(self, num_input=1):
-        super(Net, self).__init__()
-
+    def __init__(self, num_input, num_output):
+        super().__init__()
         self.conv1 = nn.Conv2d(num_input, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout(0.25)
         self.dropout2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(9216, 128)
-        self.fc2 = nn.Linear(128, 10)
+        self.fc2 = nn.Linear(128, num_output)
+
+        self.max_pool = nn.AdaptiveMaxPool2d((12, 12))
 
     def forward(self, x):
         x = self.conv1(x)
         x = nn.functional.relu(x)
         x = self.conv2(x)
-        x = nn.functional.max_pool2d(x, 2)
-
+        #x= nn.functional.max_pool2d(x,2)
+        #x = nn.functional.adaptive_max_pool2d(x, output_size = 144)
+        x = self.max_pool(x)
         x = self.dropout1(x)
         x = torch.flatten(x, 1)
 
@@ -50,8 +52,8 @@ class BatchUpdateParameterServer(object):
 
     """
 
-    def __init__(self, delay, ntrainers, lr, momentum, logger, mode):
-        self.model = Net()
+    def __init__(self, delay, ntrainers, lr, momentum, logger, mode, num_input, num_output):
+        self.model = Net(num_input, num_output)
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
         self.optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum = momentum)
@@ -183,7 +185,7 @@ def run_trainer(ps_rref, dataloader, name, epochs, output_folder):
     trainer.train()
 
 
-def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode):
+def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode,num_input, num_output):
     """
     This is the main function which launches the training of all the slaves
     """
@@ -203,7 +205,7 @@ def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning
     pslogger.addHandler(fh)
     pslogger.info("Start training")
 
-    ps_rref = rpc.RRef(BatchUpdateParameterServer(delay, len(trainers),learning_rate, momentum, pslogger, mode))
+    ps_rref = rpc.RRef(BatchUpdateParameterServer(delay, len(trainers),learning_rate, momentum, pslogger, mode, num_input, num_output))
     futs = []
     
     # Random partition of the classes for each trainer
@@ -211,7 +213,6 @@ def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning
     np.random.shuffle(classes)
     chunks = np.floor(len(classes)/len(trainers)).astype(int)
     targets = [classes[i*chunks: (i+1)*chunks] for i in range(0, len(trainers))]
-    
 
     for id, trainer in enumerate(trainers):
         pslogger.info(f"Trainer {id+1} working with classes {targets[id]}")
@@ -220,7 +221,7 @@ def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning
         d = copy.deepcopy(dataset)
         idx = np.isin(d.targets,targets[id])
         d.data = d.data[idx]
-        d.targets = d.targets[idx]
+        d.targets = np.array(d.targets)[idx]
         dataloader = torch.utils.data.DataLoader(d, 
                                 batch_size=batch_size, 
                                 shuffle=True)
@@ -262,7 +263,7 @@ def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning
 
 
 
-def run(rank, world_size,  output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode):
+def run(rank, world_size,  output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode, num_input, num_output):
     """
     Creates the PS and launches the trainers
     """
@@ -287,7 +288,7 @@ def run(rank, world_size,  output_folder, dataset, batch_size, epochs, delay, le
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)], output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode)
+        run_ps([f"trainer{r}" for r in range(1, world_size)], output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode, num_input, num_output)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -382,6 +383,8 @@ if __name__=="__main__":
                                                     torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
                                                     torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
                                                 ]))
+        num_input = 1
+        num_output = 10
     
     elif dataset_name == "cifar10":
         print("Using CIFAR10 dataset")
@@ -392,6 +395,8 @@ if __name__=="__main__":
                                                     torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
                                                     torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
                                                 ]))
+        num_input = 3
+        num_output = 10
     elif dataset_name == "cifar100":
         print("Using CIFAR100 dataset")
         dataset = torchvision.datasets.CIFAR100('./../data/cifar100', 
@@ -401,6 +406,8 @@ if __name__=="__main__":
                                                     torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
                                                     torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
                                                 ]))
+        num_input = 3
+        num_output = 100
     elif dataset_name == "fmnist":
         print("Using FashionMNIST dataset")
         dataset = torchvision.datasets.FashionMNIST('./../data/fmnist', 
@@ -410,6 +417,8 @@ if __name__=="__main__":
                                                     torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
                                                     torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
                                                 ]))
+        num_input = 1
+        num_output = 10
                                                 
     else:
         print("You must specify a dataset amongst: {mnist, cifar10, cifar100, fmnist}")
@@ -423,4 +432,5 @@ if __name__=="__main__":
     world_size = args.world_size
     
 
-    mp.spawn(run, args=(world_size, output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode,), nprocs=world_size, join=True)
+    mp.spawn(run, args=(world_size, output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum,
+            model_accuracy, save_model, mode,num_input,num_output,), nprocs=world_size, join=True)
