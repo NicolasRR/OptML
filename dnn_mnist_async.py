@@ -17,43 +17,62 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 # create file handler which logs even debug messages
-fh = logging.FileHandler('log.log', mode="w")
+fh = logging.FileHandler("log.log", mode="w")
 fh.setLevel(logging.DEBUG)
 # create console handler with a higher log level
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
 # create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch.setFormatter(formatter)
 fh.setFormatter(formatter)
 # add the handlers to logger
 logger.addHandler(ch)
 logger.addHandler(fh)
 
+
 def timed_log(text):
     print(f"{datetime.now().strftime('%H:%M:%S')} {text}")
+
 
 DEFAULT_WORLD_SIZE = 4
 BATCH_SIZE = 32
 
-TRAIN_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
-                                                download=True, 
-                                                train=True,
-                                                transform=torchvision.transforms.Compose([
-                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                ])), 
-                                batch_size=BATCH_SIZE, 
-                                shuffle=True)
-TEST_LOADER = torch.utils.data.DataLoader(torchvision.datasets.MNIST('./../data/mnist_data', 
-                                                    download=True, 
-                                                    train=False,
-                                                    transform=torchvision.transforms.Compose([
-                                                        torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-                                                        torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                    ])), 
-                                    batch_size=BATCH_SIZE, 
-                                    shuffle=True)
+TRAIN_LOADER = torch.utils.data.DataLoader(
+    torchvision.datasets.MNIST(
+        "./../data/mnist_data",
+        download=True,
+        train=True,
+        transform=torchvision.transforms.Compose(
+            [
+                torchvision.transforms.ToTensor(),  # first, convert image to PyTorch tensor
+                torchvision.transforms.Normalize(
+                    (0.1307,), (0.3081,)
+                ),  # normalize inputs
+            ]
+        ),
+    ),
+    batch_size=BATCH_SIZE,
+    shuffle=True,
+)
+TEST_LOADER = torch.utils.data.DataLoader(
+    torchvision.datasets.MNIST(
+        "./../data/mnist_data",
+        download=True,
+        train=False,
+        transform=torchvision.transforms.Compose(
+            [
+                torchvision.transforms.ToTensor(),  # first, convert image to PyTorch tensor
+                torchvision.transforms.Normalize(
+                    (0.1307,), (0.3081,)
+                ),  # normalize inputs
+            ]
+        ),
+    ),
+    batch_size=BATCH_SIZE,
+    shuffle=True,
+)
+
 
 class Net(nn.Module):
     def __init__(self):
@@ -74,13 +93,13 @@ class Net(nn.Module):
         x = self.dropout1(x)
         x = torch.flatten(x, 1)
 
-
         x = self.fc1(x)
         x = nn.functional.relu(x)
         x = self.dropout2(x)
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
         return output
+
 
 class BatchUpdateParameterServer(object):
     def __init__(self, batch_update_size):
@@ -102,11 +121,13 @@ class BatchUpdateParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(ps_rref, grads, id, loss):
         self = ps_rref.local_value()
-        logger.debug(f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates")
+        logger.debug(
+            f"PS got {self.curr_update_size +1}/{self.batch_update_size} updates"
+        )
         for p, g in zip(self.model.parameters(), grads):
             if (p.grad is not None) and (g is not None):
-                p.grad += g 
-            elif(p.grad is None):
+                p.grad += g
+            elif p.grad is None:
                 logger.debug(f"None p.grad detected from worker {id}")
             else:
                 logger.debug("None g detected")
@@ -134,13 +155,14 @@ class BatchUpdateParameterServer(object):
                 fut = self.future_model
         return fut
 
+
 class Trainer(object):
     def __init__(self, ps_rref):
         self.ps_rref = ps_rref
         self.loss_fn = nn.functional.nll_loss
 
     def get_next_batch(self):
-        for (inputs, labels) in tqdm(TRAIN_LOADER):
+        for inputs, labels in tqdm(TRAIN_LOADER):
             yield inputs, labels
 
     def train(self):
@@ -152,22 +174,27 @@ class Trainer(object):
             rpc.rpc_async(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.parameters()], name, loss.detach().sum()),
+                args=(
+                    self.ps_rref,
+                    [p.grad for p in m.parameters()],
+                    name,
+                    loss.detach().sum(),
+                ),
             )
             m = self.ps_rref.rpc_sync().get_model()
+
 
 def run_trainer(ps_rref):
     trainer = Trainer(ps_rref)
     trainer.train()
+
 
 def run_ps(trainers, batch_update_size):
     logger.info("Start training")
     ps_rref = rpc.RRef(BatchUpdateParameterServer(batch_update_size))
     futs = []
     for trainer in trainers:
-        futs.append(
-            rpc.rpc_async(trainer, run_trainer, args=(ps_rref,))
-        )
+        futs.append(rpc.rpc_async(trainer, run_trainer, args=(ps_rref,)))
     torch.futures.wait_all(futs)
     losses = ps_rref.to_here().losses
     plt.plot(range(len(losses)), losses)
@@ -177,64 +204,64 @@ def run_ps(trainers, batch_update_size):
     logger.info("Finished training")
     print(f"Final train loss: {losses[-1]}")
 
-def run(rank, world_size):
 
-    options=rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads=world_size,
-        rpc_timeout=0 # infinite timeout
-     )
+def run(rank, world_size):
+    options = rpc.TensorPipeRpcBackendOptions(
+        num_worker_threads=world_size, rpc_timeout=0  # infinite timeout
+    )
     if rank != 0:
         rpc.init_rpc(
             f"trainer{rank}",
             rank=rank,
             world_size=world_size,
-            rpc_backend_options=options
+            rpc_backend_options=options,
         )
         # trainer passively waiting for ps to kick off training iterations
     else:
         rpc.init_rpc(
-            "ps",
-            rank=rank,
-            world_size=world_size,
-            rpc_backend_options=options
+            "ps", rank=rank, world_size=world_size, rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size-1)
+        run_ps([f"trainer{r}" for r in range(1, world_size)], world_size - 1)
 
     # block until all rpcs finish
     rpc.shutdown()
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Asynchronous-parameter-Server RPC based training")
+        description="Asynchronous-parameter-Server RPC based training"
+    )
     parser.add_argument(
         "--world_size",
         type=int,
         default=DEFAULT_WORLD_SIZE,
         help="""Total number of participating processes. Should be the sum of
-        master node and all training nodes.""")
+        master node and all training nodes.""",
+    )
     parser.add_argument(
         "--master_addr",
         type=str,
         default="0.0.0.0",
         help="""Address of master, will default to localhost if not provided.
-        Master must be able to accept network traffic on the address + port.""")
+        Master must be able to accept network traffic on the address + port.""",
+    )
     parser.add_argument(
         "--master_port",
         type=str,
         default="29500",
         help="""Port that master is listening on, will default to 29500 if not
-        provided. Master must be able to accept network traffic on the host and port.""")
-
+        provided. Master must be able to accept network traffic on the host and port.""",
+    )
 
     args = parser.parse_args()
-    os.environ['MASTER_ADDR'] = args.master_addr
+    os.environ["MASTER_ADDR"] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     if len(sys.argv) < 3:
         print(f"Using default world_size value: {args.world_size}")
     elif args.world_size < 2:
-        print("Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)")
+        print(
+            "Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)"
+        )
         exit()
     world_size = args.world_size
-    mp.spawn(run, args=(world_size, ), nprocs=world_size, join=True)
+    mp.spawn(run, args=(world_size,), nprocs=world_size, join=True)

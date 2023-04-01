@@ -9,7 +9,8 @@ import numpy as np
 
 DEFAULT_BATCH_SIZE = 500
 
-#if train architecture changes, change the Net class
+
+# if train architecture changes, change the Net class
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
@@ -36,21 +37,24 @@ class Net(nn.Module):
         output = nn.functional.log_softmax(x, dim=1)
         return output
 
-def main(model_path, batch_size):
 
+def main(model_path, batch_size):
     # Load the saved model
     model = Net()
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
     # Prepare the test dataset
-    test_transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])
+    test_transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+    )
 
-    test_dataset = datasets.MNIST('data/', train=False, download=True, transform=test_transform)
-    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    test_dataset = datasets.MNIST(
+        "data/", train=False, download=True, transform=test_transform
+    )
+    test_loader = torch.utils.data.DataLoader(
+        test_dataset, batch_size=batch_size, shuffle=False
+    )
 
     # Evaluate the model on the test dataset
     test_loss = 0
@@ -62,7 +66,7 @@ def main(model_path, batch_size):
         for data, target in test_loader:
             data, target = data, target
             output = model(data)
-            test_loss += F.nll_loss(output, target, reduction='sum').item()
+            test_loss += F.nll_loss(output, target, reduction="sum").item()
             pred = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
 
@@ -72,33 +76,37 @@ def main(model_path, batch_size):
     test_loss /= len(test_loader.dataset)
     accuracy = correct / len(test_loader.dataset)
     print("\n")
-    print(f"Average accuracy: {accuracy*100:.2f} % ({correct}/{len(test_loader.dataset)})")
-    print(f'Average loss: {test_loss:.4f}')
-    per_class_accuracy = [accuracy_score(np.array(targets) == i, np.array(predictions) == i) for i in range(10)]
+    print(
+        f"Average accuracy: {accuracy*100:.2f} % ({correct}/{len(test_loader.dataset)})"
+    )
+    print(f"Average loss: {test_loss:.4f}")
+    per_class_accuracy = [
+        accuracy_score(np.array(targets) == i, np.array(predictions) == i)
+        for i in range(10)
+    ]
 
-    print('Per-class metrics:')
-    print('Class\tAccuracy')
+    print("Per-class metrics:")
+    print("Class\tAccuracy")
     for i in range(10):
-        print(f'{i}\t{per_class_accuracy[i]:.4f}')
-        
+        print(f"{i}\t{per_class_accuracy[i]:.4f}")
 
     report = classification_report(targets, predictions)
-    print('\nClassification report:')
+    print("\nClassification report:")
     print(report)
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-    description="Testing MNIST models")
+    parser = argparse.ArgumentParser(description="Testing MNIST models")
     parser.add_argument(
         "--batch_size",
         type=int,
         default=None,
-        help="""Batch size of Mini batch SGD [1,len(train set)].""")
+        help="""Batch size of Mini batch SGD [1,len(train set)].""",
+    )
     parser.add_argument(
-        "remainder",
-        nargs=argparse.REMAINDER,
-        help="""Path of the trained model.""")
-    
+        "remainder", nargs=argparse.REMAINDER, help="""Path of the trained model."""
+    )
+
     args = parser.parse_args()
 
     if args.batch_size is None:

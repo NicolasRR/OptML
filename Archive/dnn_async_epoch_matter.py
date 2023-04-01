@@ -5,23 +5,23 @@ import torch.distributed.rpc as rpc
 from torch import nn
 from torchvision import datasets, transforms
 
+
 def parse_args():
-    parser = argparse.ArgumentParser(description='PyTorch RPC MNIST Example')
-    parser.add_argument('--master_addr', type=str, default='localhost',
-                        help='Address of master node')
-    parser.add_argument('--master_port', type=str, default='29500',
-                        help='Port of master node')
+    parser = argparse.ArgumentParser(description="PyTorch RPC MNIST Example")
+    parser.add_argument(
+        "--master_addr", type=str, default="localhost", help="Address of master node"
+    )
+    parser.add_argument(
+        "--master_port", type=str, default="29500", help="Port of master node"
+    )
     return parser.parse_args()
+
 
 class MNISTTrainer(nn.Module):
     def __init__(self, digit):
         super().__init__()
         self.digit = digit
-        self.model = nn.Sequential(
-            nn.Linear(784, 128),
-            nn.ReLU(),
-            nn.Linear(128, 1)
-        )
+        self.model = nn.Sequential(nn.Linear(784, 128), nn.ReLU(), nn.Linear(128, 1))
 
     def forward(self, x):
         return self.model(x)
@@ -42,40 +42,47 @@ class MNISTTrainer(nn.Module):
                 loss.backward()
                 optimizer.step()
 
+
 class ParameterServer(nn.Module):
     def __init__(self):
         super().__init__()
-        self.params = nn.ParameterList([
-            nn.Parameter(torch.zeros(128, 784)),
-            nn.Parameter(torch.zeros(128)),
-            nn.Parameter(torch.zeros(1, 128)),
-            nn.Parameter(torch.zeros(1))
-        ])
+        self.params = nn.ParameterList(
+            [
+                nn.Parameter(torch.zeros(128, 784)),
+                nn.Parameter(torch.zeros(128)),
+                nn.Parameter(torch.zeros(1, 128)),
+                nn.Parameter(torch.zeros(1)),
+            ]
+        )
 
     def update_params(self, params):
         for p1, p2 in zip(self.params.parameters(), params.parameters()):
             p1.data += p2.grad
 
+
 def run_trainer(rank, world_size):
     # Disable shared memory transport
     options = rpc.TensorPipeRpcBackendOptions(
-        _transports=["ibv", "uv"],
-        _channels=["basic"]
+        _transports=["ibv", "uv"], _channels=["basic"]
     )
 
-    rpc.init_rpc(f"trainer{rank}", rank=rank, world_size=world_size,
-                 rpc_backend_options=options)
+    rpc.init_rpc(
+        f"trainer{rank}", rank=rank, world_size=world_size, rpc_backend_options=options
+    )
 
     if rank == 0:
         # Rank 0 is the parameter server
         ps = ParameterServer()
     else:
         # Other ranks are trainers
-        train_data = datasets.MNIST('./data', train=True, download=True,
-                                    transform=transforms.Compose([
-                                        transforms.ToTensor(),
-                                        transforms.Normalize((0.1307,), (0.3081,))
-                                    ]))
+        train_data = datasets.MNIST(
+            "./data",
+            train=True,
+            download=True,
+            transform=transforms.Compose(
+                [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+            ),
+        )
 
         # Split the data by digit
         digit_data = [[] for _ in range(10)]
@@ -91,14 +98,15 @@ def run_trainer(rank, world_size):
         ps_rref.rpc_sync().update_params(trainer.model)
 
         # Wait for all workers to reach this point, epoch wait
-        #rpc.barrier()
+        # rpc.barrier()
 
     rpc.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     args = parse_args()
-    os.environ['MASTER_ADDR'] = args.master_addr
-    os.environ['MASTER_PORT'] = args.master_port
+    os.environ["MASTER_ADDR"] = args.master_addr
+    os.environ["MASTER_PORT"] = args.master_port
 
     world_size = 11
     torch.multiprocessing.spawn(run_trainer, args=(world_size,), nprocs=world_size)

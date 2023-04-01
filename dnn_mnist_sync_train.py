@@ -14,16 +14,17 @@ from tqdm import tqdm
 import logging
 import logging.handlers
 import numpy as np
-import matplotlib.pyplot as plt #remove if unused
+import matplotlib.pyplot as plt  # remove if unused
 
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
 DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
-DEFAULT_BATCH_SIZE = 32 # 1 == SGD, >1 MINI BATCH SGD
+DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
+
 
 #################################### LOGGER ####################################
 def setup_logger(log_queue):
@@ -34,19 +35,22 @@ def setup_logger(log_queue):
     qh.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
-    #fh = logging.FileHandler("log.log")
-    #fh.setLevel(logging.DEBUG)
+    # fh = logging.FileHandler("log.log")
+    # fh.setLevel(logging.DEBUG)
 
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     ch.setFormatter(formatter)
     qh.setFormatter(formatter)
-    #fh.setFormatter(formatter)
+    # fh.setFormatter(formatter)
 
     logger.addHandler(ch)
     logger.addHandler(qh)
-    #logger.addHandler(fh)
+    # logger.addHandler(fh)
 
     return logger
+
 
 class QueueHandler(logging.Handler):
     def __init__(self, log_queue):
@@ -56,19 +60,23 @@ class QueueHandler(logging.Handler):
     def emit(self, record):
         self.log_queue.put(record)
 
+
 def log_writer(log_queue):
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    with open('log.log', 'w') as log_file:
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    with open("log.log", "w") as log_file:
         while True:
             try:
-                record = log_queue.get(timeout=1) 
+                record = log_queue.get(timeout=1)
                 if record is None:
                     break
                 msg = formatter.format(record)
                 log_file.write(msg + "\n")
             except queue.Empty:
                 continue
-    
+
+
 #################################### NET ####################################
 class Net(nn.Module):
     def __init__(self):
@@ -96,36 +104,49 @@ class Net(nn.Module):
         output = nn.functional.log_softmax(x, dim=1)
         return output
 
+
 #################################### PARAMETER SERVER ####################################
 class ParameterServer(object):
-
     def __init__(self, nb_workers, logger, learning_rate, momentum):
-        self.model = Net() #global model
+        self.model = Net()  # global model
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
         self.nb_workers = nb_workers
         self.update_counter = 0
-        self.optimizer = optim.SGD(self.model.parameters(), lr=learning_rate, momentum= momentum) #dampening=0, weight_decay=0; learning scheduler separately 
-        self.losses = np.array([]) #store global model loss
-        self.loss = np.array([]) #store workers loss
+        self.optimizer = optim.SGD(
+            self.model.parameters(), lr=learning_rate, momentum=momentum
+        )  # dampening=0, weight_decay=0; learning scheduler separately
+        self.losses = np.array([])  # store global model loss
+        self.loss = np.array([])  # store workers loss
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
-        
+
     def get_model(self):
-        return self.model #get global model
-    
+        return self.model  # get global model
+
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads, worker_name, worker_batch_count, worker_epoch, total_batches_to_run, total_epochs, loss):
+    def update_and_fetch_model(
+        ps_rref,
+        grads,
+        worker_name,
+        worker_batch_count,
+        worker_epoch,
+        total_batches_to_run,
+        total_epochs,
+        loss,
+    ):
         self = ps_rref.local_value()
-        self.logger.debug(f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})")
+        self.logger.debug(
+            f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})"
+        )
         for param, grad in zip(self.model.parameters(), grads):
-            if (param.grad is not None )and (grad is not None):
+            if (param.grad is not None) and (grad is not None):
                 param.grad += grad
-            elif(param.grad is None):
+            elif param.grad is None:
                 self.logger.debug(f"None param.grad detected from worker {worker_name}")
-            else: 
+            else:
                 self.logger.debug("None grad detected")
         self.loss = np.append(self.loss, loss)
         with self.lock:
@@ -154,57 +175,76 @@ class ParameterServer(object):
 
 #################################### WORKER ####################################
 class Worker(object):
-
     def __init__(self, ps_rref, train_loader, logger, epochs, worker_accuracy):
         self.ps_rref = ps_rref
-        self.train_loader = train_loader #worker trainloader
-        self.loss_fn = nn.functional.nll_loss #worker loss
+        self.train_loader = train_loader  # worker trainloader
+        self.loss_fn = nn.functional.nll_loss  # worker loss
         self.logger = logger
-        self.batch_count = 0 
+        self.batch_count = 0
         self.current_epoch = 0
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
         self.worker_accuracy = worker_accuracy
-        self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}") #length of the subtrain set
-        #self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
+        self.logger.debug(
+            f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
+        )  # length of the subtrain set
+        # self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
         for epoch in range(self.epochs):
-            self.current_epoch = epoch +1
+            self.current_epoch = epoch + 1
             if self.worker_name == "Worker_1":
-                iterable = tqdm(self.train_loader) #progress bar only of the first worker (we are in synchronous mode)
+                iterable = tqdm(
+                    self.train_loader
+                )  # progress bar only of the first worker (we are in synchronous mode)
             else:
                 iterable = self.train_loader
 
-            for (inputs, labels) in iterable:
+            for inputs, labels in iterable:
                 yield inputs, labels
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()
 
         for inputs, labels in self.get_next_batch():
-            #print(labels, self.worker_name) #check the samples of workers
-            loss = self.loss_fn(worker_model(inputs), labels) #worker loss
+            # print(labels, self.worker_name) #check the samples of workers
+            loss = self.loss_fn(worker_model(inputs), labels)  # worker loss
             loss.backward()
             self.batch_count += 1
 
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [param.grad for param in worker_model.parameters()], self.worker_name, self.batch_count, self.current_epoch, len(self.train_loader), self.epochs, loss.detach().sum()),
+                args=(
+                    self.ps_rref,
+                    [param.grad for param in worker_model.parameters()],
+                    self.worker_name,
+                    self.batch_count,
+                    self.current_epoch,
+                    len(self.train_loader),
+                    self.epochs,
+                    loss.detach().sum(),
+                ),
             )
             if self.worker_accuracy:
-                if self.batch_count == len(self.train_loader) and self.current_epoch == self.epochs:
+                if (
+                    self.batch_count == len(self.train_loader)
+                    and self.current_epoch == self.epochs
+                ):
                     correct_predictions = 0
                     total_predictions = 0
                     with torch.no_grad():  # No need to track gradients for evaluation
                         for _, (data, target) in enumerate(self.train_loader):
                             logits = worker_model(data)
                             predicted_classes = torch.argmax(logits, dim=1)
-                            correct_predictions += (predicted_classes == target).sum().item()
+                            correct_predictions += (
+                                (predicted_classes == target).sum().item()
+                            )
                             total_predictions += target.size(0)
                         final_train_accuracy = correct_predictions / total_predictions
-                    print(f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
+                    print(
+                        f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
+                    )
 
 
 #################################### GLOBAL FUNCTIONS ####################################
@@ -213,15 +253,31 @@ def run_worker(ps_rref, train_loader, logger, epochs, worker_accuracy):
     worker.train()
 
 
-def run_parameter_server(workers, split_dataset, digits_mode, logger, learning_rate, momentum, save_model=True, train_split=DEFAULT_TRAIN_SPLIT, batch_size=None, epochs=DEFAULT_EPOCHS, worker_accuracy=False, model_accuracy=False):
-
-    train_data = torchvision.datasets.MNIST('data/', 
-                                        download=True, 
-                                        train=True,
-                                        transform=torchvision.transforms.Compose([
-                                            torchvision.transforms.ToTensor(),
-                                            torchvision.transforms.Normalize((0.1307,), (0.3081,))
-                                        ]))
+def run_parameter_server(
+    workers,
+    split_dataset,
+    digits_mode,
+    logger,
+    learning_rate,
+    momentum,
+    save_model=True,
+    train_split=DEFAULT_TRAIN_SPLIT,
+    batch_size=None,
+    epochs=DEFAULT_EPOCHS,
+    worker_accuracy=False,
+    model_accuracy=False,
+):
+    train_data = torchvision.datasets.MNIST(
+        "data/",
+        download=True,
+        train=True,
+        transform=torchvision.transforms.Compose(
+            [
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize((0.1307,), (0.3081,)),
+            ]
+        ),
+    )
     # Shuffle and split the train_data
     train_data_indices = torch.randperm(len(train_data))
     train_length = int(train_split * len(train_data))
@@ -234,28 +290,50 @@ def run_parameter_server(workers, split_dataset, digits_mode, logger, learning_r
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
 
-    train_loader_full = 0 #train loader for final global accuracy, useful when workers don't share samples
+    train_loader_full = 0  # train loader for final global accuracy, useful when workers don't share samples
     ps_rref = rpc.RRef(ParameterServer(len(workers), logger, learning_rate, momentum))
     futs = []
 
-    if not split_dataset and not digits_mode: #workers sharing samples
-        train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
+    if not split_dataset and not digits_mode:  # workers sharing samples
+        train_loader = DataLoader(
+            train_data,
+            batch_size=batch_size,
+            sampler=SubsetRandomSampler(subsample_train_indices),
+        )
         if model_accuracy:
-            train_loader_full= train_loader
+            train_loader_full = train_loader
         logger.info("Start training")
         for idx, worker in enumerate(workers):
             futs.append(
-                rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
+                rpc.rpc_async(
+                    worker,
+                    run_worker,
+                    args=(ps_rref, train_loader, logger, epochs, worker_accuracy),
+                )
             )
     elif split_dataset and not digits_mode:
-        worker_indices = subsample_train_indices.chunk(len(workers)) # Split the train_indices based on the number of workers (world_size - 1)
+        worker_indices = subsample_train_indices.chunk(
+            len(workers)
+        )  # Split the train_indices based on the number of workers (world_size - 1)
         if model_accuracy:
-            train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(subsample_train_indices)) 
+            train_loader_full = DataLoader(
+                train_data,
+                batch_size=batch_size,
+                sampler=SubsetRandomSampler(subsample_train_indices),
+            )
         logger.info("Start training")
         for idx, worker in enumerate(workers):
-            train_loader  = DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_indices[idx])) 
+            train_loader = DataLoader(
+                train_data,
+                batch_size=batch_size,
+                sampler=SubsetRandomSampler(worker_indices[idx]),
+            )
             futs.append(
-                rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
+                rpc.rpc_async(
+                    worker,
+                    run_worker,
+                    args=(ps_rref, train_loader, logger, epochs, worker_accuracy),
+                )
             )
     elif digits_mode:
         digit_indices = {i: [] for i in range(10)}
@@ -278,20 +356,35 @@ def run_parameter_server(workers, split_dataset, digits_mode, logger, learning_r
         for i, worker in enumerate(worker_indices):
             worker_indices[i] = worker[:min_subset_length]
 
-        digit_train_loaders = [DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(worker_idx)) for worker_idx in worker_indices]
+        digit_train_loaders = [
+            DataLoader(
+                train_data,
+                batch_size=batch_size,
+                sampler=SubsetRandomSampler(worker_idx),
+            )
+            for worker_idx in worker_indices
+        ]
 
         if model_accuracy:
             full_digits_list = []
             for sublist in worker_indices:
                 full_digits_list.extend(sublist)
-            train_loader_full= DataLoader(train_data, batch_size=batch_size, sampler=SubsetRandomSampler(full_digits_list)) 
-        
+            train_loader_full = DataLoader(
+                train_data,
+                batch_size=batch_size,
+                sampler=SubsetRandomSampler(full_digits_list),
+            )
+
         logger.info("Start training")
 
         for idx, worker in enumerate(workers):
             train_loader = digit_train_loaders[idx]
             futs.append(
-                rpc.rpc_async(worker, run_worker, args=(ps_rref, train_loader, logger, epochs, worker_accuracy))
+                rpc.rpc_async(
+                    worker,
+                    run_worker,
+                    args=(ps_rref, train_loader, logger, epochs, worker_accuracy),
+                )
             )
 
     torch.futures.wait_all(futs)
@@ -299,15 +392,15 @@ def run_parameter_server(workers, split_dataset, digits_mode, logger, learning_r
     losses = ps_rref.to_here().losses
     logger.info("Finished training")
     print(f"Final train loss: {losses[-1]}")
-    #plt.plot(range(len(losses)), losses)
-    #plt.xlabel("Losses")
-    #plt.ylabel("Update steps")
-    #plt.savefig("loss.png")
+    # plt.plot(range(len(losses)), losses)
+    # plt.xlabel("Losses")
+    # plt.ylabel("Update steps")
+    # plt.savefig("loss.png")
 
     if model_accuracy:
         correct_predictions = 0
         total_predictions = 0
-        #memory efficient way (for large datasets)
+        # memory efficient way (for large datasets)
         with torch.no_grad():  # No need to track gradients for evaluation
             for _, (data, target) in enumerate(train_loader_full):
                 logits = ps_rref.to_here().model(data)
@@ -315,14 +408,16 @@ def run_parameter_server(workers, split_dataset, digits_mode, logger, learning_r
                 correct_predictions += (predicted_classes == target).sum().item()
                 total_predictions += target.size(0)
         final_train_accuracy = correct_predictions / total_predictions
-        print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
+        print(
+            f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
+        )
 
     if save_model:
         if split_dataset:
             filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
-        elif  digits_mode:
+        elif digits_mode:
             filename = f"mnist_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_digits.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
@@ -332,21 +427,33 @@ def run_parameter_server(workers, split_dataset, digits_mode, logger, learning_r
             print(f"Model saved: {filename}")
 
 
-
-def run(rank, world_size, learning_rate, momentum, log_queue, save_model, split_dataset, train_split, batch_size, epochs, worker_accuracy, model_accuracy, digits_mode):
-    logger= setup_logger(log_queue)
-    rpc_backend_options= rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads=world_size,
-        rpc_timeout=0 # infinite timeout
+def run(
+    rank,
+    world_size,
+    learning_rate,
+    momentum,
+    log_queue,
+    save_model,
+    split_dataset,
+    train_split,
+    batch_size,
+    epochs,
+    worker_accuracy,
+    model_accuracy,
+    digits_mode,
+):
+    logger = setup_logger(log_queue)
+    rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
+        num_worker_threads=world_size, rpc_timeout=0  # infinite timeout
     )
 
     if rank != 0:
-        #starting up worker
+        # starting up worker
         rpc.init_rpc(
             f"Worker_{rank}",
             rank=rank,
             world_size=world_size,
-            rpc_backend_options=rpc_backend_options
+            rpc_backend_options=rpc_backend_options,
         )
         # worker passively waiting for parameter server to kick off training iterations
     else:
@@ -355,99 +462,121 @@ def run(rank, world_size, learning_rate, momentum, log_queue, save_model, split_
             "Parameter_Server",
             rank=rank,
             world_size=world_size,
-            rpc_backend_options=rpc_backend_options
+            rpc_backend_options=rpc_backend_options,
         )
-        run_parameter_server([f"Worker_{r}" for r in range(1, world_size)], split_dataset, digits_mode, logger, learning_rate, momentum, save_model, train_split, batch_size, epochs, worker_accuracy, model_accuracy)
+        run_parameter_server(
+            [f"Worker_{r}" for r in range(1, world_size)],
+            split_dataset,
+            digits_mode,
+            logger,
+            learning_rate,
+            momentum,
+            save_model,
+            train_split,
+            batch_size,
+            epochs,
+            worker_accuracy,
+            model_accuracy,
+        )
 
     # block until all rpcs finish
     rpc.shutdown()
 
 
 #################################### MAIN ####################################
-if __name__=="__main__":
-
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Synchronous Parallel SGD parameter-Server RPC based training")
+        description="Synchronous Parallel SGD parameter-Server RPC based training"
+    )
     parser.add_argument(
         "--master_port",
         type=str,
         default="29500",
         help="""Port that master is listening on, will default to 29500 if not
-        provided. Master must be able to accept network traffic on the host and port.""")
+        provided. Master must be able to accept network traffic on the host and port.""",
+    )
     parser.add_argument(
         "--master_addr",
         type=str,
         default="localhost",
         help="""Address of master, will default to localhost if not provided.
-        Master must be able to accept network traffic on the address + port.""")
+        Master must be able to accept network traffic on the address + port.""",
+    )
     parser.add_argument(
         "--world_size",
         type=int,
         default=None,
         help="""Total number of participating processes. Should be the sum of
-        master node and all training nodes [2,+inf].""")
+        master node and all training nodes [2,+inf].""",
+    )
     parser.add_argument(
         "--train_split",
         type=float,
         default=None,
-        help="""Percentage of the training dataset to be used for training (0,1].""")
+        help="""Percentage of the training dataset to be used for training (0,1].""",
+    )
     parser.add_argument(
-        "--lr",
-        type=float,
-        default=None,
-        help="""Learning rate of SGD  (0,+inf).""")
+        "--lr", type=float, default=None, help="""Learning rate of SGD  (0,+inf)."""
+    )
     parser.add_argument(
-        "--momentum",
-        type=float,
-        default=None,
-        help="""Momentum of SGD  [0,+inf).""")
+        "--momentum", type=float, default=None, help="""Momentum of SGD  [0,+inf)."""
+    )
     parser.add_argument(
         "--batch_size",
         type=int,
         default=None,
-        help="""Batch size of Mini batch SGD [1,len(train set)].""")
+        help="""Batch size of Mini batch SGD [1,len(train set)].""",
+    )
     parser.add_argument(
         "--epochs",
         type=int,
         default=None,
-        help="""Number of epochs for training [1,+inf).""")
+        help="""Number of epochs for training [1,+inf).""",
+    )
     parser.add_argument(
         "--model_accuracy",
         action="store_true",
-        help="""If set, will compute the train accuracy of the global model after training.""")
+        help="""If set, will compute the train accuracy of the global model after training.""",
+    )
     parser.add_argument(
         "--worker_accuracy",
         action="store_true",
-        help="""If set, will compute the train accuracy of each worker after training (useful when --split_dataset).""")
+        help="""If set, will compute the train accuracy of each worker after training (useful when --split_dataset).""",
+    )
     parser.add_argument(
         "--no_save_model",
         action="store_true",
-        help="""If set, the trained model will not be saved.""")
+        help="""If set, the trained model will not be saved.""",
+    )
     parser.add_argument(
         "--split_dataset",
         action="store_true",
         help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
-        shared between workers).""")
+        shared between workers).""",
+    )
     parser.add_argument(
         "--digits",
         action="store_true",
         help="""If set, it will split the MNIST dataset in {world_size -1} parts, each part corresponding to a distinct set of digits, and each part will be assigned to a worker. Workers will not share samples and the digits are randomly assigned
-        This mode requires --world_size {digits +1} --batch_size 1, don't use --split_dataset. With MNIST --world_size should be 3, 6, or 11.""")
+        This mode requires --batch_size 1, don't use --split_dataset. With MNIST --world_size should be 3, 6, or 11.""",
+    )
     parser.add_argument(
         "--seed",
         action="store_true",
-        help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""")
-            
+        help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""",
+    )
 
     args = parser.parse_args()
-    os.environ['MASTER_ADDR'] = args.master_addr
+    os.environ["MASTER_ADDR"] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
-    
+
     if args.world_size is None:
         args.world_size = DEFAULT_WORLD_SIZE
         print(f"Using default world_size value: {DEFAULT_WORLD_SIZE}")
     elif args.world_size < 2:
-        print("Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)")
+        print(
+            "Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)"
+        )
         exit()
 
     if args.train_split is None:
@@ -507,7 +636,7 @@ if __name__=="__main__":
         if split_dataset:
             print("Please use --digits without --split_dataset")
             exit()
-        elif 10 % (args.world_size -1) != 0 or args.world_size == 2:
+        elif 10 % (args.world_size - 1) != 0 or args.world_size == 2:
             print("Please use --digits with --world_size {3, 6, 11}")
             exit()
         elif args.batch_size != 1:
@@ -518,13 +647,30 @@ if __name__=="__main__":
         torch.manual_seed(DEFAULT_SEED)
         np.random.seed(DEFAULT_SEED)
 
-
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
 
         log_writer_thread.start()
-        mp.spawn(run, args=(args.world_size, args.lr, args.momentum, log_queue, save_model, split_dataset, args.train_split, args.batch_size, args.epochs, worker_accuracy, model_accuracy, digits_mode), nprocs=args.world_size, join=True)
+        mp.spawn(
+            run,
+            args=(
+                args.world_size,
+                args.lr,
+                args.momentum,
+                log_queue,
+                save_model,
+                split_dataset,
+                args.train_split,
+                args.batch_size,
+                args.epochs,
+                worker_accuracy,
+                model_accuracy,
+                digits_mode,
+            ),
+            nprocs=args.world_size,
+            join=True,
+        )
 
         log_queue.put(None)
         log_writer_thread.join()
