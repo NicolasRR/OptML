@@ -411,7 +411,7 @@ if __name__ == "__main__":
         type=str,
         choices=["mnist", "fashion_mnist", "cifar10", "cifar100"],
         required=True,
-        help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100",
+        help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100.",
     )
     parser.add_argument(
         "--world_size",
