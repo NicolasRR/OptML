@@ -57,7 +57,7 @@ For WSL, run in bash `python3 dnn_sync_train.py --dataset mnist` or `python3 dnn
 `python3 dnn_sync_train.py --dataset mnist --world_size 6 --model_accuracy --batch_size 1 --split_labels`
 
 ## Command line flags
-Our scripts accept various arguments from the command line, to see all the flags available: `python3 dnn_sync_train.py -h` or `python3 dnn_sync_train.py --help`
+Our scripts accept various arguments from the command line, to see all the flags available: <br> `python3 dnn_sync_train.py -h` or `python3 dnn_sync_train.py --help`
 
 <div align="center">
 
