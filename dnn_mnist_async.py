@@ -27,7 +27,7 @@ fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
 # create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch.setFormatter(formatter)
 fh.setFormatter(formatter)
 # add the handlers to logger
@@ -59,7 +59,6 @@ class Net(nn.Module):
         x = self.dropout1(x)
         x = torch.flatten(x, 1)
 
-
         x = self.fc1(x)
         x = nn.functional.relu(x)
         x = self.dropout2(x)
@@ -67,9 +66,10 @@ class Net(nn.Module):
         output = nn.functional.log_softmax(x, dim=1)
         return output
 
+
 class BatchUpdateParameterServer(object):
     """
-    This class contains the parameters and updates them at every iteration. To do so it performs thread locking in order to avoid memory issues. 
+    This class contains the parameters and updates them at every iteration. To do so it performs thread locking in order to avoid memory issues.
 
     """
 
@@ -77,28 +77,27 @@ class BatchUpdateParameterServer(object):
         self.model = Net()
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
-        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-4, momentum = 0.9)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=1e-4, momentum=0.9)
         self.losses = np.array([])
         self.norms = np.array([])
-        for i,p in enumerate(self.model.parameters()):
+        for i, p in enumerate(self.model.parameters()):
             p.grad = torch.zeros_like(p)
-        self.lnorms = [[] for j in range(i+1)]
+        self.lnorms = [[] for j in range(i + 1)]
         self.trainers = np.zeros(ntrainers, dtype=int)
-        self.delay = delay        
+        self.delay = delay
 
     def get_model(self):
         return self.model
 
-
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(ps_rref, grads,id, loss):
+    def update_and_fetch_model(ps_rref, grads, id, loss):
         """
         This function can be called asynchonously by all the slaves in order to update the master's parameters. It manually add the gradient to .grad
         """
         self = ps_rref.local_value()
         logger.debug(f"PS got 1 updates from worker {id}")
-        self.trainers[id-1] +=1
+        self.trainers[id - 1] += 1
         logger.debug(f"The value of trainer is {self.trainers}")
         self.losses = np.append(self.losses, loss)
         if id == 1:
@@ -106,7 +105,7 @@ class BatchUpdateParameterServer(object):
         with self.lock:
             fut = self.future_model
             norm = 0
-            for i,(p, g) in enumerate(zip(self.model.parameters(), grads)):
+            for i, (p, g) in enumerate(zip(self.model.parameters(), grads)):
                 if p.grad is not None:
                     p.grad += g
                     n = p.grad.norm(2).item() ** 2
@@ -115,7 +114,7 @@ class BatchUpdateParameterServer(object):
                 else:
                     logger.debug(f"None p.grad detected for the update")
             logger.debug(f"Loss is {self.losses[-1]}")
-            self.norms = np.append(self.norms, norm**(0.5))
+            self.norms = np.append(self.norms, norm ** (0.5))
             logger.debug(f"The norm of the gradient is {self.norms[-1]}")
             self.loss = np.array([])
             self.optimizer.step()
@@ -139,10 +138,9 @@ class Trainer(object):
         self.name = name
         self.epochs = epochs
 
-
     def get_next_batch(self):
         for _ in range(self.epochs):
-            for (inputs,labels) in tqdm(self.dataloader, position=self.name):
+            for inputs, labels in tqdm(self.dataloader, position=self.name):
                 yield inputs, labels
 
     def train(self):
@@ -153,7 +151,12 @@ class Trainer(object):
             m = rpc.rpc_sync(
                 self.ps_rref.owner(),
                 BatchUpdateParameterServer.update_and_fetch_model,
-                args=(self.ps_rref, [p.grad for p in m.parameters()], self.name, loss.detach().sum()),
+                args=(
+                    self.ps_rref,
+                    [p.grad for p in m.parameters()],
+                    self.name,
+                    loss.detach().sum(),
+                ),
             )
 
 
@@ -172,32 +175,45 @@ def run_ps(trainers, output_folder, epochs, delay):
     logger.info("Start training")
     ps_rref = rpc.RRef(BatchUpdateParameterServer(delay, len(trainers)))
     futs = []
-    dataset = torchvision.datasets.MNIST('./../data/mnist_data', 
-                                                download=True, 
-                                                train=True,
-                                                transform=torchvision.transforms.Compose([
-                                                    torchvision.transforms.ToTensor(), # first, convert image to PyTorch tensor
-                                                    torchvision.transforms.Normalize((0.1307,), (0.3081,)) # normalize inputs
-                                                ]))
+    dataset = torchvision.datasets.MNIST(
+        "./../data/mnist_data",
+        download=True,
+        train=True,
+        transform=torchvision.transforms.Compose(
+            [
+                torchvision.transforms.ToTensor(),  # first, convert image to PyTorch tensor
+                torchvision.transforms.Normalize(
+                    (0.1307,), (0.3081,)
+                ),  # normalize inputs
+            ]
+        ),
+    )
     for id, trainer in enumerate(trainers):
         d = copy.deepcopy(dataset)
-        idx = d.targets==id
+        idx = d.targets == id
         d.data = d.data[idx]
         d.targets = d.targets[idx]
-        dataloader = torch.utils.data.DataLoader(d, 
-                                batch_size=BATCH_SIZE, 
-                                shuffle=True)
+        dataloader = torch.utils.data.DataLoader(d, batch_size=BATCH_SIZE, shuffle=True)
 
         futs.append(
-            rpc.rpc_async(trainer, run_trainer, args=(ps_rref,dataloader, id+1,epochs,))
+            rpc.rpc_async(
+                trainer,
+                run_trainer,
+                args=(
+                    ps_rref,
+                    dataloader,
+                    id + 1,
+                    epochs,
+                ),
+            )
         )
 
     torch.futures.wait_all(futs)
     ps = ps_rref.to_here()
-    
-    np.savetxt(os.path.join(output_folder,"loss.txt"), ps.losses)
+
+    np.savetxt(os.path.join(output_folder, "loss.txt"), ps.losses)
     lnorms = ps.lnorms
-    np.savetxt(os.path.join(output_folder,"norms.txt"), ps.norms)
+    np.savetxt(os.path.join(output_folder, "norms.txt"), ps.norms)
     for i in range(len(lnorms)):
         np.savetxt(os.path.join(output_folder, f"lnorms{i}.txt"), lnorms[i])
     logger.info("Finish training")
@@ -208,77 +224,81 @@ def run(rank, world_size, output_folder, epochs, delay):
     Creates the PS and launches the trainers
     """
 
-    options=rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads=6,
-        rpc_timeout=0 # infinite timeout
-     )
+    options = rpc.TensorPipeRpcBackendOptions(
+        num_worker_threads=6, rpc_timeout=0  # infinite timeout
+    )
     if rank != 0:
         rpc.init_rpc(
             f"trainer{rank}",
             rank=rank,
             world_size=world_size,
-            rpc_backend_options=options
+            rpc_backend_options=options,
         )
         # trainer passively waiting for ps to kick off training iterations
     else:
         rpc.init_rpc(
-            "ps",
-            rank=rank,
-            world_size=world_size,
-            rpc_backend_options=options
+            "ps", rank=rank, world_size=world_size, rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)], output_folder, epochs, delay)
+        run_ps(
+            [f"trainer{r}" for r in range(1, world_size)], output_folder, epochs, delay
+        )
 
     # block until all rpcs finish
     rpc.shutdown()
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Asynchronous-parameter-Server RPC based training")
+        description="Asynchronous-parameter-Server RPC based training"
+    )
     parser.add_argument(
         "--world_size",
         type=int,
         default=6,
         help="""Total number of participating processes. Should be the sum of
-        master node and all training nodes.""")
+        master node and all training nodes.""",
+    )
     parser.add_argument(
         "--master_addr",
         type=str,
         default="0.0.0.0",
         help="""Address of master, will default to localhost if not provided.
-        Master must be able to accept network traffic on the address + port.""")
+        Master must be able to accept network traffic on the address + port.""",
+    )
     parser.add_argument(
         "--master_port",
         type=str,
         default="29500",
         help="""Port that master is listening on, will default to 29500 if not
-        provided. Master must be able to accept network traffic on the host and port.""")
+        provided. Master must be able to accept network traffic on the host and port.""",
+    )
     parser.add_argument(
         "--output",
         type=str,
         default="./results/dnn_mnist_async",
-        help="""Output folder.""")
-    parser.add_argument(
-        "--epochs",
-        type=int,
-        default=5,
-        help="""Number of epochs"""),
-    parser.add_argument(
-        "--delay",
-        type=float,
-        default=0.5,
-        help="""delay in seconds""")
+        help="""Output folder.""",
+    )
+    parser.add_argument("--epochs", type=int, default=5, help="""Number of epochs"""),
+    parser.add_argument("--delay", type=float, default=0.5, help="""delay in seconds""")
     args = parser.parse_args()
     output_folder = args.output
     epochs = args.epochs
     delay = args.delay
-    if not(os.path.exists(output_folder)):
+    if not (os.path.exists(output_folder)):
         os.mkdir(output_folder)
-    
-    os.environ['MASTER_ADDR'] = args.master_addr
+
+    os.environ["MASTER_ADDR"] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     world_size = args.world_size
-    
-    mp.spawn(run, args=(world_size, output_folder, epochs, delay,), nprocs=world_size, join=True)
+
+    mp.spawn(
+        run,
+        args=(
+            world_size,
+            output_folder,
+            epochs,
+            delay,
+        ),
+        nprocs=world_size,
+        join=True,
+    )

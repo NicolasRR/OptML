@@ -65,7 +65,10 @@ Our scripts accept various arguments from the command line, to see all the flags
 | --------------- | --------------- |
 | --master_port MASTER_PORT | Port that master is listening on, will default to 29500 if not provided. Master must be able to accept network traffic on the host and port. |
 | --master_addr MASTER_ADDR | Address of master, will default to localhost if not provided. Master must be able to accept network traffic on the address + port. |
+| --dataset {mnist,fashion_mnist,cifar10,cifar100} | Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100." |
 | --world_size WORLD_SIZE | Total number of participating processes. Should be the sum of master node and all training nodes [2,+inf]. |
+| --split_dataset | After applying train_split, each worker will train on a unique distinct dataset (samples will not be shared between workers). |
+| --split_labels | If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned. This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels $mod$ (world_size-1) = 0, with world_size = 2 excluded. |
 | --train_split TRAIN_SPLIT| Percentage of the training dataset to be used for training (0,1&#93;. |
 | --lr LR | Learning rate of SGD  (0,+inf)." |
 | --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
@@ -74,8 +77,6 @@ Our scripts accept various arguments from the command line, to see all the flags
 | --model_accuracy | If set, will compute the train accuracy of the global model after training. |
 | --worker_accuracy | If set, will compute the train accuracy of each worker after training (useful when --split_dataset). |
 | --no_save_model | If set, the trained model will not be saved. |
-| --split_dataset | After applying train_split, each worker will train on a unique distinct dataset (samples will not be shared between workers). |
-| --split_labels | If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned. This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels % (world_size-1) = 0, with world_size = 2 excluded. |
 | --seed | If set, it will set seeds on `torch`, `numpy` and `random` for reproducibility purposes. |
 
 </div>
