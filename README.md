@@ -31,16 +31,16 @@ Option 1:
 To use *dnn_mnist.py* you have to activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python *dnn_mnist.py* and you will start training. The python script accepts as arguments *world_size* that you can use to specify the number of nodes for training: $1$ parameter server + $n-1$ workers.
 
 Option 2:
-For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_size N` with $N \geqslant 2$.
+For WSL, run in bash `python3 dnn_sync_train.py --dataset mnist` or `python3 dnn_sync_train.py --dataset mnist --world_size N` with $N \geqslant 2$.
 
 ### Some examples
 - The following command will train two workers synchronously, on 10% of MNIST train dataset, trainloaders will use a batch size of 64, and the SGD optimizer a learning rate of $10^{-2}$ and momentum of $0.5$, at the end of training the global accuracy of the model will be printed and the model will not be saved. As `--epochs EPOCHS` is not precised, the default value of epochs will be used: $1$. <br>
-`python3 dnn_mnist_sync_train.py --world_size 3 --train_split 0.1 --lr 0.01 --momentum 0.5 --batch_size 64 --model_accuracy --no_save_model`
+`python3 dnn_mnist_sync_train.py --dataset mnist --world_size 3 --train_split 0.1 --lr 0.01 --momentum 0.5 --batch_size 64 --model_accuracy --no_save_model`
 
 - The following command will train 3 workers synchronously, on 50% of MNIST train dataset, trainloaders will split the 50% of trainset in 3 equal parts for each worker ($60k \Rightarrow 30k \Rightarrow 10k$, $10k$, $10k$), in this configuration workers will not **share** samples (each worker has its distinct trainset). At the end of training, the accuracy of each worker, and global model will be printed, and the model will be saved. <br>
-`python3 dnn_mnist_sync_train.py --train_split 0.5 --model_accuracy --worker_accuracy` 
+`python3 dnn_mnist_sync_train.py --dataset mnist --train_split 0.5 --model_accuracy --worker_accuracy` 
 
-- The following command will train 5 workers synchronously, on the full MNIST train dataset, trainloaders will use a batch size of 1, and model accuracy will be printed at the end. With the `--digits` flag, the 10 digits will be splitted evenly between the workers. For this example, we have 5 workers, meaning that each worker will train on two randomly chosen digits in $\[0,9\]$, here is an illustrative example:
+- The following command will train 5 workers synchronously, on the full MNIST train dataset, trainloaders will use a batch size of 1, and model accuracy will be printed at the end. With the `--split_labels` flag, the 10 digits will be splitted evenly between the workers. For this example, we have 5 workers, meaning that each worker will train on two randomly chosen digits in $\[0,9\]$, here is an illustrative example:
 
 <div align="center">
 
@@ -54,7 +54,7 @@ For WSL, run in bash `python3 dnn_mnist.py` or `python3 dnn_mnist.py --world_siz
 
 </div>
 
-`python3 dnn_mnist_sync_train.py --world_size 6 --model_accuracy --batch_size 1 --digits`
+`python3 dnn_sync_train.py --dataset mnist --world_size 6 --model_accuracy --batch_size 1 --split_labels`
 
 ## Command line flags
 Our scripts accept various arguments from the command line, to see all the flags available: `python3 dnn_mnist.py -h` or `python3 dnn_mnist.py --help`
@@ -75,7 +75,7 @@ Our scripts accept various arguments from the command line, to see all the flags
 | --worker_accuracy | If set, will compute the train accuracy of each worker after training (useful when --split_dataset). |
 | --no_save_model | If set, the trained model will not be saved. |
 | --split_dataset | After applying train_split, each worker will train on a unique distinct dataset (samples will not be shared between workers). |
-| --digits | If set, it will split the MNIST dataset in {world_size -1} parts, each part corresponding to a distinct set of digits, and each part will be assigned to a worker. Workers will not share samples and the digits are randomly assigned This mode requires --world_size {digits +1} --batch_size 1, don't use --split_dataset. With MNIST --world_size should be 3, 6, or 11. |
+| --split_labels | If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned. This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels % (world_size-1) = 0, with world_size = 2 excluded. |
 | --seed | If set, it will set seeds on `torch`, `numpy` and `random` for reproducibility purposes. |
 
 </div>
