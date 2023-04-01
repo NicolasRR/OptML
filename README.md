@@ -28,7 +28,7 @@ Use Windows Subsystem for Linux (WSL). To install WSL take the following steps:
 
 ## How to use our scripts
 Option 1:
-To use *dnn_mnist.py* you have to activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python *dnn_mnist.py* and you will start training. The python script accepts as arguments *world_size* that you can use to specify the number of nodes for training: $1$ parameter server + $n-1$ workers.
+To use *dnn_sync_train.py* you have to activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python *dnn_sync_train.py* and you will start training. The python script accepts as arguments *world_size* that you can use to specify the number of nodes for training: $1$ parameter server + $n-1$ workers.
 
 Option 2:
 For WSL, run in bash `python3 dnn_sync_train.py --dataset mnist` or `python3 dnn_sync_train.py --dataset mnist --world_size N` with $N \geqslant 2$.
@@ -57,7 +57,7 @@ For WSL, run in bash `python3 dnn_sync_train.py --dataset mnist` or `python3 dnn
 `python3 dnn_sync_train.py --dataset mnist --world_size 6 --model_accuracy --batch_size 1 --split_labels`
 
 ## Command line flags
-Our scripts accept various arguments from the command line, to see all the flags available: `python3 dnn_mnist.py -h` or `python3 dnn_mnist.py --help`
+Our scripts accept various arguments from the command line, to see all the flags available: `python3 dnn_sync_train.py -h` or `python3 dnn_sync_train.py --help`
 
 <div align="center">
 
