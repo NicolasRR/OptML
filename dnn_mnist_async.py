@@ -119,12 +119,14 @@ class BatchUpdateParameterServer(object):
             if self.epochs[id-1] < epoch:
                 self.epochs[id-1] += 1
                 if self.mode == "swa" and epoch>self.swa_start:
-                    self.logger.debug("SWA scheduler update")
+                    self.logger.info("SWA scheduler update")
                     self.swa_model.update_parameters(self.model)
                     self.swa_scheduler.step()
                 elif self.mode == "swa" or self.mode == "scheduler":
-                    self.logger.debug("Scheduler Upate")
+                    
                     self.scheduler.step()
+                    self.logger.info("Scheduler Update")
+                    print(self.scheduler.get_lr())
 
             self.optimizer.zero_grad(set_to_none=False)
             fut.set_result(self.model)
@@ -370,7 +372,7 @@ if __name__=="__main__":
     model_accuracy = args.m 
     batch_size = args.batch_size
     learning_rate = args.lr
-    momentum = args.m
+    momentum = args.momemtum
     dataset_name = args.dataset
     mode = args.mode
 
