@@ -85,10 +85,10 @@ class BatchUpdateParameterServer(object):
         if pca_gen:
             self.filename = os.path.join(output_folder,'data_pca.npy')
             self.pca_current = 0
-            self.pca_max = 300
+            self.pca_max = 800
             shape = (self.pca_max, torch.numel(torch.nn.utils.parameters_to_vector(self.model.parameters())))
             self.data = np.lib.format.open_memmap(self.filename, mode='w+', shape=shape, dtype=np.float32)
-            self.pca_iter = 3
+            self.pca_iter = 1
 
 
 
@@ -136,7 +136,7 @@ class BatchUpdateParameterServer(object):
             # self.data = np.vstack([self.data, flat])
                 self.data[self.pca_current, :] = flat
                 self.pca_current += 1
-                if self.pca_current%10 == 0:
+                if self.pca_current%50 == 0:
                     self.data.flush()
                 # np.save(self.filename, self.data)
             self.logger.debug(f"Loss is {self.losses[-1]}")
@@ -411,7 +411,7 @@ if __name__=="__main__":
 
     if dataset_name == "mnist":
         print("Using MNIST dataset")
-        dataset = torchvision.datasets.MNIST('./../data/mnist_data', 
+        dataset = torchvision.datasets.MNIST('./data/mnist_data', 
                                                 download=True, 
                                                 train=True,
                                                 transform=torchvision.transforms.Compose([
@@ -423,7 +423,7 @@ if __name__=="__main__":
     
     elif dataset_name == "cifar10":
         print("Using CIFAR10 dataset")
-        dataset = torchvision.datasets.CIFAR10('./../data/cifar10', 
+        dataset = torchvision.datasets.CIFAR10('./data/cifar10', 
                                                 download=True, 
                                                 train=True,
                                                 transform=torchvision.transforms.Compose([
@@ -434,7 +434,7 @@ if __name__=="__main__":
         num_output = 10
     elif dataset_name == "cifar100":
         print("Using CIFAR100 dataset")
-        dataset = torchvision.datasets.CIFAR100('./../data/cifar100', 
+        dataset = torchvision.datasets.CIFAR100('./data/cifar100', 
                                                 download=True, 
                                                 train=True,
                                                 transform=torchvision.transforms.Compose([
@@ -445,7 +445,7 @@ if __name__=="__main__":
         num_output = 100
     elif dataset_name == "fmnist":
         print("Using FashionMNIST dataset")
-        dataset = torchvision.datasets.FashionMNIST('./../data/fmnist', 
+        dataset = torchvision.datasets.FashionMNIST('./data/fmnist', 
                                                 download=True, 
                                                 train=True,
                                                 transform=torchvision.transforms.Compose([
