@@ -32,8 +32,6 @@ class Net(nn.Module):
         x = self.conv1(x)
         x = nn.functional.relu(x)
         x = self.conv2(x)
-        #x= nn.functional.max_pool2d(x,2)
-        #x = nn.functional.adaptive_max_pool2d(x, output_size = 144)
         x = self.max_pool(x)
         x = self.dropout1(x)
         x = torch.flatten(x, 1)
@@ -56,7 +54,10 @@ class BatchUpdateParameterServer(object):
         self.model = Net(num_input, num_output)
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
-        self.optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum = momentum)
+        if mode == "normal" or mode == "compensation":
+            self.optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum = momentum)
+        else:
+            self.optimizer = optim.SGD(self.model.parameters(), lr=100*lr, momentum = momentum)
         self.losses = np.array([])
         self.norms = np.array([])
         for _,p in enumerate(self.model.parameters()):
@@ -66,11 +67,11 @@ class BatchUpdateParameterServer(object):
         self.mode = mode
         if mode == "scheduler":
             self.logger.info("Creating a Learning rate scheduler")
-            self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=300)
+            self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=0.9)
         if mode == "swa":
             self.logger.info("Creating a SWA scheduler")
             self.swa_model = torch.optim.swa_utils.AveragedModel(self.model)
-            self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=300)
+            self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=0.9)
             self.swa_start = 2
             self.swa_scheduler = SWALR(self.optimizer, swa_lr=0.05)
         elif mode == "compensation":
@@ -119,14 +120,13 @@ class BatchUpdateParameterServer(object):
             if self.epochs[id-1] < epoch:
                 self.epochs[id-1] += 1
                 if self.mode == "swa" and epoch>self.swa_start:
-                    self.logger.info("SWA scheduler update")
                     self.swa_model.update_parameters(self.model)
                     self.swa_scheduler.step()
-                elif self.mode == "swa" or self.mode == "scheduler":
-                    
+                    self.logger.debug(f"SWA scheduler update: {self.swa_scheduler.get_lr()}")
+                elif self.mode == "swa" or self.mode == "scheduler":                    
                     self.scheduler.step()
-                    self.logger.info("Scheduler Update")
-                    print(self.scheduler.get_lr())
+                    lrs = [param["lr"]  for param in self.optimizer.param_groups]
+                    self.logger.debug(f"Scheduler Update: {lrs}")
 
             self.optimizer.zero_grad(set_to_none=False)
             fut.set_result(self.model)
@@ -258,7 +258,7 @@ def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning
         print(f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})")
 
     if save_model:
-        filename = f"mnist_async_{learning_rate}_{momentum}_{batch_size}_numclasses_{len(targets)*chunks}.pt"
+        filename = f"mnist_async_{learning_rate}_{momentum}_{batch_size}_{mode}_numclasses_{len(targets)*chunks}.pt"
         torch.save(ps_rref.to_here().model.state_dict(), os.path.join(output_folder,filename))
         print(f"Model saved: {filename}")
     logging.shutdown()
@@ -321,7 +321,7 @@ if __name__=="__main__":
     parser.add_argument(
         "--output",
         type=str,
-        default="./results/dnn_mnist_async",
+        default="./results/",
         help="""Output folder.""")
     parser.add_argument(
         "--epochs",
@@ -346,7 +346,7 @@ if __name__=="__main__":
     parser.add_argument(
         "--momemtum",
         type=float,
-        default=0.9,
+        default=0.0,
         help="""Momentum""")
     parser.add_argument(
         "--dataset",
@@ -426,9 +426,10 @@ if __name__=="__main__":
         print("You must specify a dataset amongst: {mnist, cifar10, cifar100, fmnist}")
         exit()
 
-    if not(os.path.exists(output_folder)):
+    if not(os.path.exists(os.path.join(output_folder,f"mnist_async_{learning_rate*1000}_{momentum*100}_{batch_size}_{mode}"))):
         os.mkdir(output_folder)
-    
+        os.mkdir(os.path.join(output_folder,f"mnist_async_{learning_rate*1000}_{momentum*100}_{batch_size}_{mode}"))
+    output_folder = os.path.join(output_folder,f"mnist_async_{learning_rate*1000}_{momentum*100}_{batch_size}_{mode}")
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     world_size = args.world_size
