@@ -84,9 +84,11 @@ class BatchUpdateParameterServer(object):
         self.pca_gen = pca_gen
         if pca_gen:
             self.filename = os.path.join(output_folder,'data_pca.npy')
-            shape = (0, torch.numel(torch.nn.utils.parameters_to_vector(self.model.parameters())))
+            self.pca_current = 0
+            self.pca_max = 300
+            shape = (self.pca_max, torch.numel(torch.nn.utils.parameters_to_vector(self.model.parameters())))
             self.data = np.lib.format.open_memmap(self.filename, mode='w+', shape=shape, dtype=np.float32)
-            self.pca_iter = 10
+            self.pca_iter = 3
 
 
 
@@ -109,6 +111,7 @@ class BatchUpdateParameterServer(object):
         self.losses = np.append(self.losses, loss)
         if id == 1:
             time.sleep(self.delay)
+        
         with self.lock:
             fut = self.future_model
             norm = 0
@@ -129,9 +132,13 @@ class BatchUpdateParameterServer(object):
                     self.logger.debug(f"None p.grad detected for the update")
                      # Append the data to the memory-mapped array
             # PCA data generation
-            if self.pca_gen and self.steps[id-1]%self.pca_iter == 0:
-                self.data = np.vstack([self.data, flat])
-                np.save(self.filename, self.data)
+            if self.pca_gen and self.pca_current<self.pca_max and self.steps[id-1]%self.pca_iter == 0 :
+            # self.data = np.vstack([self.data, flat])
+                self.data[self.pca_current, :] = flat
+                self.pca_current += 1
+                if self.pca_current%10 == 0:
+                    self.data.flush()
+                # np.save(self.filename, self.data)
             self.logger.debug(f"Loss is {self.losses[-1]}")
             self.norms = np.append(self.norms, norm**(0.5))
             self.logger.debug(f"The norm of the gradient is {self.norms[-1]}")
@@ -155,7 +162,6 @@ class BatchUpdateParameterServer(object):
             self.logger.debug("PS updated model")
             
             self.future_model = torch.futures.Future()
-
         return fut
 
 
