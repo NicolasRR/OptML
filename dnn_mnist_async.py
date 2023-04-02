@@ -125,7 +125,7 @@ class BatchUpdateParameterServer(object):
                     else:
                         p.grad += g
                     if self.pca_gen and self.steps[id-1]%self.pca_iter == 0:
-                        flat = np.concatenate((flat,torch.flatten(p.grad).numpy()))
+                        flat = np.concatenate((flat,torch.flatten(p.detach()).numpy()))
                     n = p.grad.norm(2).item() ** 2
                     norm += n
                 else:
