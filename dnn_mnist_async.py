@@ -14,6 +14,7 @@ import logging
 import numpy as np
 import copy
 from torch.optim.swa_utils import SWALR
+import itertools
 
 
 class Net(nn.Module):
@@ -50,14 +51,14 @@ class BatchUpdateParameterServer(object):
 
     """
 
-    def __init__(self, delay, ntrainers, lr, momentum, logger, mode, num_input, num_output):
+    def __init__(self, delay, ntrainers, lr, momentum, logger, mode, num_input, num_output, pca_gen, output_folder):
         self.model = Net(num_input, num_output)
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
-        if mode == "normal" or mode == "compensation":
-            self.optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum = momentum)
-        else:
+        if mode == "scheduler" or mode == "swa":
             self.optimizer = optim.SGD(self.model.parameters(), lr=100*lr, momentum = momentum)
+        else:
+            self.optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum = momentum)
         self.losses = np.array([])
         self.norms = np.array([])
         for _,p in enumerate(self.model.parameters()):
@@ -78,6 +79,14 @@ class BatchUpdateParameterServer(object):
             self.logger.info("Using delay compensation")
             self.backups = [[torch.randn_like(param, requires_grad=False) for param in self.model.parameters()] for _ in range(ntrainers)]
         self.epochs = np.zeros(ntrainers, dtype=int)
+        self.steps = np.zeros(ntrainers, dtype=int)
+        # Uncomment these lines to generate the data for the PCA matrix generation
+        self.pca_gen = pca_gen
+        if pca_gen:
+            self.filename = os.path.join(output_folder,'data_pca.npy')
+            shape = (0, torch.numel(torch.nn.utils.parameters_to_vector(self.model.parameters())))
+            self.data = np.lib.format.open_memmap(self.filename, mode='w+', shape=shape, dtype=np.float32)
+            self.pca_iter = 10
 
 
 
@@ -96,28 +105,41 @@ class BatchUpdateParameterServer(object):
         """
         self = ps_rref.local_value()
         self.logger.debug(f"PS got 1 updates from worker {id}")
+        
         self.losses = np.append(self.losses, loss)
         if id == 1:
             time.sleep(self.delay)
         with self.lock:
             fut = self.future_model
             norm = 0
+            # PCA data generation
+            if self.pca_gen and self.steps[id-1]%self.pca_iter == 0:
+                flat =np.array([])
             for i,(p, g) in enumerate(zip(self.model.parameters(), grads)):
                 if p.grad is not None:
                     if self.mode == "compensation":
                         p.grad += g+0.5*g*g*(p-self.backups[id-1][i])
                     else:
                         p.grad += g
+                    if self.pca_gen and self.steps[id-1]%self.pca_iter == 0:
+                        flat = np.concatenate((flat,torch.flatten(p.grad).numpy()))
                     n = p.grad.norm(2).item() ** 2
                     norm += n
                 else:
                     self.logger.debug(f"None p.grad detected for the update")
+                     # Append the data to the memory-mapped array
+            # PCA data generation
+            if self.pca_gen and self.steps[id-1]%self.pca_iter == 0:
+                self.data = np.vstack([self.data, flat])
+                np.save(self.filename, self.data)
             self.logger.debug(f"Loss is {self.losses[-1]}")
             self.norms = np.append(self.norms, norm**(0.5))
             self.logger.debug(f"The norm of the gradient is {self.norms[-1]}")
             self.loss = np.array([])
             self.optimizer.step()
+            self.steps[id-1] +=1
             if self.epochs[id-1] < epoch:
+                self.steps[id-1] = 0
                 self.epochs[id-1] += 1
                 if self.mode == "swa" and epoch>self.swa_start:
                     self.swa_model.update_parameters(self.model)
@@ -131,6 +153,7 @@ class BatchUpdateParameterServer(object):
             self.optimizer.zero_grad(set_to_none=False)
             fut.set_result(self.model)
             self.logger.debug("PS updated model")
+            
             self.future_model = torch.futures.Future()
 
         return fut
@@ -187,7 +210,7 @@ def run_trainer(ps_rref, dataloader, name, epochs, output_folder):
     trainer.train()
 
 
-def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode,num_input, num_output):
+def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode,num_input, num_output, pca_gen):
     """
     This is the main function which launches the training of all the slaves
     """
@@ -207,7 +230,7 @@ def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning
     pslogger.addHandler(fh)
     pslogger.info("Start training")
 
-    ps_rref = rpc.RRef(BatchUpdateParameterServer(delay, len(trainers),learning_rate, momentum, pslogger, mode, num_input, num_output))
+    ps_rref = rpc.RRef(BatchUpdateParameterServer(delay, len(trainers),learning_rate, momentum, pslogger, mode, num_input, num_output, pca_gen, output_folder))
     futs = []
     
     # Random partition of the classes for each trainer
@@ -265,7 +288,7 @@ def run_ps(trainers, output_folder, dataset, batch_size, epochs, delay, learning
 
 
 
-def run(rank, world_size,  output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode, num_input, num_output):
+def run(rank, world_size,  output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode, num_input, num_output, pca_gen):
     """
     Creates the PS and launches the trainers
     """
@@ -290,7 +313,7 @@ def run(rank, world_size,  output_folder, dataset, batch_size, epochs, delay, le
             world_size=world_size,
             rpc_backend_options=options
         )
-        run_ps([f"trainer{r}" for r in range(1, world_size)], output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode, num_input, num_output)
+        run_ps([f"trainer{r}" for r in range(1, world_size)], output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum, model_accuracy, save_model, mode, num_input, num_output, pca_gen)
 
     # block until all rpcs finish
     rpc.shutdown()
@@ -331,7 +354,7 @@ if __name__=="__main__":
     parser.add_argument(
         "--delay",
         type=float,
-        default=0.1,
+        default=0.0001,
         help="""delay in seconds""")
     parser.add_argument(
         "--batch_size",
@@ -346,7 +369,7 @@ if __name__=="__main__":
     parser.add_argument(
         "--momemtum",
         type=float,
-        default=0.0,
+        default=0.9,
         help="""Momentum""")
     parser.add_argument(
         "--dataset",
@@ -358,6 +381,9 @@ if __name__=="__main__":
         action='store_false')
     parser.add_argument(
         '-ns', help="Save model",
+        action='store_true')
+    parser.add_argument(
+        '-pca_gen', help="Generate data for the PCA matrix generation",
         action='store_true')
     parser.add_argument(
         '--mode', 
@@ -375,6 +401,7 @@ if __name__=="__main__":
     momentum = args.momemtum
     dataset_name = args.dataset
     mode = args.mode
+    pca_gen = args.pca_gen
 
     if dataset_name == "mnist":
         print("Using MNIST dataset")
@@ -425,15 +452,16 @@ if __name__=="__main__":
     else:
         print("You must specify a dataset amongst: {mnist, cifar10, cifar100, fmnist}")
         exit()
-
-    if not(os.path.exists(os.path.join(output_folder,f"mnist_async_{learning_rate*1000}_{momentum*100}_{batch_size}_{mode}"))):
+    if not(os.path.exists(output_folder)):
         os.mkdir(output_folder)
-        os.mkdir(os.path.join(output_folder,f"mnist_async_{learning_rate*1000}_{momentum*100}_{batch_size}_{mode}"))
-    output_folder = os.path.join(output_folder,f"mnist_async_{learning_rate*1000}_{momentum*100}_{batch_size}_{mode}")
+
+    if not(os.path.exists(os.path.join(output_folder,f"mnist_async_{learning_rate}_{momentum}_{batch_size}_{mode}"))):
+        os.mkdir(os.path.join(output_folder,f"mnist_async_{learning_rate}_{momentum}_{batch_size}_{mode}"))
+    output_folder = os.path.join(output_folder,f"mnist_async_{learning_rate}_{momentum}_{batch_size}_{mode}")
     os.environ['MASTER_ADDR'] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
     world_size = args.world_size
     
 
     mp.spawn(run, args=(world_size, output_folder, dataset, batch_size, epochs, delay, learning_rate, momentum,
-            model_accuracy, save_model, mode,num_input,num_output,), nprocs=world_size, join=True)
+            model_accuracy, save_model, mode,num_input,num_output, pca_gen,), nprocs=world_size, join=True)
