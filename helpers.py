@@ -35,9 +35,9 @@ class CNN_MNIST(nn.Module):  # for MNIST and Fashion MNIST
         return output
 
 
-class CNN_CIFAR(nn.Module):  # for CIFAR10 and CIFAR100
+class CNN_CIFAR10(nn.Module): 
     def __init__(self):
-        super(CNN_CIFAR, self).__init__()
+        super(CNN_CIFAR10, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
@@ -61,6 +61,75 @@ class CNN_CIFAR(nn.Module):  # for CIFAR10 and CIFAR100
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
         return output
+    
+
+"""class CNN_CIFAR10(nn.Module):
+    def __init__(self):
+        super(CNN_CIFAR10, self).__init__()
+        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc1 = nn.Linear(128 * 4 * 4, 512)
+        self.fc2 = nn.Linear(512, 10)
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(0.5)
+
+    def forward(self, x):
+        x = self.relu(self.conv1(x))
+        x = self.pool(self.relu(self.conv2(x)))
+        x = self.pool(self.relu(self.conv3(x)))
+        x = x.view(-1, 128 * 4 * 4)
+        x = self.dropout(self.relu(self.fc1(x)))
+        x = self.fc2(x)
+        return x"""
+    
+
+class CNN_CIFAR100(nn.Module): 
+    def __init__(self):
+        super(CNN_CIFAR100, self).__init__()
+        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.dropout1 = nn.Dropout2d(0.25)
+        self.dropout2 = nn.Dropout2d(0.5)
+        self.fc1 = nn.Linear(64 * 8 * 8, 512)
+        self.fc2 = nn.Linear(512, 100)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = nn.functional.relu(x)
+        x = self.pool(x)
+        x = self.conv2(x)
+        x = nn.functional.relu(x)
+        x = self.pool(x)
+        x = self.dropout1(x)
+        x = torch.flatten(x, 1)
+        x = self.fc1(x)
+        x = nn.functional.relu(x)
+        x = self.dropout2(x)
+        x = self.fc2(x)
+        output = nn.functional.log_softmax(x, dim=1)
+        return output
+    
+"""class CNN_CIFAR100(nn.Module):
+    def __init__(self):
+        super(CNN_CIFAR100, self).__init__()
+        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.dropout = nn.Dropout(0.5)
+        self.fc1 = nn.Linear(64 * 16 * 16, 512)
+        self.fc2 = nn.Linear(512, 100)
+
+    def forward(self, x):
+        x = self.pool(torch.nn.functional.relu(self.conv1(x)))
+        x = self.pool(torch.nn.functional.relu(self.conv2(x)))
+        x = x.view(-1, 64 * 16 * 16)
+        x = self.dropout(x)
+        x = torch.nn.functional.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x"""
 
 
 #################################### Utility functions ####################################

@@ -12,7 +12,7 @@ from tqdm import tqdm
 import logging
 import logging.handlers
 import numpy as np
-from helpers import CNN_CIFAR, CNN_MNIST, create_worker_trainloaders
+from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -79,9 +79,16 @@ class ParameterServer(object):
         if "mnist" in dataset_name:
             print("Created MNIST CNN")
             self.model = CNN_MNIST()  # global model
-        elif "cifar" in dataset_name:
-            print("Created CIFAR CNN")
-            self.model = CNN_CIFAR()
+        elif "cifar100" in dataset_name:
+            print("Created CIFAR100 CNN")
+            self.model = CNN_CIFAR100()
+        elif "cifar10" in dataset_name:
+            print("Created CIFAR10 CNN")
+            self.model = CNN_CIFAR10()
+        else:
+            print("Unknown dataset, cannot create CNN")
+            exit()
+            
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
