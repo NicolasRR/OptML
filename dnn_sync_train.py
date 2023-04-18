@@ -61,7 +61,7 @@ def log_writer(log_queue):
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-    with open("log.log", "w") as log_file:
+    with open("log_sync.log", "w") as log_file:
         while True:
             try:
                 record = log_queue.get(timeout=1)
@@ -94,11 +94,11 @@ class ParameterServer(object):
         self.future_model = torch.futures.Future()
         self.nb_workers = nb_workers
         self.update_counter = 0
+        self.losses = np.array([])  # store global model loss (averaged workers loss)
+        self.loss = np.array([])  # store workers loss
         self.optimizer = optim.SGD(
             self.model.parameters(), lr=learning_rate, momentum=momentum
-        )  # dampening=0, weight_decay=0; learning scheduler separately
-        self.losses = np.array([])  # store global model loss
-        self.loss = np.array([])  # store workers loss
+        )
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
@@ -174,9 +174,8 @@ class Worker(object):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
             if self.worker_name == "Worker_1":
-                iterable = tqdm(
-                    self.train_loader
-                )  # progress bar only of the first worker (we are in synchronous mode)
+                # progress bar only of the first worker (we are in synchronous mode)
+                iterable = tqdm(self.train_loader)  
             else:
                 iterable = self.train_loader
 

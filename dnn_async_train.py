@@ -61,7 +61,7 @@ def log_writer(log_queue):
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-    with open("log.log", "w") as log_file:
+    with open("log_async.log", "w") as log_file:
         while True:
             try:
                 record = log_queue.get(timeout=1)
@@ -91,14 +91,11 @@ class ParameterServer(object):
             
         self.logger = logger
         self.lock = threading.Lock()
-        self.future_model = torch.futures.Future()
         self.nb_workers = nb_workers
-        self.update_counter = 0
+        self.loss = np.array([])  # store workers loss
         self.optimizer = optim.SGD(
             self.model.parameters(), lr=learning_rate, momentum=momentum
-        )  # dampening=0, weight_decay=0; learning scheduler separately
-        self.losses = np.array([])  # store global model loss
-        self.loss = np.array([])  # store workers loss
+        )
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
@@ -119,36 +116,24 @@ class ParameterServer(object):
     ):
         self = ps_rref.local_value()
         self.logger.debug(
-            f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})"
+            f"PS got update from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs}"
         )
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None) and (grad is not None):
-                param.grad += grad
+                param.grad = grad
             elif param.grad is None:
                 self.logger.debug(f"None param.grad detected from worker {worker_name}")
             else:
                 self.logger.debug("None grad detected")
-        self.loss = np.append(self.loss, loss)
-        with self.lock:
-            self.update_counter += 1
-            fut = self.future_model
 
-            if self.update_counter >= self.nb_workers:
-                for param in self.model.parameters():
-                    if param.grad is not None:
-                        param.grad /= self.nb_workers
-                    else:
-                        self.logger.debug(f"None param.grad detected for the update")
-                        self.optimizer.zero_grad()
-                self.update_counter = 0
-                self.losses = np.append(self.losses, self.loss.mean())
-                self.logger.debug(f"Global model loss is {self.losses[-1]}")
-                self.loss = np.array([])
-                self.optimizer.step()
-                self.optimizer.zero_grad(set_to_none=False)
-                fut.set_result(self.model)
-                self.logger.debug("PS updated model")
-                self.future_model = torch.futures.Future()
+        self.loss = np.append(self.loss, loss)
+
+        with self.lock:
+            self.optimizer.step()
+            self.optimizer.zero_grad(set_to_none=False)
+            fut = torch.futures.Future()
+            fut.set_result(self.model)
+            self.logger.debug(f"PS updated model, Global model loss is {self.loss[-1]}")
 
         return fut
 
@@ -173,15 +158,11 @@ class Worker(object):
     def get_next_batch(self):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
-            if self.worker_name == "Worker_1":
-                iterable = tqdm(
-                    self.train_loader
-                )  # progress bar only of the first worker (we are in synchronous mode)
-            else:
-                iterable = self.train_loader
+            iterable = tqdm(self.train_loader, position=int(self.worker_name.split('_')[1])-1, desc=f"{self.worker_name} Epoch {self.current_epoch}") 
 
             for inputs, labels in iterable:
                 yield inputs, labels
+            iterable.close()
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()
@@ -191,8 +172,8 @@ class Worker(object):
             loss = self.loss_fn(worker_model(inputs), labels)  # worker loss
             loss.backward()
             self.batch_count += 1
-
-            worker_model = rpc.rpc_async(
+            # in asynchronous we send the parameters to the server asynchronously and then we update the worker model synchronously
+            rpc.rpc_async(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
                 args=(
@@ -206,6 +187,8 @@ class Worker(object):
                     loss.detach().sum(),
                 ),
             )
+            worker_model = self.ps_rref.rpc_sync().get_model()
+
             if self.worker_accuracy:
                 if (
                     self.batch_count == len(self.train_loader)
@@ -302,9 +285,9 @@ def run_parameter_server(
 
     torch.futures.wait_all(futs)
 
-    losses = ps_rref.to_here().losses
+    loss = ps_rref.to_here().loss
     logger.info("Finished training")
-    print(f"Final train loss: {losses[-1]}")
+    print(f"Final train loss: {loss[-1]}")
 
     if model_accuracy:
         correct_predictions = 0

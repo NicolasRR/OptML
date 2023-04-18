@@ -40,7 +40,7 @@ BATCH_SIZE = 32
 
 TRAIN_LOADER = torch.utils.data.DataLoader(
     torchvision.datasets.MNIST(
-        "./../data/mnist_data",
+        "data/",
         download=True,
         train=True,
         transform=torchvision.transforms.Compose(
@@ -57,7 +57,7 @@ TRAIN_LOADER = torch.utils.data.DataLoader(
 )
 TEST_LOADER = torch.utils.data.DataLoader(
     torchvision.datasets.MNIST(
-        "./../data/mnist_data",
+        "data/",
         download=True,
         train=False,
         transform=torchvision.transforms.Compose(
