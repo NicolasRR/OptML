@@ -35,7 +35,7 @@ class CNN_MNIST(nn.Module):  # for MNIST and Fashion MNIST
         return output
 
 
-class CNN_CIFAR10(nn.Module): 
+class CNN_CIFAR10(nn.Module):
     def __init__(self):
         super(CNN_CIFAR10, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -61,7 +61,7 @@ class CNN_CIFAR10(nn.Module):
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
         return output
-    
+
 
 """class CNN_CIFAR10(nn.Module):
     def __init__(self):
@@ -83,9 +83,9 @@ class CNN_CIFAR10(nn.Module):
         x = self.dropout(self.relu(self.fc1(x)))
         x = self.fc2(x)
         return x"""
-    
 
-class CNN_CIFAR100(nn.Module): 
+
+class CNN_CIFAR100(nn.Module):
     def __init__(self):
         super(CNN_CIFAR100, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -111,7 +111,8 @@ class CNN_CIFAR100(nn.Module):
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
         return output
-    
+
+
 """class CNN_CIFAR100(nn.Module):
     def __init__(self):
         super(CNN_CIFAR100, self).__init__()

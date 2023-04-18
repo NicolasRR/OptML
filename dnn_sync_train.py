@@ -88,7 +88,7 @@ class ParameterServer(object):
         else:
             print("Unknown dataset, cannot create CNN")
             exit()
-            
+
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
@@ -119,7 +119,7 @@ class ParameterServer(object):
     ):
         self = ps_rref.local_value()
         self.logger.debug(
-            f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})"
+            f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})"
         )
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None) and (grad is not None):
@@ -167,7 +167,8 @@ class Worker(object):
         self.worker_accuracy = worker_accuracy
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
-        )  # length of the subtrain set
+        )
+        # length of the subtrain set
         # self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
@@ -175,7 +176,10 @@ class Worker(object):
             self.current_epoch = epoch + 1
             if self.worker_name == "Worker_1":
                 # progress bar only of the first worker (we are in synchronous mode)
-                iterable = tqdm(self.train_loader)  
+                iterable = tqdm(
+                    self.train_loader,
+                    desc=f"Epoch {self.current_epoch}",
+                )
             else:
                 iterable = self.train_loader
 

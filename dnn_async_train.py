@@ -13,6 +13,7 @@ import logging
 import logging.handlers
 import numpy as np
 from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders
+from time import sleep
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -88,7 +89,7 @@ class ParameterServer(object):
         else:
             print("Unknown dataset, cannot create CNN")
             exit()
-            
+
         self.logger = logger
         self.lock = threading.Lock()
         self.nb_workers = nb_workers
@@ -116,7 +117,7 @@ class ParameterServer(object):
     ):
         self = ps_rref.local_value()
         self.logger.debug(
-            f"PS got update from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs}"
+            f"PS got update from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs}"
         )
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None) and (grad is not None):
@@ -152,13 +153,18 @@ class Worker(object):
         self.worker_accuracy = worker_accuracy
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
-        )  # length of the subtrain set
+        )
+        # length of the subtrain set
         # self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
-            iterable = tqdm(self.train_loader, position=int(self.worker_name.split('_')[1])-1, desc=f"{self.worker_name} Epoch {self.current_epoch}") 
+            iterable = tqdm(
+                self.train_loader,
+                position=int(self.worker_name.split("_")[1]) - 1,
+                desc=f"{self.worker_name} Epoch {self.current_epoch}",
+            )
 
             for inputs, labels in iterable:
                 yield inputs, labels
