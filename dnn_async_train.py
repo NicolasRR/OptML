@@ -192,7 +192,7 @@ class Worker(object):
             loss.backward()
             self.batch_count += 1
 
-            worker_model = rpc.rpc_sync(
+            worker_model = rpc.rpc_async(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
                 args=(
@@ -268,7 +268,7 @@ def run_parameter_server(
     futs = []
 
     if not split_dataset and not split_labels:  # workers sharing samples
-        logger.info("Starting synchronous SGD training")
+        logger.info("Starting asynchronous SGD training")
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -323,15 +323,15 @@ def run_parameter_server(
 
     if save_model:
         if split_dataset:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         elif split_labels:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         else:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
 
@@ -397,7 +397,7 @@ def run(
 #################################### MAIN ####################################
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Synchronous Parallel SGD parameter-Server RPC based training"
+        description="Asynchronous Parallel SGD parameter-Server RPC based training"
     )
     parser.add_argument(
         "--master_port",
