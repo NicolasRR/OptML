@@ -119,7 +119,7 @@ class ParameterServer(object):
     ):
         self = ps_rref.local_value()
         self.logger.debug(
-            f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})"
+            f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run} ({worker_batch_count}/{total_batches_to_run*total_epochs}), epoch {worker_epoch}/{total_epochs})"
         )
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None) and (grad is not None):
@@ -177,14 +177,16 @@ class Worker(object):
             if self.worker_name == "Worker_1":
                 # progress bar only of the first worker (we are in synchronous mode)
                 iterable = tqdm(
-                    self.train_loader,
-                    desc=f"Epoch {self.current_epoch}",
+                    self.train_loader, desc=f"Epoch {self.current_epoch}", unit="batch"
                 )
             else:
                 iterable = self.train_loader
 
             for inputs, labels in iterable:
                 yield inputs, labels
+
+        if self.worker_name == "Worker_1":
+            iterable.close()
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()

@@ -13,7 +13,6 @@ import logging
 import logging.handlers
 import numpy as np
 from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders
-from time import sleep
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -117,15 +116,8 @@ class ParameterServer(object):
     ):
         self = ps_rref.local_value()
         self.logger.debug(
-            f"PS got update from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs}"
+            f"PS got update from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run} ({worker_batch_count}/{total_batches_to_run*total_epochs}), epoch {worker_epoch}/{total_epochs}"
         )
-        for param, grad in zip(self.model.parameters(), grads):
-            if (param.grad is not None) and (grad is not None):
-                param.grad = grad
-            elif param.grad is None:
-                self.logger.debug(f"None param.grad detected from worker {worker_name}")
-            else:
-                self.logger.debug("None grad detected")
 
         self.loss = np.append(self.loss, loss)
 
@@ -134,7 +126,7 @@ class ParameterServer(object):
             self.optimizer.zero_grad(set_to_none=False)
             fut = torch.futures.Future()
             fut.set_result(self.model)
-            self.logger.debug(f"PS updated model, Global model loss is {self.loss[-1]}")
+            self.logger.debug(f"PS updated model")
 
         return fut
 
@@ -154,21 +146,23 @@ class Worker(object):
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
         )
+        self.progress_bar = tqdm(
+            position=int(self.worker_name.split("_")[1]) - 1,
+            desc=f"{self.worker_name}",
+            unit="batch",
+            total=len(self.train_loader) * self.epochs,
+        )
         # length of the subtrain set
         # self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
-            iterable = tqdm(
-                self.train_loader,
-                position=int(self.worker_name.split("_")[1]) - 1,
-                desc=f"{self.worker_name} Epoch {self.current_epoch}",
-            )
-
-            for inputs, labels in iterable:
+            self.progress_bar.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}")
+            for inputs, labels in self.train_loader:
                 yield inputs, labels
-            iterable.close()
+
+        self.progress_bar.close()
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()
@@ -194,7 +188,7 @@ class Worker(object):
                 ),
             )
             worker_model = self.ps_rref.rpc_sync().get_model()
-
+            self.progress_bar.update(1)
             if self.worker_accuracy:
                 if (
                     self.batch_count == len(self.train_loader)
@@ -292,6 +286,7 @@ def run_parameter_server(
     torch.futures.wait_all(futs)
 
     loss = ps_rref.to_here().loss
+
     logger.info("Finished training")
     print(f"Final train loss: {loss[-1]}")
 
@@ -575,8 +570,8 @@ if __name__ == "__main__":
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
-
         log_writer_thread.start()
+
         mp.spawn(
             run,
             args=(
