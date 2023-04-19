@@ -20,7 +20,7 @@ def main(model_path, batch_size):
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    test_loader, _ = create_testloader(model_path, batch_size)
+    test_loader, nb_labels = create_testloader(model_path, batch_size)
 
     # Evaluate the model on the test dataset
     test_loss = 0

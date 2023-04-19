@@ -323,15 +323,15 @@ def run_parameter_server(
 
     if save_model:
         if split_dataset:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
+            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_split_dataset.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         elif split_labels:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
+            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_labels.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         else:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
+            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
 

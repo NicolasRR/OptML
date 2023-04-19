@@ -87,7 +87,7 @@ class ParameterServer(object):
             exit()
 
         self.logger = logger
-        self.lock = threading.Lock()
+        self.model_lock = threading.Lock()
         self.nb_workers = nb_workers
         self.loss = np.array([])  # store workers loss
         self.optimizer = optim.SGD(
@@ -117,7 +117,7 @@ class ParameterServer(object):
 
         self.loss = np.append(self.loss, loss)
 
-        with self.lock:
+        with self.model_lock:
             self.optimizer.step()
             self.optimizer.zero_grad(set_to_none=False)
             fut = torch.futures.Future()
@@ -129,7 +129,7 @@ class ParameterServer(object):
 
 #################################### WORKER ####################################
 class Worker(object):
-    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
+    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy, tqdm_lock):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_func = nn.functional.nll_loss  # worker loss function
@@ -139,6 +139,7 @@ class Worker(object):
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
         self.worker_accuracy = worker_accuracy
+        self.tqdm_lock = tqdm_lock
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
         )
@@ -181,7 +182,8 @@ class Worker(object):
                 ),
             )
             worker_model = self.ps_rref.rpc_sync().get_model()
-            self.progress_bar.update(1)
+            with self.tqdm_lock:
+                self.progress_bar.update(1)
             if self.worker_accuracy:
                 if (
                     self.batch_count == len(self.train_loader)
@@ -204,8 +206,8 @@ class Worker(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker(ps_rref, logger, train_loader, epochs, worker_accuracy):
-    worker = Worker(ps_rref, logger, train_loader, epochs, worker_accuracy)
+def run_worker(ps_rref, logger, train_loader, epochs, worker_accuracy, tqdm_lock):
+    worker = Worker(ps_rref, logger, train_loader, epochs, worker_accuracy, tqdm_lock)
     worker.train()
 
 
@@ -245,6 +247,8 @@ def run_parameter_server(
     )
     futs = []
 
+    tqdm_lock = threading.Lock()
+
     if (
         not split_dataset and not split_labels and not split_labels_unscaled
     ):  # workers sharing samples
@@ -254,7 +258,7 @@ def run_parameter_server(
                 rpc.rpc_async(
                     worker,
                     run_worker,
-                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy, tqdm_lock),
                 )
             )
 
@@ -265,7 +269,7 @@ def run_parameter_server(
                 rpc.rpc_async(
                     worker,
                     run_worker,
-                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy, tqdm_lock),
                 )
             )
 
@@ -293,19 +297,19 @@ def run_parameter_server(
 
     if save_model:
         if split_dataset:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_split_dataset.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         elif split_labels:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_labels.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         elif split_labels_unscaled:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels_unscaled.pt"
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_labels_unscaled.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
         else:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
 
