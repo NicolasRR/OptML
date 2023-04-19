@@ -594,7 +594,7 @@ def mnist_testloader(batch_size):
     test_loader = torch.utils.data.DataLoader(
         mnist_test, batch_size=batch_size, shuffle=False
     )
-    return test_loader, count_distinct_labels(mnist_test)
+    return test_loader
 
 
 def fashion_mnist_testloader(batch_size):
@@ -621,7 +621,7 @@ def fashion_mnist_testloader(batch_size):
     test_loader = torch.utils.data.DataLoader(
         fashion_mnist_test, batch_size=batch_size, shuffle=False
     )
-    return test_loader, count_distinct_labels(fashion_mnist_test)
+    return test_loader
 
 
 def cifar10_testloader(batch_size):
@@ -648,7 +648,7 @@ def cifar10_testloader(batch_size):
     test_loader = torch.utils.data.DataLoader(
         cifar10_test, batch_size=batch_size, shuffle=False
     )
-    return test_loader, count_distinct_labels(cifar10_test)
+    return test_loader
 
 
 def cifar100_testloader(batch_size):
@@ -675,7 +675,7 @@ def cifar100_testloader(batch_size):
     test_loader = torch.utils.data.DataLoader(
         cifar100_test, batch_size=batch_size, shuffle=False
     )
-    return test_loader, count_distinct_labels(cifar100_test)
+    return test_loader
 
 
 #################################### TEST LOADER main function ####################################

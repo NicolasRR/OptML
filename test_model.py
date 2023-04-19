@@ -2,7 +2,7 @@ import argparse
 import torch
 import torch.nn.functional as F
 from sklearn.metrics import classification_report
-from helpers import CNN_MNIST, CNN_CIFAR, create_testloader
+from helpers import CNN_MNIST, CNN_CIFAR10, CNN_CIFAR100, create_testloader
 
 DEFAULT_BATCH_SIZE = 500
 
@@ -13,14 +13,20 @@ def main(model_path, batch_size):
     if "mnist" in model_path:
         print("Loading MNIST CNN")
         model = CNN_MNIST()
-    elif "cifar" in model_path:
-        print("Loading CIFAR CNN")
-        model = CNN_CIFAR()
+    elif "cifar100" in model_path:
+        print("Loading CIFAR100 CNN")
+        model = CNN_CIFAR100()
+    elif "cifar10" in model_path:
+        print("Loading CIFAR10 CNN")
+        model = CNN_CIFAR10()
+    else:
+        print("dataset not supported")
+        exit()
 
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    test_loader, nb_labels = create_testloader(model_path, batch_size)
+    test_loader = create_testloader(model_path, batch_size)
 
     # Evaluate the model on the test dataset
     test_loss = 0
