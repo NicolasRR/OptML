@@ -171,8 +171,9 @@ class Worker(object):
             if self.worker_name == "Worker_1":
                 # progress bar only of the first worker (we are in synchronous mode)
                 iterable = tqdm(
-                    self.train_loader, desc=f"Epoch {self.current_epoch}", unit="batch"
+                    self.train_loader, unit="batch",
                 )
+                iterable.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}")
             else:
                 iterable = self.train_loader
 
