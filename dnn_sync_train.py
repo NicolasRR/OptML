@@ -252,6 +252,7 @@ def run_parameter_server(
         dataset_name,
         split_dataset,
         split_labels,
+        False,  # compatibility for async split_labels_unscaled
         train_split,
         batch_size,
         model_accuracy,

@@ -147,6 +147,7 @@ class Worker(object):
             desc=f"{self.worker_name}",
             unit="batch",
             total=len(self.train_loader) * self.epochs,
+            leave=True,
         )
 
     def get_next_batch(self):
@@ -155,7 +156,7 @@ class Worker(object):
             self.progress_bar.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}")
             for inputs, labels in self.train_loader:
                 yield inputs, labels
-
+        self.progress_bar.clear()
         self.progress_bar.close()
 
     def train(self):
@@ -214,6 +215,7 @@ def run_parameter_server(
     dataset_name,
     split_dataset,
     split_labels,
+    split_labels_unscaled,
     learning_rate,
     momentum,
     train_split,
@@ -228,6 +230,7 @@ def run_parameter_server(
         dataset_name,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         train_split,
         batch_size,
         model_accuracy,
@@ -242,7 +245,9 @@ def run_parameter_server(
     )
     futs = []
 
-    if not split_dataset and not split_labels:  # workers sharing samples
+    if (
+        not split_dataset and not split_labels and not split_labels_unscaled
+    ):  # workers sharing samples
         logger.info("Starting asynchronous SGD training")
         for idx, worker in enumerate(workers):
             futs.append(
@@ -253,18 +258,7 @@ def run_parameter_server(
                 )
             )
 
-    elif split_dataset and not split_labels:
-        logger.info("Start training")
-        for idx, worker in enumerate(workers):
-            futs.append(
-                rpc.rpc_async(
-                    worker,
-                    run_worker,
-                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
-                )
-            )
-
-    elif split_labels:
+    else:
         logger.info("Start training")
         for idx, worker in enumerate(workers):
             futs.append(
@@ -306,6 +300,10 @@ def run_parameter_server(
             filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
             print(f"Model saved: {filename}")
+        elif split_labels_unscaled:
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels_unscaled.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            print(f"Model saved: {filename}")
         else:
             filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
             torch.save(ps_rref.to_here().model.state_dict(), filename)
@@ -318,6 +316,7 @@ def run(
     dataset_name,
     split_dataset,
     split_labels,
+    split_labels_unscaled,
     world_size,
     learning_rate,
     momentum,
@@ -356,6 +355,7 @@ def run(
             dataset_name,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             learning_rate,
             momentum,
             train_split,
@@ -413,7 +413,14 @@ if __name__ == "__main__":
         "--split_labels",
         action="store_true",
         help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
-        Workers will not share samples and the labels are randomly assigned.
+        Workers will not share samples and the labels are randomly assigned. Note, the training length will be the SAME for all workers (like in synchronous SGD).
+        This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+    )
+    parser.add_argument(
+        "--split_labels_unscaled",
+        action="store_true",
+        help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+        Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has.
         This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
     )
     parser.add_argument(
@@ -527,12 +534,20 @@ if __name__ == "__main__":
     else:
         split_labels = False
 
+    if args.split_labels_unscaled:
+        split_labels_unscaled = True
+    else:
+        split_labels_unscaled = False
+
     if split_labels:
         if split_dataset:
             print("Please use --split_labels without --split_dataset")
             exit()
         elif args.batch_size != 1:
             print("Please use --split_labels with the --batch_size 1")
+            exit()
+        elif split_labels_unscaled:
+            print("Please use --split_labels with the --split_labels_unscaled")
             exit()
         elif args.dataset == "mnist":
             if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
@@ -555,6 +570,37 @@ if __name__ == "__main__":
                 )
                 exit()
 
+    if split_labels_unscaled:
+        if split_dataset:
+            print("Please use --split_labels_unscaled without --split_dataset")
+            exit()
+        elif args.batch_size != 1:
+            print("Please use --split_labels_unscaled with the --batch_size 1")
+            exit()
+        elif split_labels:
+            print("Please use --split_labels_unscaled with the --split_labels")
+            exit()
+        elif args.dataset == "mnist":
+            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print("Please use --split_labels_unscaled with --world_size {3, 6, 11}")
+                exit()
+        elif args.dataset == "fashion_mnist":
+            if 40 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print(
+                    "Please use --split_labels_unscaled with --world_size {3, 5, 6, 9, 11, 21, 41}"
+                )
+                exit()
+        elif args.dataset == "cifar10":
+            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print("Please use --split_labels_unscaled with --world_size {3, 6, 11}")
+                exit()
+        elif args.dataset == "cifar100":
+            if 100 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print(
+                    "Please use --split_labels_unscaled with --world_size {3, 5, 6, 11, 21, 26, 51, 101}"
+                )
+                exit()
+
     if args.seed:
         torch.manual_seed(DEFAULT_SEED)
         np.random.seed(DEFAULT_SEED)
@@ -571,6 +617,7 @@ if __name__ == "__main__":
                 args.dataset,
                 split_dataset,
                 split_labels,
+                split_labels_unscaled,
                 args.world_size,
                 args.lr,
                 args.momentum,

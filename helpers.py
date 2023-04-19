@@ -255,6 +255,48 @@ def create_split_labels_trainloaders(
         return labels_train_loaders
 
 
+def create_split_labels_unscaled_trainloaders(
+    nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
+):
+    nb_labels = count_distinct_labels(dataset)
+
+    label_indices = {i: [] for i in range(nb_labels)}
+
+    for idx in subsample_train_indices:
+        label = dataset[idx][1]
+        label_indices[label].append(idx)
+
+    worker_indices = [[] for _ in range(nb_workers)]
+    available_labels = list(range(nb_labels))
+    np.random.shuffle(available_labels)
+
+    for i, label in enumerate(available_labels):
+        worker = i % nb_workers
+        worker_indices[worker].extend(label_indices[label])
+
+    labels_train_loaders = [
+        DataLoader(
+            dataset,
+            batch_size=batch_size,
+            sampler=SubsetRandomSampler(worker_idx),
+        )
+        for worker_idx in worker_indices
+    ]
+
+    if model_accuracy:
+        full_labels_list = []
+        for sublist in worker_indices:
+            full_labels_list.extend(sublist)
+        train_loader_full = DataLoader(
+            dataset,
+            batch_size=batch_size,
+            sampler=SubsetRandomSampler(full_labels_list),
+        )
+        return (labels_train_loaders, train_loader_full)
+    else:
+        return labels_train_loaders
+
+
 def get_trainloader(
     nb_workers,
     dataset,
@@ -262,22 +304,28 @@ def get_trainloader(
     batch_size,
     split_dataset,
     split_labels,
+    split_labels_unscaled,
     model_accuracy,
 ):
-    if not split_dataset and not split_labels:
+    if not split_dataset and not split_labels and not split_labels_unscaled:
         train_loaders = create_default_trainloaders(
             dataset, subsample_train_indices, batch_size, model_accuracy
         )
         return train_loaders
 
-    elif split_dataset and not split_labels:
+    elif split_dataset and not split_labels and not split_labels_unscaled:
         train_loaders = create_split_dataset_trainloaders(
             nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
         )
         return train_loaders
 
-    else:
+    elif split_labels and not split_labels_unscaled:
         train_loaders = create_split_labels_trainloaders(
+            nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
+        )
+        return train_loaders
+    else:
+        train_loaders = create_split_labels_unscaled_trainloaders(
             nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
         )
         return train_loaders
@@ -285,7 +333,13 @@ def get_trainloader(
 
 #################################### Dataset train loaders ####################################
 def mnist_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     mnist_train = torchvision.datasets.MNIST(
         "data/",
@@ -317,13 +371,20 @@ def mnist_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
 
 
 def fashion_mnist_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     fashion_mnist_train = torchvision.datasets.FashionMNIST(
         "data/",
@@ -357,13 +418,20 @@ def fashion_mnist_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
 
 
 def cifar10_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     cifar10_train = torchvision.datasets.CIFAR10(
         "data/",
@@ -395,13 +463,20 @@ def cifar10_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
 
 
 def cifar100_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     cifar100_train = torchvision.datasets.CIFAR100(
         "data/",
@@ -433,6 +508,7 @@ def cifar100_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
@@ -444,6 +520,7 @@ def create_worker_trainloaders(
     dataset_name,
     split_dataset,
     split_labels,
+    split_labels_unscaled,
     train_split,
     batch_size,
     model_accuracy,
@@ -453,6 +530,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
@@ -462,6 +540,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
@@ -471,6 +550,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
@@ -480,6 +560,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
