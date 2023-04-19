@@ -2,31 +2,26 @@ import argparse
 import torch
 import torch.nn.functional as F
 from sklearn.metrics import classification_report
-from helpers import CNN_MNIST, CNN_CIFAR10, CNN_CIFAR100, create_testloader
+from helpers import (
+    CNN_MNIST,
+    CNN_CIFAR10,
+    CNN_CIFAR100,
+    create_testloader,
+    create_trainloader,
+)
 
 DEFAULT_BATCH_SIZE = 500
 
 
-def main(model_path, batch_size):
-    # Load the saved model
-    model = 0
-    if "mnist" in model_path:
-        print("Loading MNIST CNN")
-        model = CNN_MNIST()
-    elif "cifar100" in model_path:
-        print("Loading CIFAR100 CNN")
-        model = CNN_CIFAR100()
-    elif "cifar10" in model_path:
-        print("Loading CIFAR10 CNN")
-        model = CNN_CIFAR10()
+def performance(model_path, model, batch_size, test=True):
+    if test:
+        print("Test Performance")
+        test_loader = create_testloader(model_path, batch_size)
+        mode = "test"
     else:
-        print("dataset not supported")
-        exit()
-
-    model.load_state_dict(torch.load(model_path))
-    model.eval()
-
-    test_loader = create_testloader(model_path, batch_size)
+        print("Train Performance")
+        test_loader = create_trainloader(model_path, batch_size)
+        mode = "train"
 
     # Evaluate the model on the test dataset
     test_loss = 0
@@ -47,13 +42,36 @@ def main(model_path, batch_size):
     test_loss /= len(test_loader.dataset)
     accuracy = correct / len(test_loader.dataset)
     print(
-        f"Average accuracy: {accuracy*100:.2f} % ({correct}/{len(test_loader.dataset)})"
+        f"Average {mode} accuracy: {accuracy*100:.2f} % ({correct}/{len(test_loader.dataset)})"
     )
-    print(f"Average loss: {test_loss:.4f}")
+    print(f"Average {mode} loss: {test_loss:.4f}")
 
     report = classification_report(targets, predictions)
-    print("\nClassification report:")
+    print(f"\nClassification {mode} report:")
     print(report)
+
+
+def main(model_path, batch_size):
+    # Load the saved model
+    model = 0
+    if "mnist" in model_path:
+        print("Loading MNIST CNN\n")
+        model = CNN_MNIST()
+    elif "cifar100" in model_path:
+        print("Loading CIFAR100 CNN\n")
+        model = CNN_CIFAR100()
+    elif "cifar10" in model_path:
+        print("Loading CIFAR10 CNN\n")
+        model = CNN_CIFAR10()
+    else:
+        print("dataset not supported\n")
+        exit()
+
+    model.load_state_dict(torch.load(model_path))
+    model.eval()
+
+    performance(model_path, model, batch_size, test=False)
+    performance(model_path, model, batch_size, test=True)
 
 
 if __name__ == "__main__":
@@ -65,9 +83,7 @@ if __name__ == "__main__":
         help="""Batch size of Mini batch SGD [1,len(train set)].""",
     )
     parser.add_argument(
-        "model_path",
-        type=argparse.FileType("r"),
-        help="""Path of the trained model."""
+        "model_path", type=argparse.FileType("r"), help="""Path of the trained model."""
     )
 
     args = parser.parse_args()

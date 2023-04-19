@@ -571,7 +571,7 @@ def create_worker_trainloaders(
 
 
 #################################### Dataset test loaders ####################################
-def mnist_testloader(batch_size):
+def mnist_testloader(batch_size, test=True):
     mnist_train = torchvision.datasets.MNIST(
         "data/",
         download=True,
@@ -580,24 +580,40 @@ def mnist_testloader(batch_size):
     )
     mean, std = get_mean_std(mnist_train)
 
-    mnist_test = torchvision.datasets.MNIST(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
-    test_loader = torch.utils.data.DataLoader(
-        mnist_test, batch_size=batch_size, shuffle=False
-    )
+    if test:
+        mnist_test = torchvision.datasets.MNIST(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            mnist_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        mnist_train = torchvision.datasets.MNIST(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            mnist_train, batch_size=batch_size, shuffle=False
+        )
     return test_loader
 
 
-def fashion_mnist_testloader(batch_size):
+def fashion_mnist_testloader(batch_size, test=True):
     fashion_mnist_train = torchvision.datasets.FashionMNIST(
         "data/",
         download=True,
@@ -606,25 +622,40 @@ def fashion_mnist_testloader(batch_size):
     )
     mean, std = get_mean_std(fashion_mnist_train)
 
-    fashion_mnist_test = torchvision.datasets.FashionMNIST(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
-
-    test_loader = torch.utils.data.DataLoader(
-        fashion_mnist_test, batch_size=batch_size, shuffle=False
-    )
+    if test:
+        fashion_mnist_test = torchvision.datasets.FashionMNIST(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            fashion_mnist_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        fashion_mnist_train = torchvision.datasets.FashionMNIST(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            fashion_mnist_train, batch_size=batch_size, shuffle=False
+        )
     return test_loader
 
 
-def cifar10_testloader(batch_size):
+def cifar10_testloader(batch_size, test=True):
     cifar10_train = torchvision.datasets.CIFAR10(
         "data/",
         download=True,
@@ -632,26 +663,40 @@ def cifar10_testloader(batch_size):
         transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor()]),
     )
     mean, std = get_mean_std(cifar10_train)
-
-    cifar10_test = torchvision.datasets.CIFAR10(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
-
-    test_loader = torch.utils.data.DataLoader(
-        cifar10_test, batch_size=batch_size, shuffle=False
-    )
+    if test:
+        cifar10_test = torchvision.datasets.CIFAR10(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar10_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        cifar10_train = torchvision.datasets.CIFAR10(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar10_train, batch_size=batch_size, shuffle=False
+        )
     return test_loader
 
 
-def cifar100_testloader(batch_size):
+def cifar100_testloader(batch_size, test=True):
     cifar100_train = torchvision.datasets.CIFAR100(
         "data/",
         download=True,
@@ -659,22 +704,36 @@ def cifar100_testloader(batch_size):
         transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor()]),
     )
     mean, std = get_mean_std(cifar100_train)
-
-    cifar100_test = torchvision.datasets.CIFAR100(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
-
-    test_loader = torch.utils.data.DataLoader(
-        cifar100_test, batch_size=batch_size, shuffle=False
-    )
+    if test:
+        cifar100_test = torchvision.datasets.CIFAR100(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar100_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        cifar100_train = torchvision.datasets.CIFAR100(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar100_train, batch_size=batch_size, shuffle=False
+        )
     return test_loader
 
 
@@ -692,6 +751,24 @@ def create_testloader(model_path, batch_size):
     elif "cifar10" in model_path:
         print("Created CIFAR10 testloader \n")
         return cifar10_testloader(batch_size)
+    else:
+        print("Error Unkown dataset")
+        exit()
+
+
+def create_trainloader(model_path, batch_size):
+    if "fashion_mnist" in model_path:
+        print("Created FashionMNIST trainloader \n")
+        return fashion_mnist_testloader(batch_size, test=False)
+    elif "mnist" in model_path:
+        print("Created MNIST trainloader \n")
+        return mnist_testloader(batch_size, test=False)
+    elif "cifar100" in model_path:
+        print("Created CIFAR100 trainloader \n")
+        return cifar100_testloader(batch_size, test=False)
+    elif "cifar10" in model_path:
+        print("Created CIFAR10 trainloader \n")
+        return cifar10_testloader(batch_size, test=False)
     else:
         print("Error Unkown dataset")
         exit()

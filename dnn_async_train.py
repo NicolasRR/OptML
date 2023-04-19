@@ -237,7 +237,7 @@ def run_parameter_server(
         batch_size,
         model_accuracy,
     )
-    train_loader_full = 0
+    train_loader_full = None
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
@@ -292,22 +292,17 @@ def run_parameter_server(
         )
 
     if save_model:
-        if split_dataset:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_split_dataset.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
-            print(f"Model saved: {filename}")
-        elif split_labels:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_labels.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
-            print(f"Model saved: {filename}")
-        elif split_labels_unscaled:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_labels_unscaled.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
-            print(f"Model saved: {filename}")
-        else:
-            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
-            print(f"Model saved: {filename}")
+        suffix = ""
+    elif split_dataset:
+        suffix = "_split_dataset"
+    elif split_labels:
+        suffix = "_labels"
+    elif split_labels_unscaled:
+        suffix = "_labels_unscaled"
+
+    filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
+    torch.save(ps_rref.to_here().model.state_dict(), filename)
+    print(f"Model saved: {filename}")
 
 
 def run(

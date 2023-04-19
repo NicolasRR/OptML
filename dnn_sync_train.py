@@ -90,7 +90,7 @@ class ParameterServer(object):
         self.future_model = torch.futures.Future()
         self.nb_workers = nb_workers
         self.update_counter = 0
-        self.model_loss = 0 # store global model loss (averaged workers loss)
+        self.model_loss = 0  # store global model loss (averaged workers loss)
         self.loss = np.array([])  # store workers loss
         self.optimizer = optim.SGD(
             self.model.parameters(), lr=learning_rate, momentum=momentum
@@ -137,7 +137,7 @@ class ParameterServer(object):
                         self.logger.debug(f"None param.grad detected for the update")
                         self.optimizer.zero_grad()
                 self.update_counter = 0
-                self.model_loss =self.loss.mean()
+                self.model_loss = self.loss.mean()  # aggregate the workers loss
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)
@@ -170,7 +170,8 @@ class Worker(object):
             if self.worker_name == "Worker_1":
                 # progress bar only of the first worker (we are in synchronous mode)
                 iterable = tqdm(
-                    self.train_loader, unit="batch",
+                    self.train_loader,
+                    unit="batch",
                 )
                 iterable.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}")
             else:
@@ -257,7 +258,7 @@ def run_parameter_server(
         batch_size,
         model_accuracy,
     )
-    train_loader_full = 0
+    train_loader_full = None
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
@@ -278,18 +279,7 @@ def run_parameter_server(
                 )
             )
 
-    elif split_dataset and not split_labels:
-        logger.info("Start training")
-        for idx, worker in enumerate(workers):
-            futs.append(
-                rpc.rpc_async(
-                    worker,
-                    run_worker,
-                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
-                )
-            )
-
-    elif split_labels:
+    else:
         logger.info("Start training")
         for idx, worker in enumerate(workers):
             futs.append(
@@ -321,18 +311,15 @@ def run_parameter_server(
         )
 
     if save_model:
-        if split_dataset:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_split_dataset.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
-            print(f"Model saved: {filename}")
-        elif split_labels:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}_labels.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
-            print(f"Model saved: {filename}")
-        else:
-            filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.pt"
-            torch.save(ps_rref.to_here().model.state_dict(), filename)
-            print(f"Model saved: {filename}")
+        suffix = ""
+    elif split_dataset:
+        suffix = "_split_dataset"
+    elif split_labels:
+        suffix = "_labels"
+
+    filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
+    torch.save(ps_rref.to_here().model.state_dict(), filename)
+    print(f"Model saved: {filename}")
 
 
 def run(
