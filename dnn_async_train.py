@@ -122,7 +122,7 @@ class ParameterServer(object):
             self.optimizer.zero_grad(set_to_none=False)
             fut = torch.futures.Future()
             fut.set_result(self.model)
-            self.logger.debug(f"PS updated model")
+            self.logger.debug(f"PS updated model, received worker loss: {loss} ({worker_name})")
 
         return fut
 
