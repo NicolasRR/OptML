@@ -35,7 +35,7 @@ class CNN_MNIST(nn.Module):  # for MNIST and Fashion MNIST
         return output
 
 
-class CNN_CIFAR10(nn.Module): 
+class CNN_CIFAR10(nn.Module):
     def __init__(self):
         super(CNN_CIFAR10, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -61,7 +61,7 @@ class CNN_CIFAR10(nn.Module):
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
         return output
-    
+
 
 """class CNN_CIFAR10(nn.Module):
     def __init__(self):
@@ -83,9 +83,9 @@ class CNN_CIFAR10(nn.Module):
         x = self.dropout(self.relu(self.fc1(x)))
         x = self.fc2(x)
         return x"""
-    
 
-class CNN_CIFAR100(nn.Module): 
+
+class CNN_CIFAR100(nn.Module):
     def __init__(self):
         super(CNN_CIFAR100, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -111,7 +111,8 @@ class CNN_CIFAR100(nn.Module):
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
         return output
-    
+
+
 """class CNN_CIFAR100(nn.Module):
     def __init__(self):
         super(CNN_CIFAR100, self).__init__()
@@ -254,6 +255,48 @@ def create_split_labels_trainloaders(
         return labels_train_loaders
 
 
+def create_split_labels_unscaled_trainloaders(
+    nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
+):
+    nb_labels = count_distinct_labels(dataset)
+
+    label_indices = {i: [] for i in range(nb_labels)}
+
+    for idx in subsample_train_indices:
+        label = dataset[idx][1]
+        label_indices[label].append(idx)
+
+    worker_indices = [[] for _ in range(nb_workers)]
+    available_labels = list(range(nb_labels))
+    np.random.shuffle(available_labels)
+
+    for i, label in enumerate(available_labels):
+        worker = i % nb_workers
+        worker_indices[worker].extend(label_indices[label])
+
+    labels_train_loaders = [
+        DataLoader(
+            dataset,
+            batch_size=batch_size,
+            sampler=SubsetRandomSampler(worker_idx),
+        )
+        for worker_idx in worker_indices
+    ]
+
+    if model_accuracy:
+        full_labels_list = []
+        for sublist in worker_indices:
+            full_labels_list.extend(sublist)
+        train_loader_full = DataLoader(
+            dataset,
+            batch_size=batch_size,
+            sampler=SubsetRandomSampler(full_labels_list),
+        )
+        return (labels_train_loaders, train_loader_full)
+    else:
+        return labels_train_loaders
+
+
 def get_trainloader(
     nb_workers,
     dataset,
@@ -261,22 +304,28 @@ def get_trainloader(
     batch_size,
     split_dataset,
     split_labels,
+    split_labels_unscaled,
     model_accuracy,
 ):
-    if not split_dataset and not split_labels:
+    if not split_dataset and not split_labels and not split_labels_unscaled:
         train_loaders = create_default_trainloaders(
             dataset, subsample_train_indices, batch_size, model_accuracy
         )
         return train_loaders
 
-    elif split_dataset and not split_labels:
+    elif split_dataset and not split_labels and not split_labels_unscaled:
         train_loaders = create_split_dataset_trainloaders(
             nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
         )
         return train_loaders
 
-    else:
+    elif split_labels and not split_labels_unscaled:
         train_loaders = create_split_labels_trainloaders(
+            nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
+        )
+        return train_loaders
+    else:
+        train_loaders = create_split_labels_unscaled_trainloaders(
             nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
         )
         return train_loaders
@@ -284,7 +333,13 @@ def get_trainloader(
 
 #################################### Dataset train loaders ####################################
 def mnist_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     mnist_train = torchvision.datasets.MNIST(
         "data/",
@@ -316,13 +371,20 @@ def mnist_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
 
 
 def fashion_mnist_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     fashion_mnist_train = torchvision.datasets.FashionMNIST(
         "data/",
@@ -356,13 +418,20 @@ def fashion_mnist_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
 
 
 def cifar10_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     cifar10_train = torchvision.datasets.CIFAR10(
         "data/",
@@ -394,13 +463,20 @@ def cifar10_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
 
 
 def cifar100_trainloaders(
-    nb_workers, split_dataset, split_labels, train_split, batch_size, model_accuracy
+    nb_workers,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    train_split,
+    batch_size,
+    model_accuracy,
 ):
     cifar100_train = torchvision.datasets.CIFAR100(
         "data/",
@@ -432,6 +508,7 @@ def cifar100_trainloaders(
         batch_size,
         split_dataset,
         split_labels,
+        split_labels_unscaled,
         model_accuracy,
     )
     return (train_loaders, batch_size)
@@ -443,6 +520,7 @@ def create_worker_trainloaders(
     dataset_name,
     split_dataset,
     split_labels,
+    split_labels_unscaled,
     train_split,
     batch_size,
     model_accuracy,
@@ -452,6 +530,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
@@ -461,6 +540,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
@@ -470,6 +550,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
@@ -479,6 +560,7 @@ def create_worker_trainloaders(
             nb_workers,
             split_dataset,
             split_labels,
+            split_labels_unscaled,
             train_split,
             batch_size,
             model_accuracy,
@@ -489,7 +571,7 @@ def create_worker_trainloaders(
 
 
 #################################### Dataset test loaders ####################################
-def mnist_testloader(batch_size):
+def mnist_testloader(batch_size, test=True):
     mnist_train = torchvision.datasets.MNIST(
         "data/",
         download=True,
@@ -498,24 +580,40 @@ def mnist_testloader(batch_size):
     )
     mean, std = get_mean_std(mnist_train)
 
-    mnist_test = torchvision.datasets.MNIST(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
-    test_loader = torch.utils.data.DataLoader(
-        mnist_test, batch_size=batch_size, shuffle=False
-    )
-    return test_loader, count_distinct_labels(mnist_test)
+    if test:
+        mnist_test = torchvision.datasets.MNIST(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            mnist_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        mnist_train = torchvision.datasets.MNIST(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            mnist_train, batch_size=batch_size, shuffle=False
+        )
+    return test_loader
 
 
-def fashion_mnist_testloader(batch_size):
+def fashion_mnist_testloader(batch_size, test=True):
     fashion_mnist_train = torchvision.datasets.FashionMNIST(
         "data/",
         download=True,
@@ -524,25 +622,40 @@ def fashion_mnist_testloader(batch_size):
     )
     mean, std = get_mean_std(fashion_mnist_train)
 
-    fashion_mnist_test = torchvision.datasets.FashionMNIST(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
+    if test:
+        fashion_mnist_test = torchvision.datasets.FashionMNIST(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            fashion_mnist_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        fashion_mnist_train = torchvision.datasets.FashionMNIST(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            fashion_mnist_train, batch_size=batch_size, shuffle=False
+        )
+    return test_loader
 
-    test_loader = torch.utils.data.DataLoader(
-        fashion_mnist_test, batch_size=batch_size, shuffle=False
-    )
-    return test_loader, count_distinct_labels(fashion_mnist_test)
 
-
-def cifar10_testloader(batch_size):
+def cifar10_testloader(batch_size, test=True):
     cifar10_train = torchvision.datasets.CIFAR10(
         "data/",
         download=True,
@@ -550,26 +663,40 @@ def cifar10_testloader(batch_size):
         transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor()]),
     )
     mean, std = get_mean_std(cifar10_train)
+    if test:
+        cifar10_test = torchvision.datasets.CIFAR10(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar10_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        cifar10_train = torchvision.datasets.CIFAR10(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar10_train, batch_size=batch_size, shuffle=False
+        )
+    return test_loader
 
-    cifar10_test = torchvision.datasets.CIFAR10(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
 
-    test_loader = torch.utils.data.DataLoader(
-        cifar10_test, batch_size=batch_size, shuffle=False
-    )
-    return test_loader, count_distinct_labels(cifar10_test)
-
-
-def cifar100_testloader(batch_size):
+def cifar100_testloader(batch_size, test=True):
     cifar100_train = torchvision.datasets.CIFAR100(
         "data/",
         download=True,
@@ -577,23 +704,37 @@ def cifar100_testloader(batch_size):
         transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor()]),
     )
     mean, std = get_mean_std(cifar100_train)
-
-    cifar100_test = torchvision.datasets.CIFAR100(
-        "data/",
-        download=True,
-        train=False,
-        transform=torchvision.transforms.Compose(
-            [
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
-            ]
-        ),
-    )
-
-    test_loader = torch.utils.data.DataLoader(
-        cifar100_test, batch_size=batch_size, shuffle=False
-    )
-    return test_loader, count_distinct_labels(cifar100_test)
+    if test:
+        cifar100_test = torchvision.datasets.CIFAR100(
+            "data/",
+            download=True,
+            train=False,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar100_test, batch_size=batch_size, shuffle=False
+        )
+    else:
+        cifar100_train = torchvision.datasets.CIFAR100(
+            "data/",
+            download=True,
+            train=True,
+            transform=torchvision.transforms.Compose(
+                [
+                    torchvision.transforms.ToTensor(),
+                    torchvision.transforms.Normalize((mean.item(),), (std.item(),)),
+                ]
+            ),
+        )
+        test_loader = torch.utils.data.DataLoader(
+            cifar100_train, batch_size=batch_size, shuffle=False
+        )
+    return test_loader
 
 
 #################################### TEST LOADER main function ####################################
@@ -610,6 +751,24 @@ def create_testloader(model_path, batch_size):
     elif "cifar10" in model_path:
         print("Created CIFAR10 testloader \n")
         return cifar10_testloader(batch_size)
+    else:
+        print("Error Unkown dataset")
+        exit()
+
+
+def create_trainloader(model_path, batch_size):
+    if "fashion_mnist" in model_path:
+        print("Created FashionMNIST trainloader \n")
+        return fashion_mnist_testloader(batch_size, test=False)
+    elif "mnist" in model_path:
+        print("Created MNIST trainloader \n")
+        return mnist_testloader(batch_size, test=False)
+    elif "cifar100" in model_path:
+        print("Created CIFAR100 trainloader \n")
+        return cifar100_testloader(batch_size, test=False)
+    elif "cifar10" in model_path:
+        print("Created CIFAR10 trainloader \n")
+        return cifar10_testloader(batch_size, test=False)
     else:
         print("Error Unkown dataset")
         exit()
