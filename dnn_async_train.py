@@ -31,19 +31,16 @@ def setup_logger(log_queue):
     qh.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
-    # fh = logging.FileHandler("log.log")
-    # fh.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
+
     ch.setFormatter(formatter)
     qh.setFormatter(formatter)
-    # fh.setFormatter(formatter)
 
     logger.addHandler(ch)
     logger.addHandler(qh)
-    # logger.addHandler(fh)
 
     return logger
 
@@ -106,7 +103,6 @@ class ParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(
         ps_rref,
-        grads,
         worker_name,
         worker_batch_count,
         worker_epoch,
@@ -135,8 +131,8 @@ class ParameterServer(object):
 class Worker(object):
     def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
         self.ps_rref = ps_rref
-        self.train_loader = train_loader  # worker trainloader
-        self.loss_fn = nn.functional.nll_loss  # worker loss
+        self.train_loader = train_loader
+        self.loss_func = nn.functional.nll_loss  # worker loss function
         self.logger = logger
         self.batch_count = 0
         self.current_epoch = 0
@@ -152,8 +148,6 @@ class Worker(object):
             unit="batch",
             total=len(self.train_loader) * self.epochs,
         )
-        # length of the subtrain set
-        # self.logger.debug(f"{self.worker_name} is working on a dataset of size {len(train_loader)}") #total number of batches to run (len subtrain set / batch size)
 
     def get_next_batch(self):
         for epoch in range(self.epochs):
@@ -168,8 +162,7 @@ class Worker(object):
         worker_model = self.ps_rref.rpc_sync().get_model()
 
         for inputs, labels in self.get_next_batch():
-            # print(labels, self.worker_name) #check the samples of workers
-            loss = self.loss_fn(worker_model(inputs), labels)  # worker loss
+            loss = self.loss_func(worker_model(inputs), labels)  # worker loss
             loss.backward()
             self.batch_count += 1
             # in asynchronous we send the parameters to the server asynchronously and then we update the worker model synchronously
@@ -178,13 +171,12 @@ class Worker(object):
                 ParameterServer.update_and_fetch_model,
                 args=(
                     self.ps_rref,
-                    [param.grad for param in worker_model.parameters()],
                     self.worker_name,
                     self.batch_count,
                     self.current_epoch,
                     len(self.train_loader),
                     self.epochs,
-                    loss.detach().sum(),
+                    loss.detach(),
                 ),
             )
             worker_model = self.ps_rref.rpc_sync().get_model()
