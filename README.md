@@ -83,4 +83,4 @@ Our scripts accept various arguments from the command line, to see all the flags
 </div>
 
 ## How to use our notebooks
-In WSL, run `jupyter notebook`. If no browser is detected, just copy past one of the created links to your browser. 
+In WSL, run `jupyter notebook`. If no browser is detected, just copy past one of the created links in your browser. 
