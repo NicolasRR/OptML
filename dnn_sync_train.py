@@ -512,33 +512,8 @@ if __name__ == "__main__":
         print("Forbidden value !!! epochs must be between [1,+inf)")
         exit()
 
-    if args.no_save_model:
-        save_model = False
-    else:
-        save_model = True
-
-    if args.split_dataset:
-        split_dataset = True
-    else:
-        split_dataset = False
-
-    if args.model_accuracy:
-        model_accuracy = True
-    else:
-        model_accuracy = False
-
-    if args.worker_accuracy:
-        worker_accuracy = True
-    else:
-        worker_accuracy = False
-
     if args.split_labels:
-        split_labels = True
-    else:
-        split_labels = False
-
-    if split_labels:
-        if split_dataset:
+        if args.split_dataset:
             print("Please use --split_labels without --split_dataset")
             exit()
         elif args.batch_size != 1:
@@ -579,17 +554,17 @@ if __name__ == "__main__":
             args=(
                 log_queue,
                 args.dataset,
-                split_dataset,
-                split_labels,
+                args.split_dataset,
+                args.split_labels,
                 args.world_size,
                 args.lr,
                 args.momentum,
                 args.train_split,
                 args.batch_size,
                 args.epochs,
-                worker_accuracy,
-                model_accuracy,
-                save_model,
+                args.worker_accuracy,
+                args.model_accuracy,
+                not args.no_save_model,
             ),
             nprocs=args.world_size,
             join=True,

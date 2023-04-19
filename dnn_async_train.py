@@ -366,6 +366,30 @@ def run(
 
 
 #################################### MAIN ####################################
+def check_dataset_specific_args(args):
+    if args.split_labels or args.split_labels_unscaled:
+        if args.dataset == "mnist":
+            valid_world_sizes = {3, 6, 11}
+        elif args.dataset == "fashion_mnist":
+            valid_world_sizes = {3, 5, 6, 9, 11, 21, 41}
+        elif args.dataset == "cifar10":
+            valid_world_sizes = {3, 6, 11}
+        elif args.dataset == "cifar100":
+            valid_world_sizes = {3, 5, 6, 11, 21, 26, 51, 101}
+
+        if args.world_size not in valid_world_sizes:
+            if args.split_labels:
+                print(
+                    f"Please use --split_labels with --world_size {valid_world_sizes}"
+                )
+                exit()
+            else:
+                print(
+                    f"Please use --split_labels_unscaled with --world_size {valid_world_sizes}"
+                )
+                exit()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Asynchronous Parallel SGD parameter-Server RPC based training"
@@ -504,97 +528,27 @@ if __name__ == "__main__":
         print("Forbidden value !!! epochs must be between [1,+inf)")
         exit()
 
-    if args.no_save_model:
-        save_model = False
-    else:
-        save_model = True
+    if args.split_labels and args.split_dataset:
+        print("Please use --split_labels without --split_dataset")
+        exit()
 
-    if args.split_dataset:
-        split_dataset = True
-    else:
-        split_dataset = False
+    if args.split_labels_unscaled and args.split_dataset:
+        print("Please use --split_labels_unscaled without --split_dataset")
+        exit()
 
-    if args.model_accuracy:
-        model_accuracy = True
-    else:
-        model_accuracy = False
+    if args.split_labels and args.batch_size != 1:
+        print("Please use --split_labels with the --batch_size 1")
+        exit()
 
-    if args.worker_accuracy:
-        worker_accuracy = True
-    else:
-        worker_accuracy = False
+    if args.split_labels_unscaled and args.batch_size != 1:
+        print("Please use --split_labels_unscaled with the --batch_size 1")
+        exit()
 
-    if args.split_labels:
-        split_labels = True
-    else:
-        split_labels = False
+    if args.split_labels and args.split_labels_unscaled:
+        print("Please do not use --split_labels and --split_labels_unscaled together")
+        exit()
 
-    if args.split_labels_unscaled:
-        split_labels_unscaled = True
-    else:
-        split_labels_unscaled = False
-
-    if split_labels:
-        if split_dataset:
-            print("Please use --split_labels without --split_dataset")
-            exit()
-        elif args.batch_size != 1:
-            print("Please use --split_labels with the --batch_size 1")
-            exit()
-        elif split_labels_unscaled:
-            print("Please use --split_labels with the --split_labels_unscaled")
-            exit()
-        elif args.dataset == "mnist":
-            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print("Please use --split_labels with --world_size {3, 6, 11}")
-                exit()
-        elif args.dataset == "fashion_mnist":
-            if 40 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print(
-                    "Please use --split_labels with --world_size {3, 5, 6, 9, 11, 21, 41}"
-                )
-                exit()
-        elif args.dataset == "cifar10":
-            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print("Please use --split_labels with --world_size {3, 6, 11}")
-                exit()
-        elif args.dataset == "cifar100":
-            if 100 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print(
-                    "Please use --split_labels with --world_size {3, 5, 6, 11, 21, 26, 51, 101}"
-                )
-                exit()
-
-    if split_labels_unscaled:
-        if split_dataset:
-            print("Please use --split_labels_unscaled without --split_dataset")
-            exit()
-        elif args.batch_size != 1:
-            print("Please use --split_labels_unscaled with the --batch_size 1")
-            exit()
-        elif split_labels:
-            print("Please use --split_labels_unscaled with the --split_labels")
-            exit()
-        elif args.dataset == "mnist":
-            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print("Please use --split_labels_unscaled with --world_size {3, 6, 11}")
-                exit()
-        elif args.dataset == "fashion_mnist":
-            if 40 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print(
-                    "Please use --split_labels_unscaled with --world_size {3, 5, 6, 9, 11, 21, 41}"
-                )
-                exit()
-        elif args.dataset == "cifar10":
-            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print("Please use --split_labels_unscaled with --world_size {3, 6, 11}")
-                exit()
-        elif args.dataset == "cifar100":
-            if 100 % (args.world_size - 1) != 0 or args.world_size == 2:
-                print(
-                    "Please use --split_labels_unscaled with --world_size {3, 5, 6, 11, 21, 26, 51, 101}"
-                )
-                exit()
+    check_dataset_specific_args(args)
 
     if args.seed:
         torch.manual_seed(DEFAULT_SEED)
@@ -610,18 +564,18 @@ if __name__ == "__main__":
             args=(
                 log_queue,
                 args.dataset,
-                split_dataset,
-                split_labels,
-                split_labels_unscaled,
+                args.split_dataset,
+                args.split_labels,
+                args.split_labels_unscaled,
                 args.world_size,
                 args.lr,
                 args.momentum,
                 args.train_split,
                 args.batch_size,
                 args.epochs,
-                worker_accuracy,
-                model_accuracy,
-                save_model,
+                args.worker_accuracy,
+                args.model_accuracy,
+                not args.no_save_model,
             ),
             nprocs=args.world_size,
             join=True,
