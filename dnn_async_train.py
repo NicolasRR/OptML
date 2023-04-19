@@ -89,7 +89,7 @@ class ParameterServer(object):
         self.logger = logger
         self.model_lock = threading.Lock()
         self.nb_workers = nb_workers
-        self.loss = np.array([])  # store workers loss
+        self.loss = 0  # store workers loss
         self.optimizer = optim.SGD(
             self.model.parameters(), lr=learning_rate, momentum=momentum
         )
@@ -115,14 +115,14 @@ class ParameterServer(object):
             f"PS got update from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run} ({worker_batch_count}/{total_batches_to_run*total_epochs}), epoch {worker_epoch}/{total_epochs}"
         )
 
-        self.loss = np.append(self.loss, loss)
+        self.loss = loss
 
         with self.model_lock:
             self.optimizer.step()
             self.optimizer.zero_grad(set_to_none=False)
             fut = torch.futures.Future()
             fut.set_result(self.model)
-            self.logger.debug(f"PS updated model, received worker loss: {loss} ({worker_name})")
+            self.logger.debug(f"PS updated model, worker loss: {loss} ({worker_name})")
 
         return fut
 
@@ -250,7 +250,7 @@ def run_parameter_server(
     if (
         not split_dataset and not split_labels and not split_labels_unscaled
     ):  # workers sharing samples
-        logger.info("Starting asynchronous SGD training")
+        logger.info(f"Starting asynchronous SGD training with {len(workers)} workers")
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -273,10 +273,8 @@ def run_parameter_server(
 
     torch.futures.wait_all(futs)
 
-    loss = ps_rref.to_here().loss
-
     logger.info("Finished training")
-    print(f"Final train loss: {loss[-1]}")
+    print(f"Final train loss: {ps_rref.to_here().loss}")
 
     if model_accuracy:
         correct_predictions = 0

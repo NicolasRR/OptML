@@ -90,7 +90,7 @@ class ParameterServer(object):
         self.future_model = torch.futures.Future()
         self.nb_workers = nb_workers
         self.update_counter = 0
-        self.losses = np.array([])  # store global model loss (averaged workers loss)
+        self.model_loss = 0 # store global model loss (averaged workers loss)
         self.loss = np.array([])  # store workers loss
         self.optimizer = optim.SGD(
             self.model.parameters(), lr=learning_rate, momentum=momentum
@@ -137,13 +137,12 @@ class ParameterServer(object):
                         self.logger.debug(f"None param.grad detected for the update")
                         self.optimizer.zero_grad()
                 self.update_counter = 0
-                self.losses = np.append(self.losses, self.loss.mean())
-                self.logger.debug(f"Global model loss is {self.losses[-1]}")
+                self.model_loss =self.loss.mean()
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)
                 fut.set_result(self.model)
-                self.logger.debug("PS updated model")
+                self.logger.debug(f"PS updated model, global loss is {self.model_loss}")
                 self.future_model = torch.futures.Future()
 
         return fut
@@ -269,7 +268,7 @@ def run_parameter_server(
     futs = []
 
     if not split_dataset and not split_labels:  # workers sharing samples
-        logger.info("Starting synchronous SGD training")
+        logger.info(f"Starting synchronous SGD training with {len(workers)} workers")
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -303,9 +302,8 @@ def run_parameter_server(
 
     torch.futures.wait_all(futs)
 
-    losses = ps_rref.to_here().losses
     logger.info("Finished training")
-    print(f"Final train loss: {losses[-1]}")
+    print(f"Final train loss: {ps_rref.to_here().model_loss}")
 
     if model_accuracy:
         correct_predictions = 0
