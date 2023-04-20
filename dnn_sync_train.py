@@ -118,29 +118,33 @@ class ParameterServer(object):
             f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run} ({worker_batch_count}/{total_batches_to_run*total_epochs}), epoch {worker_epoch}/{total_epochs})"
         )
         for param, grad in zip(self.model.parameters(), grads):
-            if (param.grad is not None) and (grad is not None):
-                param.grad += grad
-            elif param.grad is None:
+            if (param.grad is not None) and (grad is not None): # remove if confident, good for security
+                param.grad += grad # accumulate workers grads
+            
+            elif param.grad is None: #PyTorch security
                 self.logger.debug(f"None param.grad detected from worker {worker_name}")
             else:
                 self.logger.debug("None grad detected")
+
         self.loss = np.append(self.loss, loss)
+
         with self.lock:
+
             self.update_counter += 1
             fut = self.future_model
 
-            if self.update_counter >= self.nb_workers:
+            if self.update_counter >= self.nb_workers: # received grads from all workers
                 for param in self.model.parameters():
-                    if param.grad is not None:
-                        param.grad /= self.nb_workers
-                    else:
+                    if param.grad is not None: # remove if confident, good for security
+                        param.grad /= self.nb_workers # average workers grads
+                    else: # remove if confident, good for security
                         self.logger.debug(f"None param.grad detected for the update")
-                        self.optimizer.zero_grad()
+                        self.optimizer.zero_grad() # redundant
                 self.update_counter = 0
                 self.model_loss = self.loss.mean()  # aggregate the workers loss
                 self.loss = np.array([])
                 self.optimizer.step()
-                self.optimizer.zero_grad(set_to_none=False)
+                self.optimizer.zero_grad() # reset grad tensor to 0
                 fut.set_result(self.model)
                 self.logger.debug(f"PS updated model, global loss is {self.model_loss}")
                 self.future_model = torch.futures.Future()

@@ -58,7 +58,7 @@ def log_writer(log_queue):
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-    with open("log_async.log", "w") as log_file:
+    with open("log.log", "w") as log_file:
         while True:
             try:
                 record = log_queue.get(timeout=1)
@@ -87,12 +87,13 @@ class ParameterServer(object):
             exit()
 
         self.logger = logger
-        self.model_lock = threading.Lock()
+        self.lock = threading.Lock()
+        self.future_model = torch.futures.Future()
         self.nb_workers = nb_workers
-        self.loss = 0  # store workers loss
         self.optimizer = optim.SGD(
             self.model.parameters(), lr=learning_rate, momentum=momentum
-        )
+        ) 
+        self.loss = 0
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
@@ -113,30 +114,32 @@ class ParameterServer(object):
     ):
         self = ps_rref.local_value()
         self.logger.debug(
-            f"PS got update from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run} ({worker_batch_count}/{total_batches_to_run*total_epochs}), epoch {worker_epoch}/{total_epochs}"
+            f"PS got 1 update (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})"
         )
 
-        with self.model_lock:
+        
+        with self.lock:
+            for param, grad in zip(self.model.parameters(), grads):
+                param.grad = grad #replace with grad
+
+            fut = self.future_model
 
             self.loss = loss
-
-            for param, grad in zip(self.model.parameters(), grads):
-                param.grad = grad
-
+            self.logger.debug(f"Global model loss is {self.loss}, from {worker_name}")
             self.optimizer.step()
-            self.optimizer.zero_grad()
+            self.optimizer.zero_grad(set_to_none=False) # reset grad tensor to 0
+            fut.set_result(self.model)
+            self.future_model = torch.futures.Future()
 
-            self.logger.debug(f"PS updated model, worker loss: {loss} ({worker_name})")
-
-        return self.model
+        return fut
 
 
 #################################### WORKER ####################################
 class Worker(object):
     def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
         self.ps_rref = ps_rref
-        self.train_loader = train_loader
-        self.loss_func = nn.functional.nll_loss  # worker loss function
+        self.train_loader = train_loader  # worker trainloader
+        self.loss_fn = nn.functional.nll_loss  # worker loss
         self.logger = logger
         self.batch_count = 0
         self.current_epoch = 0
@@ -145,32 +148,29 @@ class Worker(object):
         self.worker_accuracy = worker_accuracy
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
-        )
-        self.progress_bar = tqdm(
-            position=int(self.worker_name.split("_")[1]) - 1,
-            desc=f"{self.worker_name}",
-            unit="batch",
-            total=len(self.train_loader) * self.epochs,
-            leave=True,
-        )
+        ) 
 
     def get_next_batch(self):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
-            self.progress_bar.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}")
-            for inputs, labels in self.train_loader:
+            if self.worker_name == "Worker_1":
+                iterable = tqdm(
+                    self.train_loader
+                )  # progress bar only of the first worker (we are in synchronous mode)
+            else:
+                iterable = self.train_loader
+
+            for inputs, labels in iterable:
                 yield inputs, labels
-        self.progress_bar.clear()
-        self.progress_bar.close()
 
     def train(self):
         worker_model = self.ps_rref.rpc_sync().get_model()
 
         for inputs, labels in self.get_next_batch():
-            loss = self.loss_func(worker_model(inputs), labels)  # worker loss
+            loss = self.loss_fn(worker_model(inputs), labels)  # worker loss
             loss.backward()
             self.batch_count += 1
-            # in asynchronous we send the parameters to the server asynchronously and then we update the worker model synchronously
+
             rpc.rpc_async(
                 self.ps_rref.owner(),
                 ParameterServer.update_and_fetch_model,
@@ -185,9 +185,8 @@ class Worker(object):
                     loss.detach(),
                 ),
             )
-            worker_model = self.ps_rref.rpc_sync().get_model()
 
-            self.progress_bar.update(1)
+            worker_model = self.ps_rref.rpc_sync().get_model()
 
             if self.worker_accuracy:
                 if (
@@ -222,7 +221,6 @@ def run_parameter_server(
     dataset_name,
     split_dataset,
     split_labels,
-    split_labels_unscaled,
     learning_rate,
     momentum,
     train_split,
@@ -237,12 +235,12 @@ def run_parameter_server(
         dataset_name,
         split_dataset,
         split_labels,
-        split_labels_unscaled,
+        False,
         train_split,
         batch_size,
         model_accuracy,
     )
-    train_loader_full = None
+    train_loader_full = 0
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
@@ -252,10 +250,8 @@ def run_parameter_server(
     )
     futs = []
 
-    if (
-        not split_dataset and not split_labels and not split_labels_unscaled
-    ):  # workers sharing samples
-        logger.info(f"Starting asynchronous SGD training with {len(workers)} workers")
+    if not split_dataset and not split_labels:  # workers sharing samples
+        logger.info("Starting asynchronous SGD training")
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -265,7 +261,18 @@ def run_parameter_server(
                 )
             )
 
-    else:
+    elif split_dataset and not split_labels:
+        logger.info("Start training")
+        for idx, worker in enumerate(workers):
+            futs.append(
+                rpc.rpc_async(
+                    worker,
+                    run_worker,
+                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
+                )
+            )
+
+    elif split_labels:
         logger.info("Start training")
         for idx, worker in enumerate(workers):
             futs.append(
@@ -297,17 +304,18 @@ def run_parameter_server(
         )
 
     if save_model:
-        suffix = ""
-    elif split_dataset:
-        suffix = "_split_dataset"
-    elif split_labels:
-        suffix = "_labels"
-    elif split_labels_unscaled:
-        suffix = "_labels_unscaled"
-
-    filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
-    torch.save(ps_rref.to_here().model.state_dict(), filename)
-    print(f"Model saved: {filename}")
+        if split_dataset:
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_split_dataset.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            print(f"Model saved: {filename}")
+        elif split_labels:
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_labels.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            print(f"Model saved: {filename}")
+        else:
+            filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}.pt"
+            torch.save(ps_rref.to_here().model.state_dict(), filename)
+            print(f"Model saved: {filename}")
 
 
 def run(
@@ -316,7 +324,6 @@ def run(
     dataset_name,
     split_dataset,
     split_labels,
-    split_labels_unscaled,
     world_size,
     learning_rate,
     momentum,
@@ -355,7 +362,6 @@ def run(
             dataset_name,
             split_dataset,
             split_labels,
-            split_labels_unscaled,
             learning_rate,
             momentum,
             train_split,
@@ -371,30 +377,6 @@ def run(
 
 
 #################################### MAIN ####################################
-def check_dataset_specific_args(args):
-    if args.split_labels or args.split_labels_unscaled:
-        if args.dataset == "mnist":
-            valid_world_sizes = {3, 6, 11}
-        elif args.dataset == "fashion_mnist":
-            valid_world_sizes = {3, 5, 6, 9, 11, 21, 41}
-        elif args.dataset == "cifar10":
-            valid_world_sizes = {3, 6, 11}
-        elif args.dataset == "cifar100":
-            valid_world_sizes = {3, 5, 6, 11, 21, 26, 51, 101}
-
-        if args.world_size not in valid_world_sizes:
-            if args.split_labels:
-                print(
-                    f"Please use --split_labels with --world_size {valid_world_sizes}"
-                )
-                exit()
-            else:
-                print(
-                    f"Please use --split_labels_unscaled with --world_size {valid_world_sizes}"
-                )
-                exit()
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Asynchronous Parallel SGD parameter-Server RPC based training"
@@ -437,21 +419,14 @@ if __name__ == "__main__":
         "--split_labels",
         action="store_true",
         help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
-        Workers will not share samples and the labels are randomly assigned. Note, the training length will be the SAME for all workers (like in synchronous SGD).
-        This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
-    )
-    parser.add_argument(
-        "--split_labels_unscaled",
-        action="store_true",
-        help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
-        Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has.
+        Workers will not share samples and the labels are randomly assigned.
         This mode requires --batch_size 1, don't use --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
     )
     parser.add_argument(
         "--train_split",
         type=float,
         default=None,
-        help="""Fraction of the training dataset to be used for training (0,1].""",
+        help="""Percentage of the training dataset to be used for training (0,1].""",
     )
     parser.add_argument(
         "--lr", type=float, default=None, help="""Learning rate of SGD  (0,+inf)."""
@@ -533,27 +508,58 @@ if __name__ == "__main__":
         print("Forbidden value !!! epochs must be between [1,+inf)")
         exit()
 
-    if args.split_labels and args.split_dataset:
-        print("Please use --split_labels without --split_dataset")
-        exit()
+    if args.no_save_model:
+        save_model = False
+    else:
+        save_model = True
 
-    if args.split_labels_unscaled and args.split_dataset:
-        print("Please use --split_labels_unscaled without --split_dataset")
-        exit()
+    if args.split_dataset:
+        split_dataset = True
+    else:
+        split_dataset = False
 
-    if args.split_labels and args.batch_size != 1:
-        print("Please use --split_labels with the --batch_size 1")
-        exit()
+    if args.model_accuracy:
+        model_accuracy = True
+    else:
+        model_accuracy = False
 
-    if args.split_labels_unscaled and args.batch_size != 1:
-        print("Please use --split_labels_unscaled with the --batch_size 1")
-        exit()
+    if args.worker_accuracy:
+        worker_accuracy = True
+    else:
+        worker_accuracy = False
 
-    if args.split_labels and args.split_labels_unscaled:
-        print("Please do not use --split_labels and --split_labels_unscaled together")
-        exit()
+    if args.split_labels:
+        split_labels = True
+    else:
+        split_labels = False
 
-    check_dataset_specific_args(args)
+    if split_labels:
+        if split_dataset:
+            print("Please use --split_labels without --split_dataset")
+            exit()
+        elif args.batch_size != 1:
+            print("Please use --split_labels with the --batch_size 1")
+            exit()
+        elif args.dataset == "mnist":
+            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print("Please use --split_labels with --world_size {3, 6, 11}")
+                exit()
+        elif args.dataset == "fashion_mnist":
+            if 40 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print(
+                    "Please use --split_labels with --world_size {3, 5, 6, 9, 11, 21, 41}"
+                )
+                exit()
+        elif args.dataset == "cifar10":
+            if 10 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print("Please use --split_labels with --world_size {3, 6, 11}")
+                exit()
+        elif args.dataset == "cifar100":
+            if 100 % (args.world_size - 1) != 0 or args.world_size == 2:
+                print(
+                    "Please use --split_labels with --world_size {3, 5, 6, 11, 21, 26, 51, 101}"
+                )
+                exit()
 
     if args.seed:
         torch.manual_seed(DEFAULT_SEED)
@@ -562,25 +568,24 @@ if __name__ == "__main__":
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
-        log_writer_thread.start()
 
+        log_writer_thread.start()
         mp.spawn(
             run,
             args=(
                 log_queue,
                 args.dataset,
-                args.split_dataset,
-                args.split_labels,
-                args.split_labels_unscaled,
+                split_dataset,
+                split_labels,
                 args.world_size,
                 args.lr,
                 args.momentum,
                 args.train_split,
                 args.batch_size,
                 args.epochs,
-                args.worker_accuracy,
-                args.model_accuracy,
-                not args.no_save_model,
+                worker_accuracy,
+                model_accuracy,
+                save_model,
             ),
             nprocs=args.world_size,
             join=True,
