@@ -430,7 +430,7 @@ if __name__ == "__main__":
         "--train_split",
         type=float,
         default=None,
-        help="""Percentage of the training dataset to be used for training (0,1].""",
+        help="""Fraction of the training dataset to be used for training (0,1].""",
     )
     parser.add_argument(
         "--lr", type=float, default=None, help="""Learning rate of SGD  (0,+inf)."""

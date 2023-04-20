@@ -300,7 +300,7 @@ def run_parameter_server(
     elif split_labels_unscaled:
         suffix = "_labels_unscaled"
 
-    filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
+    filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
     torch.save(ps_rref.to_here().model.state_dict(), filename)
     print(f"Model saved: {filename}")
 
@@ -446,7 +446,7 @@ if __name__ == "__main__":
         "--train_split",
         type=float,
         default=None,
-        help="""Percentage of the training dataset to be used for training (0,1].""",
+        help="""Fraction of the training dataset to be used for training (0,1].""",
     )
     parser.add_argument(
         "--lr", type=float, default=None, help="""Learning rate of SGD  (0,+inf)."""
