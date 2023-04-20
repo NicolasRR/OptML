@@ -92,7 +92,7 @@ class ParameterServer(object):
         self.nb_workers = nb_workers
         self.optimizer = optim.SGD(
             self.model.parameters(), lr=learning_rate, momentum=momentum
-        ) 
+        )
         self.loss = 0
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
@@ -117,17 +117,16 @@ class ParameterServer(object):
             f"PS got 1 update (from {worker_name}, {worker_batch_count}/{total_batches_to_run}, epoch {worker_epoch}/{total_epochs})"
         )
 
-        
         with self.lock:
             for param, grad in zip(self.model.parameters(), grads):
-                param.grad = grad #replace with grad
+                param.grad = grad  # replace with grad
 
             fut = self.future_model
 
             self.loss = loss
             self.logger.debug(f"Global model loss is {self.loss}, from {worker_name}")
             self.optimizer.step()
-            self.optimizer.zero_grad(set_to_none=False) # reset grad tensor to 0
+            self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
             fut.set_result(self.model)
             self.future_model = torch.futures.Future()
 
@@ -148,7 +147,7 @@ class Worker(object):
         self.worker_accuracy = worker_accuracy
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
-        ) 
+        )
 
     def get_next_batch(self):
         for epoch in range(self.epochs):

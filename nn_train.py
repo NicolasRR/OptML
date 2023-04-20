@@ -27,13 +27,12 @@ fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
 # create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch.setFormatter(formatter)
 fh.setFormatter(formatter)
 # add the handlers to logger
 logger.addHandler(ch)
 logger.addHandler(fh)
-    
 
 
 def run(
@@ -46,7 +45,6 @@ def run(
     model_accuracy,
     save_model,
 ):
-    
     if "mnist" in dataset_name:
         print("Created MNIST CNN")
         model = CNN_MNIST()  # global model
@@ -60,12 +58,10 @@ def run(
         print("Unknown dataset, cannot create CNN")
         exit()
 
-    optimizer = optim.SGD(
-            model.parameters(), lr=learning_rate, momentum=momentum
-    )
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
 
-    loss_func = nn.functional.nll_loss 
-    
+    loss_func = nn.functional.nll_loss
+
     train_loaders, batch_size = create_worker_trainloaders(
         1,
         dataset_name,
@@ -83,7 +79,10 @@ def run(
 
     logger.info("Start non distributed SGD training")
 
-    progress_bar = tqdm(total=len(train_loaders) * epochs, unit="batch",)
+    progress_bar = tqdm(
+        total=len(train_loaders) * epochs,
+        unit="batch",
+    )
 
     last_loss = None
     for epoch in range(epochs):
@@ -94,12 +93,13 @@ def run(
             loss = loss_func(output, target)
             loss.backward()
             optimizer.step()
-            logger.debug(f"Loss: {loss.item()}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}")
+            logger.debug(
+                f"Loss: {loss.item()}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}"
+            )
             progress_bar.update(1)
 
     last_loss = loss.item()
 
-    
     progress_bar.close()
 
     logger.info("Finished training")
@@ -119,19 +119,16 @@ def run(
         print(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
         )
-    
+
     if save_model:
         filename = f"{dataset_name}_classic_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.pt"
         torch.save(model.state_dict(), filename)
         print(f"Model saved: {filename}")
 
 
-
 #################################### MAIN ####################################
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Classic non distributed SGD training"
-    )
+    parser = argparse.ArgumentParser(description="Classic non distributed SGD training")
     parser.add_argument(
         "--dataset",
         type=str,
@@ -219,7 +216,8 @@ if __name__ == "__main__":
         torch.manual_seed(DEFAULT_SEED)
         np.random.seed(DEFAULT_SEED)
 
-    run(args.dataset, 
+    run(
+        args.dataset,
         args.lr,
         args.momentum,
         args.train_split,
@@ -228,4 +226,3 @@ if __name__ == "__main__":
         args.model_accuracy,
         not args.no_save_model,
     )
-

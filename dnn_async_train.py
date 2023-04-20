@@ -117,7 +117,6 @@ class ParameterServer(object):
         )
 
         with self.model_lock:
-
             self.loss = loss
 
             for param, grad in zip(self.model.parameters(), grads):
