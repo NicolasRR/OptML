@@ -24,7 +24,7 @@ Use Windows Subsystem for Linux (WSL). To install WSL take the following steps:
   - `sudo apt upgrade`
   - `sudo apt install python3-pip`
   - `pip3 install torch torchvision torchaudio tqdm --index-url https://download.pytorch.org/whl/cpu`
-  - `pip3 install matplotlib scikit-learn`
+  - `pip3 install matplotlib scikit-learn papermill`
 
 ## How to use our scripts
 Option 1:
