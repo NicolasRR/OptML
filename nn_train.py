@@ -94,7 +94,7 @@ def run(
             loss = loss_func(output, target)
             loss.backward()
             optimizer.step()
-            logger.debug(f"Batch {batch_idx}/{len(train_loaders)*epochs}, Loss: {loss.item()}")
+            logger.debug(f"Loss: {loss.item()}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}")
             progress_bar.update(1)
 
     last_loss = loss.item()
