@@ -33,6 +33,12 @@ done
 world_sizes=(3 4 5 6 7)
 train_splits=(0.2 0.5 1)
 
+test_model_flags=""
+if $include_classification_report; then
+    test_model_flags+=" --classification_report"
+fi
+test_model_flags+=" --training_time"
+
 # Nested loops for world_size and train_split
 for world_size in "${world_sizes[@]}"; do
   for train_split in "${train_splits[@]}"; do
@@ -41,6 +47,7 @@ for world_size in "${world_sizes[@]}"; do
         formatted_train_split=$(echo $train_split | tr -d '.')
         formatted_lr=$(echo $lr | tr -d '.')
         formatted_momentum=$(echo $momentum | tr -d '.')
+
         if $include_model_classic; then
             model_classic="mnist_classic_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
         fi
@@ -51,30 +58,23 @@ for world_size in "${world_sizes[@]}"; do
             python3 nn_train.py --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
             sleep 0.1
             echo
-        fi
-        python3 dnn_sync_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed 
-        sleep 0.1
-        echo
-        python3 dnn_async_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
-        sleep 0.1
-        echo
-
-
-        test_model_flags=""
-        if $include_classification_report; then
-            test_model_flags+=" --classification_report"
-        fi
-        test_model_flags+=" --training_time"
-        if $include_model_classic; then
             python3 test_model.py $model_classic $test_model_flags
             sleep 0.1
             echo
         fi
+        
+        python3 dnn_sync_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed 
+        sleep 0.1
+        echo
         python3 test_model.py $model_sync $test_model_flags
+        sleep 0.1
+        echo
+
+        python3 dnn_async_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
         sleep 0.1
         echo
         python3 test_model.py $model_async $test_model_flags
         sleep 0.1
-
+        echo
     done
 done
