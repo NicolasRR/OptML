@@ -1,7 +1,7 @@
 import argparse
 import torch
 import torch.nn.functional as F
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report as CR
 from helpers import (
     CNN_MNIST,
     CNN_CIFAR10,
@@ -13,7 +13,7 @@ from helpers import (
 DEFAULT_BATCH_SIZE = 500
 
 
-def performance(model_path, model, batch_size, test=True):
+def performance(model_path, model, batch_size, classification_report, test=True):
     if test:
         print("Test Performance")
         test_loader = create_testloader(model_path, batch_size)
@@ -46,12 +46,14 @@ def performance(model_path, model, batch_size, test=True):
     )
     print(f"Average {mode} loss: {test_loss:.4f}")
 
-    report = classification_report(targets, predictions, zero_division=0)
-    print(f"\nClassification {mode} report:")
-    print(report)
+    if classification_report:
+        report = CR(targets, predictions, zero_division=0)
+        print(f"\nClassification {mode} report:")
+        print(report)
 
 
-def main(model_path, batch_size):
+def main(model_path, batch_size, classification_report):
+    print(f"Testing performance of {model_path}")
     # Load the saved model
     model = 0
     if "mnist" in model_path:
@@ -70,8 +72,8 @@ def main(model_path, batch_size):
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    performance(model_path, model, batch_size, test=False)
-    performance(model_path, model, batch_size, test=True)
+    performance(model_path, model, batch_size, classification_report, test=False)
+    performance(model_path, model, batch_size, classification_report, test=True)
 
 
 if __name__ == "__main__":
@@ -85,6 +87,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "model_path", type=argparse.FileType("r"), help="""Path of the trained model."""
     )
+    parser.add_argument(
+        "--classification_report",
+        action="store_true",
+        help="If set, prints a classification report (labels performance)",
+    )
 
     args = parser.parse_args()
 
@@ -95,4 +102,4 @@ if __name__ == "__main__":
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
 
-    main(args.model_path.name, args.batch_size)
+    main(args.model_path.name, args.batch_size, args.classification_report)
