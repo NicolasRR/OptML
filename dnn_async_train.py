@@ -103,6 +103,7 @@ class ParameterServer(object):
     @rpc.functions.async_execution
     def update_and_fetch_model(
         ps_rref,
+        grads,
         worker_name,
         worker_batch_count,
         worker_epoch,
@@ -115,16 +116,18 @@ class ParameterServer(object):
             f"PS got update from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run} ({worker_batch_count}/{total_batches_to_run*total_epochs}), epoch {worker_epoch}/{total_epochs}"
         )
 
-        self.loss = loss
-
         with self.model_lock:
+            self.loss = loss
+
+            for param, grad in zip(self.model.parameters(), grads):
+                param.grad = grad
+
             self.optimizer.step()
-            self.optimizer.zero_grad(set_to_none=False)
-            fut = torch.futures.Future()
-            fut.set_result(self.model)
+            self.optimizer.zero_grad()
+
             self.logger.debug(f"PS updated model, worker loss: {loss} ({worker_name})")
 
-        return fut
+        return self.model
 
 
 #################################### WORKER ####################################
@@ -172,6 +175,7 @@ class Worker(object):
                 ParameterServer.update_and_fetch_model,
                 args=(
                     self.ps_rref,
+                    [param.grad for param in worker_model.parameters()],
                     self.worker_name,
                     self.batch_count,
                     self.current_epoch,
@@ -300,7 +304,7 @@ def run_parameter_server(
     elif split_labels_unscaled:
         suffix = "_labels_unscaled"
 
-    filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
+    filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
     torch.save(ps_rref.to_here().model.state_dict(), filename)
     print(f"Model saved: {filename}")
 
@@ -446,7 +450,7 @@ if __name__ == "__main__":
         "--train_split",
         type=float,
         default=None,
-        help="""Percentage of the training dataset to be used for training (0,1].""",
+        help="""Fraction of the training dataset to be used for training (0,1].""",
     )
     parser.add_argument(
         "--lr", type=float, default=None, help="""Learning rate of SGD  (0,+inf)."""

@@ -46,7 +46,7 @@ def performance(model_path, model, batch_size, test=True):
     )
     print(f"Average {mode} loss: {test_loss:.4f}")
 
-    report = classification_report(targets, predictions)
+    report = classification_report(targets, predictions, zero_division=0)
     print(f"\nClassification {mode} report:")
     print(report)
 
