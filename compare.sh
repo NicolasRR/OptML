@@ -4,7 +4,7 @@
 #bash compare.sh
 
 include_model_classic=false # include classic sgd to compare with sync and async
-include_classification_report=false
+include_classification_report=false # include labels classification report
 notebook=false # use notebook for plots
 
 train_split=0.2
@@ -36,7 +36,9 @@ done
 formatted_train_split=$(echo $train_split | tr -d '.')
 formatted_lr=$(echo $lr | tr -d '.')
 formatted_momentum=$(echo $momentum | tr -d '.')
-model_classic="mnist_classic_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+if $include_model_classic; then
+    model_classic="mnist_classic_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+fi
 model_sync="mnist_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
 model_async="mnist_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
 
