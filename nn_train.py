@@ -79,13 +79,13 @@ def run(
 
     logger.info("Start non distributed SGD training")
 
-    progress_bar = tqdm(
-        total=len(train_loaders) * epochs,
-        unit="batch",
-    )
-
     last_loss = None
+
     for epoch in range(epochs):
+        progress_bar = tqdm(
+            total=len(train_loaders),
+            unit="batch",
+        )
         progress_bar.set_postfix(epoch=f"{epoch+1}/{epochs}")
         for batch_idx, (data, target) in enumerate(train_loaders):
             optimizer.zero_grad()
@@ -97,6 +97,7 @@ def run(
                 f"Loss: {loss.item()}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}"
             )
             progress_bar.update(1)
+        progress_bar.close()
 
     last_loss = loss.item()
 
