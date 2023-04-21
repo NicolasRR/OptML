@@ -1,4 +1,4 @@
-#%% PACKAGES
+# %% PACKAGES
 import os
 import time
 import matplotlib.pyplot as plt
@@ -14,8 +14,7 @@ from torch.utils.data import DataLoader
 import torch.nn.functional as F
 
 
-
-#%% NETWORK CNN FOR CLASSIFICATION
+# %% NETWORK CNN FOR CLASSIFICATION
 class Net(nn.Module):
     def __init__(self, num_input, num_output):
         super().__init__()
@@ -26,7 +25,7 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(9216, 128)
         self.fc2 = nn.Linear(128, num_output)
         self.max_pool = nn.AdaptiveMaxPool2d((12, 12))
-        
+
     def forward(self, x):
         x = self.conv1(x)
         x = nn.functional.relu(x)
@@ -42,10 +41,10 @@ class Net(nn.Module):
         return output
 
 
-
-#%% TRANING PARAMETERS
-def train_model_SGD(network, learning_rate, momentum, epochs, train_loader, print_every):
-
+# %% TRANING PARAMETERS
+def train_model_SGD(
+    network, learning_rate, momentum, epochs, train_loader, print_every
+):
     # Set the network and the loss function
     model = network
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
@@ -79,16 +78,19 @@ def train_model_SGD(network, learning_rate, momentum, epochs, train_loader, prin
             running_loss += loss.item()
             _, predictions = torch.max(output.data, 1)
             correct_predictions += (predictions == target).sum().item()
-            if batch_idx%print_every == 0:
+            if batch_idx % print_every == 0:
                 # print running loss and correct prediction over the last n batches
                 print(
                     "Epochs : {}  , Batch : {},  Loss : {},  Accruacy : {}".format(
-                    epoch + 1, batch_idx,running_loss-last_rn_loss,
-                    (correct_predictions-last_correct_pred)/print_every
-                    ))
+                        epoch + 1,
+                        batch_idx,
+                        running_loss - last_rn_loss,
+                        (correct_predictions - last_correct_pred) / print_every,
+                    )
+                )
                 last_correct_pred = correct_predictions
                 last_rn_loss = running_loss
-                
+
         # Compute the average loss and accuracy for this epoch
         avg_loss = running_loss / len(train_loader.dataset)
         accuracy = correct_predictions / len(train_loader.dataset)
@@ -100,36 +102,39 @@ def train_model_SGD(network, learning_rate, momentum, epochs, train_loader, prin
             )
         )
     training_time = time.time() - start_time
-    print(f"Training time: {training_time} seconds")  
-      
+    print(f"Training time: {training_time} seconds")
+
     return model
 
 
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Ask for the dataset to use
     # Load the CIFAR-10 dataset
-    train_dataset = datasets.CIFAR10(root='./data', train=True, transform=transforms.ToTensor(), download=True)
-    test_dataset = datasets.CIFAR10(root='./data', train=False, transform=transforms.ToTensor(), download=True)
+    train_dataset = datasets.CIFAR10(
+        root="./data", train=True, transform=transforms.ToTensor(), download=True
+    )
+    test_dataset = datasets.CIFAR10(
+        root="./data", train=False, transform=transforms.ToTensor(), download=True
+    )
 
     # Create data loaders
     train_loader = DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
     test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
-    
+
     # Ask if testing resutls are required
     data_sample, _ = train_dataset[0]
     input_dim = data_sample.shape.numel()
     output_dim = len(train_dataset.classes)
-    
+
     network = Net(num_input=3, num_output=output_dim)
     # Parameters
     lr = 0.0001
     momentum = 0.0001
     epochs = 10
     print_every = 10
-    trained_model = train_model_SGD(network, lr, momentum, epochs, train_loader, print_every)
-    
-    
+    trained_model = train_model_SGD(
+        network, lr, momentum, epochs, train_loader, print_every
+    )
+
+
 # %%
