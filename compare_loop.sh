@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #dos2unix compare_loop.sh
-#bash compare_loop.sh
+#bash compare_loop.sh > loop_result.txt
 
 include_model_classic=false # include classic sgd to compare with sync and async
 include_classification_report=false # include labels classification report
@@ -62,7 +62,7 @@ for world_size in "${world_sizes[@]}"; do
             sleep 0.1
             echo
         fi
-        
+
         python3 dnn_sync_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed 
         sleep 0.1
         echo
