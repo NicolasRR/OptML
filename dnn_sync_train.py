@@ -147,7 +147,7 @@ class ParameterServer(object):
                 self.model_loss = self.loss.mean()  # aggregate the workers loss
                 self.loss = np.array([])
                 self.optimizer.step()
-                self.optimizer.zero_grad()  # reset grad tensor to 0
+                self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
                 fut.set_result(self.model)
                 self.logger.debug(f"PS updated model, global loss is {self.model_loss}")
                 self.future_model = torch.futures.Future()
