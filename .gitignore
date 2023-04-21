@@ -1,9 +1,7 @@
 
 .vscode/settings.json
-*.log
 *.png
 *.txt
-*.pt
 data/
 __pycache__/
 .ipynb_checkpoints/

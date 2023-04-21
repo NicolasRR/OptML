@@ -22,10 +22,10 @@ model_async="mnist_async_${world_size}_${formatted_train_split}_${formatted_lr}_
 python3 nn_train.py --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
 sleep 0.1
 echo
-python3 dnn_sync_train.py --world_size 3 --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed 
+python3 dnn_sync_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed 
 sleep 0.1
 echo
-python3 dnn_async_train.py --world_size 3 --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
+python3 dnn_async_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
 sleep 0.1
 echo
 
