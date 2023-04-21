@@ -740,16 +740,16 @@ def cifar100_testloader(batch_size, test=True):
 #################################### TEST LOADER main function ####################################
 def create_testloader(model_path, batch_size):
     if "fashion_mnist" in model_path:
-        print("Created FashionMNIST testloader \n")
+        # print("Created FashionMNIST testloader \n")
         return fashion_mnist_testloader(batch_size)
     elif "mnist" in model_path:
-        print("Created MNIST testloader \n")
+        # print("Created MNIST testloader \n")
         return mnist_testloader(batch_size)
     elif "cifar100" in model_path:
-        print("Created CIFAR100 testloader \n")
+        # print("Created CIFAR100 testloader \n")
         return cifar100_testloader(batch_size)
     elif "cifar10" in model_path:
-        print("Created CIFAR10 testloader \n")
+        # print("Created CIFAR10 testloader \n")
         return cifar10_testloader(batch_size)
     else:
         print("Error Unkown dataset")
@@ -758,16 +758,16 @@ def create_testloader(model_path, batch_size):
 
 def create_trainloader(model_path, batch_size):
     if "fashion_mnist" in model_path:
-        print("Created FashionMNIST trainloader \n")
+        # print("Created FashionMNIST trainloader \n")
         return fashion_mnist_testloader(batch_size, test=False)
     elif "mnist" in model_path:
-        print("Created MNIST trainloader \n")
+        # print("Created MNIST trainloader \n")
         return mnist_testloader(batch_size, test=False)
     elif "cifar100" in model_path:
-        print("Created CIFAR100 trainloader \n")
+        # print("Created CIFAR100 trainloader \n")
         return cifar100_testloader(batch_size, test=False)
     elif "cifar10" in model_path:
-        print("Created CIFAR10 trainloader \n")
+        # print("Created CIFAR10 trainloader \n")
         return cifar10_testloader(batch_size, test=False)
     else:
         print("Error Unkown dataset")
