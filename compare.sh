@@ -3,8 +3,9 @@
 #dos2unix compare.sh
 #bash compare.sh
 
-include_model_classic=false
+include_model_classic=false # include classic sgd to compare with sync and async
 include_classification_report=false
+notebook=false # use notebook for plots
 
 train_split=0.2
 epoch=2
@@ -19,6 +20,7 @@ while [ "$#" -gt 0 ]; do
   case "$1" in
     --model_classic) include_model_classic=true; shift ;;
     --classification_report) include_classification_report=true; shift ;;
+    --notebook) notebook=true; shift;;
     --train_split) train_split="$2"; shift 2 ;;
     --epoch) epoch="$2"; shift 2 ;;
     --world_size) world_size="$2"; shift 2 ;;
@@ -38,9 +40,11 @@ model_classic="mnist_classic_${formatted_train_split}_${formatted_lr}_${formatte
 model_sync="mnist_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
 model_async="mnist_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
 
-python3 nn_train.py --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
-sleep 0.1
-echo
+if $include_model_classic; then
+    python3 nn_train.py --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
+    sleep 0.1
+    echo
+fi
 python3 dnn_sync_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed 
 sleep 0.1
 echo
@@ -48,16 +52,34 @@ python3 dnn_async_train.py --world_size $world_size --train_split $train_split -
 sleep 0.1
 echo
 
-if $include_model_classic; then
-    if $include_classification_report; then
-        papermill Compare.ipynb Compare_out.ipynb -p model_classic $model_classic -p model_sync $model_sync -p model_async $model_async -p include_classification_report $include_classification_report
+if $notebook; then
+    if $include_model_classic; then
+        if $include_classification_report; then
+            papermill Compare_and_Plot.ipynb Compare_and_Plot_out.ipynb -p model_classic $model_classic -p model_sync $model_sync -p model_async $model_async -p include_classification_report $include_classification_report
+        else
+            papermill Compare_and_Plot.ipynb Compare_and_Plot_out.ipynb -p model_classic $model_classic -p model_sync $model_sync -p model_async $model_async
+        fi
     else
-        papermill Compare.ipynb Compare_out.ipynb -p model_classic $model_classic -p model_sync $model_sync -p model_async $model_async
+        if $include_classification_report; then
+            papermill Compare_and_Plot.ipynb Compare_and_Plot_out.ipynb -p model_sync $model_sync -p model_async $model_async -p include_classification_report $include_classification_report
+        else
+            papermill Compare_and_Plot.ipynb Compare_and_Plot_out.ipynb -p model_sync $model_sync -p model_async $model_async
+        fi
     fi
 else
+    test_model_flags=""
     if $include_classification_report; then
-        papermill Compare.ipynb Compare_out.ipynb -p model_sync $model_sync -p model_async $model_async -p include_classification_report $include_classification_report
-    else
-        papermill Compare.ipynb Compare_out.ipynb -p model_sync $model_sync -p model_async $model_async
+        test_model_flags+=" --classification_report"
     fi
+    test_model_flags+=" --training_time"
+    if $include_model_classic; then
+        python3 test_model.py $model_classic $test_model_flags
+        sleep 0.1
+        echo
+    fi
+    python3 test_model.py $model_sync $test_model_flags
+    sleep 0.1
+    echo
+    python3 test_model.py $model_async $test_model_flags
+    sleep 0.1
 fi
