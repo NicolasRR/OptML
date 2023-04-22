@@ -86,7 +86,7 @@ Here is how to run `nn_train.py` (vanilla non distributed SGD):
 
 </div>
 
-Here is how to run `dnn_sync_train.py` (synchronous parallel SGD) or ``dnn_async_train.py` (asynchronous parallel SGD):
+Here is how to run `dnn_sync_train.py` (synchronous parallel SGD) or `dnn_async_train.py` (asynchronous parallel SGD):
 - `python3 dnn_sync_train.py [flags]` `python3 dnn_async_train.py [flags]`
 
 <div align="center">
