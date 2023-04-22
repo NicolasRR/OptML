@@ -149,6 +149,5 @@ To see all the flags available for a script: `python3 nn_train.py -h` or `python
 | 5 | 0, 8 |
 
 </div>
-
-      `python3 dnn_sync_train.py --dataset mnist --world_size 6 --model_accuracy --batch_size 1 --split_labels`
+ `python3 dnn_sync_train.py --dataset mnist --world_size 6 --model_accuracy --batch_size 1 --split_labels`
 
