@@ -157,12 +157,6 @@ if __name__ == "__main__":
         help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100.",
     )
     parser.add_argument(
-        "--split_dataset",
-        action="store_true",
-        help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
-        shared between workers).""",
-    )
-    parser.add_argument(
         "--train_split",
         type=float,
         default=None,
