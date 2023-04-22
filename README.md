@@ -66,8 +66,7 @@ couples of parameters such as the number of workers, the learning rate, momentum
 
 </div>
 
-Here is how to run `nn_train.py` (vanilla non distributed SGD):
-- `python3 nn_train.py [flags]`
+- Here is how to run `nn_train.py` (vanilla non distributed SGD): `python3 nn_train.py [flags]`
 
 <div align="center">
 
@@ -86,8 +85,7 @@ Here is how to run `nn_train.py` (vanilla non distributed SGD):
 
 </div>
 
-Here is how to run `dnn_sync_train.py` (synchronous parallel SGD) or `dnn_async_train.py` (asynchronous parallel SGD):
-- `python3 dnn_sync_train.py [flags]` `python3 dnn_async_train.py [flags]`
+- Here is how to run `dnn_sync_train.py` (synchronous parallel SGD) or `dnn_async_train.py` (asynchronous parallel SGD): `python3 dnn_sync_train.py [flags]` `python3 dnn_async_train.py [flags]`
 
 <div align="center">
 
@@ -113,8 +111,7 @@ Here is how to run `dnn_sync_train.py` (synchronous parallel SGD) or `dnn_async_
 
 </div>
 
-Here is how to run `test_model.py` (compute training time, plots and test performance):
-- `python test_model.py [flags]`
+- Here is how to run `test_model.py` (compute training time, plots and test performance): `python test_model.py [flags]`
 
 <div align="center">
 
