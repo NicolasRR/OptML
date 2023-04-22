@@ -320,7 +320,7 @@ def run_parameter_server(
             suffix = "_labels_unscaled"
 
         filename = f"{dataset_name}_async_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
-        
+
         if len(subfolder) > 0:
             filepath = os.path.join(subfolder, filename)
         else:
@@ -328,6 +328,7 @@ def run_parameter_server(
 
         torch.save(ps_rref.to_here().model.state_dict(), filepath)
         print(f"Model saved: {filepath}")
+
 
 def run(
     rank,
@@ -591,7 +592,9 @@ if __name__ == "__main__":
 
     with Manager() as manager:
         log_queue = manager.Queue()
-        log_writer_thread = threading.Thread(target=log_writer, args=(log_queue, args.subfolder))
+        log_writer_thread = threading.Thread(
+            target=log_writer, args=(log_queue, args.subfolder)
+        )
         log_writer_thread.start()
 
         mp.spawn(

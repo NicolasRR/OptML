@@ -34,7 +34,9 @@ def setup_logger(subfolder):
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
     # create formatter and add it to the handlers
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     ch.setFormatter(formatter)
     fh.setFormatter(formatter)
     # add the handlers to logger
@@ -134,7 +136,7 @@ def run(
 
     if save_model:
         filename = f"{dataset_name}_classic_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.pt"
-        
+
         if len(subfolder) > 0:
             filepath = os.path.join(subfolder, filename)
         else:
@@ -252,5 +254,5 @@ if __name__ == "__main__":
         args.epochs,
         args.model_accuracy,
         not args.no_save_model,
-        args.subfolder
+        args.subfolder,
     )

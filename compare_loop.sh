@@ -44,14 +44,16 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-world_sizes=(3 4 5 6 7)
-train_splits=(0.2 0.5 1)
+#world_sizes=(3 4 5 6 7)
+world_sizes=(3 4)
+#train_splits=(0.2 0.5 1)
+train_splits=(0.2 0.5)
 
 test_model_flags=""
 if $include_classification_report; then
     test_model_flags+=" --classification_report"
 fi
-test_model_flags+=" --training_time"
+test_model_flags+=" --training_time --pics"
 
 # Nested loops for world_size and train_split
 for world_size in "${world_sizes[@]}"; do

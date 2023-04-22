@@ -339,7 +339,7 @@ def run_parameter_server(
         elif split_labels:
             suffix = "_labels"
         filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
-        
+
         if len(subfolder) > 0:
             filepath = os.path.join(subfolder, filename)
         else:
@@ -584,7 +584,9 @@ if __name__ == "__main__":
 
     with Manager() as manager:
         log_queue = manager.Queue()
-        log_writer_thread = threading.Thread(target=log_writer, args=(log_queue, args.subfolder))
+        log_writer_thread = threading.Thread(
+            target=log_writer, args=(log_queue, args.subfolder)
+        )
 
         log_writer_thread.start()
         mp.spawn(
@@ -603,7 +605,7 @@ if __name__ == "__main__":
                 args.worker_accuracy,
                 args.model_accuracy,
                 not args.no_save_model,
-                args.subfolder
+                args.subfolder,
             ),
             nprocs=args.world_size,
             join=True,

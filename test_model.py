@@ -54,6 +54,7 @@ def performance(model_path, model, batch_size, classification_report, test=True)
         print(f"\nClassification {mode} report:")
         print(report)
 
+
 def format_timedelta(x, _):
     td = timedelta(seconds=x)
     minutes, remainder = divmod(td.seconds, 60)
@@ -61,11 +62,12 @@ def format_timedelta(x, _):
     milliseconds = td.microseconds // 1000
     return f"{minutes:02d}:{seconds:02d}:{milliseconds:03d}"
 
+
 def compute_training_time_and_pics(model_path, pics, subfolder):
     lines = []
     model_type = None
     if "classic" in model_path:
-        model_type = "Classic" 
+        model_type = "Classic"
         if len(subfolder) > 0:
             with open(os.path.join(subfolder, "log.log"), "r") as log_file:
                 # Iterate through each line in the log file
@@ -110,7 +112,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
 
     if model_type == "Synchronous" or model_type == "Asynchronous":
         nb_workers = int(
-        (lines[0][1].split("with ")[1]).split(" workers")[0]
+            (lines[0][1].split("with ")[1]).split(" workers")[0]
         )  # extract from first line
 
     del_list = []
@@ -161,7 +163,9 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[0].scatter(timedeltas, losses, marker="o")
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Model Loss")
-            axs[0].set_title("Classic SGD evolution of the model loss in function of time")
+            axs[0].set_title(
+                "Classic SGD evolution of the model loss in function of time"
+            )
 
             # Format x-axis tick labels
             formatter = FuncFormatter(format_timedelta)
@@ -180,10 +184,12 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[1].xaxis.set_major_formatter(formatter)
 
             if len(subfolder) > 0:
-                plt.savefig(os.path.join(subfolder, 'model_classic.png'))
+                plt.savefig(
+                    os.path.join(subfolder, "model_classic.png"), bbox_inches="tight"
+                )
                 plt.close(fig)
             else:
-                plt.savefig('model_classic.png')
+                plt.savefig("model_classic.png", bbox_inches="tight")
                 plt.close(fig)
 
         elif model_type == "Synchronous":
@@ -218,7 +224,9 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[0].scatter(timedeltas, losses, marker="o")
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Model Loss")
-            axs[0].set_title("Synchronous SGD evolution of the model loss in function of time")
+            axs[0].set_title(
+                "Synchronous SGD evolution of the model loss in function of time"
+            )
 
             # Format x-axis tick labels
             formatter = FuncFormatter(format_timedelta)
@@ -228,7 +236,9 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             worker_cumulative_updates = {}
             for line in worker_update_lines:
                 td, worker_id, batch_count, epoch = line
-                worker_cumulative_updates.setdefault(worker_id, []).append((td, batch_count))
+                worker_cumulative_updates.setdefault(worker_id, []).append(
+                    (td, batch_count)
+                )
 
             for worker_id, updates in worker_cumulative_updates.items():
                 x = [td.total_seconds() for td, _ in updates]
@@ -244,85 +254,93 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[1].xaxis.set_major_formatter(formatter)
 
             if len(subfolder) > 0:
-                plt.savefig(os.path.join(subfolder, 'model_synchronous.png'))
+                plt.savefig(
+                    os.path.join(subfolder, "model_synchronous.png"),
+                    bbox_inches="tight",
+                )
                 plt.close(fig)
             else:
-                plt.savefig('model_synchronous.png')
+                plt.savefig("model_synchronous.png", bbox_inches="tight")
                 plt.close(fig)
-        
+
         elif model_type == "Asynchronous":
-                worker_update_lines = []
-                for i, line in enumerate(lines):
-                    if i < nb_workers:
-                        continue
-                    if "PS updated model, worker loss: " in line[1]:
-                        splited_text = (line[1].split("PS updated model, worker loss: "))[1].split(
-                            " "
+            worker_update_lines = []
+            for i, line in enumerate(lines):
+                if i < nb_workers:
+                    continue
+                if "PS updated model, worker loss: " in line[1]:
+                    splited_text = (line[1].split("PS updated model, worker loss: "))[
+                        1
+                    ].split(" ")
+                    worker_update_lines.append(
+                        (
+                            line[0],
+                            float(splited_text[0]),
+                            int(splited_text[1].split("_")[1][:-1]),
                         )
-                        worker_update_lines.append(
-                            (
-                                line[0],
-                                float(splited_text[0]),
-                                int(splited_text[1].split("_")[1][:-1]),
-                            )
-                        )
-
-                ####### PLOTS #######
-                # Create a 1x2 grid of subplots
-                fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(20, 5))
-
-                # First subplot (Worker Loss vs Time)
-                worker_losses = {}
-                for line in worker_update_lines:
-                    td, worker_loss, worker_id = line
-                    worker_losses.setdefault(worker_id, []).append((td, worker_loss))
-
-                for worker_id, losses in worker_losses.items():
-                    x = [td.total_seconds() for td, _ in losses]
-                    y = [worker_loss for _, worker_loss in losses]
-                    axs[0].scatter(x, y, label=f"Worker {worker_id}", marker="o")
-
-                axs[0].set_xlabel("Time (MM:SS:sss)")
-                axs[0].set_ylabel("Worker Loss")
-                axs[0].set_title("Asynchronous SGD evolution of worker loss in function of time")
-                axs[0].legend()
-
-                # Format x-axis tick labels
-                formatter = FuncFormatter(format_timedelta)
-                axs[0].xaxis.set_major_formatter(formatter)
-
-                # Second subplot (Cumulative Batch Update Count vs Time)
-                worker_cumulative_updates = {}
-                for line in worker_update_lines:
-                    td, _, worker_id = line
-                    worker_cumulative_updates.setdefault(worker_id, []).append(td)
-
-                for worker_id, updates in worker_cumulative_updates.items():
-                    x = [td.total_seconds() for td in updates]
-                    y = list(range(1, len(updates) + 1))
-                    axs[1].plot(
-                        x,
-                        y,
-                        label=f"Worker {worker_id}",
                     )
 
-                axs[1].set_xlabel("Time (MM:SS:sss)")
-                axs[1].set_ylabel("Cumulative Batch Update Count")
-                axs[1].set_title("Asynchronous SGD workers speed comparison")
-                axs[1].legend()
+            ####### PLOTS #######
+            # Create a 1x2 grid of subplots
+            fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(20, 5))
 
-                # Format x-axis tick labels
-                axs[1].xaxis.set_major_formatter(formatter)
+            # First subplot (Worker Loss vs Time)
+            worker_losses = {}
+            for line in worker_update_lines:
+                td, worker_loss, worker_id = line
+                worker_losses.setdefault(worker_id, []).append((td, worker_loss))
 
-                if len(subfolder) > 0:
-                    plt.savefig(os.path.join(subfolder, 'model_asynchronous.png'))
-                    plt.close(fig)
-                else:
-                    plt.savefig('model_asynchronous.png')
-                    plt.close(fig)
+            for worker_id, losses in worker_losses.items():
+                x = [td.total_seconds() for td, _ in losses]
+                y = [worker_loss for _, worker_loss in losses]
+                axs[0].scatter(x, y, label=f"Worker {worker_id}", marker="o")
+
+            axs[0].set_xlabel("Time (MM:SS:sss)")
+            axs[0].set_ylabel("Worker Loss")
+            axs[0].set_title(
+                "Asynchronous SGD evolution of worker loss in function of time"
+            )
+            axs[0].legend()
+
+            # Format x-axis tick labels
+            formatter = FuncFormatter(format_timedelta)
+            axs[0].xaxis.set_major_formatter(formatter)
+
+            # Second subplot (Cumulative Batch Update Count vs Time)
+            worker_cumulative_updates = {}
+            for line in worker_update_lines:
+                td, _, worker_id = line
+                worker_cumulative_updates.setdefault(worker_id, []).append(td)
+
+            for worker_id, updates in worker_cumulative_updates.items():
+                x = [td.total_seconds() for td in updates]
+                y = list(range(1, len(updates) + 1))
+                axs[1].plot(
+                    x,
+                    y,
+                    label=f"Worker {worker_id}",
+                )
+
+            axs[1].set_xlabel("Time (MM:SS:sss)")
+            axs[1].set_ylabel("Cumulative Batch Update Count")
+            axs[1].set_title("Asynchronous SGD workers speed comparison")
+            axs[1].legend()
+
+            # Format x-axis tick labels
+            axs[1].xaxis.set_major_formatter(formatter)
+
+            if len(subfolder) > 0:
+                plt.savefig(
+                    os.path.join(subfolder, "model_asynchronous.png"),
+                    bbox_inches="tight",
+                )
+                plt.close(fig)
+            else:
+                plt.savefig("model_asynchronous.png", bbox_inches="tight")
+                plt.close(fig)
+
 
 def main(model_path, batch_size, classification_report, training_time, pics, subfolder):
-
     # Load the saved model
     model = None
     if "mnist" in model_path:
@@ -343,15 +361,23 @@ def main(model_path, batch_size, classification_report, training_time, pics, sub
 
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
-                os.makedirs(subfolder)
-        output_file_path = os.path.join(subfolder, 'test_output.txt')
-        with open(output_file_path, 'w') as output_file:
+            os.makedirs(subfolder)
+
+        model_filename = os.path.basename(model_path)
+        model_basename, _ = os.path.splitext(model_filename)
+        output_file_path = os.path.join(subfolder, f"{model_basename}_test_output.txt")
+
+        with open(output_file_path, "w") as output_file:
             with contextlib.redirect_stdout(output_file):
                 print(f"Testing performance of {model_path}")
                 if training_time:
                     compute_training_time_and_pics(model_path, pics, subfolder)
-                performance(model_path, model, batch_size, classification_report, test=False)
-                performance(model_path, model, batch_size, classification_report, test=True)
+                performance(
+                    model_path, model, batch_size, classification_report, test=False
+                )
+                performance(
+                    model_path, model, batch_size, classification_report, test=True
+                )
 
     print(f"Testing performance of {model_path}")
     if training_time:
@@ -409,7 +435,6 @@ if __name__ == "__main__":
 
     if len(args.subfolder) > 0:
         print(f"Outputs will be saved to {args.subfolder}/")
-
 
     main(
         args.model_path.name,
