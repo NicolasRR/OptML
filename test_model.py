@@ -401,23 +401,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "--classification_report",
         action="store_true",
-        help="If set, prints a classification report (labels performance)",
+        help="""If set, prints a classification report (labels performance).""",
     )
     parser.add_argument(
         "--training_time",
         action="store_true",
-        help="If set, will read the associated log file to compute the training time",
+        help="""If set, will read the associated log file to compute the training time.""",
     )
     parser.add_argument(
         "--pics",
         action="store_true",
-        help="If set, will compute and save plots from the .log file",
+        help="""If set, will compute and save plots from the .log file.""",
     )
     parser.add_argument(
         "--subfolder",
         type=str,
         default="",
-        help="Subfolder name where the test results and plots will be saved",
+        help="""Subfolder name where the test results and plots will be saved.""",
     )
 
     args = parser.parse_args()
