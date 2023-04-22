@@ -2,6 +2,7 @@
 
 #dos2unix compare.sh
 #bash compare.sh
+#bash compare.sh > compare_result.txt
 
 include_model_classic=false # include classic sgd to compare with sync and async
 include_classification_report=false # include labels classification report

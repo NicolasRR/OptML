@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 from torch import optim
@@ -17,22 +18,32 @@ DEFAULT_SEED = 614310
 
 
 #################################### LOGGER ####################################
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+def setup_logger(subfolder):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
 
-# create file handler which logs even debug messages
-fh = logging.FileHandler("log.log", mode="w")
-fh.setLevel(logging.DEBUG)
-# create console handler with a higher log level
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-# create formatter and add it to the handlers
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-ch.setFormatter(formatter)
-fh.setFormatter(formatter)
-# add the handlers to logger
-logger.addHandler(ch)
-logger.addHandler(fh)
+    # create file handler which logs even debug messages
+    if len(subfolder) > 0:
+        if not os.path.exists(subfolder):
+            os.makedirs(subfolder)
+        fh = logging.FileHandler(os.path.join(subfolder, "log.log"), mode="w")
+    else:
+        fh = logging.FileHandler("log.log", mode="w")
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    ch.setFormatter(formatter)
+    fh.setFormatter(formatter)
+    # add the handlers to logger
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+
+    return logger
 
 
 def run(
@@ -44,6 +55,7 @@ def run(
     epochs,
     model_accuracy,
     save_model,
+    subfolder,
 ):
     if "mnist" in dataset_name:
         print("Created MNIST CNN")
@@ -77,6 +89,7 @@ def run(
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
 
+    logger = setup_logger(subfolder)
     logger.info("Start non distributed SGD training")
 
     last_loss = None
@@ -123,8 +136,14 @@ def run(
 
     if save_model:
         filename = f"{dataset_name}_classic_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.pt"
-        torch.save(model.state_dict(), filename)
-        print(f"Model saved: {filename}")
+
+        if len(subfolder) > 0:
+            filepath = os.path.join(subfolder, filename)
+        else:
+            filepath = filename
+
+        torch.save(model.state_dict(), filepath)
+        print(f"Model saved: {filepath}")
 
 
 #################################### MAIN ####################################
@@ -182,6 +201,12 @@ if __name__ == "__main__":
         action="store_true",
         help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""",
     )
+    parser.add_argument(
+        "--subfolder",
+        type=str,
+        default="",
+        help="""Subfolder where the model and log.log will be saved.""",
+    )
 
     args = parser.parse_args()
 
@@ -217,6 +242,9 @@ if __name__ == "__main__":
         torch.manual_seed(DEFAULT_SEED)
         np.random.seed(DEFAULT_SEED)
 
+    if len(args.subfolder) > 0:
+        print(f"Saving model and log.log to {args.subfolder}")
+
     run(
         args.dataset,
         args.lr,
@@ -226,4 +254,5 @@ if __name__ == "__main__":
         args.epochs,
         args.model_accuracy,
         not args.no_save_model,
+        args.subfolder,
     )

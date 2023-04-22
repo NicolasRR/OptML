@@ -53,20 +53,34 @@ class QueueHandler(logging.Handler):
         self.log_queue.put(record)
 
 
-def log_writer(log_queue):
+def log_writer(log_queue, subfolder):
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-    with open("log_sync.log", "w") as log_file:
-        while True:
-            try:
-                record = log_queue.get(timeout=1)
-                if record is None:
-                    break
-                msg = formatter.format(record)
-                log_file.write(msg + "\n")
-            except queue.Empty:
-                continue
+    if len(subfolder) > 0:
+        if not os.path.exists(subfolder):
+            os.makedirs(subfolder)
+        with open(os.path.join(subfolder, "log_sync.log"), "w") as log_file:
+            while True:
+                try:
+                    record = log_queue.get(timeout=1)
+                    if record is None:
+                        break
+                    msg = formatter.format(record)
+                    log_file.write(msg + "\n")
+                except queue.Empty:
+                    continue
+    else:
+        with open("log_sync.log", "w") as log_file:
+            while True:
+                try:
+                    record = log_queue.get(timeout=1)
+                    if record is None:
+                        break
+                    msg = formatter.format(record)
+                    log_file.write(msg + "\n")
+                except queue.Empty:
+                    continue
 
 
 #################################### PARAMETER SERVER ####################################
@@ -254,6 +268,7 @@ def run_parameter_server(
     worker_accuracy,
     model_accuracy,
     save_model,
+    subfolder,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         len(workers),
@@ -319,14 +334,19 @@ def run_parameter_server(
 
     if save_model:
         suffix = ""
-    elif split_dataset:
-        suffix = "_split_dataset"
-    elif split_labels:
-        suffix = "_labels"
+        if split_dataset:
+            suffix = "_split_dataset"
+        elif split_labels:
+            suffix = "_labels"
+        filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
 
-    filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
-    torch.save(ps_rref.to_here().model.state_dict(), filename)
-    print(f"Model saved: {filename}")
+        if len(subfolder) > 0:
+            filepath = os.path.join(subfolder, filename)
+        else:
+            filepath = filename
+
+        torch.save(ps_rref.to_here().model.state_dict(), filepath)
+        print(f"Model saved: {filepath}")
 
 
 def run(
@@ -344,6 +364,7 @@ def run(
     worker_accuracy,
     model_accuracy,
     save_model,
+    subfolder,
 ):
     logger = setup_logger(log_queue)
     rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
@@ -381,6 +402,7 @@ def run(
             worker_accuracy,
             model_accuracy,
             save_model,
+            subfolder,
         )
 
     # block until all rpcs finish
@@ -477,6 +499,12 @@ if __name__ == "__main__":
         action="store_true",
         help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""",
     )
+    parser.add_argument(
+        "--subfolder",
+        type=str,
+        default="",
+        help="""Subfolder where the model and log_sync.log will be saved.""",
+    )
 
     args = parser.parse_args()
     os.environ["MASTER_ADDR"] = args.master_addr
@@ -551,9 +579,14 @@ if __name__ == "__main__":
         torch.manual_seed(DEFAULT_SEED)
         np.random.seed(DEFAULT_SEED)
 
+    if len(args.subfolder) > 0:
+        print(f"Saving model and log_sync.log to {args.subfolder}")
+
     with Manager() as manager:
         log_queue = manager.Queue()
-        log_writer_thread = threading.Thread(target=log_writer, args=(log_queue,))
+        log_writer_thread = threading.Thread(
+            target=log_writer, args=(log_queue, args.subfolder)
+        )
 
         log_writer_thread.start()
         mp.spawn(
@@ -572,6 +605,7 @@ if __name__ == "__main__":
                 args.worker_accuracy,
                 args.model_accuracy,
                 not args.no_save_model,
+                args.subfolder,
             ),
             nprocs=args.world_size,
             join=True,
