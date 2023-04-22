@@ -6,6 +6,20 @@
 include_model_classic=false # include classic sgd to compare with sync and async
 include_classification_report=false # include labels classification report
 
+create_subfolder() {
+  subfolder_name="experience_"
+  i=1
+  while true; do
+    folder="${subfolder_name}${i}"
+    if [ ! -d "$folder" ]; then
+      mkdir "$folder"
+      break
+    fi
+    i=$((i+1))
+  done
+  echo "$folder"
+}
+
 #train_split=0.5
 epoch=1
 #world_size=3
@@ -41,40 +55,41 @@ test_model_flags+=" --training_time"
 
 # Nested loops for world_size and train_split
 for world_size in "${world_sizes[@]}"; do
-  for train_split in "${train_splits[@]}"; do
+  for train_split in "${train_splits[@]}"; do   
+    subfolder=$(create_subfolder)
 
-        # Format the model filenames based on input parameters
-        formatted_train_split=$(echo $train_split | tr -d '.')
-        formatted_lr=$(echo $lr | tr -d '.')
-        formatted_momentum=$(echo $momentum | tr -d '.')
+    # Format the model filenames based on input parameters
+    formatted_train_split=$(echo $train_split | tr -d '.')
+    formatted_lr=$(echo $lr | tr -d '.')
+    formatted_momentum=$(echo $momentum | tr -d '.')
 
-        if $include_model_classic; then
-            model_classic="mnist_classic_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
-        fi
-        model_sync="mnist_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
-        model_async="mnist_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    if $include_model_classic; then
+        model_classic="${subfolder}/mnist_classic_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    fi
+    model_sync="${subfolder}/mnist_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    model_async="${subfolder}/mnist_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
 
-        if $include_model_classic; then
-            python3 nn_train.py --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
-            sleep 0.1
-            echo
-            python3 test_model.py $model_classic $test_model_flags
-            sleep 0.1
-            echo
-        fi
-
-        python3 dnn_sync_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed 
+    if $include_model_classic; then
+        python3 nn_train.py --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed --subfolder $subfolder
         sleep 0.1
         echo
-        python3 test_model.py $model_sync $test_model_flags
+        python3 test_model.py $model_classic $test_model_flags --subfolder $subfolder
         sleep 0.1
         echo
+    fi
 
-        python3 dnn_async_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed
-        sleep 0.1
-        echo
-        python3 test_model.py $model_async $test_model_flags
-        sleep 0.1
-        echo
-    done
+    python3 dnn_sync_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed --subfolder $subfolder
+    sleep 0.1
+    echo
+    python3 test_model.py $model_sync $test_model_flags --subfolder $subfolder
+    sleep 0.1
+    echo
+
+    python3 dnn_async_train.py --world_size $world_size --train_split $train_split --epoch $epoch --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed --subfolder $subfolder
+    sleep 0.1
+    echo
+    python3 test_model.py $model_async $test_model_flags --subfolder $subfolder
+    sleep 0.1
+    echo
+  done
 done
