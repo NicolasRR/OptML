@@ -1,3 +1,25 @@
+## Analysis of the delayed grad probl in Async SGD.pdf
+- Downpour SGD, which minimizes worker idle time by allowing gradients computed on stale parameters to be sent to the parameter server.
+- Direct usage of asynchronous SGD leads to added noise during training from stale gradients.
+- Learning rate and batch size selection are the majorizing factors in whether delayed gradients significantly reduce test accuracy. Careful selection of learning rate and batch size, or use of adaptive learning rate
+methods, is effective in minimizing the delayed gradient problem up to a large
+($n = 257$) number of workers.
+- Model parallelism, where a model is split across different workers, and data parallelism, where training data is sharded or distributed to worker copies.
+- Due to the delayed application of gradients, ASGD suffers from accuracy degradation.
+-  LeNet-5 model for the MNIST digit recognition task over 30 epochs,
+using SGD with $m = 0.9$.
+-  Simulate delayed gradient submissions in asynchronous SGD, we
+create a wrapper around synchronous PyTorch optimizers which store gradients in a buffer and reapplies them after a constant delay.
+- Test accuracy significantly degrades
+at batch sizes larger than $256$ and $lr ≥ 10^{2.5}$
+. We observe that regardless of delay amount, test
+accuracy scales smoothly upward with lr, then sharply drops off. SGD with more delay is less
+resilient to learning rate adjustment, with the test accuracy dropping off sooner. One plausible explanation for low test accuracy at high learning rates in delayed SGD is that gradients are more
+variant near the start of training, so delayed updates add significant noise to the parameter search.
+- Our experiments on Delayed SGD indicate that learning rate warmup only initially improves test accuracy but quickly falls off as soon as the full learning rate is applied. Learning rate
+schedule likely has little effect in mitigating delayed gradient noise. We find that optimizers which
+employ per-parameter adaptive learning rates, such as Adam (Kingma & Ba, 2014), increase resiliency to learning rate and batch size selections, achieving test accuracy comparable to baseline up
+to 256 delay, in comparison to SGD, which cannot handle more than 32 delay.
 ## Asynchronous SGD with delay compensation.pdf
 - With the fast development of deep learning, it has become common to learn big neural networks using massive training data. Asynchronous Stochastic Gradient Descent is widely adopted to fulfill this task for its efficiency
 - **Asynchronous SGD are Asynchronous SGD known to suffer from the problem of delayed
