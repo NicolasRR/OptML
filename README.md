@@ -1,4 +1,4 @@
-## Analysis of the delayed grad probl in Async SGD.pdf
+## Analysis of the delayed gradient problem in Asynchronous SGD.pdf
 - Downpour SGD, which minimizes worker idle time by allowing gradients computed on stale parameters to be sent to the parameter server.
 - Direct usage of asynchronous SGD leads to added noise during training from stale gradients.
 - Learning rate and batch size selection are the majorizing factors in whether delayed gradients significantly reduce test accuracy. Careful selection of learning rate and batch size, or use of adaptive learning rate
