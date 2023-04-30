@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader, SubsetRandomSampler
 import numpy as np
 import logging
 import queue
-from multiprocessing import Manager
+
 
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 
