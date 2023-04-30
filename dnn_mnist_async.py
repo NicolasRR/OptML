@@ -21,12 +21,11 @@ from helpers import CNN_MNIST, CNN_CIFAR100, CNN_CIFAR10,setup_logger, QueueHand
 import queue
 
 
-DEFAULT_WORLD_SIZE = 4
-DEFAULT_TRAIN_SPLIT = 1
+DEFAULT_WORLD_SIZE = 6
 DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
-DEFAULT_BATCH_SIZE = 32 # 1 == SGD, >1 MINI BATCH SGD
-DEFAULT_EPOCHS = 1
+DEFAULT_BATCH_SIZE = 64 # 1 == SGD, >1 MINI BATCH SGD
+DEFAULT_EPOCHS = 5
 
 
 
@@ -343,6 +342,7 @@ def run_parameter_server(
 
 def run(
     rank,
+    log_queue,
     world_size,
     output_folder,
     dataset,
@@ -423,15 +423,15 @@ if __name__=="__main__":
         help="""Total number of participating processes. Should be the sum of
         master node and all training nodes [2,+inf].""")
     parser.add_argument(
-        "--train_split",
-        type=float,
-        default=None,
-        help="""Percentage of the training dataset to be used for training (0,1].""")
-    parser.add_argument(
         "--lr",
         type=float,
         default=None,
         help="""Learning rate of SGD  (0,+inf).""")
+    parser.add_argument(
+        "--delay",
+        type=float,
+        default=0.0001,
+        help="""delay in seconds""")
     parser.add_argument(
         "--momentum",
         type=float,
@@ -465,24 +465,33 @@ if __name__=="__main__":
         action="store_true",
     )
     parser.add_argument(
+        "--dataset",
+        type=str,
+        default="mnist",
+        help="""Dataset amongst: {mnist, cifar10, cifar100, fmnist}""")
+    parser.add_argument(
+        "--output_folder",
+        type=str,
+        default="./results",
+        help="""Name of the output_folder""",
+    )
+    parser.add_argument(
         "--mode",
         type=str,
         default="normal",
         help="""Choose amongst {compensation, scheduler swa}, scheduler indicates to only use a learning rate scheduler""",
     )
     args = parser.parse_args()
-    output_folder = args.output
+    output_folder = args.output_folder
     delay = args.delay
     save_model = not(args.no_save_model)
-    model_accuracy = args.m 
     batch_size = args.batch_size
-    learning_rate = args.lr
-    momentum = args.momemtum
+    lr = args.lr
+    momentum = args.momentum
     dataset_name = args.dataset
     mode = args.mode
     pca_gen = args.pca_gen
     world_size = args.world_size
-    train_split = args.train_split
     lr = args.lr
     momentum = args.momentum
     epochs = args.epochs
@@ -494,7 +503,7 @@ if __name__=="__main__":
     if dataset_name == "mnist":
         print("Using MNIST dataset")
         dataset = torchvision.datasets.MNIST(
-            "./../data/mnist_data",
+            "./datasets/mnist_data",
             download=True,
             train=True,
             transform=torchvision.transforms.Compose(
@@ -511,7 +520,7 @@ if __name__=="__main__":
     elif dataset_name == "cifar10":
         print("Using CIFAR10 dataset")
         dataset = torchvision.datasets.CIFAR10(
-            "./../data/cifar10",
+            "./datasets/cifar10",
             download=True,
             train=True,
             transform=torchvision.transforms.Compose(
@@ -527,7 +536,7 @@ if __name__=="__main__":
     elif dataset_name == "cifar100":
         print("Using CIFAR100 dataset")
         dataset = torchvision.datasets.CIFAR100(
-            "./../data/cifar100",
+            "./datasets/cifar100",
             download=True,
             train=True,
             transform=torchvision.transforms.Compose(
@@ -543,7 +552,7 @@ if __name__=="__main__":
     elif dataset_name == "fmnist":
         print("Using FashionMNIST dataset")
         dataset = torchvision.datasets.FashionMNIST(
-            "./../data/fmnist",
+            "./datasets/fmnist",
             download=True,
             train=True,
             transform=torchvision.transforms.Compose(
@@ -561,26 +570,7 @@ if __name__=="__main__":
         print("You must specify a dataset amongst: {mnist, cifar10, cifar100, fmnist}")
         exit()
 
-    if not (os.path.exists(output_folder)):
-        os.mkdir(output_folder)
 
-    if not (
-        os.path.exists(
-            os.path.join(
-                output_folder,
-                f"nn_async_{learning_rate}_{momentum}_{batch_size}_{mode}",
-            )
-        )
-    ):
-        os.mkdir(
-            os.path.join(
-                output_folder,
-                f"nn_async_{learning_rate}_{momentum}_{batch_size}_{mode}",
-            )
-        )
-    output_folder = os.path.join(
-        output_folder, f"nn_async_{learning_rate}_{momentum}_{batch_size}_{mode}"
-    )
 
     args = parser.parse_args()
     os.environ['MASTER_ADDR'] = args.master_addr
@@ -593,20 +583,12 @@ if __name__=="__main__":
         print("Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)")
         exit()
 
-    if train_split is None:
-        train_split = DEFAULT_TRAIN_SPLIT
-        print(f"Using default train_split value: {DEFAULT_TRAIN_SPLIT}")
-    elif train_split > 1 or train_split <= 0:
-        print("Forbidden value !!! train_split must be between (0,1]")
-        exit()
-
     if lr is None:
         lr = DEFAULT_LR
         print(f"Using default lr: {DEFAULT_LR}")
     elif lr <= 0:
         print("Forbidden value !!! lr must be between (0,+inf)")
         exit()
-
     if momentum is None:
         momentum = DEFAULT_MOMENTUM
         print(f"Using default momentum: {DEFAULT_MOMENTUM}")
@@ -621,7 +603,33 @@ if __name__=="__main__":
         print("Forbidden value !!! epochs must be between [1,+inf)")
         exit()
 
+    if batch_size is None:
+        batch_size = DEFAULT_BATCH_SIZE
+        print(f"Using default epochs: {DEFAULT_BATCH_SIZE}")
+    elif batch_size < 1:
+        print("Forbidden value !!! epochs must be between [1,+inf)")
+        exit()
 
+    if not (os.path.exists(output_folder)):
+        os.mkdir(output_folder)
+
+    if not (
+        os.path.exists(
+            os.path.join(
+                output_folder,
+                f"nn_async_{lr}_{momentum}_{batch_size}_{mode}",
+            )
+        )
+    ):
+        os.mkdir(
+            os.path.join(
+                output_folder,
+                f"nn_async_{lr}_{momentum}_{batch_size}_{mode}",
+            )
+        )
+    output_folder = os.path.join(
+        output_folder, f"nn_async_{lr}_{momentum}_{batch_size}_{mode}"
+    )
 
     with Manager() as manager:
         log_queue = manager.Queue()
@@ -629,18 +637,19 @@ if __name__=="__main__":
 
         log_writer_thread.start()
         mp.spawn(run, args=(
+            log_queue,
             world_size,
             output_folder,
             dataset,
             batch_size,
             epochs,
             delay,
-            learning_rate,
+            lr,
             momentum,
             model_accuracy,
             save_model,
             mode,
-            pca_gen,dataset_name,), nprocs=args.world_size, join=True)
+            pca_gen,dataset_name,), nprocs=world_size, join=True)
 
         log_queue.put(None)
         log_writer_thread.join()

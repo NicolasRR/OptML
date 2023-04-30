@@ -1,7 +1,7 @@
 *.log
 *.png
 *.txt
-data/
+datasets/
 results/
 *.pt
 __pycache__/
