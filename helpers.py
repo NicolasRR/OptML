@@ -330,6 +330,46 @@ def get_trainloader(
         )
         return train_loaders
 
+############################## Loggers
+
+def setup_logger(log_queue):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    qh = QueueHandler(log_queue)
+    qh.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    qh.setFormatter(formatter)
+
+    logger.addHandler(ch)
+    logger.addHandler(qh)
+
+    return logger
+
+class QueueHandler(logging.Handler):
+    def __init__(self, log_queue):
+        super().__init__()
+        self.log_queue = log_queue
+
+    def emit(self, record):
+        self.log_queue.put(record)
+
+def log_writer(log_queue, output_folder = "."):
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    with open(os.path.join(output_folder,'log.log'), 'w') as log_file:
+        while True:
+            try:
+                record = log_queue.get(timeout=1) 
+                if record is None:
+                    break
+                msg = formatter.format(record)
+                log_file.write(msg + "\n")
+            except queue.Empty:
+                continue
 
 #################################### Dataset train loaders ####################################
 def mnist_trainloaders(
