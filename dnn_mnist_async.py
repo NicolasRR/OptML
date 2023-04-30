@@ -28,42 +28,6 @@ DEFAULT_MOMENTUM = 0.0
 DEFAULT_BATCH_SIZE = 32 # 1 == SGD, >1 MINI BATCH SGD
 DEFAULT_EPOCHS = 1
 
-def setup_logger(log_queue):
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-
-    qh = QueueHandler(log_queue)
-    qh.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(formatter)
-    qh.setFormatter(formatter)
-
-    logger.addHandler(ch)
-    logger.addHandler(qh)
-
-class QueueHandler(logging.Handler):
-    def __init__(self, log_queue):
-        super().__init__()
-        self.log_queue = log_queue
-
-    def emit(self, record):
-        self.log_queue.put(record)
-
-def log_writer(log_queue, output_folder = "."):
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    with open(os.path.join(output_folder,f"log.log"), 'w') as log_file:
-        while True:
-            try:
-                record = log_queue.get(timeout=1) 
-                if record is None:
-                    break
-                msg = formatter.format(record)
-                log_file.write(msg + "\n")
-            except queue.Empty:
-                continue
 
 
 class ParameterServer(object):
