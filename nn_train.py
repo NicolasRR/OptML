@@ -56,6 +56,7 @@ def run(
     model_accuracy,
     save_model,
     subfolder,
+    saves_per_epoch,
 ):
     if "mnist" in dataset_name:
         print("Created MNIST CNN")
@@ -94,6 +95,13 @@ def run(
 
     last_loss = None
 
+    if saves_per_epoch is not None:
+        weights_matrix = []
+        save_idx = np.linspace(0, len(train_loaders) - 1, saves_per_epoch, dtype=int)
+        unique_idx = set(save_idx)
+        if len(unique_idx) < saves_per_epoch:
+            save_idx = np.array(sorted(unique_idx))
+
     for epoch in range(epochs):
         progress_bar = tqdm(
             total=len(train_loaders),
@@ -109,12 +117,30 @@ def run(
             logger.debug(
                 f"Loss: {loss.item()}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}"
             )
+            if saves_per_epoch is not None:
+                if batch_idx in save_idx:
+                    weights = [w.detach().clone().cpu().numpy() for w in model.parameters()]
+                    weights_matrix.append(weights)
+
             progress_bar.update(1)
         progress_bar.close()
 
     last_loss = loss.item()
 
     progress_bar.close()
+
+    if saves_per_epoch is not None:
+        flat_weights = [np.hstack([w.flatten() for w in epoch_weights]) for epoch_weights in weights_matrix]
+        weights_matrix_np = np.vstack(flat_weights)
+
+        filename = f"{dataset_name}_weights_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.npy"
+        if len(subfolder) > 0:
+            filepath = os.path.join(subfolder, filename)
+        else:
+            filepath = filename
+
+        np.save(filepath, weights_matrix_np)
+        print(f"Weights saved: {filepath}")
 
     logger.info("Finished training")
     print(f"Final train loss: {last_loss}")
@@ -201,6 +227,12 @@ if __name__ == "__main__":
         default="",
         help="""Subfolder where the model and log.log will be saved.""",
     )
+    parser.add_argument(
+    "--saves_per_epoch",
+    type=int,
+    default=None,
+    help="Number of times the model weights will be saved during one epoch.",
+    )
 
     args = parser.parse_args()
 
@@ -232,6 +264,12 @@ if __name__ == "__main__":
         print("Forbidden value !!! epochs must be between [1,+inf)")
         exit()
 
+    if args.saves_per_epoch < 1:
+        print("Forbidden value !!! saves_per_epoch must be > 1")
+        exit()
+    else:
+        print(f"Saving model weights {args.saves_per_epoch} times during one epoch")
+
     if args.seed:
         torch.manual_seed(DEFAULT_SEED)
         np.random.seed(DEFAULT_SEED)
@@ -249,4 +287,5 @@ if __name__ == "__main__":
         args.model_accuracy,
         not args.no_save_model,
         args.subfolder,
+        args.saves_per_epoch,
     )

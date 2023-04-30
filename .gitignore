@@ -9,4 +9,5 @@ data
 .ipynb_checkpoints/
 __pycache__/
 *.txt
+*.npy
 experience_*/
