@@ -11,3 +11,4 @@ __pycache__/
 *.txt
 *.npy
 experience_*/
+*.html
