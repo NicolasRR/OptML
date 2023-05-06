@@ -1,13 +1,10 @@
 import os
 import torch
-import torch.nn as nn
 from torch import optim
 import argparse
 from tqdm import tqdm
-import logging
-import logging.handlers
 import numpy as np
-from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders
+from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders, setup_simple_logger, compute_weights_l2_norm, LOSS_FUNC, EXPO_DECAY
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -15,36 +12,6 @@ DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-
-
-#################################### LOGGER ####################################
-def setup_logger(subfolder):
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-
-    # create file handler which logs even debug messages
-    if len(subfolder) > 0:
-        if not os.path.exists(subfolder):
-            os.makedirs(subfolder)
-        fh = logging.FileHandler(os.path.join(subfolder, "log.log"), mode="w")
-    else:
-        fh = logging.FileHandler("log.log", mode="w")
-    fh.setLevel(logging.DEBUG)
-    # create console handler with a higher log level
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    # create formatter and add it to the handlers
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    ch.setFormatter(formatter)
-    fh.setFormatter(formatter)
-    # add the handlers to logger
-    logger.addHandler(ch)
-    logger.addHandler(fh)
-
-    return logger
-
 
 def run(
     dataset_name,
@@ -57,26 +24,35 @@ def run(
     save_model,
     subfolder,
     saves_per_epoch,
+    use_alr,
+    lrs,
 ):
+    
+    loss_func = LOSS_FUNC
+
     if "mnist" in dataset_name:
         print("Created MNIST CNN")
-        model = CNN_MNIST()  # global model
+        model = CNN_MNIST(loss_func=loss_func)  # global model
     elif "cifar100" in dataset_name:
         print("Created CIFAR100 CNN")
-        model = CNN_CIFAR100()
+        model = CNN_CIFAR100(loss_func=loss_func)
     elif "cifar10" in dataset_name:
         print("Created CIFAR10 CNN")
-        model = CNN_CIFAR10()
+        model = CNN_CIFAR10(loss_func=loss_func)
     else:
         print("Unknown dataset, cannot create CNN")
         exit()
 
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
-
-    loss_func = nn.functional.nll_loss
+    if use_alr:
+        if momentum > 1:
+            optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        else:
+            optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(max(momentum, 0.99), 0.999)) # weight decay if weights too large
+    else:
+        optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
 
     train_loaders, batch_size = create_worker_trainloaders(
-        1,
+        1, # only 1 worker
         dataset_name,
         False,
         False,
@@ -90,7 +66,15 @@ def run(
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
 
-    logger = setup_logger(subfolder)
+    if lrs is not None:
+        if args.lrs == "exponential": # more suitable for async
+            scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=EXPO_DECAY)  # initial_learning_rate * gamma^epoch
+        elif args.lrs == "cosine_annealing": # more suitable for sync
+            scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len(train_loaders) * epochs)
+        else:
+            scheduler = None
+
+    logger = setup_simple_logger(subfolder)
     logger.info("Start non distributed SGD training")
 
     last_loss = None
@@ -107,7 +91,7 @@ def run(
             total=len(train_loaders),
             unit="batch",
         )
-        progress_bar.set_postfix(epoch=f"{epoch+1}/{epochs}")
+        progress_bar.set_postfix(epoch=f"{epoch+1}/{epochs}", lr=f"{optimizer.param_groups[0]['lr']:.5f}")
         for batch_idx, (data, target) in enumerate(train_loaders):
             optimizer.zero_grad()
             output = model(data)
@@ -115,7 +99,7 @@ def run(
             loss.backward()
             optimizer.step()
             logger.debug(
-                f"Loss: {loss.item()}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}"
+                f"Loss: {loss.item()}, weight norm: {compute_weights_l2_norm(model)}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}"
             )
             if saves_per_epoch is not None:
                 if batch_idx in save_idx:
@@ -124,6 +108,8 @@ def run(
 
             progress_bar.update(1)
         progress_bar.close()
+        if scheduler is not None:
+                scheduler.step()
 
     last_loss = loss.item()
 
@@ -178,8 +164,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset",
         type=str,
+        default="mnist",
         choices=["mnist", "fashion_mnist", "cifar10", "cifar100"],
-        required=True,
         help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100.",
     )
     parser.add_argument(
@@ -233,6 +219,18 @@ if __name__ == "__main__":
     default=None,
     help="Number of times the model weights will be saved during one epoch.",
     )
+    parser.add_argument(
+    "--alr",
+    action="store_true",
+    help="If set, use adaptive learning rate (Adam optimizer) instead of SGD optimizer.",
+    )
+    parser.add_argument(
+    "--lrs",
+    type=str,
+    choices=["exponential", "cosine_annealing", "none"],
+    default="none",
+    help="Choose a learning rate scheduler: exponential, cosine_annealing, or none.",
+    )
 
     args = parser.parse_args()
 
@@ -264,11 +262,12 @@ if __name__ == "__main__":
         print("Forbidden value !!! epochs must be between [1,+inf)")
         exit()
 
-    if args.saves_per_epoch < 1:
-        print("Forbidden value !!! saves_per_epoch must be > 1")
-        exit()
-    else:
-        print(f"Saving model weights {args.saves_per_epoch} times during one epoch")
+    if args.saves_per_epoch is not None:
+        if args.saves_per_epoch < 1:
+            print("Forbidden value !!! saves_per_epoch must be > 1")
+            exit()
+        else:
+            print(f"Saving model weights {args.saves_per_epoch} times during one epoch")
 
     if args.seed:
         torch.manual_seed(DEFAULT_SEED)
@@ -276,6 +275,12 @@ if __name__ == "__main__":
 
     if len(args.subfolder) > 0:
         print(f"Saving model and log.log to {args.subfolder}")
+
+    if args.alr:
+        print("Using Adam as optimizer instead of SGD")
+
+    if args.lrs is not None:
+        print(f"Using learning rate scheduler: {args.lrs}")
 
     run(
         args.dataset,
@@ -288,4 +293,6 @@ if __name__ == "__main__":
         not args.no_save_model,
         args.subfolder,
         args.saves_per_epoch,
+        args.alr,
+        args.lrs,
     )

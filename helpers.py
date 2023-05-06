@@ -3,12 +3,41 @@ import torch.nn as nn
 import torchvision
 from torch.utils.data import DataLoader, SubsetRandomSampler
 import numpy as np
+import logging
+import logging.handlers
+import queue
+import os
 
+LOSS_FUNC = nn.CrossEntropyLoss() #nn.functional.nll_loss # add softmax layer if nll
+EXPO_DECAY = 0.9
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 
 
 #################################### NET ####################################
-class CNN_MNIST(nn.Module):  # for MNIST and Fashion MNIST
+class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
+    def __init__(self, loss_func=nn.functional.nll_loss):
+        super(CNN_MNIST, self).__init__()
+        self.loss_func = loss_func
+        self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = nn.functional.relu(self.conv1(x))
+        x = nn.functional.max_pool2d(x, kernel_size=2, stride=2)
+        x = nn.functional.relu(self.conv2(x))
+        x = nn.functional.max_pool2d(x, kernel_size=2, stride=2)
+        x = torch.flatten(x, 1)
+        x = nn.functional.relu(self.fc1(x))
+        x = nn.functional.relu(self.fc2(x))
+        x = self.fc3(x)
+        if self.loss_func == nn.functional.nll_loss:
+            x = nn.functional.log_softmax(x, dim=1)
+        return x
+    
+"""class CNN_MNIST(nn.Module):  # PyTorch model for MNIST and Fashion MNIST, using nll
     def __init__(self):
         super(CNN_MNIST, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
@@ -32,10 +61,73 @@ class CNN_MNIST(nn.Module):  # for MNIST and Fashion MNIST
         x = self.dropout2(x)
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
-        return output
+        return output"""
 
+class BasicBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1):
+        super(BasicBlock, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_channels)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_channels)
 
-class CNN_CIFAR10(nn.Module):
+        self.shortcut = nn.Sequential()
+        if stride != 1 or in_channels != out_channels:
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_channels)
+            )
+
+    def forward(self, x):
+        out = nn.functional.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        out += self.shortcut(x)
+        out = nn.functional.relu(out)
+        return out
+    
+class ResNet(nn.Module): # ResNet18
+    def __init__(self, num_classes=10, block=BasicBlock, num_blocks=[2, 2, 2, 2], loss_func=nn.functional.nll_loss):
+        super(ResNet, self).__init__()
+        self.in_channels = 64
+        self.loss_func = loss_func
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
+        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
+        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
+        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
+        self.linear = nn.Linear(512, num_classes)
+
+    def _make_layer(self, block, out_channels, num_blocks, stride):
+        strides = [stride] + [1] * (num_blocks - 1)
+        layers = []
+        for stride in strides:
+            layers.append(block(self.in_channels, out_channels, stride))
+            self.in_channels = out_channels
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        x = nn.functional.relu(self.bn1(self.conv1(x)))
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+        x = nn.functional.avg_pool2d(x, 4)
+        x = torch.flatten(x, 1)
+        x = self.linear(x)
+        if self.loss_func == nn.functional.nll_loss:
+            x = nn.functional.log_softmax(x, dim=1)
+        return x
+
+class CNN_CIFAR10(ResNet):
+    def __init__(self, loss_func=nn.functional.nll_loss):
+        super().__init__(num_classes=10, loss_func=loss_func)
+
+class CNN_CIFAR100(ResNet):
+    def __init__(self, loss_func=nn.functional.nll_loss):
+        super().__init__(num_classes=100, loss_func=loss_func)
+
+"""class CNN_CIFAR10(nn.Module): # Adapted PyTorch model for CIFAR10 using nll
     def __init__(self):
         super(CNN_CIFAR10, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -60,10 +152,10 @@ class CNN_CIFAR10(nn.Module):
         x = self.dropout2(x)
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
-        return output
+        return output"""
 
 
-"""class CNN_CIFAR10(nn.Module):
+"""class CNN_CIFAR10(nn.Module): # Adapted PyTorch model for CIFAR10 using nll (more complex 3 conv layers)
     def __init__(self):
         super(CNN_CIFAR10, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -85,7 +177,7 @@ class CNN_CIFAR10(nn.Module):
         return x"""
 
 
-class CNN_CIFAR100(nn.Module):
+"""class CNN_CIFAR100(nn.Module): # Adapted PyTorch model for CIFAR100 using nll
     def __init__(self):
         super(CNN_CIFAR100, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -110,10 +202,10 @@ class CNN_CIFAR100(nn.Module):
         x = self.dropout2(x)
         x = self.fc2(x)
         output = nn.functional.log_softmax(x, dim=1)
-        return output
+        return output"""
 
 
-"""class CNN_CIFAR100(nn.Module):
+"""class CNN_CIFAR100(nn.Module): # Adapted PyTorch model for CIFAR100 using nll (variant 2)
     def __init__(self):
         super(CNN_CIFAR100, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -134,6 +226,15 @@ class CNN_CIFAR100(nn.Module):
 
 
 #################################### Utility functions ####################################
+def compute_weights_l2_norm(model):
+    total_norm = 0.0
+    for p in model.parameters():
+        param_norm = p.data.norm(2)
+        total_norm += param_norm.item() ** 2
+    total_norm = total_norm ** 0.5
+    return total_norm
+
+
 def count_distinct_labels(dataset):
     labels = dataset.targets
     unique_labels = torch.unique(torch.as_tensor(labels))
@@ -772,3 +873,93 @@ def create_trainloader(model_path, batch_size):
     else:
         print("Error Unkown dataset")
         exit()
+
+
+
+#################################### LOGGER ####################################
+def setup_simple_logger(subfolder):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    # create file handler which logs even debug messages
+    if len(subfolder) > 0:
+        if not os.path.exists(subfolder):
+            os.makedirs(subfolder)
+        fh = logging.FileHandler(os.path.join(subfolder, "log.log"), mode="w")
+    else:
+        fh = logging.FileHandler("log.log", mode="w")
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    ch.setFormatter(formatter)
+    fh.setFormatter(formatter)
+    # add the handlers to logger
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+
+    return logger
+
+
+def setup_logger(log_queue):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    qh = QueueHandler(log_queue)
+    qh.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    ch.setFormatter(formatter)
+    qh.setFormatter(formatter)
+
+    logger.addHandler(ch)
+    logger.addHandler(qh)
+
+    return logger
+
+
+class QueueHandler(logging.Handler):
+    def __init__(self, log_queue):
+        super().__init__()
+        self.log_queue = log_queue
+
+    def emit(self, record):
+        self.log_queue.put(record)
+
+
+def log_writer(log_queue, subfolder, filename):
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    if len(subfolder) > 0:
+        if not os.path.exists(subfolder):
+            os.makedirs(subfolder)
+        with open(os.path.join(subfolder, filename), "w") as log_file:
+            while True:
+                try:
+                    record = log_queue.get(timeout=1)
+                    if record is None:
+                        break
+                    msg = formatter.format(record)
+                    log_file.write(msg + "\n")
+                except queue.Empty:
+                    continue
+    else:
+        with open(filename, "w") as log_file:
+            while True:
+                try:
+                    record = log_queue.get(timeout=1)
+                    if record is None:
+                        break
+                    msg = formatter.format(record)
+                    log_file.write(msg + "\n")
+                except queue.Empty:
+                    continue

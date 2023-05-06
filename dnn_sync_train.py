@@ -1,18 +1,14 @@
 import os
 import threading
-import queue
 import torch
-import torch.nn as nn
 from torch import optim
 import torch.distributed.rpc as rpc
 import torch.multiprocessing as mp
 from multiprocessing import Manager
 import argparse
 from tqdm import tqdm
-import logging
-import logging.handlers
 import numpy as np
-from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders
+from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders, log_writer, setup_logger, compute_weights_l2_norm, LOSS_FUNC, EXPO_DECAY
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -20,67 +16,6 @@ DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-
-
-#################################### LOGGER ####################################
-def setup_logger(log_queue):
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-
-    qh = QueueHandler(log_queue)
-    qh.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    ch.setFormatter(formatter)
-    qh.setFormatter(formatter)
-
-    logger.addHandler(ch)
-    logger.addHandler(qh)
-
-    return logger
-
-
-class QueueHandler(logging.Handler):
-    def __init__(self, log_queue):
-        super().__init__()
-        self.log_queue = log_queue
-
-    def emit(self, record):
-        self.log_queue.put(record)
-
-
-def log_writer(log_queue, subfolder):
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    if len(subfolder) > 0:
-        if not os.path.exists(subfolder):
-            os.makedirs(subfolder)
-        with open(os.path.join(subfolder, "log_sync.log"), "w") as log_file:
-            while True:
-                try:
-                    record = log_queue.get(timeout=1)
-                    if record is None:
-                        break
-                    msg = formatter.format(record)
-                    log_file.write(msg + "\n")
-                except queue.Empty:
-                    continue
-    else:
-        with open("log_sync.log", "w") as log_file:
-            while True:
-                try:
-                    record = log_queue.get(timeout=1)
-                    if record is None:
-                        break
-                    msg = formatter.format(record)
-                    log_file.write(msg + "\n")
-                except queue.Empty:
-                    continue
 
 
 #################################### PARAMETER SERVER ####################################
@@ -174,7 +109,7 @@ class Worker(object):
     def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
         self.ps_rref = ps_rref
         self.train_loader = train_loader  # worker trainloader
-        self.loss_func = nn.functional.nll_loss  # worker loss
+        self.loss_func = LOSS_FUNC  # worker loss
         self.logger = logger
         self.batch_count = 0
         self.current_epoch = 0
@@ -585,7 +520,7 @@ if __name__ == "__main__":
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(
-            target=log_writer, args=(log_queue, args.subfolder)
+            target=log_writer, args=(log_queue, args.subfolder, "log_sync.log")
         )
 
         log_writer_thread.start()
