@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision
 from torch.utils.data import DataLoader, SubsetRandomSampler
+from torch import optim
 import numpy as np
 import logging
 import logging.handlers
@@ -226,6 +227,77 @@ class CNN_CIFAR100(ResNet):
 
 
 #################################### Utility functions ####################################
+def _get_model(dataset_name, loss_func):
+    if "mnist" in dataset_name:
+        print("Created MNIST CNN")
+        return CNN_MNIST(loss_func=loss_func)  # global model
+    elif "cifar100" in dataset_name:
+        print("Created CIFAR100 CNN")
+        return CNN_CIFAR100(loss_func=loss_func)
+    elif "cifar10" in dataset_name:
+        print("Created CIFAR10 CNN")
+        return CNN_CIFAR10(loss_func=loss_func)
+    else:
+        print("Unknown dataset, cannot create CNN")
+        exit()
+
+
+def get_optimizer(model, learning_rate, momentum, use_alr):
+    if use_alr:
+        if momentum > 1:
+            return optim.Adam(model.parameters(), lr=learning_rate)
+        else:
+            return optim.Adam(model.parameters(), lr=learning_rate, betas=(max(momentum, 0.99), 0.999)) # weight decay if weights too large
+    else:
+        return optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
+    
+    
+def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
+    if lrs is not None:
+        if lrs == "exponential": # more suitable for async
+            return torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=gamma)  # initial_learning_rate * gamma^epoch
+        elif lrs == "cosine_annealing": # more suitable for sync
+            return torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len_trainloader* epochs)
+        else:
+            return None
+    
+
+def get_model_accuracy(model, train_loader_full):
+    correct_predictions = 0
+    total_predictions = 0
+    # memory efficient way (for large datasets)
+    with torch.no_grad():  # No need to track gradients for evaluation
+        for _, (data, target) in enumerate(train_loader_full):
+            logits = model(data)
+            predicted_classes = torch.argmax(logits, dim=1)
+            correct_predictions += (predicted_classes == target).sum().item()
+            total_predictions += target.size(0)
+    final_train_accuracy = correct_predictions / total_predictions
+    print(
+        f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
+    )
+
+
+def _save_model(mode, dataset_name, model, len_workers, train_split, learning_rate, momentum, batch_size, epochs, subfolder, split_dataset=False, split_labels=False, split_labels_unscaled=False):
+    suffix = ""
+    if split_dataset:
+        suffix = "_split_dataset"
+    elif split_labels:
+        suffix = "_labels"
+    elif split_labels_unscaled:
+        suffix = "_labels_unscaled"
+
+    filename = f"{dataset_name}_{mode}_{len_workers+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
+
+    if len(subfolder) > 0:
+        filepath = os.path.join(subfolder, filename)
+    else:
+        filepath = filename
+
+    torch.save(model.state_dict(), filepath)
+    print(f"Model saved: {filepath}")
+
+
 def compute_weights_l2_norm(model):
     total_norm = 0.0
     for p in model.parameters():

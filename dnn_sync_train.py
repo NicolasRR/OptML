@@ -1,14 +1,13 @@
 import os
 import threading
 import torch
-from torch import optim
 import torch.distributed.rpc as rpc
 import torch.multiprocessing as mp
 from multiprocessing import Manager
 import argparse
 from tqdm import tqdm
 import numpy as np
-from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders, log_writer, setup_logger, compute_weights_l2_norm, LOSS_FUNC, EXPO_DECAY
+from helpers import create_worker_trainloaders, log_writer, setup_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, _save_model, compute_weights_l2_norm, LOSS_FUNC
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
@@ -20,20 +19,8 @@ DEFAULT_SEED = 614310
 
 #################################### PARAMETER SERVER ####################################
 class ParameterServer(object):
-    def __init__(self, nb_workers, logger, dataset_name, learning_rate, momentum):
-        if "mnist" in dataset_name:
-            print("Created MNIST CNN")
-            self.model = CNN_MNIST()  # global model
-        elif "cifar100" in dataset_name:
-            print("Created CIFAR100 CNN")
-            self.model = CNN_CIFAR100()
-        elif "cifar10" in dataset_name:
-            print("Created CIFAR10 CNN")
-            self.model = CNN_CIFAR10()
-        else:
-            print("Unknown dataset, cannot create CNN")
-            exit()
-
+    def __init__(self, nb_workers, logger, dataset_name, learning_rate, momentum, use_alr, len_trainloader, epochs, lrs):
+        self.model = _get_model(dataset_name, LOSS_FUNC)
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
@@ -41,14 +28,16 @@ class ParameterServer(object):
         self.update_counter = 0
         self.model_loss = 0  # store global model loss (averaged workers loss)
         self.loss = np.array([])  # store workers loss
-        self.optimizer = optim.SGD(
-            self.model.parameters(), lr=learning_rate, momentum=momentum
-        )
+        self.optimizer = get_optimizer(self.model, learning_rate, momentum, use_alr)
+        self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
     def get_model(self):
         return self.model  # get global model
+    
+    def get_current_lr(self):
+        return self.optimizer.param_groups[0]['lr']
 
     @staticmethod
     @rpc.functions.async_execution
@@ -98,7 +87,9 @@ class ParameterServer(object):
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
                 fut.set_result(self.model)
-                self.logger.debug(f"PS updated model, global loss is {self.model_loss}")
+                self.logger.debug(f"PS updated model, global loss is {self.model_loss}, weights norm is {compute_weights_l2_norm(self.model)}")
+                # DETECT END OF EPOCH AND DO SCHEDULER STEP IF SCHEDULER IS NOT NONE
+                # DETECT IF BATCH COUNT IS IN THE BATCH TO SAVE LIST
                 self.future_model = torch.futures.Future()
 
         return fut
@@ -129,7 +120,8 @@ class Worker(object):
                     self.train_loader,
                     unit="batch",
                 )
-                iterable.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}")
+                current_lr = self.ps_rref.rpc_sync().get_current_lr()
+                iterable.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}")
             else:
                 iterable = self.train_loader
 
@@ -204,6 +196,9 @@ def run_parameter_server(
     model_accuracy,
     save_model,
     subfolder,
+    use_alr,
+    saves_per_epoch, # to use, to worker or Parameter server class
+    lrs,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         len(workers),
@@ -221,7 +216,7 @@ def run_parameter_server(
         train_loaders = train_loaders[0]
 
     ps_rref = rpc.RRef(
-        ParameterServer(len(workers), logger, dataset_name, learning_rate, momentum)
+        ParameterServer(len(workers), logger, dataset_name, learning_rate, momentum, use_alr, len(train_loaders), epochs, lrs)
     )
     futs = []
 
@@ -253,35 +248,10 @@ def run_parameter_server(
     print(f"Final train loss: {ps_rref.to_here().model_loss}")
 
     if model_accuracy:
-        correct_predictions = 0
-        total_predictions = 0
-        # memory efficient way (for large datasets)
-        with torch.no_grad():  # No need to track gradients for evaluation
-            for _, (data, target) in enumerate(train_loader_full):
-                logits = ps_rref.to_here().model(data)
-                predicted_classes = torch.argmax(logits, dim=1)
-                correct_predictions += (predicted_classes == target).sum().item()
-                total_predictions += target.size(0)
-        final_train_accuracy = correct_predictions / total_predictions
-        print(
-            f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
-        )
+        get_model_accuracy(ps_rref.to_here().model, train_loader_full)
 
     if save_model:
-        suffix = ""
-        if split_dataset:
-            suffix = "_split_dataset"
-        elif split_labels:
-            suffix = "_labels"
-        filename = f"{dataset_name}_sync_{len(workers)+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
-
-        if len(subfolder) > 0:
-            filepath = os.path.join(subfolder, filename)
-        else:
-            filepath = filename
-
-        torch.save(ps_rref.to_here().model.state_dict(), filepath)
-        print(f"Model saved: {filepath}")
+        _save_model("sync", dataset_name, ps_rref.to_here().model, len(workers), train_split, learning_rate, momentum, batch_size, epochs, subfolder, split_dataset, split_labels)
 
 
 def run(
@@ -300,6 +270,9 @@ def run(
     model_accuracy,
     save_model,
     subfolder,
+    saves_per_epoch,
+    use_alr,
+    lrs,
 ):
     logger = setup_logger(log_queue)
     rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
@@ -338,6 +311,9 @@ def run(
             model_accuracy,
             save_model,
             subfolder,
+            use_alr,
+            saves_per_epoch,
+            lrs,
         )
 
     # block until all rpcs finish
@@ -440,6 +416,24 @@ if __name__ == "__main__":
         default="",
         help="""Subfolder where the model and log_sync.log will be saved.""",
     )
+    parser.add_argument(
+        "--saves_per_epoch",
+        type=int,
+        default=None,
+        help="Number of times the model weights will be saved during one epoch.",
+    )
+    parser.add_argument(
+        "--alr",
+        action="store_true",
+        help="If set, use adaptive learning rate (Adam optimizer) instead of SGD optimizer.",
+    )
+    parser.add_argument(
+        "--lrs",
+        type=str,
+        choices=["exponential", "cosine_annealing", "none"],
+        default="none",
+        help="Choose a learning rate scheduler: exponential, cosine_annealing, or none.",
+    )
 
     args = parser.parse_args()
     os.environ["MASTER_ADDR"] = args.master_addr
@@ -510,12 +504,25 @@ if __name__ == "__main__":
                 )
                 exit()
 
+    if args.saves_per_epoch is not None:
+        if args.saves_per_epoch < 1:
+            print("Forbidden value !!! saves_per_epoch must be > 1")
+            exit()
+        else:
+            print(f"Saving model weights {args.saves_per_epoch} times during one epoch")
+
     if args.seed:
         torch.manual_seed(DEFAULT_SEED)
         np.random.seed(DEFAULT_SEED)
 
     if len(args.subfolder) > 0:
         print(f"Saving model and log_sync.log to {args.subfolder}")
+
+    if args.alr:
+        print("Using Adam as optimizer instead of SGD")
+
+    if args.lrs is not None:
+        print(f"Using learning rate scheduler: {args.lrs}")
 
     with Manager() as manager:
         log_queue = manager.Queue()
@@ -541,6 +548,9 @@ if __name__ == "__main__":
                 args.model_accuracy,
                 not args.no_save_model,
                 args.subfolder,
+                args.saves_per_epoch,
+                args.alr,
+                args.lrs,
             ),
             nprocs=args.world_size,
             join=True,
