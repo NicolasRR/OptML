@@ -1,16 +1,10 @@
-import os
 import torch
 import argparse
 from tqdm import tqdm
 import numpy as np
-from helpers import create_worker_trainloaders, setup_simple_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, _save_model, compute_weights_l2_norm, LOSS_FUNC
+from helpers import create_worker_trainloaders, setup_simple_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, _save_model, save_weights, compute_weights_l2_norm
+from helpers import DEFAULT_DATASET, DEFAULT_TRAIN_SPLIT, DEFAULT_LR, DEFAULT_MOMENTUM, DEFAULT_EPOCHS, DEFAULT_SEED, LOSS_FUNC
 
-DEFAULT_WORLD_SIZE = 4
-DEFAULT_TRAIN_SPLIT = 1
-DEFAULT_LR = 1e-3
-DEFAULT_MOMENTUM = 0.0
-DEFAULT_EPOCHS = 1
-DEFAULT_SEED = 614310
 
 def run(
     dataset_name,
@@ -90,19 +84,6 @@ def run(
 
     progress_bar.close()
 
-    if saves_per_epoch is not None: # create a save_weights function
-        flat_weights = [np.hstack([w.flatten() for w in epoch_weights]) for epoch_weights in weights_matrix]
-        weights_matrix_np = np.vstack(flat_weights)
-
-        filename = f"{dataset_name}_weights_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.npy"
-        if len(subfolder) > 0:
-            filepath = os.path.join(subfolder, filename)
-        else:
-            filepath = filename
-
-        np.save(filepath, weights_matrix_np)
-        print(f"Weights saved: {filepath}")
-
     logger.info("Finished training")
     print(f"Final train loss: {last_loss}")
 
@@ -112,6 +93,9 @@ def run(
     if save_model:
         _save_model("classic", dataset_name, model, -1, train_split, learning_rate, momentum, batch_size, epochs, subfolder)
 
+    if saves_per_epoch is not None: # create a save_weights function
+        save_weights(weights_matrix, "classic", dataset_name, train_split, learning_rate, momentum, batch_size, epochs, subfolder)
+
 
 #################################### MAIN ####################################
 if __name__ == "__main__":
@@ -119,7 +103,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset",
         type=str,
-        default="mnist",
+        default=None,
         choices=["mnist", "fashion_mnist", "cifar10", "cifar100"],
         help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100.",
     )
@@ -182,12 +166,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "--lrs",
         type=str,
-        choices=["exponential", "cosine_annealing", "none"],
-        default="none",
+        choices=["exponential", "cosine_annealing"],
+        default=None,
         help="""Choose a learning rate scheduler: exponential, cosine_annealing, or none.""",
     )
 
     args = parser.parse_args()
+
+    if args.dataset is None:
+        args.dataset = DEFAULT_DATASET
+        print(f"Using default dataset: {DEFAULT_DATASET}")
 
     if args.train_split is None:
         args.train_split = DEFAULT_TRAIN_SPLIT

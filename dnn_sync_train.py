@@ -7,19 +7,13 @@ from multiprocessing import Manager
 import argparse
 from tqdm import tqdm
 import numpy as np
-from helpers import create_worker_trainloaders, log_writer, setup_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, _save_model, compute_weights_l2_norm, LOSS_FUNC
-
-DEFAULT_WORLD_SIZE = 4
-DEFAULT_TRAIN_SPLIT = 1
-DEFAULT_LR = 1e-3
-DEFAULT_MOMENTUM = 0.0
-DEFAULT_EPOCHS = 1
-DEFAULT_SEED = 614310
+from helpers import create_worker_trainloaders, log_writer, setup_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, _save_model, save_weights, compute_weights_l2_norm
+from helpers import DEFAULT_DATASET, DEFAULT_WORLD_SIZE, DEFAULT_TRAIN_SPLIT, DEFAULT_LR, DEFAULT_MOMENTUM, DEFAULT_EPOCHS, DEFAULT_SEED, LOSS_FUNC
 
 
 #################################### PARAMETER SERVER ####################################
 class ParameterServer(object):
-    def __init__(self, nb_workers, logger, dataset_name, learning_rate, momentum, use_alr, len_trainloader, epochs, lrs):
+    def __init__(self, nb_workers, logger, dataset_name, learning_rate, momentum, use_alr, len_trainloader, epochs, lrs, saves_per_epoch):
         self.model = _get_model(dataset_name, LOSS_FUNC)
         self.logger = logger
         self.lock = threading.Lock()
@@ -30,8 +24,17 @@ class ParameterServer(object):
         self.loss = np.array([])  # store workers loss
         self.optimizer = get_optimizer(self.model, learning_rate, momentum, use_alr)
         self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
+        self.weights_matrix = []
+        self.saves_per_epoch = saves_per_epoch
+        if saves_per_epoch is not None:
+            save_idx = np.linspace(0, len_trainloader - 1, saves_per_epoch, dtype=int)
+            unique_idx = set(save_idx)
+            if len(unique_idx) < saves_per_epoch:
+                save_idx = np.array(sorted(unique_idx))
+            self.save_idx = save_idx
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
+        print(f"Save idx: {save_idx}")
 
     def get_model(self):
         return self.model  # get global model
@@ -86,10 +89,16 @@ class ParameterServer(object):
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
+                if self.saves_per_epoch is not None:
+                    relative_batch_idx = worker_batch_count - total_batches_to_run*(worker_epoch-1) # PROBLEM HERE
+                    if relative_batch_idx in self.save_idx:
+                        weights = [w.detach().clone().cpu().numpy() for w in self.model.parameters()]
+                        self.weights_matrix.append(weights)
+                if worker_batch_count == total_batches_to_run:
+                    if self.scheduler is not None:
+                        self.scheduler.step()
                 fut.set_result(self.model)
                 self.logger.debug(f"PS updated model, global loss is {self.model_loss}, weights norm is {compute_weights_l2_norm(self.model)}")
-                # DETECT END OF EPOCH AND DO SCHEDULER STEP IF SCHEDULER IS NOT NONE
-                # DETECT IF BATCH COUNT IS IN THE BATCH TO SAVE LIST
                 self.future_model = torch.futures.Future()
 
         return fut
@@ -216,7 +225,7 @@ def run_parameter_server(
         train_loaders = train_loaders[0]
 
     ps_rref = rpc.RRef(
-        ParameterServer(len(workers), logger, dataset_name, learning_rate, momentum, use_alr, len(train_loaders), epochs, lrs)
+        ParameterServer(len(workers), logger, dataset_name, learning_rate, momentum, use_alr, len(train_loaders), epochs, lrs, saves_per_epoch)
     )
     futs = []
 
@@ -252,6 +261,9 @@ def run_parameter_server(
 
     if save_model:
         _save_model("sync", dataset_name, ps_rref.to_here().model, len(workers), train_split, learning_rate, momentum, batch_size, epochs, subfolder, split_dataset, split_labels)
+
+    if saves_per_epoch is not None:
+        save_weights(ps_rref.to_here().weights_matrix, "sync", dataset_name, train_split, learning_rate, momentum, batch_size, epochs, subfolder)
 
 
 def run(
@@ -343,7 +355,7 @@ if __name__ == "__main__":
         "--dataset",
         type=str,
         choices=["mnist", "fashion_mnist", "cifar10", "cifar100"],
-        required=True,
+        default=None,
         help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100.",
     )
     parser.add_argument(
@@ -420,24 +432,28 @@ if __name__ == "__main__":
         "--saves_per_epoch",
         type=int,
         default=None,
-        help="Number of times the model weights will be saved during one epoch.",
+        help="""Number of times the model weights will be saved during one epoch.""",
     )
     parser.add_argument(
         "--alr",
         action="store_true",
-        help="If set, use adaptive learning rate (Adam optimizer) instead of SGD optimizer.",
+        help="""If set, use adaptive learning rate (Adam optimizer) instead of SGD optimizer.""",
     )
     parser.add_argument(
         "--lrs",
         type=str,
-        choices=["exponential", "cosine_annealing", "none"],
-        default="none",
-        help="Choose a learning rate scheduler: exponential, cosine_annealing, or none.",
+        choices=["exponential", "cosine_annealing"],
+        default=None,
+        help="""Choose a learning rate scheduler: exponential, cosine_annealing, or none.""",
     )
 
     args = parser.parse_args()
     os.environ["MASTER_ADDR"] = args.master_addr
     os.environ["MASTER_PORT"] = args.master_port
+
+    if args.dataset is None:
+        args.dataset = DEFAULT_DATASET
+        print(f"Using default dataset: {DEFAULT_DATASET}")
 
     if args.world_size is None:
         args.world_size = DEFAULT_WORLD_SIZE

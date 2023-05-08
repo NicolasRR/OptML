@@ -9,6 +9,13 @@ import logging.handlers
 import queue
 import os
 
+DEFAULT_DATASET = "mnist"
+DEFAULT_WORLD_SIZE = 4
+DEFAULT_TRAIN_SPLIT = 1
+DEFAULT_LR = 1e-3
+DEFAULT_MOMENTUM = 0.0
+DEFAULT_EPOCHS = 1
+DEFAULT_SEED = 614310
 LOSS_FUNC = nn.CrossEntropyLoss() #nn.functional.nll_loss # add softmax layer if nll
 EXPO_DECAY = 0.9
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
@@ -297,6 +304,20 @@ def _save_model(mode, dataset_name, model, len_workers, train_split, learning_ra
     torch.save(model.state_dict(), filepath)
     print(f"Model saved: {filepath}")
 
+
+def save_weights(weights_matrix, mode, dataset_name, train_split, learning_rate, momentum, batch_size, epochs, subfolder):
+    flat_weights = [np.hstack([w.flatten() for w in epoch_weights]) for epoch_weights in weights_matrix]
+    weights_matrix_np = np.vstack(flat_weights)
+
+    filename = f"{dataset_name}_{mode}_weights_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.npy"
+    if len(subfolder) > 0:
+        filepath = os.path.join(subfolder, filename)
+    else:
+        filepath = filename
+
+    np.save(filepath, weights_matrix_np)
+    print(f"Weights {weights_matrix_np.shape} saved: {filepath}")
+    
 
 def compute_weights_l2_norm(model):
     total_norm = 0.0
