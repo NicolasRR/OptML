@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import os
 import plotly.graph_objs as go
 from tqdm import tqdm
-from helpers import (
+from common import (
     CNN_MNIST,
     CNN_CIFAR10,
     CNN_CIFAR100,

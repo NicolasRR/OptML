@@ -8,6 +8,13 @@ import logging
 import logging.handlers
 import queue
 import os
+from multiprocessing import Manager
+import threading
+import torch.multiprocessing as mp
+import torch.distributed.rpc as rpc
+
+from dnn_sync_train import run_parameter_server_sync
+from dnn_async_train import run_parameter_server_async
 
 DEFAULT_DATASET = "mnist"
 DEFAULT_WORLD_SIZE = 4
@@ -256,7 +263,380 @@ class CNN_CIFAR100(ResNet):
         return x"""
 
 
-#################################### Utility functions ####################################
+#################################### Parser ####################################
+def check_args(args, mode):
+    if args.dataset is None:
+        args.dataset = DEFAULT_DATASET
+        print(f"Using default dataset: {DEFAULT_DATASET}")
+
+    if mode is not None:
+        if args.world_size is None:
+            args.world_size = DEFAULT_WORLD_SIZE
+            print(f"Using default world_size value: {DEFAULT_WORLD_SIZE}")
+        elif args.world_size < 2:
+            print(
+                "Forbidden value !!! world_size must be >= 2 (1 Parameter Server and 1 Worker)"
+            )
+            exit()
+
+        if args.split_labels and args.split_dataset:
+            print("Please use --split_labels without --split_dataset")
+            exit()
+
+        if args.split_labels and args.batch_size != 1:
+            print("Please use --split_labels with the --batch_size 1")
+            exit()
+
+        if mode == "async":
+            if args.split_labels_unscaled and args.split_dataset:
+                print("Please use --split_labels_unscaled without --split_dataset")
+                exit()
+
+            if args.split_labels and args.split_labels_unscaled:
+                print("Please do not use --split_labels and --split_labels_unscaled together")
+                exit()
+
+            if args.split_labels_unscaled and args.batch_size != 1:
+                print("Please use --split_labels_unscaled with the --batch_size 1")
+                exit()
+        
+        if args.dataset == "mnist":
+            valid_world_sizes = {3, 6, 11}
+        elif args.dataset == "fashion_mnist":
+            valid_world_sizes = {3, 5, 6, 9, 11, 21, 41}
+        elif args.dataset == "cifar10":
+            valid_world_sizes = {3, 6, 11}
+        elif args.dataset == "cifar100":
+            valid_world_sizes = {3, 5, 6, 11, 21, 26, 51, 101}
+        if mode == "sync":
+            if args.split_labels:
+                if args.world_size not in valid_world_sizes:
+                    print(
+                        f"Please use --split_labels with --world_size {valid_world_sizes}"
+                    )
+                    exit()
+        elif mode == "async":
+            if args.split_labels or args.split_labels_unscaled:
+                if args.world_size not in valid_world_sizes:
+                    if args.split_labels:
+                        print(
+                            f"Please use --split_labels with --world_size {valid_world_sizes}"
+                        )
+                        exit()
+                    else:
+                        print(
+                            f"Please use --split_labels_unscaled with --world_size {valid_world_sizes}"
+                        )
+                        exit()
+        
+
+    if args.train_split is None:
+        args.train_split = DEFAULT_TRAIN_SPLIT
+        print(f"Using default train_split value: {DEFAULT_TRAIN_SPLIT}")
+    elif args.train_split > 1 or args.train_split <= 0:
+        print("Forbidden value !!! train_split must be between (0,1]")
+        exit()
+
+    if args.lr is None:
+        args.lr = DEFAULT_LR
+        print(f"Using default lr: {DEFAULT_LR}")
+    elif args.lr <= 0:
+        print("Forbidden value !!! lr must be between (0,+inf)")
+        exit()
+
+    if args.momentum is None:
+        args.momentum = DEFAULT_MOMENTUM
+        print(f"Using default momentum: {DEFAULT_MOMENTUM}")
+    elif args.momentum < 0:
+        print("Forbidden value !!! momentum must be between [0,+inf)")
+        exit()
+
+    if args.epochs is None:
+        args.epochs = DEFAULT_EPOCHS
+        print(f"Using default epochs: {DEFAULT_EPOCHS}")
+    elif args.epochs < 1:
+        print("Forbidden value !!! epochs must be between [1,+inf)")
+        exit()
+
+    if args.saves_per_epoch is not None:
+        if args.saves_per_epoch < 1:
+            print("Forbidden value !!! saves_per_epoch must be > 1")
+            exit()
+        else:
+            print(f"Saving model weights {args.saves_per_epoch} times during one epoch")
+
+    if args.seed:
+        torch.manual_seed(DEFAULT_SEED)
+        np.random.seed(DEFAULT_SEED)
+
+    if len(args.subfolder) > 0:
+        if mode is not None:
+            print(f"Saving model and log_{mode}.log to {args.subfolder}")
+        else:
+            print(f"Saving model and log.log to {args.subfolder}")
+
+    if args.alr:
+        print("Using Adam as optimizer instead of SGD")
+
+    if args.lrs is not None:
+        print(f"Using learning rate scheduler: {args.lrs}")
+
+    return args
+
+def read_parser(parser, mode=None):
+    if mode is not None:
+        parser.add_argument(
+            "--master_port",
+            type=str,
+            default="29500",
+            help="""Port that master is listening on, will default to 29500 if not
+            provided. Master must be able to accept network traffic on the host and port.""",
+        )
+        parser.add_argument(
+            "--master_addr",
+            type=str,
+            default="localhost",
+            help="""Address of master, will default to localhost if not provided.
+            Master must be able to accept network traffic on the address + port.""",
+        )
+        parser.add_argument(
+            "--world_size",
+            type=int,
+            default=None,
+            help="""Total number of participating processes. Should be the sum of
+            master node and all training nodes [2,+inf].""",
+        )
+        parser.add_argument(
+            "--split_dataset",
+            action="store_true",
+            help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
+            shared between workers).""",
+        )
+        if mode == "sync":
+            parser.add_argument(
+                "--split_labels",
+                action="store_true",
+                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+                Workers will not share samples and the labels are randomly assigned.
+                Requires --batch_size 1, don't use with --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+            )
+        elif mode == "async":
+            parser.add_argument(
+                "--split_labels",
+                action="store_true",
+                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+                Workers will not share samples and the labels are randomly assigned.
+                Requires --batch_size 1, don't use with --split_dataset or --split_labels_unscaled. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+            )
+            parser.add_argument(
+                "--split_labels_unscaled",
+                action="store_true",
+                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+                Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has.
+                Requires --batch_size 1, don't use --split_dataset or split_labels. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+            )
+
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        choices=["mnist", "fashion_mnist", "cifar10", "cifar100"],
+        default=None,
+        help="Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100.",
+    )
+    parser.add_argument(
+        "--train_split",
+        type=float,
+        default=None,
+        help="""Fraction of the training dataset to be used for training (0,1].""",
+    )
+    parser.add_argument(
+        "--lr", type=float, default=None, help="""Learning rate of SGD  (0,+inf)."""
+    )
+    parser.add_argument(
+        "--momentum", type=float, default=None, help="""Momentum of SGD  [0,+inf)."""
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=None,
+        help="""Batch size of Mini batch SGD [1,len(train set)].""",
+    )
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=None,
+        help="""Number of epochs for training [1,+inf).""",
+    )
+    parser.add_argument(
+        "--model_accuracy",
+        action="store_true",
+        help="""If set, will compute the train accuracy of the global model after training.""",
+    )
+    parser.add_argument(
+        "--no_save_model",
+        action="store_true",
+        help="""If set, the trained model will not be saved.""",
+    )
+    parser.add_argument(
+        "--seed",
+        action="store_true",
+        help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""",
+    )
+    parser.add_argument(
+        "--subfolder",
+        type=str,
+        default="",
+        help="""Subfolder where the model and log.log will be saved.""",
+    )
+    parser.add_argument(
+        "--saves_per_epoch",
+        type=int,
+        default=None,
+        help="""Number of times the model weights will be saved during one epoch.""",
+    )
+    parser.add_argument(
+        "--alr",
+        action="store_true",
+        help="""If set, use adaptive learning rate (Adam optimizer) instead of SGD optimizer.""",
+    )
+    parser.add_argument(
+        "--lrs",
+        type=str,
+        choices=["exponential", "cosine_annealing"],
+        default=None,
+        help="""Choose a learning rate scheduler: exponential, cosine_annealing, or none.""",
+    )
+
+    args = parser.parse_args()
+    if mode is not None:
+        os.environ["MASTER_ADDR"] = args.master_addr
+        os.environ["MASTER_PORT"] = args.master_port
+
+    return check_args(args, mode)
+
+
+#################################### Start and Run ####################################
+def start(args, mode):
+    if mode == "sync":
+        log_name = "log_sync.log"
+    elif mode == "async":
+        log_name = "log_async.log"
+    with Manager() as manager:
+        log_queue = manager.Queue()
+        log_writer_thread = threading.Thread(
+            target=log_writer, args=(log_queue, args.subfolder, log_name)
+        )
+        log_writer_thread.start()
+        mp.spawn(
+            run,
+            args=(
+                mode,
+                log_queue,
+                args.dataset,
+                args.split_dataset,
+                args.split_labels,
+                args.split_labels_unscaled if hasattr(args, "split_labels_unscaled") else None,
+                args.world_size,
+                args.lr,
+                args.momentum,
+                args.train_split,
+                args.batch_size,
+                args.epochs,
+                args.worker_accuracy,
+                args.model_accuracy,
+                not args.no_save_model,
+                args.subfolder,
+                args.saves_per_epoch,
+                args.alr,
+                args.lrs,
+            ),
+            nprocs=args.world_size,
+            join=True,
+        )
+        log_queue.put(None)
+        log_writer_thread.join()
+
+def run(
+    rank,
+    mode,
+    log_queue,
+    dataset_name,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    world_size,
+    learning_rate,
+    momentum,
+    train_split,
+    batch_size,
+    epochs,
+    worker_accuracy,
+    model_accuracy,
+    save_model,
+    subfolder,
+    saves_per_epoch,
+    use_alr,
+    lrs,
+):
+    logger = setup_logger(log_queue)
+    rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
+        num_worker_threads=world_size, rpc_timeout=0 
+    )
+    if rank != 0:
+        rpc.init_rpc(
+            f"Worker_{rank}",
+            rank=rank,
+            world_size=world_size,
+            rpc_backend_options=rpc_backend_options,
+        )
+    else:
+        rpc.init_rpc(
+            "Parameter_Server",
+            rank=rank,
+            world_size=world_size,
+            rpc_backend_options=rpc_backend_options,
+        )
+        if mode == "sync":
+            run_parameter_server_sync(
+                [f"Worker_{r}" for r in range(1, world_size)],
+                logger,
+                dataset_name,
+                split_dataset,
+                split_labels,
+                learning_rate,
+                momentum,
+                train_split,
+                batch_size,
+                epochs,
+                worker_accuracy,
+                model_accuracy,
+                save_model,
+                subfolder,
+                use_alr,
+                saves_per_epoch,
+                lrs,
+            )
+        elif mode == "async":
+            run_parameter_server_async(
+                [f"Worker_{r}" for r in range(1, world_size)],
+                logger,
+                dataset_name,
+                split_dataset,
+                split_labels,
+                split_labels_unscaled,
+                learning_rate,
+                momentum,
+                train_split,
+                batch_size,
+                epochs,
+                worker_accuracy,
+                model_accuracy,
+                save_model,
+                subfolder,
+            )
+    rpc.shutdown()
+
+#################################### Main utility functions ####################################
 def _get_model(dataset_name, loss_func):
     if "mnist" in dataset_name:
         print("Created MNIST CNN")
@@ -399,6 +779,7 @@ def compute_weights_l2_norm(model):
     return total_norm
 
 
+#################################### Dataloader utility functions ####################################
 def count_distinct_labels(dataset):
     labels = dataset.targets
     unique_labels = torch.unique(torch.as_tensor(labels))

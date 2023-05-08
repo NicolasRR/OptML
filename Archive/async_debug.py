@@ -12,7 +12,7 @@ from tqdm import tqdm
 import logging
 import logging.handlers
 import numpy as np
-from helpers import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders
+from common import CNN_CIFAR10, CNN_CIFAR100, CNN_MNIST, create_worker_trainloaders
 
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1

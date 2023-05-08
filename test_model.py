@@ -7,7 +7,7 @@ from matplotlib.ticker import FuncFormatter
 import matplotlib.pyplot as plt
 import contextlib
 import os
-from helpers import (
+from common import (
     CNN_MNIST,
     CNN_CIFAR10,
     CNN_CIFAR100,
