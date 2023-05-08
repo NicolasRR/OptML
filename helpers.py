@@ -16,8 +16,8 @@ DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-LOSS_FUNC = nn.CrossEntropyLoss() # nn.functional.nll_loss # add softmax layer if nll
-EXPO_DECAY = 0.9 # for exponential learning rate scheduler
+LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer if nll
+EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 
 
@@ -44,7 +44,8 @@ class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
         if self.loss_func == nn.functional.nll_loss:
             x = nn.functional.log_softmax(x, dim=1)
         return x
-    
+
+
 """class CNN_MNIST(nn.Module):  # PyTorch model for MNIST and Fashion MNIST, using nll
     def __init__(self):
         super(CNN_MNIST, self).__init__()
@@ -71,19 +72,31 @@ class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
         output = nn.functional.log_softmax(x, dim=1)
         return output"""
 
+
 class BasicBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1):
         super(BasicBlock, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(
+            in_channels,
+            out_channels,
+            kernel_size=3,
+            stride=stride,
+            padding=1,
+            bias=False,
+        )
         self.bn1 = nn.BatchNorm2d(out_channels)
-        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(
+            out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False
+        )
         self.bn2 = nn.BatchNorm2d(out_channels)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_channels != out_channels:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm2d(out_channels)
+                nn.Conv2d(
+                    in_channels, out_channels, kernel_size=1, stride=stride, bias=False
+                ),
+                nn.BatchNorm2d(out_channels),
             )
 
     def forward(self, x):
@@ -92,9 +105,16 @@ class BasicBlock(nn.Module):
         out += self.shortcut(x)
         out = nn.functional.relu(out)
         return out
-    
-class ResNet(nn.Module): # ResNet18
-    def __init__(self, num_classes=10, block=BasicBlock, num_blocks=[2, 2, 2, 2], loss_func=nn.functional.nll_loss):
+
+
+class ResNet(nn.Module):  # ResNet18
+    def __init__(
+        self,
+        num_classes=10,
+        block=BasicBlock,
+        num_blocks=[2, 2, 2, 2],
+        loss_func=nn.functional.nll_loss,
+    ):
         super(ResNet, self).__init__()
         self.in_channels = 64
         self.loss_func = loss_func
@@ -127,13 +147,16 @@ class ResNet(nn.Module): # ResNet18
             x = nn.functional.log_softmax(x, dim=1)
         return x
 
+
 class CNN_CIFAR10(ResNet):
     def __init__(self, loss_func=nn.functional.nll_loss):
         super().__init__(num_classes=10, loss_func=loss_func)
 
+
 class CNN_CIFAR100(ResNet):
     def __init__(self, loss_func=nn.functional.nll_loss):
         super().__init__(num_classes=100, loss_func=loss_func)
+
 
 """class CNN_CIFAR10(nn.Module): # Adapted PyTorch model for CIFAR10 using nll
     def __init__(self):
@@ -254,20 +277,26 @@ def get_optimizer(model, learning_rate, momentum, use_alr):
         if momentum > 1:
             return optim.Adam(model.parameters(), lr=learning_rate)
         else:
-            return optim.Adam(model.parameters(), lr=learning_rate, betas=(max(momentum, 0.99), 0.999)) # weight decay if weights too large
+            return optim.Adam(
+                model.parameters(), lr=learning_rate, betas=(max(momentum, 0.99), 0.999)
+            )  # weight decay if weights too large
     else:
         return optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
-    
-    
+
+
 def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
     if lrs is not None:
-        if lrs == "exponential": # more suitable for async
-            return torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=gamma)  # initial_learning_rate * gamma^epoch
-        elif lrs == "cosine_annealing": # more suitable for sync
-            return torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len_trainloader* epochs)
+        if lrs == "exponential":  # more suitable for async
+            return torch.optim.lr_scheduler.ExponentialLR(
+                optimizer, gamma=gamma
+            )  # initial_learning_rate * gamma^epoch
+        elif lrs == "cosine_annealing":  # more suitable for sync
+            return torch.optim.lr_scheduler.CosineAnnealingLR(
+                optimizer, T_max=len_trainloader * epochs
+            )
         else:
             return None
-    
+
 
 def get_model_accuracy(model, train_loader_full):
     correct_predictions = 0
@@ -288,13 +317,11 @@ def get_model_accuracy(model, train_loader_full):
 def get_worker_accuracy(worker_model, worker_name, worker_train_loader):
     correct_predictions = 0
     total_predictions = 0
-    with torch.no_grad(): 
+    with torch.no_grad():
         for _, (data, target) in enumerate(worker_train_loader):
             logits = worker_model(data)
             predicted_classes = torch.argmax(logits, dim=1)
-            correct_predictions += (
-                (predicted_classes == target).sum().item()
-            )
+            correct_predictions += (predicted_classes == target).sum().item()
             total_predictions += target.size(0)
         final_train_accuracy = correct_predictions / total_predictions
     print(
@@ -302,7 +329,21 @@ def get_worker_accuracy(worker_model, worker_name, worker_train_loader):
     )
 
 
-def _save_model(mode, dataset_name, model, len_workers, train_split, learning_rate, momentum, batch_size, epochs, subfolder, split_dataset=False, split_labels=False, split_labels_unscaled=False):
+def _save_model(
+    mode,
+    dataset_name,
+    model,
+    len_workers,
+    train_split,
+    learning_rate,
+    momentum,
+    batch_size,
+    epochs,
+    subfolder,
+    split_dataset=False,
+    split_labels=False,
+    split_labels_unscaled=False,
+):
     suffix = ""
     if split_dataset:
         suffix = "_split_dataset"
@@ -322,8 +363,21 @@ def _save_model(mode, dataset_name, model, len_workers, train_split, learning_ra
     print(f"Model saved: {filepath}")
 
 
-def save_weights(weights_matrix, mode, dataset_name, train_split, learning_rate, momentum, batch_size, epochs, subfolder):
-    flat_weights = [np.hstack([w.flatten() for w in epoch_weights]) for epoch_weights in weights_matrix]
+def save_weights(
+    weights_matrix,
+    mode,
+    dataset_name,
+    train_split,
+    learning_rate,
+    momentum,
+    batch_size,
+    epochs,
+    subfolder,
+):
+    flat_weights = [
+        np.hstack([w.flatten() for w in epoch_weights])
+        for epoch_weights in weights_matrix
+    ]
     weights_matrix_np = np.vstack(flat_weights)
 
     filename = f"{dataset_name}_{mode}_weights_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.npy"
@@ -334,14 +388,14 @@ def save_weights(weights_matrix, mode, dataset_name, train_split, learning_rate,
 
     np.save(filepath, weights_matrix_np)
     print(f"Weights {weights_matrix_np.shape} saved: {filepath}")
-    
+
 
 def compute_weights_l2_norm(model):
     total_norm = 0.0
     for p in model.parameters():
         param_norm = p.data.norm(2)
         total_norm += param_norm.item() ** 2
-    total_norm = total_norm ** 0.5
+    total_norm = total_norm**0.5
     return total_norm
 
 
@@ -983,7 +1037,6 @@ def create_trainloader(model_path, batch_size):
     else:
         print("Error Unkown dataset")
         exit()
-
 
 
 #################################### LOGGER ####################################

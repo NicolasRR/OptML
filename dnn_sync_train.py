@@ -7,13 +7,46 @@ from multiprocessing import Manager
 import argparse
 from tqdm import tqdm
 import numpy as np
-from helpers import create_worker_trainloaders, log_writer, setup_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, get_worker_accuracy, _save_model, save_weights, compute_weights_l2_norm
-from helpers import DEFAULT_DATASET, DEFAULT_WORLD_SIZE, DEFAULT_TRAIN_SPLIT, DEFAULT_LR, DEFAULT_MOMENTUM, DEFAULT_EPOCHS, DEFAULT_SEED, LOSS_FUNC
+from helpers import (
+    create_worker_trainloaders,
+    log_writer,
+    setup_logger,
+    _get_model,
+    get_optimizer,
+    get_scheduler,
+    get_model_accuracy,
+    get_worker_accuracy,
+    _save_model,
+    save_weights,
+    compute_weights_l2_norm,
+)
+from helpers import (
+    DEFAULT_DATASET,
+    DEFAULT_WORLD_SIZE,
+    DEFAULT_TRAIN_SPLIT,
+    DEFAULT_LR,
+    DEFAULT_MOMENTUM,
+    DEFAULT_EPOCHS,
+    DEFAULT_SEED,
+    LOSS_FUNC,
+)
 
 
 #################################### PARAMETER SERVER ####################################
 class ParameterServer(object):
-    def __init__(self, nb_workers, logger, dataset_name, learning_rate, momentum, use_alr, len_trainloader, epochs, lrs, saves_per_epoch):
+    def __init__(
+        self,
+        nb_workers,
+        logger,
+        dataset_name,
+        learning_rate,
+        momentum,
+        use_alr,
+        len_trainloader,
+        epochs,
+        lrs,
+        saves_per_epoch,
+    ):
         self.model = _get_model(dataset_name, LOSS_FUNC)
         self.logger = logger
         self.lock = threading.Lock()
@@ -37,9 +70,9 @@ class ParameterServer(object):
 
     def get_model(self):
         return self.model
-    
+
     def get_current_lr(self):
-        return self.optimizer.param_groups[0]['lr']
+        return self.optimizer.param_groups[0]["lr"]
 
     @staticmethod
     @rpc.functions.async_execution
@@ -58,9 +91,7 @@ class ParameterServer(object):
             f"PS got {self.update_counter +1}/{self.nb_workers} updates (from {worker_name}, {worker_batch_count - total_batches_to_run*(worker_epoch-1)}/{total_batches_to_run} ({worker_batch_count}/{total_batches_to_run*total_epochs}), epoch {worker_epoch}/{total_epochs})"
         )
         for param, grad in zip(self.model.parameters(), grads):
-            if (param.grad is not None) and (
-                grad is not None
-            ):  
+            if (param.grad is not None) and (grad is not None):
                 param.grad += grad  # accumulate workers grads
 
         self.loss = np.append(self.loss, loss)
@@ -73,7 +104,7 @@ class ParameterServer(object):
                 self.update_counter >= self.nb_workers
             ):  # received grads from all workers
                 for param in self.model.parameters():
-                    if param.grad is not None: 
+                    if param.grad is not None:
                         param.grad /= self.nb_workers  # average workers grads
                 self.update_counter = 0
                 self.model_loss = self.loss.mean()  # aggregate the workers loss
@@ -81,15 +112,24 @@ class ParameterServer(object):
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
                 if self.saves_per_epoch is not None:
-                    relative_batch_idx = worker_batch_count - total_batches_to_run*(worker_epoch-1) -1
+                    relative_batch_idx = (
+                        worker_batch_count
+                        - total_batches_to_run * (worker_epoch - 1)
+                        - 1
+                    )
                     if relative_batch_idx in self.save_idx:
-                        weights = [w.detach().clone().cpu().numpy() for w in self.model.parameters()]
+                        weights = [
+                            w.detach().clone().cpu().numpy()
+                            for w in self.model.parameters()
+                        ]
                         self.weights_matrix.append(weights)
                 if worker_batch_count == total_batches_to_run:
                     if self.scheduler is not None:
                         self.scheduler.step()
                 fut.set_result(self.model)
-                self.logger.debug(f"PS updated model, global loss is {self.model_loss}, weights norm is {compute_weights_l2_norm(self.model)}")
+                self.logger.debug(
+                    f"PS updated model, global loss is {self.model_loss}, weights norm is {compute_weights_l2_norm(self.model)}"
+                )
                 self.future_model = torch.futures.Future()
 
         return fut
@@ -121,7 +161,9 @@ class Worker(object):
                     unit="batch",
                 )
                 current_lr = self.ps_rref.rpc_sync().get_current_lr()
-                iterable.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}")
+                iterable.set_postfix(
+                    epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}"
+                )
             else:
                 iterable = self.train_loader
 
@@ -158,7 +200,9 @@ class Worker(object):
                     self.batch_count == len(self.train_loader)
                     and self.current_epoch == self.epochs
                 ):
-                    get_worker_accuracy(worker_model, self.worker_name, self.train_loader)
+                    get_worker_accuracy(
+                        worker_model, self.worker_name, self.train_loader
+                    )
 
 
 #################################### GLOBAL FUNCTIONS ####################################
@@ -201,7 +245,18 @@ def run_parameter_server(
         train_loaders = train_loaders[0]
 
     ps_rref = rpc.RRef(
-        ParameterServer(len(workers), logger, dataset_name, learning_rate, momentum, use_alr, len(train_loaders), epochs, lrs, saves_per_epoch)
+        ParameterServer(
+            len(workers),
+            logger,
+            dataset_name,
+            learning_rate,
+            momentum,
+            use_alr,
+            len(train_loaders),
+            epochs,
+            lrs,
+            saves_per_epoch,
+        )
     )
     futs = []
 
@@ -236,10 +291,33 @@ def run_parameter_server(
         get_model_accuracy(ps_rref.to_here().model, train_loader_full)
 
     if save_model:
-        _save_model("sync", dataset_name, ps_rref.to_here().model, len(workers), train_split, learning_rate, momentum, batch_size, epochs, subfolder, split_dataset, split_labels)
+        _save_model(
+            "sync",
+            dataset_name,
+            ps_rref.to_here().model,
+            len(workers),
+            train_split,
+            learning_rate,
+            momentum,
+            batch_size,
+            epochs,
+            subfolder,
+            split_dataset,
+            split_labels,
+        )
 
     if saves_per_epoch is not None:
-        save_weights(ps_rref.to_here().weights_matrix, "sync", dataset_name, train_split, learning_rate, momentum, batch_size, epochs, subfolder)
+        save_weights(
+            ps_rref.to_here().weights_matrix,
+            "sync",
+            dataset_name,
+            train_split,
+            learning_rate,
+            momentum,
+            batch_size,
+            epochs,
+            subfolder,
+        )
 
 
 def run(

@@ -16,11 +16,11 @@ from helpers import (
 )
 
 DEFAULT_GRID_BORDER = 10
-DEFAULT_GRID_SIZE = 10 
+DEFAULT_GRID_SIZE = 10
 DEFAULT_BATCH_SIZE = 100
 
-def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border):
 
+def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border):
     loader = create_testloader(model_path, batch_size)
     model = None
     if "mnist" in model_path:
@@ -39,7 +39,7 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    weights_matrix_np= np.load(weights_path)
+    weights_matrix_np = np.load(weights_path)
 
     print(f"Saved weights shape: {weights_matrix_np.shape}")
 
@@ -52,10 +52,13 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
     grid_weights = pca.inverse_transform(grid_points)
 
-
     grid_losses = []
 
-    progress_bar = tqdm(total= len(grid_weights), desc="Computing loss of grid weights", unit="model_weights")
+    progress_bar = tqdm(
+        total=len(grid_weights),
+        desc="Computing loss of grid weights",
+        unit="model_weights",
+    )
 
     with torch.no_grad():
         for weights in grid_weights:
@@ -64,11 +67,13 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
             idx = 0
             for key, param in model.state_dict().items():
                 size = np.prod(param.shape)
-                weight_dict[key] = torch.tensor(weights[idx:idx+size]).view(param.shape)
+                weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
+                    param.shape
+                )
                 idx += size
-            
+
             model.load_state_dict(weight_dict)
-            
+
             running_loss = 0.0
             for inputs, labels in loader:
                 inputs, labels = inputs, labels
@@ -80,12 +85,15 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
             progress_bar.update(1)
             progress_bar.set_postfix(grid_loss=grid_losses[-1])
 
-
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
     trajectory_loss_reevaluted = []
 
-    progress_bar2 = tqdm(total= len(weights_matrix_np), desc="Computing loss of trajectory weights", unit="model_weights")
+    progress_bar2 = tqdm(
+        total=len(weights_matrix_np),
+        desc="Computing loss of trajectory weights",
+        unit="model_weights",
+    )
 
     with torch.no_grad():
         for weights in weights_matrix_np:
@@ -94,11 +102,13 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
             idx = 0
             for key, param in model.state_dict().items():
                 size = np.prod(param.shape)
-                weight_dict[key] = torch.tensor(weights[idx:idx+size]).view(param.shape)
+                weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
+                    param.shape
+                )
                 idx += size
-            
+
             model.load_state_dict(weight_dict)
-            
+
             running_loss = 0.0
             for inputs, labels in loader:
                 inputs, labels = inputs, labels
@@ -110,8 +120,15 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
             progress_bar2.update(1)
             progress_bar2.set_postfix(trajectory_loss=trajectory_loss_reevaluted[-1])
 
-
-    surface = go.Surface(x=xx, y=yy, z=grid_losses, opacity=0.8, name="grid point", coloraxis="coloraxis", colorscale="Viridis")
+    surface = go.Surface(
+        x=xx,
+        y=yy,
+        z=grid_losses,
+        opacity=0.8,
+        name="grid point",
+        coloraxis="coloraxis",
+        colorscale="Viridis",
+    )
 
     colors = ["blue"] + ["red"] * (len(reduced_weights) - 2) + ["green"]
     sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
@@ -120,33 +137,32 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
         x=reduced_weights[:, 0],
         y=reduced_weights[:, 1],
         z=trajectory_loss_reevaluted,
-        mode='markers+lines',
+        mode="markers+lines",
         line=dict(color="red"),
         marker=dict(color=colors, size=sizes),
         name="Training Trajectory",
     )
 
     layout = go.Layout(
-        scene=dict(
-            xaxis_title='PC1',
-            yaxis_title='PC2',
-            zaxis_title=' Loss'
-        ),
-        coloraxis=dict(colorbar=dict(title="Loss magnitude"), colorscale="Viridis"), 
+        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss"),
+        coloraxis=dict(colorbar=dict(title="Loss magnitude"), colorscale="Viridis"),
     )
 
     fig = go.Figure(data=[surface, trajectory], layout=layout)
-    #fig.show()
+    # fig.show()
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
-        output_file_path = os.path.join(subfolder, f"{model_basename}_loss_landscape.html")
-        pio.write_html(fig, output_file_path) 
+        output_file_path = os.path.join(
+            subfolder, f"{model_basename}_loss_landscape.html"
+        )
+        pio.write_html(fig, output_file_path)
     else:
         output_file_path = f"{model_basename}_loss_landscape.html"
         pio.write_html(fig, output_file_path)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Testing models")
@@ -171,9 +187,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "weights_path", type=str, help="""Weights of the trained model."""
     )
-    parser.add_argument(
-        "model_path", type=str, help="""Path of the model."""
-    )
+    parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(
         "--subfolder",
         type=str,
@@ -189,7 +203,7 @@ if __name__ == "__main__":
     elif args.batch_size < 1:
         print("Forbidden value !!! batch_size must be between [1,len(test set)]")
         exit()
-    
+
     if args.grid_size is None:
         args.grid_size = DEFAULT_GRID_SIZE
         print(f"Using default grid_size: {DEFAULT_GRID_SIZE}")
@@ -209,14 +223,14 @@ if __name__ == "__main__":
 
     if len(args.weights_path) == 0:
         print("Missing weights path !!!")
-        exit() 
+        exit()
 
     if len(args.model_path) == 0:
         print("Missing model path !!!")
-        exit() 
+        exit()
 
     main(
-        args.batch_size, 
+        args.batch_size,
         args.weights_path,
         args.model_path,
         args.subfolder,
