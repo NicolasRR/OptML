@@ -12,8 +12,6 @@ from helpers import (
     _save_model,
     save_weights,
     compute_weights_l2_norm,
-)
-from helpers import (
     DEFAULT_DATASET,
     DEFAULT_TRAIN_SPLIT,
     DEFAULT_LR,
