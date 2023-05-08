@@ -16,8 +16,8 @@ DEFAULT_LR = 1e-3
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-LOSS_FUNC = nn.CrossEntropyLoss() #nn.functional.nll_loss # add softmax layer if nll
-EXPO_DECAY = 0.9
+LOSS_FUNC = nn.CrossEntropyLoss() # nn.functional.nll_loss # add softmax layer if nll
+EXPO_DECAY = 0.9 # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 
 
@@ -282,6 +282,23 @@ def get_model_accuracy(model, train_loader_full):
     final_train_accuracy = correct_predictions / total_predictions
     print(
         f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
+    )
+
+
+def get_worker_accuracy(worker_model, worker_name, worker_train_loader):
+    correct_predictions = 0
+    total_predictions = 0
+    with torch.no_grad(): 
+        for _, (data, target) in enumerate(worker_train_loader):
+            logits = worker_model(data)
+            predicted_classes = torch.argmax(logits, dim=1)
+            correct_predictions += (
+                (predicted_classes == target).sum().item()
+            )
+            total_predictions += target.size(0)
+        final_train_accuracy = correct_predictions / total_predictions
+    print(
+        f"Accuracy of {worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
     )
 
 
@@ -710,14 +727,14 @@ def cifar100_trainloaders(
 
 #################################### TRAIN LOADER main function ####################################
 def create_worker_trainloaders(
-    nb_workers,
     dataset_name,
-    split_dataset,
-    split_labels,
-    split_labels_unscaled,
     train_split,
     batch_size,
     model_accuracy,
+    nb_workers=1,
+    split_dataset=False,
+    split_labels=False,
+    split_labels_unscaled=False,
 ):
     if dataset_name == "mnist":
         return mnist_trainloaders(

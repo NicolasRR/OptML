@@ -7,7 +7,7 @@ from multiprocessing import Manager
 import argparse
 from tqdm import tqdm
 import numpy as np
-from helpers import create_worker_trainloaders, log_writer, setup_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, _save_model, save_weights, compute_weights_l2_norm
+from helpers import create_worker_trainloaders, log_writer, setup_logger, _get_model, get_optimizer, get_scheduler, get_model_accuracy, get_worker_accuracy, _save_model, save_weights, compute_weights_l2_norm
 from helpers import DEFAULT_DATASET, DEFAULT_WORLD_SIZE, DEFAULT_TRAIN_SPLIT, DEFAULT_LR, DEFAULT_MOMENTUM, DEFAULT_EPOCHS, DEFAULT_SEED, LOSS_FUNC
 
 
@@ -34,10 +34,9 @@ class ParameterServer(object):
             self.save_idx = save_idx
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
-        print(f"Save idx: {save_idx}")
 
     def get_model(self):
-        return self.model  # get global model
+        return self.model
     
     def get_current_lr(self):
         return self.optimizer.param_groups[0]['lr']
@@ -61,13 +60,8 @@ class ParameterServer(object):
         for param, grad in zip(self.model.parameters(), grads):
             if (param.grad is not None) and (
                 grad is not None
-            ):  # remove if confident, good for security
+            ):  
                 param.grad += grad  # accumulate workers grads
-
-            elif param.grad is None:  # PyTorch security
-                self.logger.debug(f"None param.grad detected from worker {worker_name}")
-            else:
-                self.logger.debug("None grad detected")
 
         self.loss = np.append(self.loss, loss)
 
@@ -79,18 +73,15 @@ class ParameterServer(object):
                 self.update_counter >= self.nb_workers
             ):  # received grads from all workers
                 for param in self.model.parameters():
-                    if param.grad is not None:  # remove if confident, good for security
+                    if param.grad is not None: 
                         param.grad /= self.nb_workers  # average workers grads
-                    else:  # remove if confident, good for security
-                        self.logger.debug(f"None param.grad detected for the update")
-                        self.optimizer.zero_grad()  # redundant
                 self.update_counter = 0
                 self.model_loss = self.loss.mean()  # aggregate the workers loss
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
                 if self.saves_per_epoch is not None:
-                    relative_batch_idx = worker_batch_count - total_batches_to_run*(worker_epoch-1) # PROBLEM HERE
+                    relative_batch_idx = worker_batch_count - total_batches_to_run*(worker_epoch-1) -1
                     if relative_batch_idx in self.save_idx:
                         weights = [w.detach().clone().cpu().numpy() for w in self.model.parameters()]
                         self.weights_matrix.append(weights)
@@ -108,8 +99,8 @@ class ParameterServer(object):
 class Worker(object):
     def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
         self.ps_rref = ps_rref
-        self.train_loader = train_loader  # worker trainloader
-        self.loss_func = LOSS_FUNC  # worker loss
+        self.train_loader = train_loader
+        self.loss_func = LOSS_FUNC
         self.logger = logger
         self.batch_count = 0
         self.current_epoch = 0
@@ -144,8 +135,7 @@ class Worker(object):
         worker_model = self.ps_rref.rpc_sync().get_model()
 
         for inputs, labels in self.get_next_batch():
-            # print(labels, self.worker_name) #check the samples of workers
-            loss = self.loss_func(worker_model(inputs), labels)  # worker loss
+            loss = self.loss_func(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
 
@@ -168,20 +158,7 @@ class Worker(object):
                     self.batch_count == len(self.train_loader)
                     and self.current_epoch == self.epochs
                 ):
-                    correct_predictions = 0
-                    total_predictions = 0
-                    with torch.no_grad():  # No need to track gradients for evaluation
-                        for _, (data, target) in enumerate(self.train_loader):
-                            logits = worker_model(data)
-                            predicted_classes = torch.argmax(logits, dim=1)
-                            correct_predictions += (
-                                (predicted_classes == target).sum().item()
-                            )
-                            total_predictions += target.size(0)
-                        final_train_accuracy = correct_predictions / total_predictions
-                    print(
-                        f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
-                    )
+                    get_worker_accuracy(worker_model, self.worker_name, self.train_loader)
 
 
 #################################### GLOBAL FUNCTIONS ####################################
@@ -206,18 +183,17 @@ def run_parameter_server(
     save_model,
     subfolder,
     use_alr,
-    saves_per_epoch, # to use, to worker or Parameter server class
+    saves_per_epoch,
     lrs,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
-        len(workers),
         dataset_name,
-        split_dataset,
-        split_labels,
-        False,  # compatibility for async split_labels_unscaled
         train_split,
         batch_size,
         model_accuracy,
+        len(workers),
+        split_dataset,
+        split_labels,
     )
     train_loader_full = None
     if model_accuracy:
@@ -301,7 +277,7 @@ def run(
         )
         # worker passively waiting for parameter server to kick off training iterations
     else:
-        # parameter server gives data to the workers
+        # starting up parameter server
         rpc.init_rpc(
             "Parameter_Server",
             rank=rank,
@@ -328,7 +304,6 @@ def run(
             lrs,
         )
 
-    # block until all rpcs finish
     rpc.shutdown()
 
 

@@ -27,11 +27,7 @@ def run(
     optimizer = get_optimizer(model, learning_rate, momentum, use_alr)
 
     train_loaders, batch_size = create_worker_trainloaders(
-        1, # only 1 worker
         dataset_name,
-        False,
-        False,
-        False,  # compatibility for async split_labels_unscaled
         train_split,
         batch_size,
         model_accuracy,
@@ -93,7 +89,7 @@ def run(
     if save_model:
         _save_model("classic", dataset_name, model, -1, train_split, learning_rate, momentum, batch_size, epochs, subfolder)
 
-    if saves_per_epoch is not None: # create a save_weights function
+    if saves_per_epoch is not None:
         save_weights(weights_matrix, "classic", dataset_name, train_split, learning_rate, momentum, batch_size, epochs, subfolder)
 
 
