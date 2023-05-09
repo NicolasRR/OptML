@@ -293,13 +293,15 @@ def check_args(args, mode):
                 exit()
 
             if args.split_labels and args.split_labels_unscaled:
-                print("Please do not use --split_labels and --split_labels_unscaled together")
+                print(
+                    "Please do not use --split_labels and --split_labels_unscaled together"
+                )
                 exit()
 
             if args.split_labels_unscaled and args.batch_size != 1:
                 print("Please use --split_labels_unscaled with the --batch_size 1")
                 exit()
-        
+
         if args.dataset == "mnist":
             valid_world_sizes = {3, 6, 11}
         elif args.dataset == "fashion_mnist":
@@ -328,7 +330,6 @@ def check_args(args, mode):
                             f"Please use --split_labels_unscaled with --world_size {valid_world_sizes}"
                         )
                         exit()
-        
 
     if args.train_split is None:
         args.train_split = DEFAULT_TRAIN_SPLIT
@@ -382,6 +383,7 @@ def check_args(args, mode):
         print(f"Using learning rate scheduler: {args.lrs}")
 
     return args
+
 
 def read_parser(parser, mode=None):
     if mode is not None:
@@ -535,7 +537,9 @@ def start(args, mode):
                 args.dataset,
                 args.split_dataset,
                 args.split_labels,
-                args.split_labels_unscaled if hasattr(args, "split_labels_unscaled") else None,
+                args.split_labels_unscaled
+                if hasattr(args, "split_labels_unscaled")
+                else None,
                 args.world_size,
                 args.lr,
                 args.momentum,
@@ -555,6 +559,7 @@ def start(args, mode):
         )
         log_queue.put(None)
         log_writer_thread.join()
+
 
 def run(
     rank,
@@ -580,7 +585,7 @@ def run(
 ):
     logger = setup_logger(log_queue)
     rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
-        num_worker_threads=world_size, rpc_timeout=0 
+        num_worker_threads=world_size, rpc_timeout=0
     )
     if rank != 0:
         rpc.init_rpc(
@@ -635,6 +640,7 @@ def run(
                 subfolder,
             )
     rpc.shutdown()
+
 
 #################################### Main utility functions ####################################
 def _get_model(dataset_name, loss_func):

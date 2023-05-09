@@ -307,6 +307,7 @@ def run_parameter_server_sync(
             subfolder,
         )
 
+
 #################################### MAIN ####################################
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
