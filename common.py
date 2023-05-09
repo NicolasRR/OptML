@@ -504,7 +504,7 @@ def read_parser(parser, mode=None):
         type=str,
         choices=["exponential", "cosine_annealing"],
         default=None,
-        help="""Choose a learning rate scheduler: exponential, cosine_annealing, or none.""",
+        help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
     )
 
     args = parser.parse_args()
