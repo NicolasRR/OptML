@@ -55,7 +55,7 @@ class ParameterServer(object):
 
     def get_model(self):
         return self.model
-    
+
     def get_current_lr(self):
         return self.optimizer.param_groups[0]["lr"]
 
@@ -99,7 +99,9 @@ class ParameterServer(object):
                 if self.scheduler is not None:
                     self.scheduler.step()
 
-            self.logger.debug(f"PS updated model, worker loss: {loss} ({worker_name}), weight norm: weights norm {compute_weights_l2_norm(self.model)}")
+            self.logger.debug(
+                f"PS updated model, worker loss: {loss} ({worker_name}), weight norm: weights norm {compute_weights_l2_norm(self.model)}"
+            )
 
         return self.model
 
@@ -131,7 +133,9 @@ class Worker(object):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
             current_lr = self.ps_rref.rpc_sync().get_current_lr()
-            self.progress_bar.set_postfix(epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}")
+            self.progress_bar.set_postfix(
+                epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}"
+            )
             for inputs, labels in self.train_loader:
                 yield inputs, labels
         self.progress_bar.clear()
@@ -141,7 +145,7 @@ class Worker(object):
         worker_model = self.ps_rref.rpc_sync().get_model()
 
         for inputs, labels in self.get_next_batch():
-            loss = self.loss_func(worker_model(inputs), labels) 
+            loss = self.loss_func(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
             # in asynchronous we send the parameters to the server asynchronously and then we update the worker model synchronously
