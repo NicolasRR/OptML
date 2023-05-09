@@ -21,7 +21,7 @@ from common import (
 
 
 #################################### PARAMETER SERVER ####################################
-class ParameterServer(object):
+class ParameterServer_sync(object):
     def __init__(
         self,
         nb_workers,
@@ -56,15 +56,15 @@ class ParameterServer(object):
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
-    def get_model(self):
+    def get_model_sync(self):
         return self.model
 
-    def get_current_lr(self):
+    def get_current_lr_sync(self):
         return self.optimizer.param_groups[0]["lr"]
 
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(
+    def update_and_fetch_model_sync(
         ps_rref,
         grads,
         worker_name,
@@ -124,7 +124,7 @@ class ParameterServer(object):
 
 
 #################################### WORKER ####################################
-class Worker(object):
+class Worker_sync(object):
     def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
@@ -139,7 +139,7 @@ class Worker(object):
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
         )
 
-    def get_next_batch(self):
+    def get_next_batch_sync(self):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
             if self.worker_name == "Worker_1":
@@ -148,7 +148,7 @@ class Worker(object):
                     self.train_loader,
                     unit="batch",
                 )
-                current_lr = self.ps_rref.rpc_sync().get_current_lr()
+                current_lr = self.ps_rref.rpc_sync().get_current_lr_sync()
                 iterable.set_postfix(
                     epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}"
                 )
@@ -161,17 +161,17 @@ class Worker(object):
         if self.worker_name == "Worker_1":
             iterable.close()
 
-    def train(self):
-        worker_model = self.ps_rref.rpc_sync().get_model()
+    def train_sync(self):
+        worker_model = self.ps_rref.rpc_sync().get_model_sync()
 
-        for inputs, labels in self.get_next_batch():
+        for inputs, labels in self.get_next_batch_sync():
             loss = self.loss_func(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
 
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
-                ParameterServer.update_and_fetch_model,
+                ParameterServer_sync.update_and_fetch_model_sync,
                 args=(
                     self.ps_rref,
                     [param.grad for param in worker_model.parameters()],
@@ -194,9 +194,9 @@ class Worker(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker(ps_rref, logger, train_loader, epochs, worker_accuracy):
-    worker = Worker(ps_rref, logger, train_loader, epochs, worker_accuracy)
-    worker.train()
+def run_worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy):
+    worker = Worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy)
+    worker.train_sync()
 
 
 def run_parameter_server_sync(
@@ -233,7 +233,7 @@ def run_parameter_server_sync(
         train_loaders = train_loaders[0]
 
     ps_rref = rpc.RRef(
-        ParameterServer(
+        ParameterServer_sync(
             len(workers),
             logger,
             dataset_name,
@@ -254,7 +254,7 @@ def run_parameter_server_sync(
             futs.append(
                 rpc.rpc_async(
                     worker,
-                    run_worker,
+                    run_worker_sync,
                     args=(ps_rref, logger, train_loaders, epochs, worker_accuracy),
                 )
             )
@@ -265,7 +265,7 @@ def run_parameter_server_sync(
             futs.append(
                 rpc.rpc_async(
                     worker,
-                    run_worker,
+                    run_worker_sync,
                     args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
                 )
             )
@@ -315,4 +315,4 @@ if __name__ == "__main__":
     )
     args = read_parser(parser, "sync")
 
-    start(args, "sync")
+    start(args, "sync", run_parameter_server_sync)

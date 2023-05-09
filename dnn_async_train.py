@@ -21,7 +21,7 @@ from common import (
 
 
 #################################### PARAMETER SERVER ####################################
-class ParameterServer(object):
+class ParameterServer_async(object):
     def __init__(
         self,
         nb_workers,
@@ -53,15 +53,15 @@ class ParameterServer(object):
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
-    def get_model(self):
+    def get_model_async(self):
         return self.model
 
-    def get_current_lr(self):
+    def get_current_lr_async(self):
         return self.optimizer.param_groups[0]["lr"]
 
     @staticmethod
     @rpc.functions.async_execution
-    def update_and_fetch_model(
+    def update_and_fetch_model_async(
         ps_rref,
         grads,
         worker_name,
@@ -107,7 +107,7 @@ class ParameterServer(object):
 
 
 #################################### WORKER ####################################
-class Worker(object):
+class Worker_async(object):
     def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
@@ -129,10 +129,10 @@ class Worker(object):
             leave=True,
         )
 
-    def get_next_batch(self):
+    def get_next_batch_async(self):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
-            current_lr = self.ps_rref.rpc_sync().get_current_lr()
+            current_lr = self.ps_rref.rpc_sync().get_current_lr_async()
             self.progress_bar.set_postfix(
                 epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}"
             )
@@ -141,17 +141,17 @@ class Worker(object):
         self.progress_bar.clear()
         self.progress_bar.close()
 
-    def train(self):
-        worker_model = self.ps_rref.rpc_sync().get_model()
+    def train_async(self):
+        worker_model = self.ps_rref.rpc_sync().get_model_async()
 
-        for inputs, labels in self.get_next_batch():
+        for inputs, labels in self.get_next_batch_async():
             loss = self.loss_func(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
             # in asynchronous we send the parameters to the server asynchronously and then we update the worker model synchronously
             rpc.rpc_async(
                 self.ps_rref.owner(),
-                ParameterServer.update_and_fetch_model,
+                ParameterServer_async.update_and_fetch_model_async,
                 args=(
                     self.ps_rref,
                     [param.grad for param in worker_model.parameters()],
@@ -163,7 +163,7 @@ class Worker(object):
                     loss.detach(),
                 ),
             )
-            worker_model = self.ps_rref.rpc_sync().get_model()
+            worker_model = self.ps_rref.rpc_sync().get_model_async()
 
             self.progress_bar.update(1)
 
@@ -178,9 +178,9 @@ class Worker(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker(ps_rref, logger, train_loader, epochs, worker_accuracy):
-    worker = Worker(ps_rref, logger, train_loader, epochs, worker_accuracy)
-    worker.train()
+def run_worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy):
+    worker = Worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy)
+    worker.train_async()
 
 
 def run_parameter_server_async(
@@ -219,7 +219,7 @@ def run_parameter_server_async(
         train_loaders = train_loaders[0]
 
     ps_rref = rpc.RRef(
-        ParameterServer(
+        ParameterServer_async(
             len(workers),
             logger,
             dataset_name,
@@ -242,7 +242,7 @@ def run_parameter_server_async(
             futs.append(
                 rpc.rpc_async(
                     worker,
-                    run_worker,
+                    run_worker_async,
                     args=(ps_rref, logger, train_loaders, epochs, worker_accuracy),
                 )
             )
@@ -253,7 +253,7 @@ def run_parameter_server_async(
             futs.append(
                 rpc.rpc_async(
                     worker,
-                    run_worker,
+                    run_worker_async,
                     args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
                 )
             )

@@ -13,8 +13,6 @@ import threading
 import torch.multiprocessing as mp
 import torch.distributed.rpc as rpc
 
-from dnn_sync_train import run_parameter_server_sync
-from dnn_async_train import run_parameter_server_async
 
 DEFAULT_DATASET = "mnist"
 DEFAULT_WORLD_SIZE = 4
@@ -518,7 +516,7 @@ def read_parser(parser, mode=None):
 
 
 #################################### Start and Run ####################################
-def start(args, mode):
+def start(args, mode, run_parameter):
     if mode == "sync":
         log_name = "log_sync.log"
     elif mode == "async":
@@ -553,6 +551,7 @@ def start(args, mode):
                 args.saves_per_epoch,
                 args.alr,
                 args.lrs,
+                run_parameter,
             ),
             nprocs=args.world_size,
             join=True,
@@ -582,6 +581,7 @@ def run(
     saves_per_epoch,
     use_alr,
     lrs,
+    run_parameter,
 ):
     logger = setup_logger(log_queue)
     rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
@@ -602,7 +602,7 @@ def run(
             rpc_backend_options=rpc_backend_options,
         )
         if mode == "sync":
-            run_parameter_server_sync(
+            run_parameter(
                 [f"Worker_{r}" for r in range(1, world_size)],
                 logger,
                 dataset_name,
@@ -622,7 +622,7 @@ def run(
                 lrs,
             )
         elif mode == "async":
-            run_parameter_server_async(
+            run_parameter(
                 [f"Worker_{r}" for r in range(1, world_size)],
                 logger,
                 dataset_name,
