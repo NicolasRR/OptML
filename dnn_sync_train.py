@@ -286,6 +286,7 @@ def run_parameter_server_sync(
                 epochs,
                 lrs,
                 saves_per_epoch,
+                val,
                 train_loader,
                 val_loader,
             )
@@ -305,6 +306,7 @@ def run_parameter_server_sync(
             epochs,
             lrs,
             saves_per_epoch,
+            val,
         )
     )
     futs = []
