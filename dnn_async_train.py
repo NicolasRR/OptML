@@ -16,6 +16,8 @@ from common import (
     compute_weights_l2_norm,
     read_parser,
     start,
+    long_random_delay,
+    random_delay,
     LOSS_FUNC,
 )
 
@@ -108,7 +110,7 @@ class ParameterServer_async(object):
 
 #################################### WORKER ####################################
 class Worker_async(object):
-    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
+    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_func = LOSS_FUNC
@@ -118,6 +120,8 @@ class Worker_async(object):
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
         self.worker_accuracy = worker_accuracy
+        self.delay = delay
+        self.slow_worker_1 = slow_worker_1
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
         )
@@ -148,6 +152,12 @@ class Worker_async(object):
             loss = self.loss_func(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
+
+            if self.worker_name == "Worker_1" and self.slow_worker_1:
+                long_random_delay()
+            elif self.delay:
+                random_delay()
+
             # in asynchronous we send the parameters to the server asynchronously and then we update the worker model synchronously
             rpc.rpc_async(
                 self.ps_rref.owner(),
@@ -178,8 +188,8 @@ class Worker_async(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy):
-    worker = Worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy)
+def run_worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
+    worker = Worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1)
     worker.train_async()
 
 
@@ -202,6 +212,8 @@ def run_parameter_server_async(
     use_alr,
     saves_per_epoch,
     lrs,
+    delay,
+    slow_worker_1,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
@@ -243,7 +255,7 @@ def run_parameter_server_async(
                 rpc.rpc_async(
                     worker,
                     run_worker_async,
-                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy, delay, slow_worker_1),
                 )
             )
 
@@ -254,7 +266,7 @@ def run_parameter_server_async(
                 rpc.rpc_async(
                     worker,
                     run_worker_async,
-                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy, delay, slow_worker_1),
                 )
             )
 
@@ -304,4 +316,4 @@ if __name__ == "__main__":
     )
     args = read_parser(parser, "async")
 
-    start(args, "async")
+    start(args, "async", run_parameter_server_async)

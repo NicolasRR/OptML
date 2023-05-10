@@ -16,6 +16,8 @@ from common import (
     compute_weights_l2_norm,
     read_parser,
     start,
+    long_random_delay,
+    random_delay,
     LOSS_FUNC,
 )
 
@@ -125,7 +127,7 @@ class ParameterServer_sync(object):
 
 #################################### WORKER ####################################
 class Worker_sync(object):
-    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy):
+    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_func = LOSS_FUNC
@@ -135,6 +137,8 @@ class Worker_sync(object):
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
         self.worker_accuracy = worker_accuracy
+        self.delay = delay
+        self.slow_worker_1 = slow_worker_1
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
         )
@@ -168,6 +172,11 @@ class Worker_sync(object):
             loss = self.loss_func(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
+            
+            if self.worker_name == "Worker_1" and self.slow_worker_1:
+                long_random_delay()
+            elif self.delay:
+                random_delay()
 
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
@@ -180,7 +189,7 @@ class Worker_sync(object):
                     self.current_epoch,
                     len(self.train_loader),
                     self.epochs,
-                    loss.detach().sum(),
+                    loss.detach(),
                 ),
             )
             if self.worker_accuracy:
@@ -194,8 +203,8 @@ class Worker_sync(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy):
-    worker = Worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy)
+def run_worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
+    worker = Worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy,  delay, slow_worker_1)
     worker.train_sync()
 
 
@@ -217,6 +226,8 @@ def run_parameter_server_sync(
     use_alr,
     saves_per_epoch,
     lrs,
+    delay,
+    slow_worker_1,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
@@ -255,7 +266,7 @@ def run_parameter_server_sync(
                 rpc.rpc_async(
                     worker,
                     run_worker_sync,
-                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy, delay, slow_worker_1),
                 )
             )
 
@@ -266,7 +277,7 @@ def run_parameter_server_sync(
                 rpc.rpc_async(
                     worker,
                     run_worker_sync,
-                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy),
+                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy, delay, slow_worker_1),
                 )
             )
 
