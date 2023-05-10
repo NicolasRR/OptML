@@ -329,7 +329,6 @@ def main(model_path, batch_size, classification_report, training_time, pics, sub
     model = _get_model(model_path, LOSS_FUNC)
 
     model.load_state_dict(torch.load(model_path))
-    model.eval()
 
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):

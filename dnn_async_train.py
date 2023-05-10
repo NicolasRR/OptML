@@ -185,15 +185,11 @@ class Worker_async(object):
 
             self.progress_bar.update(1)
 
-            if self.worker_accuracy:
-                if (
-                    self.batch_count == len(self.train_loader)
-                    and self.current_epoch == self.epochs
-                ):
-                    final_train_accuracy, correct_predictions = compute_accuracy_loss(worker_model, self.train_loader, loss_func=LOSS_FUNC)
-                    print(
-                        f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{len(self.train_loader.dataset)})" # total could be wrong
-                    )
+        if self.worker_accuracy:
+            final_train_accuracy, correct_predictions = compute_accuracy_loss(worker_model, self.train_loader, loss_func=LOSS_FUNC)
+            print(
+                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{len(self.train_loader.dataset)})" 
+            )
 
 
 #################################### GLOBAL FUNCTIONS ####################################

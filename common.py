@@ -18,7 +18,7 @@ import time
 DEFAULT_DATASET = "mnist"
 DEFAULT_WORLD_SIZE = 4
 DEFAULT_TRAIN_SPLIT = 1
-DEFAULT_LR = 1e-3
+DEFAULT_LR = 1e-2
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
@@ -294,8 +294,15 @@ def check_args(args, mode):
     if args.lrs is not None:
         print(f"Using learning rate scheduler: {args.lrs}")
 
-    if mode is None or mode == "sync":
-        if args.val:
+    if mode == "sync":
+        if args.val and args.split_dataset:
+            print("Please do not use --args.val and --args.split_dataset together")
+            exit()
+        elif args.val and args.split_labels:
+            print("Please do not use --args.val and --args.split_labels together")
+            exit()
+
+        elif args.val:
             print("Using validation to analyze regularization.")
 
     return args
@@ -416,12 +423,13 @@ def read_parser(parser, mode=None):
             action="store_true",
             help="""Add a long random delay only to worker 1 at each mini-batch update.""",
         )
-        parser.add_argument(
-            "--split_dataset",
-            action="store_true",
-            help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
-            shared between workers).""",
-        )
+        if mode is not None:
+            parser.add_argument(
+                "--split_dataset",
+                action="store_true",
+                help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
+                shared between workers).""",
+            )
         if mode == "sync":
             parser.add_argument(
                 "--split_labels",
@@ -499,27 +507,32 @@ def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
 def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False):
     average_loss = 0
     correct_predictions = 0
+    total_predictions = 0
     targets = []
     predictions = []
-    with torch.no_grad():
-        for data, target in loader:
-            output = model(data)
-            average_loss += loss_func(output, target, reduction="sum").item()
-            pred = output.argmax(dim=1, keepdim=True)
-            correct_predictions += pred.eq(target.view_as(pred)).sum().item()
 
-            targets.extend(target.view(-1).tolist())
+    with torch.no_grad():
+        model.eval()
+        for images, labels in loader:
+            outputs = model(images)
+            average_loss += loss_func(outputs, labels).item() * images.size(0)
+            _, pred = torch.max(outputs, 1)
+            correct_predictions += torch.sum(pred == labels.data)
+
+            total_predictions += images.size(0)
+
+            targets.extend(labels.view(-1).tolist())
             predictions.extend(pred.view(-1).tolist())
 
-    average_loss /= len(loader.dataset)
-    average_accuracy = correct_predictions / len(loader.dataset)
+    average_loss /= total_predictions
+    average_accuracy = correct_predictions / total_predictions
 
     if test_mode:
-        return average_accuracy, correct_predictions, average_loss, targets, predictions
+        return average_accuracy, correct_predictions, total_predictions, average_loss, targets, predictions
     elif return_loss:
-        return average_accuracy, correct_predictions, average_loss
+        return average_accuracy, correct_predictions, total_predictions, average_loss
     else:
-        return average_accuracy, correct_predictions 
+        return average_accuracy, correct_predictions, total_predictions
 
 """
 def get_worker_accuracy(worker_model, worker_name, worker_train_loader):

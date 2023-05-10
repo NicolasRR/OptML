@@ -59,6 +59,7 @@ class ParameterServer_sync(object):
             self.save_idx = save_idx
         self.val = val
         if val:
+            print(f"setting lodaers {type(train_loader)}, {type(val_loader)}")
             self.train_loader = train_loader
             self.val_loader = val_loader
         for params in self.model.parameters():
@@ -123,10 +124,11 @@ class ParameterServer_sync(object):
                     if self.scheduler is not None:
                         self.scheduler.step()
                     if self.val:
-                        train_acc, train_corr, train_loss = compute_accuracy_loss(self.model, self.train_loader, LOSS_FUNC, return_loss=True)
-                        val_acc, val_corr, val_loss = compute_accuracy_loss(self.model, self.val_loader, LOSS_FUNC, return_loss=True)
+                        print(type(self.train_loader), type(self.val_loader))
+                        train_acc, train_corr, train_tot, train_loss = compute_accuracy_loss(self.model, self.train_loader, LOSS_FUNC, return_loss=True)
+                        val_acc, val_corr, val_tot, val_loss = compute_accuracy_loss(self.model, self.val_loader, LOSS_FUNC, return_loss=True)
                         self.logger.debug(
-                                f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{len(self.train_loader.dataset)}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{len(self.val_loader.dataset)}), epoch: {worker_epoch}/{total_epochs}"
+                                f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{train_tot}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{val_tot}), epoch: {worker_epoch}/{total_epochs}"
                         )
                     
                 fut.set_result(self.model)
@@ -214,15 +216,11 @@ class Worker_sync(object):
                     loss.detach(),
                 ),
             )
-            if self.worker_accuracy:
-                if (
-                    self.batch_count == len(self.train_loader)
-                    and self.current_epoch == self.epochs
-                ):
-                    final_train_accuracy, correct_predictions = compute_accuracy_loss(worker_model, self.train_loader, loss_func=LOSS_FUNC)
-                    print(
-                        f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{len(self.train_loader.dataset)})" # total could be wrong
-                    )
+        if self.worker_accuracy:
+            final_train_accuracy, correct_predictions, total_predictions = compute_accuracy_loss(worker_model, self.train_loader, loss_func=LOSS_FUNC)
+            print(
+                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})" 
+            )
 
 
 #################################### GLOBAL FUNCTIONS ####################################
@@ -272,8 +270,10 @@ def run_parameter_server_sync(
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
     if val:
+        print("val is true")
         train_loader = train_loaders[0]
         val_loader = train_loaders[1]
+        print(type(train_loader), type(val_loader))
         ps_rref = rpc.RRef(
             ParameterServer_sync(
                 len(workers),
@@ -287,28 +287,27 @@ def run_parameter_server_sync(
                 lrs,
                 saves_per_epoch,
                 val,
-                train_loader,
-                val_loader,
+                train_loader=train_loader,
+                val_loader=val_loader,
             )
         )
     else:
         train_loader = train_loaders
-
-    ps_rref = rpc.RRef(
-        ParameterServer_sync(
-            len(workers),
-            logger,
-            dataset_name,
-            learning_rate,
-            momentum,
-            use_alr,
-            len(train_loader),
-            epochs,
-            lrs,
-            saves_per_epoch,
-            val,
+        ps_rref = rpc.RRef(
+            ParameterServer_sync(
+                len(workers),
+                logger,
+                dataset_name,
+                learning_rate,
+                momentum,
+                use_alr,
+                len(train_loader),
+                epochs,
+                lrs,
+                saves_per_epoch,
+                val,
+            )
         )
-    )
     futs = []
 
     if not split_dataset and not split_labels:  # workers sharing samples
@@ -355,9 +354,9 @@ def run_parameter_server_sync(
     print(f"Final train loss: {ps_rref.to_here().model_loss}")
 
     if model_accuracy:
-        final_train_accuracy, correct_predictions = compute_accuracy_loss(ps_rref.to_here().model, train_loader_full, LOSS_FUNC)
+        final_train_accuracy, correct_predictions, total_preidctions = compute_accuracy_loss(ps_rref.to_here().model, train_loader_full, LOSS_FUNC)
         print(
-            f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{len(train_loader_full.dataset)})"
+            f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
         )
 
     if save_model:
