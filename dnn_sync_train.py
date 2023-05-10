@@ -119,7 +119,8 @@ class ParameterServer_sync(object):
                             for w in self.model.parameters()
                         ]
                         self.weights_matrix.append(weights)
-                if worker_batch_count == total_batches_to_run:
+                print(total_batches_to_run, worker_batch_count)
+                if worker_batch_count == total_batches_to_run: # CHANGE WORKER BATCH COUNT IDX TO RELATIVE IDX
                     if self.scheduler is not None:
                         self.scheduler.step()
                     if self.val:
