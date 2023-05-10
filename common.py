@@ -30,7 +30,7 @@ DELAY_MAX = 0.02  # 20 ms
 DEFAULT_VAL_SPLIT = 0.1
 
 #################################### Start and Run ####################################
-def start(args, mode, run_parameter):
+def start(args, mode, run_parameter_server):
     if mode == "sync":
         log_name = "log_sync.log"
     elif mode == "async":
@@ -50,9 +50,7 @@ def start(args, mode, run_parameter):
                 args.dataset,
                 args.split_dataset,
                 args.split_labels,
-                args.split_labels_unscaled
-                if hasattr(args, "split_labels_unscaled")
-                else None,
+                args.split_labels_unscaled if hasattr(args, "split_labels_unscaled") else None,
                 args.world_size,
                 args.lr,
                 args.momentum,
@@ -68,8 +66,8 @@ def start(args, mode, run_parameter):
                 args.lrs,
                 args.delay,
                 args.slow_worker_1,
-                args.val,
-                run_parameter,
+                args.val if hasattr(args, "val") else None,
+                run_parameter_server,
             ),
             nprocs=args.world_size,
             join=True,
@@ -102,7 +100,7 @@ def run(
     delay,
     slow_woker_1,
     val,
-    run_parameter,
+    run_parameter_server,
 ):
     logger = setup_logger(log_queue)
     rpc_backend_options = rpc.TensorPipeRpcBackendOptions(
@@ -123,7 +121,7 @@ def run(
             rpc_backend_options=rpc_backend_options,
         )
         if mode == "sync":
-            run_parameter(
+            run_parameter_server(
                 [f"Worker_{r}" for r in range(1, world_size)],
                 logger,
                 dataset_name,
@@ -146,7 +144,7 @@ def run(
                 val,
             )
         elif mode == "async":
-            run_parameter(
+            run_parameter_server(
                 [f"Worker_{r}" for r in range(1, world_size)],
                 logger,
                 dataset_name,
@@ -167,7 +165,6 @@ def run(
                 lrs,
                 delay,
                 slow_woker_1,
-                val,
             )
     rpc.shutdown()
 
@@ -297,8 +294,9 @@ def check_args(args, mode):
     if args.lrs is not None:
         print(f"Using learning rate scheduler: {args.lrs}")
 
-    if args.val:
-        print("Using validation to analyze regularization.")
+    if mode is None or mode == "sync":
+        if args.val:
+            print("Using validation to analyze regularization.")
 
     return args
 
@@ -374,11 +372,12 @@ def read_parser(parser, mode=None):
         default=None,
         help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
     )
-    parser.add_argument(
-        "--val",
-        action="store_true",
-        help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch.""",
-    )
+    if mode is None or mode == "sync":
+        parser.add_argument(
+            "--val",
+            action="store_true",
+            help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch.""",
+        )
 
     if mode is not None:
         parser.add_argument(

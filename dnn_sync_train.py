@@ -35,6 +35,8 @@ class ParameterServer_sync(object):
         epochs,
         lrs,
         saves_per_epoch,
+        train_loader= None,
+        val_loader=None
     ):
         self.model = _get_model(dataset_name, LOSS_FUNC)
         self.logger = logger
@@ -54,6 +56,10 @@ class ParameterServer_sync(object):
             if len(unique_idx) < saves_per_epoch:
                 save_idx = np.array(sorted(unique_idx))
             self.save_idx = save_idx
+        if train_loader is not None:
+            self.train_loader = train_loader
+        if val_loader is not None:
+            self.val_loader = val_loader
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
@@ -115,6 +121,13 @@ class ParameterServer_sync(object):
                 if worker_batch_count == total_batches_to_run:
                     if self.scheduler is not None:
                         self.scheduler.step()
+                    if self.train_loader is not None and self.val_loader is not None:
+                        train_acc, train_corr, train_loss = compute_accuracy_loss(self.model, self.train_loader, LOSS_FUNC, return_loss=True)
+                        val_acc, val_corr, val_loss = compute_accuracy_loss(self.model, self.val_loader, LOSS_FUNC, return_loss=True)
+                        self.logger.debug(
+                                f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{len(self.train_loader.dataset)}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{len(self.val_loader.dataset)}), epoch: {worker_epoch}/{total_epochs}"
+                        )
+                    
                 fut.set_result(self.model)
                 self.logger.debug(
                     f"PS updated model, global loss is {self.model_loss}, weights norm is {compute_weights_l2_norm(self.model)}"
@@ -241,6 +254,7 @@ def run_parameter_server_sync(
     lrs,
     delay,
     slow_worker_1,
+    val,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
@@ -250,11 +264,17 @@ def run_parameter_server_sync(
         len(workers),
         split_dataset,
         split_labels,
+        val,
     )
     train_loader_full = None
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
+    if val:
+        train_loader = train_loaders[0]
+        val_loader = train_loaders[1]
+    else:
+        train_loader = train_loaders
 
     ps_rref = rpc.RRef(
         ParameterServer_sync(
@@ -264,10 +284,12 @@ def run_parameter_server_sync(
             learning_rate,
             momentum,
             use_alr,
-            len(train_loaders),
+            len(train_loader),
             epochs,
             lrs,
             saves_per_epoch,
+            train_loader,
+            val_loader,
         )
     )
     futs = []
@@ -282,7 +304,7 @@ def run_parameter_server_sync(
                     args=(
                         ps_rref,
                         logger,
-                        train_loaders,
+                        train_loader,
                         epochs,
                         worker_accuracy,
                         delay,
@@ -301,7 +323,7 @@ def run_parameter_server_sync(
                     args=(
                         ps_rref,
                         logger,
-                        train_loaders[idx],
+                        train_loader[idx],
                         epochs,
                         worker_accuracy,
                         delay,
