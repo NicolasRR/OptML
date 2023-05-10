@@ -59,7 +59,6 @@ class ParameterServer_sync(object):
             self.save_idx = save_idx
         self.val = val
         if val:
-            print(f"setting lodaers {type(train_loader)}, {type(val_loader)}")
             self.train_loader = train_loader
             self.val_loader = val_loader
         for params in self.model.parameters():
@@ -124,7 +123,6 @@ class ParameterServer_sync(object):
                     if self.scheduler is not None:
                         self.scheduler.step()
                     if self.val:
-                        print(type(self.train_loader), type(self.val_loader))
                         train_acc, train_corr, train_tot, train_loss = compute_accuracy_loss(self.model, self.train_loader, LOSS_FUNC, return_loss=True)
                         val_acc, val_corr, val_tot, val_loss = compute_accuracy_loss(self.model, self.val_loader, LOSS_FUNC, return_loss=True)
                         self.logger.debug(
@@ -263,17 +261,15 @@ def run_parameter_server_sync(
         len(workers),
         split_dataset,
         split_labels,
-        val,
+        validation=val,
     )
     train_loader_full = None
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
     if val:
-        print("val is true")
         train_loader = train_loaders[0]
         val_loader = train_loaders[1]
-        print(type(train_loader), type(val_loader))
         ps_rref = rpc.RRef(
             ParameterServer_sync(
                 len(workers),
