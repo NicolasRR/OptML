@@ -273,6 +273,22 @@ def run_parameter_server_sync(
     if val:
         train_loader = train_loaders[0]
         val_loader = train_loaders[1]
+        ps_rref = rpc.RRef(
+            ParameterServer_sync(
+                len(workers),
+                logger,
+                dataset_name,
+                learning_rate,
+                momentum,
+                use_alr,
+                len(train_loader),
+                epochs,
+                lrs,
+                saves_per_epoch,
+                train_loader,
+                val_loader,
+            )
+        )
     else:
         train_loader = train_loaders
 
@@ -288,8 +304,6 @@ def run_parameter_server_sync(
             epochs,
             lrs,
             saves_per_epoch,
-            train_loader,
-            val_loader,
         )
     )
     futs = []
