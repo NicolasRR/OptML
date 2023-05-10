@@ -35,8 +35,9 @@ class ParameterServer_sync(object):
         epochs,
         lrs,
         saves_per_epoch,
+        val,
         train_loader= None,
-        val_loader=None
+        val_loader=None,
     ):
         self.model = _get_model(dataset_name, LOSS_FUNC)
         self.logger = logger
@@ -56,9 +57,9 @@ class ParameterServer_sync(object):
             if len(unique_idx) < saves_per_epoch:
                 save_idx = np.array(sorted(unique_idx))
             self.save_idx = save_idx
-        if train_loader is not None:
+        self.val = val
+        if val:
             self.train_loader = train_loader
-        if val_loader is not None:
             self.val_loader = val_loader
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
@@ -121,7 +122,7 @@ class ParameterServer_sync(object):
                 if worker_batch_count == total_batches_to_run:
                     if self.scheduler is not None:
                         self.scheduler.step()
-                    if self.train_loader is not None and self.val_loader is not None:
+                    if self.val:
                         train_acc, train_corr, train_loss = compute_accuracy_loss(self.model, self.train_loader, LOSS_FUNC, return_loss=True)
                         val_acc, val_corr, val_loss = compute_accuracy_loss(self.model, self.val_loader, LOSS_FUNC, return_loss=True)
                         self.logger.debug(
