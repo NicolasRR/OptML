@@ -26,8 +26,8 @@ LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer 
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DELAY_MIN = 0.01  # 10 ms
-DELAY_MAX = 0.05  # 50 ms
-
+DELAY_MAX = 0.02  # 20 ms
+DEFAULT_VAL_SPLIT = 0.1
 
 #################################### Start and Run ####################################
 def start(args, mode, run_parameter):
@@ -35,6 +35,7 @@ def start(args, mode, run_parameter):
         log_name = "log_sync.log"
     elif mode == "async":
         log_name = "log_async.log"
+    
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(
@@ -67,6 +68,7 @@ def start(args, mode, run_parameter):
                 args.lrs,
                 args.delay,
                 args.slow_worker_1,
+                args.val,
                 run_parameter,
             ),
             nprocs=args.world_size,
@@ -99,6 +101,7 @@ def run(
     lrs,
     delay,
     slow_woker_1,
+    val,
     run_parameter,
 ):
     logger = setup_logger(log_queue)
@@ -140,6 +143,7 @@ def run(
                 lrs,
                 delay,
                 slow_woker_1,
+                val,
             )
         elif mode == "async":
             run_parameter(
@@ -158,8 +162,12 @@ def run(
                 model_accuracy,
                 save_model,
                 subfolder,
+                use_alr,
+                saves_per_epoch,
+                lrs,
                 delay,
                 slow_woker_1,
+                val,
             )
     rpc.shutdown()
 
@@ -289,72 +297,13 @@ def check_args(args, mode):
     if args.lrs is not None:
         print(f"Using learning rate scheduler: {args.lrs}")
 
+    if args.val:
+        print("Using validation to analyze regularization.")
+
     return args
 
 
 def read_parser(parser, mode=None):
-    if mode is not None:
-        parser.add_argument(
-            "--master_port",
-            type=str,
-            default="29500",
-            help="""Port that master is listening on, will default to 29500 if not
-            provided. Master must be able to accept network traffic on the host and port.""",
-        )
-        parser.add_argument(
-            "--master_addr",
-            type=str,
-            default="localhost",
-            help="""Address of master, will default to localhost if not provided.
-            Master must be able to accept network traffic on the address + port.""",
-        )
-        parser.add_argument(
-            "--world_size",
-            type=int,
-            default=None,
-            help="""Total number of participating processes. Should be the sum of
-            master node and all training nodes [2,+inf].""",
-        )
-        parser.add_argument(
-            "--split_dataset",
-            action="store_true",
-            help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
-            shared between workers).""",
-        )
-        parser.add_argument(
-            "--delay",
-            action="store_true",
-            help="""Add a random delay to all workers at each mini-batch update.""",
-        )
-        parser.add_argument(
-            "--slow_worker_1",
-            action="store_true",
-            help="""Add a long random delay only to worker 1 at each mini-batch update.""",
-        )
-        if mode == "sync":
-            parser.add_argument(
-                "--split_labels",
-                action="store_true",
-                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
-                Workers will not share samples and the labels are randomly assigned.
-                Requires --batch_size 1, don't use with --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
-            )
-        elif mode == "async":
-            parser.add_argument(
-                "--split_labels",
-                action="store_true",
-                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
-                Workers will not share samples and the labels are randomly assigned.
-                Requires --batch_size 1, don't use with --split_dataset or --split_labels_unscaled. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
-            )
-            parser.add_argument(
-                "--split_labels_unscaled",
-                action="store_true",
-                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
-                Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has.
-                Requires --batch_size 1, don't use --split_dataset or split_labels. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
-            )
-
     parser.add_argument(
         "--dataset",
         type=str,
@@ -425,6 +374,78 @@ def read_parser(parser, mode=None):
         default=None,
         help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
     )
+    parser.add_argument(
+        "--val",
+        action="store_true",
+        help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch.""",
+    )
+
+    if mode is not None:
+        parser.add_argument(
+            "--master_port",
+            type=str,
+            default="29500",
+            help="""Port that master is listening on, will default to 29500 if not
+            provided. Master must be able to accept network traffic on the host and port.""",
+        )
+        parser.add_argument(
+            "--master_addr",
+            type=str,
+            default="localhost",
+            help="""Address of master, will default to localhost if not provided.
+            Master must be able to accept network traffic on the address + port.""",
+        )
+        parser.add_argument(
+            "--world_size",
+            type=int,
+            default=None,
+            help="""Total number of participating processes. Should be the sum of
+            master node and all training nodes [2,+inf].""",
+        )
+        parser.add_argument(
+            "--worker_accuracy",
+            action="store_true",
+            help="""If set, will compute the train accuracy of each worker after training (useful when --split_dataset).""",
+        )
+        parser.add_argument(
+            "--delay",
+            action="store_true",
+            help="""Add a random delay to all workers at each mini-batch update.""",
+        )
+        parser.add_argument(
+            "--slow_worker_1",
+            action="store_true",
+            help="""Add a long random delay only to worker 1 at each mini-batch update.""",
+        )
+        parser.add_argument(
+            "--split_dataset",
+            action="store_true",
+            help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
+            shared between workers).""",
+        )
+        if mode == "sync":
+            parser.add_argument(
+                "--split_labels",
+                action="store_true",
+                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+                Workers will not share samples and the labels are randomly assigned.
+                Requires --batch_size 1, don't use with --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+            )
+        elif mode == "async":
+            parser.add_argument(
+                "--split_labels",
+                action="store_true",
+                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+                Workers will not share samples and the labels are randomly assigned.
+                Requires --batch_size 1, don't use with --split_dataset or --split_labels_unscaled. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+            )
+            parser.add_argument(
+                "--split_labels_unscaled",
+                action="store_true",
+                help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
+                Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has.
+                Requires --batch_size 1, don't use --split_dataset or split_labels. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+            )
 
     args = parser.parse_args()
     if mode is not None:
@@ -476,22 +497,32 @@ def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
             return None
 
 
-def get_model_accuracy(model, train_loader_full):
+def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False):
+    average_loss = 0
     correct_predictions = 0
-    total_predictions = 0
-    # memory efficient way (for large datasets)
-    with torch.no_grad():  # No need to track gradients for evaluation
-        for _, (data, target) in enumerate(train_loader_full):
-            logits = model(data)
-            predicted_classes = torch.argmax(logits, dim=1)
-            correct_predictions += (predicted_classes == target).sum().item()
-            total_predictions += target.size(0)
-    final_train_accuracy = correct_predictions / total_predictions
-    print(
-        f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
-    )
+    targets = []
+    predictions = []
+    with torch.no_grad():
+        for data, target in loader:
+            output = model(data)
+            average_loss += loss_func(output, target, reduction="sum").item()
+            pred = output.argmax(dim=1, keepdim=True)
+            correct_predictions += pred.eq(target.view_as(pred)).sum().item()
 
+            targets.extend(target.view(-1).tolist())
+            predictions.extend(pred.view(-1).tolist())
 
+    average_loss /= len(loader.dataset)
+    average_accuracy = correct_predictions / len(loader.dataset)
+
+    if test_mode:
+        return average_accuracy, correct_predictions, average_loss, targets, predictions
+    elif return_loss:
+        return average_accuracy, correct_predictions, average_loss
+    else:
+        return average_accuracy, correct_predictions 
+
+"""
 def get_worker_accuracy(worker_model, worker_name, worker_train_loader):
     correct_predictions = 0
     total_predictions = 0
@@ -504,7 +535,7 @@ def get_worker_accuracy(worker_model, worker_name, worker_train_loader):
         final_train_accuracy = correct_predictions / total_predictions
     print(
         f"Accuracy of {worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
-    )
+    )"""
 
 
 def _save_model(
@@ -577,8 +608,8 @@ def compute_weights_l2_norm(model):
     return total_norm
 
 
-def long_random_delay():  # 100 ms to 200 ms delay
-    time.sleep(np.random.uniform(DELAY_MAX * 2, DELAY_MAX * 4))
+def long_random_delay(): 
+    time.sleep(np.random.uniform((DELAY_MIN+DELAY_MAX)/2.0, DELAY_MAX * 2))
 
 
 def random_delay():  # 10 to 50 ms delay
@@ -868,6 +899,32 @@ def create_default_trainloaders(
     else:
         return train_loader
 
+def create_validation_trainloaders(dataset, subsample_train_indices, batch_size, model_accuracy, val_split=DEFAULT_VAL_SPLIT):
+    train_len = int(len(subsample_train_indices) * (1 - val_split))
+    val_len = len(subsample_train_indices) - train_len
+
+    train_indices, val_indices = torch.utils.data.random_split(subsample_train_indices, [train_len, val_len])
+
+    train_loader = DataLoader(
+        dataset,
+        batch_size=batch_size,
+        sampler=SubsetRandomSampler(train_indices),
+    )
+
+    val_loader = DataLoader(
+        dataset,
+        batch_size=batch_size,
+        sampler=SubsetRandomSampler(val_indices),
+    )
+    if model_accuracy:
+        train_loader_full = DataLoader(
+            dataset,
+            batch_size=batch_size,
+            sampler=SubsetRandomSampler(subsample_train_indices),
+        )
+        return ((train_loader, val_loader), train_loader_full)
+    else:
+        return (train_loader, val_loader)
 
 def create_split_dataset_trainloaders(
     nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
@@ -993,9 +1050,16 @@ def get_trainloader(
     split_labels,
     split_labels_unscaled,
     model_accuracy,
+    validation,
 ):
-    if not split_dataset and not split_labels and not split_labels_unscaled:
+    if not split_dataset and not split_labels and not split_labels_unscaled and not validation:
         train_loaders = create_default_trainloaders(
+            dataset, subsample_train_indices, batch_size, model_accuracy
+        )
+        return train_loaders
+
+    elif validation:
+        train_loaders = create_validation_trainloaders(
             dataset, subsample_train_indices, batch_size, model_accuracy
         )
         return train_loaders
@@ -1027,6 +1091,7 @@ def mnist_trainloaders(
     train_split,
     batch_size,
     model_accuracy,
+    validation,
 ):
     mnist_train = torchvision.datasets.MNIST(
         "data/",
@@ -1060,6 +1125,7 @@ def mnist_trainloaders(
         split_labels,
         split_labels_unscaled,
         model_accuracy,
+        validation,
     )
     return (train_loaders, batch_size)
 
@@ -1072,6 +1138,7 @@ def fashion_mnist_trainloaders(
     train_split,
     batch_size,
     model_accuracy,
+    validation,
 ):
     fashion_mnist_train = torchvision.datasets.FashionMNIST(
         "data/",
@@ -1107,6 +1174,7 @@ def fashion_mnist_trainloaders(
         split_labels,
         split_labels_unscaled,
         model_accuracy,
+        validation,
     )
     return (train_loaders, batch_size)
 
@@ -1119,6 +1187,7 @@ def cifar10_trainloaders(
     train_split,
     batch_size,
     model_accuracy,
+    validation,
 ):
     cifar10_train = torchvision.datasets.CIFAR10(
         "data/",
@@ -1152,6 +1221,7 @@ def cifar10_trainloaders(
         split_labels,
         split_labels_unscaled,
         model_accuracy,
+        validation,
     )
     return (train_loaders, batch_size)
 
@@ -1164,6 +1234,7 @@ def cifar100_trainloaders(
     train_split,
     batch_size,
     model_accuracy,
+    validation,
 ):
     cifar100_train = torchvision.datasets.CIFAR100(
         "data/",
@@ -1197,6 +1268,7 @@ def cifar100_trainloaders(
         split_labels,
         split_labels_unscaled,
         model_accuracy,
+        validation,
     )
     return (train_loaders, batch_size)
 
@@ -1211,6 +1283,7 @@ def create_worker_trainloaders(
     split_dataset=False,
     split_labels=False,
     split_labels_unscaled=False,
+    validation=False,
 ):
     if dataset_name == "mnist":
         return mnist_trainloaders(
@@ -1221,6 +1294,7 @@ def create_worker_trainloaders(
             train_split,
             batch_size,
             model_accuracy,
+            validation,
         )
     elif dataset_name == "fashion_mnist":
         return fashion_mnist_trainloaders(
@@ -1231,6 +1305,7 @@ def create_worker_trainloaders(
             train_split,
             batch_size,
             model_accuracy,
+            validation,
         )
     elif dataset_name == "cifar10":
         return cifar10_trainloaders(
@@ -1241,6 +1316,7 @@ def create_worker_trainloaders(
             train_split,
             batch_size,
             model_accuracy,
+            validation,
         )
     elif dataset_name == "cifar100":
         return cifar100_trainloaders(
@@ -1251,6 +1327,7 @@ def create_worker_trainloaders(
             train_split,
             batch_size,
             model_accuracy,
+            validation,
         )
     else:
         print("Error Unkown dataset")

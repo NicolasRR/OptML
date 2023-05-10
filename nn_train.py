@@ -7,7 +7,7 @@ from common import (
     _get_model,
     get_optimizer,
     get_scheduler,
-    get_model_accuracy,
+    compute_accuracy_loss,
     _save_model,
     save_weights,
     compute_weights_l2_norm,
@@ -29,6 +29,7 @@ def run(
     saves_per_epoch,
     use_alr,
     lrs,
+    val,
 ):
     loss_func = LOSS_FUNC
 
@@ -40,20 +41,26 @@ def run(
         train_split,
         batch_size,
         model_accuracy,
+        val,
     )
     train_loader_full = None
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
+    if val:
+        train_loader = train_loaders[0]
+        val_loader = train_loaders[1]
+    else:
+        train_loader = train_loaders
 
-    scheduler = get_scheduler(lrs, optimizer, len(train_loaders), epochs)
+    scheduler = get_scheduler(lrs, optimizer, len(train_loader), epochs)
 
     logger = setup_simple_logger(subfolder)
     logger.info("Start non distributed SGD training")
 
     if saves_per_epoch is not None:
         weights_matrix = []
-        save_idx = np.linspace(0, len(train_loaders) - 1, saves_per_epoch, dtype=int)
+        save_idx = np.linspace(0, len(train_loader) - 1, saves_per_epoch, dtype=int)
         unique_idx = set(save_idx)
         if len(unique_idx) < saves_per_epoch:
             save_idx = np.array(sorted(unique_idx))
@@ -62,20 +69,20 @@ def run(
 
     for epoch in range(epochs):
         progress_bar = tqdm(
-            total=len(train_loaders),
+            total=len(train_loader),
             unit="batch",
         )
         progress_bar.set_postfix(
             epoch=f"{epoch+1}/{epochs}", lr=f"{optimizer.param_groups[0]['lr']:.5f}"
         )
-        for batch_idx, (data, target) in enumerate(train_loaders):
+        for batch_idx, (data, target) in enumerate(train_loader):
             optimizer.zero_grad()
             output = model(data)
             loss = loss_func(output, target)
             loss.backward()
             optimizer.step()
             logger.debug(
-                f"Loss: {loss.item()}, weight norm: {compute_weights_l2_norm(model)}, batch: {batch_idx+1}/{len(train_loaders)} ({batch_idx+1 + len(train_loaders)*epoch}/{len(train_loaders)*epochs}), epoch: {epoch+1}/{epochs}"
+                f"Loss: {loss.item()}, weight norm: {compute_weights_l2_norm(model)}, batch: {batch_idx+1}/{len(train_loader)} ({batch_idx+1 + len(train_loader)*epoch}/{len(train_loader)*epochs}), epoch: {epoch+1}/{epochs}"
             )
             if saves_per_epoch is not None:
                 if batch_idx in save_idx:
@@ -86,6 +93,14 @@ def run(
 
             progress_bar.update(1)
         progress_bar.close()
+        
+        if val:
+            train_acc, train_corr, train_loss = compute_accuracy_loss(model, train_loader, LOSS_FUNC, return_loss=True)
+            val_acc, val_corr, val_loss = compute_accuracy_loss(model, val_loader, LOSS_FUNC, return_loss=True)
+            logger.debug(
+                    f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{len(train_loader.dataset)}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{len(val_loader.dataset)}), epoch: {epoch+1}/{epochs}"
+            )
+
         if scheduler is not None:
             scheduler.step()
 
@@ -97,7 +112,10 @@ def run(
     print(f"Final train loss: {last_loss}")
 
     if model_accuracy:
-        get_model_accuracy(model, train_loader_full)
+        final_train_accuracy, correct_predictions = compute_accuracy_loss(model, train_loader_full, LOSS_FUNC)
+        print(
+            f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{len(train_loader_full.dataset)})"
+        )
 
     if save_model:
         _save_model(
@@ -145,4 +163,5 @@ if __name__ == "__main__":
         args.saves_per_epoch,
         args.alr,
         args.lrs,
+        args.val,
     )

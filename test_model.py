@@ -1,6 +1,5 @@
 import argparse
 import torch
-import torch.nn.functional as F
 from sklearn.metrics import classification_report as CR
 from datetime import datetime, timedelta
 from matplotlib.ticker import FuncFormatter
@@ -8,11 +7,11 @@ import matplotlib.pyplot as plt
 import contextlib
 import os
 from common import (
-    CNN_MNIST,
-    CNN_CIFAR10,
-    CNN_CIFAR100,
+    _get_model,
     create_testloader,
     create_trainloader,
+    compute_accuracy_loss,
+    LOSS_FUNC
 )
 
 DEFAULT_BATCH_SIZE = 500
@@ -27,27 +26,12 @@ def performance(model_path, model, batch_size, classification_report, test=True)
         else create_trainloader(model_path, batch_size)
     )
 
-    test_loss = 0
-    correct = 0
-    targets = []
-    predictions = []
+    average_accuracy, correct_predictions, average_loss, targets, predictions = compute_accuracy_loss(model, loader, LOSS_FUNC, test_mode=True)
 
-    with torch.no_grad():
-        for data, target in loader:
-            output = model(data)
-            test_loss += F.nll_loss(output, target, reduction="sum").item()
-            pred = output.argmax(dim=1, keepdim=True)
-            correct += pred.eq(target.view_as(pred)).sum().item()
-
-            targets.extend(target.view(-1).tolist())
-            predictions.extend(pred.view(-1).tolist())
-
-    test_loss /= len(loader.dataset)
-    accuracy = correct / len(loader.dataset)
     print(
-        f"Average {mode} accuracy: {accuracy*100:.2f} % ({correct}/{len(loader.dataset)})"
+        f"Average {mode} accuracy: {average_accuracy*100:.2f} % ({correct_predictions}/{len(loader.dataset)})"
     )
-    print(f"Average {mode} loss: {test_loss:.4f}")
+    print(f"Average {mode} loss: {average_loss:.4f}")
 
     if classification_report:
         report = CR(targets, predictions, zero_division=0)
@@ -342,19 +326,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
 
 def main(model_path, batch_size, classification_report, training_time, pics, subfolder):
     # Load the saved model
-    model = None
-    if "mnist" in model_path:
-        # print("Loading MNIST CNN\n")
-        model = CNN_MNIST()
-    elif "cifar100" in model_path:
-        # print("Loading CIFAR100 CNN\n")
-        model = CNN_CIFAR100()
-    elif "cifar10" in model_path:
-        # print("Loading CIFAR10 CNN\n")
-        model = CNN_CIFAR10()
-    else:
-        # print("Dataset not supported\n")
-        exit()
+    model = _get_model(model_path, LOSS_FUNC)
 
     model.load_state_dict(torch.load(model_path))
     model.eval()

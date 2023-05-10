@@ -9,8 +9,7 @@ from common import (
     _get_model,
     get_optimizer,
     get_scheduler,
-    get_model_accuracy,
-    get_worker_accuracy,
+    compute_accuracy_loss,
     _save_model,
     save_weights,
     compute_weights_l2_norm,
@@ -191,8 +190,9 @@ class Worker_async(object):
                     self.batch_count == len(self.train_loader)
                     and self.current_epoch == self.epochs
                 ):
-                    get_worker_accuracy(
-                        worker_model, self.worker_name, self.train_loader
+                    final_train_accuracy, correct_predictions = compute_accuracy_loss(worker_model, self.train_loader, loss_func=LOSS_FUNC)
+                    print(
+                        f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{len(self.train_loader.dataset)})" # total could be wrong
                     )
 
 
@@ -305,7 +305,10 @@ def run_parameter_server_async(
     print(f"Final train loss: {ps_rref.to_here().loss}")
 
     if model_accuracy:
-        get_model_accuracy(ps_rref.to_here().model, train_loader_full)
+        final_train_accuracy, correct_predictions = compute_accuracy_loss(ps_rref.to_here().model, train_loader_full, LOSS_FUNC)
+        print(
+            f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{len(train_loader_full.dataset)})"
+        )
 
     if save_model:
         _save_model(
