@@ -127,7 +127,16 @@ class ParameterServer_sync(object):
 
 #################################### WORKER ####################################
 class Worker_sync(object):
-    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
+    def __init__(
+        self,
+        ps_rref,
+        logger,
+        train_loader,
+        epochs,
+        worker_accuracy,
+        delay,
+        slow_worker_1,
+    ):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_func = LOSS_FUNC
@@ -172,7 +181,7 @@ class Worker_sync(object):
             loss = self.loss_func(worker_model(inputs), labels)
             loss.backward()
             self.batch_count += 1
-            
+
             if self.worker_name == "Worker_1" and self.slow_worker_1:
                 long_random_delay()
             elif self.delay:
@@ -203,8 +212,12 @@ class Worker_sync(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
-    worker = Worker_sync(ps_rref, logger, train_loader, epochs, worker_accuracy,  delay, slow_worker_1)
+def run_worker_sync(
+    ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1
+):
+    worker = Worker_sync(
+        ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1
+    )
     worker.train_sync()
 
 
@@ -266,7 +279,15 @@ def run_parameter_server_sync(
                 rpc.rpc_async(
                     worker,
                     run_worker_sync,
-                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy, delay, slow_worker_1),
+                    args=(
+                        ps_rref,
+                        logger,
+                        train_loaders,
+                        epochs,
+                        worker_accuracy,
+                        delay,
+                        slow_worker_1,
+                    ),
                 )
             )
 
@@ -277,7 +298,15 @@ def run_parameter_server_sync(
                 rpc.rpc_async(
                     worker,
                     run_worker_sync,
-                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy, delay, slow_worker_1),
+                    args=(
+                        ps_rref,
+                        logger,
+                        train_loaders[idx],
+                        epochs,
+                        worker_accuracy,
+                        delay,
+                        slow_worker_1,
+                    ),
                 )
             )
 

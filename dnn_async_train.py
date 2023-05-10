@@ -110,7 +110,16 @@ class ParameterServer_async(object):
 
 #################################### WORKER ####################################
 class Worker_async(object):
-    def __init__(self, ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
+    def __init__(
+        self,
+        ps_rref,
+        logger,
+        train_loader,
+        epochs,
+        worker_accuracy,
+        delay,
+        slow_worker_1,
+    ):
         self.ps_rref = ps_rref
         self.train_loader = train_loader
         self.loss_func = LOSS_FUNC
@@ -188,8 +197,12 @@ class Worker_async(object):
 
 
 #################################### GLOBAL FUNCTIONS ####################################
-def run_worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1):
-    worker = Worker_async(ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1)
+def run_worker_async(
+    ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1
+):
+    worker = Worker_async(
+        ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1
+    )
     worker.train_async()
 
 
@@ -255,7 +268,15 @@ def run_parameter_server_async(
                 rpc.rpc_async(
                     worker,
                     run_worker_async,
-                    args=(ps_rref, logger, train_loaders, epochs, worker_accuracy, delay, slow_worker_1),
+                    args=(
+                        ps_rref,
+                        logger,
+                        train_loaders,
+                        epochs,
+                        worker_accuracy,
+                        delay,
+                        slow_worker_1,
+                    ),
                 )
             )
 
@@ -266,7 +287,15 @@ def run_parameter_server_async(
                 rpc.rpc_async(
                     worker,
                     run_worker_async,
-                    args=(ps_rref, logger, train_loaders[idx], epochs, worker_accuracy, delay, slow_worker_1),
+                    args=(
+                        ps_rref,
+                        logger,
+                        train_loaders[idx],
+                        epochs,
+                        worker_accuracy,
+                        delay,
+                        slow_worker_1,
+                    ),
                 )
             )
 

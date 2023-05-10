@@ -25,8 +25,8 @@ DEFAULT_SEED = 614310
 LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer if nll
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
-DELAY_MIN = 0.01 # 10 ms
-DELAY_MAX = 0.05 # 50 ms
+DELAY_MIN = 0.01  # 10 ms
+DELAY_MAX = 0.05  # 50 ms
 
 
 #################################### Start and Run ####################################
@@ -208,7 +208,6 @@ def check_args(args, mode):
 
             if args.slow_worker_1:
                 print("Slowing down worker 1 with strong delay")
-
 
         if args.dataset == "mnist":
             valid_world_sizes = {3, 6, 11}
@@ -578,11 +577,12 @@ def compute_weights_l2_norm(model):
     return total_norm
 
 
-def long_random_delay(): # 100 ms to 200 ms delay
+def long_random_delay():  # 100 ms to 200 ms delay
     time.sleep(np.random.uniform(DELAY_MAX * 2, DELAY_MAX * 4))
 
-def random_delay(): # 10 to 50 ms delay
-    time.sleep(np.random.uniform(DELAY_MIN, DELAY_MAX)) 
+
+def random_delay():  # 10 to 50 ms delay
+    time.sleep(np.random.uniform(DELAY_MIN, DELAY_MAX))
 
 
 #################################### NET ####################################
@@ -818,7 +818,6 @@ class CNN_CIFAR100(ResNet):
         x = torch.nn.functional.relu(self.fc1(x))
         x = self.fc2(x)
         return x"""
-
 
 
 #################################### Dataloader utility functions ####################################
