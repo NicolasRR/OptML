@@ -107,20 +107,19 @@ class ParameterServer_sync(object):
                 self.loss = np.array([])
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
-                if self.saves_per_epoch is not None:
-                    relative_batch_idx = (
+                relative_batch_idx = (
                         worker_batch_count
                         - total_batches_to_run * (worker_epoch - 1)
                         - 1
-                    )
+                )
+                if self.saves_per_epoch is not None:
                     if relative_batch_idx in self.save_idx:
                         weights = [
                             w.detach().clone().cpu().numpy()
                             for w in self.model.parameters()
                         ]
                         self.weights_matrix.append(weights)
-                print(total_batches_to_run, worker_batch_count)
-                if worker_batch_count == total_batches_to_run: # CHANGE WORKER BATCH COUNT IDX TO RELATIVE IDX
+                if relative_batch_idx + 1 == total_batches_to_run:
                     if self.scheduler is not None:
                         self.scheduler.step()
                     if self.val:
