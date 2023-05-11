@@ -382,11 +382,17 @@ def read_parser(parser, mode=None):
         default=None,
         help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
     )
-    if mode is None or mode == "sync":
+    if mode is None:
         parser.add_argument(
             "--val",
             action="store_true",
             help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch.""",
+        )
+    if mode == "sync":
+        parser.add_argument(
+            "--val",
+            action="store_true",
+            help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch. Please use --val without --split_dataset or --split_labels.""",
         )
 
     if mode is not None:
