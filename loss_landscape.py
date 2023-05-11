@@ -8,12 +8,7 @@ import torch.nn.functional as F
 import os
 import plotly.graph_objs as go
 from tqdm import tqdm
-from common import (
-    CNN_MNIST,
-    CNN_CIFAR10,
-    CNN_CIFAR100,
-    create_testloader,
-)
+from common import _get_model, create_testloader, LOSS_FUNC
 
 DEFAULT_GRID_BORDER = 10
 DEFAULT_GRID_SIZE = 10
@@ -22,19 +17,7 @@ DEFAULT_BATCH_SIZE = 100
 
 def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border):
     loader = create_testloader(model_path, batch_size)
-    model = None
-    if "mnist" in model_path:
-        # print("Loading MNIST CNN\n")
-        model = CNN_MNIST()
-    elif "cifar100" in model_path:
-        # print("Loading CIFAR100 CNN\n")
-        model = CNN_CIFAR100()
-    elif "cifar10" in model_path:
-        # print("Loading CIFAR10 CNN\n")
-        model = CNN_CIFAR10()
-    else:
-        # print("Dataset not supported\n")
-        exit()
+    model = _get_model(model_path, LOSS_FUNC)
 
     model.load_state_dict(torch.load(model_path))
     model.eval()

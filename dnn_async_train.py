@@ -81,17 +81,18 @@ class ParameterServer_async(object):
 
         with self.model_lock:
             self.loss = loss
-            self.global_batch_counter += 1
+            if self.scheduler is not None:
+                self.global_batch_counter += 1
             for param, grad in zip(self.model.parameters(), grads):
                 param.grad = grad
 
             self.optimizer.step()
             self.optimizer.zero_grad()
-        
+
             if self.saves_per_epoch is not None:
                 relative_batch_idx = (
                     worker_batch_count - total_batches_to_run * (worker_epoch - 1) - 1
-                )        
+                )
                 if relative_batch_idx in self.save_idx:
                     weights = [
                         w.detach().clone().cpu().numpy()
@@ -100,8 +101,11 @@ class ParameterServer_async(object):
                     self.weights_matrix.append(weights)
 
             if self.scheduler is not None:
-                    if self.global_batch_counter % (total_batches_to_run * self.nb_workers) == 0:
-                        self.scheduler.step()
+                if (
+                    self.global_batch_counter % (total_batches_to_run * self.nb_workers)
+                    == 0
+                ):
+                    self.scheduler.step()
 
             self.logger.debug(
                 f"PS updated model, worker loss: {loss} ({worker_name}), weight norm: weights norm {compute_weights_l2_norm(self.model)}"
@@ -189,7 +193,11 @@ class Worker_async(object):
             self.progress_bar.update(1)
 
         if self.worker_accuracy:
-            final_train_accuracy, correct_predictions, total_preidctions = compute_accuracy_loss(
+            (
+                final_train_accuracy,
+                correct_predictions,
+                total_preidctions,
+            ) = compute_accuracy_loss(
                 worker_model, self.train_loader, loss_func=LOSS_FUNC
             )
             print(
@@ -306,9 +314,11 @@ def run_parameter_server_async(
     print(f"Final train loss: {ps_rref.to_here().loss}")
 
     if model_accuracy:
-        final_train_accuracy, correct_predictions, total_preidctions = compute_accuracy_loss(
-            ps_rref.to_here().model, train_loader_full, LOSS_FUNC
-        )
+        (
+            final_train_accuracy,
+            correct_predictions,
+            total_preidctions,
+        ) = compute_accuracy_loss(ps_rref.to_here().model, train_loader_full, LOSS_FUNC)
         print(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
         )
