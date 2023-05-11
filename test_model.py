@@ -11,7 +11,7 @@ from common import (
     create_testloader,
     create_trainloader,
     compute_accuracy_loss,
-    LOSS_FUNC
+    LOSS_FUNC,
 )
 
 DEFAULT_BATCH_SIZE = 500
@@ -26,7 +26,13 @@ def performance(model_path, model, batch_size, classification_report, test=True)
         else create_trainloader(model_path, batch_size)
     )
 
-    average_accuracy, correct_predictions, average_loss, targets, predictions = compute_accuracy_loss(model, loader, LOSS_FUNC, test_mode=True)
+    (
+        average_accuracy,
+        correct_predictions,
+        average_loss,
+        targets,
+        predictions,
+    ) = compute_accuracy_loss(model, loader, LOSS_FUNC, test_mode=True)
 
     print(
         f"Average {mode} accuracy: {average_accuracy*100:.2f} % ({correct_predictions}/{len(loader.dataset)})"

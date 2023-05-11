@@ -94,12 +94,16 @@ def run(
 
             progress_bar.update(1)
         progress_bar.close()
-        
+
         if val:
-            train_acc, train_corr, train_tot, train_loss = compute_accuracy_loss(model, train_loader, LOSS_FUNC, return_loss=True)
-            val_acc, val_corr, val_tot, val_loss = compute_accuracy_loss(model, val_loader, LOSS_FUNC, return_loss=True)
+            train_acc, train_corr, train_tot, train_loss = compute_accuracy_loss(
+                model, train_loader, LOSS_FUNC, return_loss=True
+            )
+            val_acc, val_corr, val_tot, val_loss = compute_accuracy_loss(
+                model, val_loader, LOSS_FUNC, return_loss=True
+            )
             logger.debug(
-                    f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{train_tot}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{val_tot}), epoch: {epoch+1}/{epochs}"
+                f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{train_tot}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{val_tot}), epoch: {epoch+1}/{epochs}"
             )
 
         if scheduler is not None:
@@ -113,7 +117,11 @@ def run(
     print(f"Final train loss: {last_loss}")
 
     if model_accuracy:
-        final_train_accuracy, correct_predictions, total_predictions = compute_accuracy_loss(model, train_loader_full, LOSS_FUNC)
+        (
+            final_train_accuracy,
+            correct_predictions,
+            total_predictions,
+        ) = compute_accuracy_loss(model, train_loader_full, LOSS_FUNC)
         print(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
         )

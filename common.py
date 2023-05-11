@@ -29,13 +29,14 @@ DELAY_MIN = 0.01  # 10 ms
 DELAY_MAX = 0.02  # 20 ms
 DEFAULT_VAL_SPLIT = 0.1
 
+
 #################################### Start and Run ####################################
 def start(args, mode, run_parameter_server):
     if mode == "sync":
         log_name = "log_sync.log"
     elif mode == "async":
         log_name = "log_async.log"
-    
+
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(
@@ -50,7 +51,9 @@ def start(args, mode, run_parameter_server):
                 args.dataset,
                 args.split_dataset,
                 args.split_labels,
-                args.split_labels_unscaled if hasattr(args, "split_labels_unscaled") else None,
+                args.split_labels_unscaled
+                if hasattr(args, "split_labels_unscaled")
+                else None,
                 args.world_size,
                 args.lr,
                 args.momentum,
@@ -528,11 +531,19 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
     average_accuracy = correct_predictions / total_predictions
 
     if test_mode:
-        return average_accuracy, correct_predictions, total_predictions, average_loss, targets, predictions
+        return (
+            average_accuracy,
+            correct_predictions,
+            total_predictions,
+            average_loss,
+            targets,
+            predictions,
+        )
     elif return_loss:
         return average_accuracy, correct_predictions, total_predictions, average_loss
     else:
         return average_accuracy, correct_predictions, total_predictions
+
 
 """
 def get_worker_accuracy(worker_model, worker_name, worker_train_loader):
@@ -620,8 +631,8 @@ def compute_weights_l2_norm(model):
     return total_norm
 
 
-def long_random_delay(): 
-    time.sleep(np.random.uniform((DELAY_MIN+DELAY_MAX)/2.0, DELAY_MAX * 2))
+def long_random_delay():
+    time.sleep(np.random.uniform((DELAY_MIN + DELAY_MAX) / 2.0, DELAY_MAX * 2))
 
 
 def random_delay():  # 10 to 50 ms delay
@@ -911,11 +922,20 @@ def create_default_trainloaders(
     else:
         return train_loader
 
-def create_validation_trainloaders(dataset, subsample_train_indices, batch_size, model_accuracy, val_split=DEFAULT_VAL_SPLIT):
+
+def create_validation_trainloaders(
+    dataset,
+    subsample_train_indices,
+    batch_size,
+    model_accuracy,
+    val_split=DEFAULT_VAL_SPLIT,
+):
     train_len = int(len(subsample_train_indices) * (1 - val_split))
     val_len = len(subsample_train_indices) - train_len
 
-    train_indices, val_indices = torch.utils.data.random_split(subsample_train_indices, [train_len, val_len])
+    train_indices, val_indices = torch.utils.data.random_split(
+        subsample_train_indices, [train_len, val_len]
+    )
 
     train_loader = DataLoader(
         dataset,
@@ -937,6 +957,7 @@ def create_validation_trainloaders(dataset, subsample_train_indices, batch_size,
         return ((train_loader, val_loader), train_loader_full)
     else:
         return (train_loader, val_loader)
+
 
 def create_split_dataset_trainloaders(
     nb_workers, dataset, subsample_train_indices, batch_size, model_accuracy
@@ -1064,7 +1085,12 @@ def get_trainloader(
     model_accuracy,
     validation,
 ):
-    if not split_dataset and not split_labels and not split_labels_unscaled and not validation:
+    if (
+        not split_dataset
+        and not split_labels
+        and not split_labels_unscaled
+        and not validation
+    ):
         train_loaders = create_default_trainloaders(
             dataset, subsample_train_indices, batch_size, model_accuracy
         )

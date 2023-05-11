@@ -186,9 +186,11 @@ class Worker_async(object):
             self.progress_bar.update(1)
 
         if self.worker_accuracy:
-            final_train_accuracy, correct_predictions = compute_accuracy_loss(worker_model, self.train_loader, loss_func=LOSS_FUNC)
+            final_train_accuracy, correct_predictions = compute_accuracy_loss(
+                worker_model, self.train_loader, loss_func=LOSS_FUNC
+            )
             print(
-                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{len(self.train_loader.dataset)})" 
+                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{len(self.train_loader.dataset)})"
             )
 
 
@@ -301,7 +303,9 @@ def run_parameter_server_async(
     print(f"Final train loss: {ps_rref.to_here().loss}")
 
     if model_accuracy:
-        final_train_accuracy, correct_predictions = compute_accuracy_loss(ps_rref.to_here().model, train_loader_full, LOSS_FUNC)
+        final_train_accuracy, correct_predictions = compute_accuracy_loss(
+            ps_rref.to_here().model, train_loader_full, LOSS_FUNC
+        )
         print(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{len(train_loader_full.dataset)})"
         )

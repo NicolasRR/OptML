@@ -36,7 +36,7 @@ class ParameterServer_sync(object):
         lrs,
         saves_per_epoch,
         val,
-        train_loader= None,
+        train_loader=None,
         val_loader=None,
     ):
         self.model = _get_model(dataset_name, LOSS_FUNC)
@@ -108,9 +108,7 @@ class ParameterServer_sync(object):
                 self.optimizer.step()
                 self.optimizer.zero_grad(set_to_none=False)  # reset grad tensor to 0
                 relative_batch_idx = (
-                        worker_batch_count
-                        - total_batches_to_run * (worker_epoch - 1)
-                        - 1
+                    worker_batch_count - total_batches_to_run * (worker_epoch - 1) - 1
                 )
                 if self.saves_per_epoch is not None:
                     if relative_batch_idx in self.save_idx:
@@ -123,12 +121,21 @@ class ParameterServer_sync(object):
                     if self.scheduler is not None:
                         self.scheduler.step()
                     if self.val:
-                        train_acc, train_corr, train_tot, train_loss = compute_accuracy_loss(self.model, self.train_loader, LOSS_FUNC, return_loss=True)
-                        val_acc, val_corr, val_tot, val_loss = compute_accuracy_loss(self.model, self.val_loader, LOSS_FUNC, return_loss=True)
-                        self.logger.debug(
-                                f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{train_tot}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{val_tot}), epoch: {worker_epoch}/{total_epochs}"
+                        (
+                            train_acc,
+                            train_corr,
+                            train_tot,
+                            train_loss,
+                        ) = compute_accuracy_loss(
+                            self.model, self.train_loader, LOSS_FUNC, return_loss=True
                         )
-                    
+                        val_acc, val_corr, val_tot, val_loss = compute_accuracy_loss(
+                            self.model, self.val_loader, LOSS_FUNC, return_loss=True
+                        )
+                        self.logger.debug(
+                            f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{train_tot}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{val_tot}), epoch: {worker_epoch}/{total_epochs}"
+                        )
+
                 fut.set_result(self.model)
                 self.logger.debug(
                     f"PS updated model, global loss is {self.model_loss}, weights norm is {compute_weights_l2_norm(self.model)}"
@@ -215,9 +222,15 @@ class Worker_sync(object):
                 ),
             )
         if self.worker_accuracy:
-            final_train_accuracy, correct_predictions, total_predictions = compute_accuracy_loss(worker_model, self.train_loader, loss_func=LOSS_FUNC)
+            (
+                final_train_accuracy,
+                correct_predictions,
+                total_predictions,
+            ) = compute_accuracy_loss(
+                worker_model, self.train_loader, loss_func=LOSS_FUNC
+            )
             print(
-                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})" 
+                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
             )
 
 
@@ -350,7 +363,11 @@ def run_parameter_server_sync(
     print(f"Final train loss: {ps_rref.to_here().model_loss}")
 
     if model_accuracy:
-        final_train_accuracy, correct_predictions, total_preidctions = compute_accuracy_loss(ps_rref.to_here().model, train_loader_full, LOSS_FUNC)
+        (
+            final_train_accuracy,
+            correct_predictions,
+            total_preidctions,
+        ) = compute_accuracy_loss(ps_rref.to_here().model, train_loader_full, LOSS_FUNC)
         print(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
         )
