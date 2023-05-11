@@ -62,9 +62,8 @@ class LeNet5(nn.Module):
         return x
 
 # %% TRANING PARAMETERS
-def train_model_SGD(
-    network, learning_rate, momentum, epochs, train_loader, print_every
-):
+def train_model_SGD(network, learning_rate, train_loader,momentum=0.9 , epochs=15,  print_every=30):
+    
     # Set the network and the loss function
     model = network
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
@@ -125,10 +124,71 @@ def train_model_SGD(
     print(f"Training time: {training_time} seconds")
 
     return model
+#%% plotting the loss landscape from the model
+def loss_landscape(net, criterion, loader, d1, d2, x_range, y_range, n_points):
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+    losses = np.zeros((n_points, n_points))
 
+    for i, x in enumerate(np.linspace(x_range[0], x_range[1], n_points)):
+        for j, y in enumerate(np.linspace(y_range[0], y_range[1], n_points)):
+            state_dict = net.state_dict()
+            for key in state_dict:
+                if 'weight' in key:
+                    state_dict[key] += x * d1[key] + y * d2[key]
+            net.load_state_dict(state_dict)
+
+            loss = 0.0
+            for data in loader:
+                inputs, labels = data
+                inputs, labels = inputs.to(device), labels.to(device)
+                outputs = net(inputs)
+                loss += criterion(outputs, labels).item()
+            loss /= len(loader)
+            losses[i, j] = loss
+
+            # Restore original state dict
+            for key in state_dict:
+                if 'weight' in key:
+                    state_dict[key] -= x * d1[key] + y * d2[key]
+            net.load_state_dict(state_dict)
+
+    return losses
+
+def filter_normalized_direction(state_dict):
+    direction = {}
+    for key in state_dict:
+        if 'weight' in key:
+            d = torch.randn(state_dict[key].size())
+            d *= state_dict[key].norm() / d.norm()
+            direction[key] = d
+    return direction
+
+def plot_loss_landscape(net, criterion, testloader):
+    # parameters vectors
+    d1 = filter_normalized_direction(net.state_dict())
+    d2 = filter_normalized_direction(net.state_dict())
+
+    x_range = (-1, 1)
+    y_range = (-1, 1)
+    n_points = 21
+    losses = loss_landscape(net, criterion, testloader, d1, d2, x_range, y_range, n_points)
+
+    x = np.linspace(x_range[0], x_range[1], n_points)
+    y = np.linspace(y_range[0], y_range[1], n_points)
+    X, Y = np.meshgrid(x, y)
+
+    plt.contourf(X, Y, losses, levels=20)
+    plt.colorbar()
+    plt.xlabel('Direction 1')
+    plt.ylabel('Direction 2')
+    plt.title('Loss Landscape (2D)')
+    plt.show()
+
+#%%
 if __name__ == "__main__":
     # Ask for the dataset to use
+    """
     # Load the CIFAR-10 dataset
     train_dataset = datasets.CIFAR10(
         root="./data", train=True, transform=transforms.ToTensor(), download=True
@@ -136,25 +196,42 @@ if __name__ == "__main__":
     test_dataset = datasets.CIFAR10(
         root="./data", train=False, transform=transforms.ToTensor(), download=True
     )
-
     # Create data loaders
     train_loader = DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
     test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
+    
+    # Ask if testing resutls are required FOR CIFAR 10
+    # data_sample, _ = train_dataset[0]
+    # input_dim = data_sample.shape.numel()
+    # output_dim = len(train_dataset.classes)
+    
+    """
+    # With fashion mnist dataset
+    transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.5,), (0.5,))])
+    
+    train_dataset = torchvision.datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
+    test_dataset = torchvision.datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
+    
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
 
-    # Ask if testing resutls are required
-    data_sample, _ = train_dataset[0]
-    input_dim = data_sample.shape.numel()
-    output_dim = len(train_dataset.classes)
 
-    network = Initial_Net(num_input=3, num_output=output_dim)
+
+    network = Initial_Net(num_input=1, num_output=10)
+    network = LeNet5()
     # Parameters
-    lr = 0.0001
-    momentum = 0.0001
-    epochs = 10
-    print_every = 10
+    lr = 0.001
+    momentum = 0.9
+    epochs = 5
+    print_every = 30
+    
+    # Training the model
     trained_model = train_model_SGD(
-        network, lr, momentum, epochs, train_loader, print_every
+        network, lr, train_loader, momentum, epochs,  print_every
     )
 
-
+    #%% plot the landscape
+    plot_loss_landscape(trained_model, nn.CrossEntropyLoss(), train_loader)
 # %%
