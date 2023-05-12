@@ -22,9 +22,9 @@ Use Windows Subsystem for Linux (WSL). To install WSL take the following steps:
 - In bash run (**disable firewall** if needed):
   - `sudo apt update`
   - `sudo apt upgrade`
-  - `sudo apt install python3-pip`
+  - `sudo apt install python3-pip dos2unix`
   - `pip3 install torch torchvision torchaudio tqdm --index-url https://download.pytorch.org/whl/cpu`
-  - `pip3 install matplotlib scikit-learn papermill`
+  - `pip3 install matplotlib scikit-learn papermill plotly`
 
 ## How to use our scripts
 We created bash scripts to run and test the SGD variants together effectively. `compare.sh` will run and test the variants one time, `compare_loop.sh` will do the same but multiple times and loops other predefined
