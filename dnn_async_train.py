@@ -45,7 +45,7 @@ class ParameterServer_async(object):
         self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
         self.weights_matrix = []
         self.saves_per_epoch = saves_per_epoch
-        if lrs is not None:
+        if lrs is not None or saves_per_epoch is not None:
             self.global_batch_counter = 0
         if saves_per_epoch is not None:
             save_idx = np.linspace(0, len_trainloader - 1, saves_per_epoch, dtype=int)
@@ -81,7 +81,7 @@ class ParameterServer_async(object):
 
         with self.model_lock:
             self.loss = loss
-            if self.scheduler is not None:
+            if self.scheduler is not None or self.saves_per_epoch is not None:
                 self.global_batch_counter += 1
             for param, grad in zip(self.model.parameters(), grads):
                 param.grad = grad
@@ -91,8 +91,8 @@ class ParameterServer_async(object):
 
             if self.saves_per_epoch is not None:
                 relative_batch_idx = (
-                    worker_batch_count - total_batches_to_run * (worker_epoch - 1) - 1
-                )
+                    self.global_batch_counter / self.nb_workers - 1
+                ) % total_batches_to_run
                 if relative_batch_idx in self.save_idx:
                     weights = [
                         w.detach().clone().cpu().numpy()

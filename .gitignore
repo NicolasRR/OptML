@@ -12,3 +12,4 @@ __pycache__/
 *.npy
 experience_*/
 *.html
+*.png

@@ -24,6 +24,11 @@ parser.add_argument(
     default=DEFAULT_K_SPLITS,
     help="""The number of splits for KFold CV.""",
 )
+parser.add_argument(
+    "--alr",
+    action="store_true",
+    help="""Adam instead of vanilla SGD.""",
+)
 args = parser.parse_args()
 
 model = _get_model(args.dataset, LOSS_FUNC)
@@ -63,9 +68,16 @@ for epoch_index, epoch in enumerate(epochs):
                         f"Step: {current_step+1}/{total_steps}, Fold: {fold + 1}/{kf.get_n_splits()}"
                     )
                     model = _get_model("mnist", LOSS_FUNC)
-                    optimizer = optim.SGD(
-                        model.parameters(), lr=learning_rate, momentum=momentum
-                    )
+                    if args.alr == False:
+                        optimizer = optim.SGD(
+                            model.parameters(), lr=learning_rate, momentum=momentum
+                        )
+                    else:
+                        optimizer = optim.Adam(
+                            model.parameters(),
+                            lr=learning_rate,
+                        )
+
                     train_sampler = SubsetRandomSampler(train_indices)
                     val_sampler = SubsetRandomSampler(val_indices)
                     train_dataloader = DataLoader(

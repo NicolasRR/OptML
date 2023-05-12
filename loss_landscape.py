@@ -10,8 +10,8 @@ import plotly.graph_objs as go
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_BORDER = 10
-DEFAULT_GRID_SIZE = 10
+DEFAULT_GRID_BORDER = 5
+DEFAULT_GRID_SIZE = 25
 DEFAULT_BATCH_SIZE = 100
 
 
@@ -167,10 +167,10 @@ if __name__ == "__main__":
         default=None,
         help="""The grid will be created between [-grid_border, grid_border]x[-grid_border, grid_border].""",
     )
+    parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(
         "weights_path", type=str, help="""Weights of the trained model."""
     )
-    parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(
         "--subfolder",
         type=str,
@@ -210,6 +210,14 @@ if __name__ == "__main__":
 
     if len(args.model_path) == 0:
         print("Missing model path !!!")
+        exit()
+
+    if not args.weights_path.endswith(".npy"):
+        print("weights_path should be a .npy file")
+        exit()
+
+    if not args.model_path.endswith(".pt"):
+        print("model_path should be a .pt file")
         exit()
 
     main(
