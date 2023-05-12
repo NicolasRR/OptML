@@ -4,7 +4,6 @@ import plotly.io as pio
 import plotly.graph_objs as go
 import numpy as np
 import torch
-import torch.nn.functional as F
 import os
 import plotly.graph_objs as go
 from tqdm import tqdm
@@ -61,7 +60,7 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
             for inputs, labels in loader:
                 inputs, labels = inputs, labels
                 outputs = model(inputs)
-                loss = F.nll_loss(outputs, labels)
+                loss = LOSS_FUNC(outputs, labels)
                 running_loss += loss.item() * inputs.size(0)
 
             grid_losses.append(running_loss / len(loader.dataset))
@@ -96,7 +95,7 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
             for inputs, labels in loader:
                 inputs, labels = inputs, labels
                 outputs = model(inputs)
-                loss = F.nll_loss(outputs, labels)
+                loss = LOSS_FUNC(outputs, labels)
                 running_loss += loss.item() * inputs.size(0)
 
             trajectory_loss_reevaluted.append(running_loss / len(loader.dataset))
