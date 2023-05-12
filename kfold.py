@@ -31,11 +31,11 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-model = _get_model(args.dataset, LOSS_FUNC)
-
 if args.k_splits < 2:
     print("Forbiden value!!! --k_split should be >= 2")
     exit()
+
+print(f"Running Kfold for {args.dataset}, using {args.k_splits} splits.")
 
 loader = create_worker_trainloaders(
     args.dataset, train_split=1, batch_size=100, model_accuracy=False
@@ -67,7 +67,7 @@ for epoch_index, epoch in enumerate(epochs):
                     print(
                         f"Step: {current_step+1}/{total_steps}, Fold: {fold + 1}/{kf.get_n_splits()}"
                     )
-                    model = _get_model("mnist", LOSS_FUNC)
+                    model = _get_model(args.dataset, LOSS_FUNC)
                     if args.alr == False:
                         optimizer = optim.SGD(
                             model.parameters(), lr=learning_rate, momentum=momentum

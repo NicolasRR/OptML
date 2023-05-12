@@ -3,16 +3,34 @@
 if [ "$1" == "--alr" ]
 then
     {
-        python3 kfold.py --dataset mnist --alr
-        python3 kfold.py --dataset fashion_mnist --alr
-        python3 kfold.py --dataset cifar10 --alr
-        python3 kfold.py --dataset cifar100 --alr
-    } &> kfold_alr.txt
+        echo "Using Adam as optimizer."
+        python3 -u kfold.py --dataset mnist --alr
+        sleep 0.1
+        echo
+        python3 -u kfold.py --dataset fashion_mnist --alr
+        sleep 0.1
+        echo
+        # python3 -u kfold.py --dataset cifar10 --alr
+        # sleep 0.1
+        # echo
+        # python3 -u kfold.py --dataset cifar100 --alr
+        # sleep 0.1
+        # echo
+    } |& tee kfold_alr.txt
 else
     {
-        python3 kfold.py --dataset mnist
-        python3 kfold.py --dataset fashion_mnist
-        python3 kfold.py --dataset cifar10
-        python3 kfold.py --dataset cifar100
-    } &> kfold.txt
+        echo "Using SGD as optimizer."
+        python3 -u kfold.py --dataset mnist
+        sleep 0.1
+        echo
+        python3 -u kfold.py --dataset fashion_mnist
+        sleep 0.1
+        echo
+        # python3 -u kfold.py --dataset cifar10
+        # sleep 0.1
+        # echo
+        # python3 -u kfold.py --dataset cifar100
+        # sleep 0.1
+        # echo
+    } |& tee kfold.txt
 fi
