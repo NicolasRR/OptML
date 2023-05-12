@@ -1,18 +1,17 @@
 import argparse
 import torch
-import torch.nn.functional as F
 from sklearn.metrics import classification_report as CR
 from datetime import datetime, timedelta
 from matplotlib.ticker import FuncFormatter
 import matplotlib.pyplot as plt
 import contextlib
 import os
-from helpers import (
-    CNN_MNIST,
-    CNN_CIFAR10,
-    CNN_CIFAR100,
+from common import (
+    _get_model,
     create_testloader,
     create_trainloader,
+    compute_accuracy_loss,
+    LOSS_FUNC,
 )
 
 DEFAULT_BATCH_SIZE = 500
@@ -27,27 +26,19 @@ def performance(model_path, model, batch_size, classification_report, test=True)
         else create_trainloader(model_path, batch_size)
     )
 
-    test_loss = 0
-    correct = 0
-    targets = []
-    predictions = []
+    (
+        average_accuracy,
+        correct_predictions,
+        total_predictions,
+        average_loss,
+        targets,
+        predictions,
+    ) = compute_accuracy_loss(model, loader, LOSS_FUNC, test_mode=True)
 
-    with torch.no_grad():
-        for data, target in loader:
-            output = model(data)
-            test_loss += F.nll_loss(output, target, reduction="sum").item()
-            pred = output.argmax(dim=1, keepdim=True)
-            correct += pred.eq(target.view_as(pred)).sum().item()
-
-            targets.extend(target.view(-1).tolist())
-            predictions.extend(pred.view(-1).tolist())
-
-    test_loss /= len(loader.dataset)
-    accuracy = correct / len(loader.dataset)
     print(
-        f"Average {mode} accuracy: {accuracy*100:.2f} % ({correct}/{len(loader.dataset)})"
+        f"Average {mode} accuracy: {average_accuracy*100:.2f} % ({correct_predictions}/{total_predictions})"
     )
-    print(f"Average {mode} loss: {test_loss:.4f}")
+    print(f"Average {mode} loss: {average_loss:.4f}")
 
     if classification_report:
         report = CR(targets, predictions, zero_division=0)
@@ -63,7 +54,447 @@ def format_timedelta(x, _):
     return f"{minutes:02d}:{seconds:02d}:{milliseconds:03d}"
 
 
+def save_fig(fig, subfolder, model_type, validation=False):
+    if validation == False:
+        save_name = None
+        if model_type == "Classic":
+            save_name = "model_classic.png"
+        elif model_type == "Synchronous":
+            save_name = "model_synchronous.png"
+        elif model_type == "Asynchronous":
+            save_name = "model_asynchronous.png"
+
+        if len(subfolder) > 0:
+            plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
+            plt.close(fig)
+        else:
+            plt.savefig(save_name, bbox_inches="tight")
+            plt.close(fig)
+    else:
+        save_name = None
+        if model_type == "Classic":
+            save_name = "validation_classic.png"
+        elif model_type == "Synchronous":
+            save_name = "validation_synchronous.png"
+        if len(subfolder) > 0:
+            plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
+            plt.close(fig)
+        else:
+            plt.savefig(save_name, bbox_inches="tight")
+            plt.close(fig)
+
+
 def compute_training_time_and_pics(model_path, pics, subfolder):
+    lines = []
+    model_type = None
+    log_file_name = None
+    if "classic" in model_path:
+        model_type = "Classic"
+        log_file_name = "log.log"
+    elif "async" in model_path:
+        model_type = "Asynchronous"
+        log_file_name = "log_async.log"
+    elif "sync" in model_path:
+        model_type = "Synchronous"
+        log_file_name = "log_sync.log"
+    else:
+        print("Unrecognized model path")
+        exit()
+
+    if len(subfolder) > 0:
+        with open(os.path.join(subfolder, log_file_name), "r") as log_file:
+            # Iterate through each line in the log file
+            for line in log_file:
+                lines.append(line.split(" - common - "))
+    else:
+        with open(log_file_name, "r") as log_file:
+            for line in log_file:
+                lines.append(line.split(" - common - "))
+
+    for i, line in enumerate(lines):
+        timestamp = datetime.strptime(line[0], "%Y-%m-%d %H:%M:%S,%f")
+        lines[i][0] = timestamp
+
+    nb_workers = None
+    if model_type == "Synchronous" or model_type == "Asynchronous":
+        nb_workers = int((lines[0][1].split("with ")[1]).split(" workers")[0])
+
+    lines = [line for line in lines if "INFO" not in line[1]]
+
+    val_lines = None
+    if model_type == "Classic" or model_type == "Synchronous":
+        val_lines = [line for line in lines if "Train loss:" in line[1]]
+        lines = [line for line in lines if "Train loss:" not in line[1]]
+
+    if model_type == "Synchronous" or model_type == "Asynchronous":
+        lines = lines[nb_workers:]
+
+    start_time = lines[0][0]
+    end_time = lines[-1][0]
+    training_time = end_time - start_time
+
+    minutes, remainder = divmod(training_time.seconds, 60)
+    seconds = remainder
+    milliseconds = training_time.microseconds // 1000
+    formatted_training_time = f"{minutes:02d}:{seconds:02d}:{milliseconds:03d}"
+    print(f"{model_type} training time:", formatted_training_time)  # MM:SS:sss
+
+    if pics:
+        for i, line in enumerate(lines):
+            lines[i][0] = line[0] - start_time
+            lines[i][1] = line[1].split("DEBUG - ")[1].strip()
+
+        if model_type == "Classic":
+            model_update_lines = []
+            for line in lines:
+                splited_text = line[1].split(",")
+                model_update_lines.append(
+                    (
+                        line[0],
+                        float(splited_text[0].split(" ")[1]),
+                        float(splited_text[1].split(" ")[-1]),
+                        int(splited_text[2].split(" ")[3][1:-1].split("/")[0]),
+                        int(splited_text[3].split(" ")[-1].split("/")[0]),
+                    )
+                )
+
+            ####### PLOTS #######
+            # Create a 1x3 grid of subplots
+            fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(26, 5))
+            # First subplot (Model Loss vs Time)
+            timedeltas = [line[0].total_seconds() for line in model_update_lines]
+            losses = [line[1] for line in model_update_lines]
+            axs[0].plot(timedeltas, losses, marker="x")
+            axs[0].set_xlabel("Time (MM:SS:sss)")
+            axs[0].set_ylabel("Model Loss")
+            axs[0].set_title(
+                "Classic SGD evolution of the model loss in function of time"
+            )
+            # Format x-axis tick labels
+            formatter = FuncFormatter(format_timedelta)
+            axs[0].xaxis.set_major_formatter(formatter)
+            # Second subplot (Weights L2 norm vs Time)
+            weights_norm = [line[2] for line in model_update_lines]
+            axs[1].plot(timedeltas, weights_norm, marker="x")
+            axs[1].set_xlabel("Time (MM:SS:sss)")
+            axs[1].set_ylabel("Weights L2 norm")
+            axs[1].set_title(
+                "Classic SGD evolution of the model weights L2 norm in function of time"
+            )
+            axs[1].xaxis.set_major_formatter(formatter)
+            # Thirst subplot (Cumulative Batch Update Count vs Time)
+            batches = [line[3] for line in model_update_lines]
+            axs[2].plot(timedeltas, batches, marker="x")
+            axs[2].set_xlabel("Time (MM:SS:sss)")
+            axs[2].set_ylabel("Cumulative Batch Update Count")
+            axs[2].set_title("Classic SGD computation speed")
+            axs[2].xaxis.set_major_formatter(formatter)
+
+            save_fig(fig, subfolder, model_type)
+
+        elif model_type == "Synchronous":
+            model_loss_lines = []
+            worker_update_lines = []
+            for i, line in enumerate(lines):
+                if "PS updated model, " in line[1]:
+                    # timedetla, model loss
+                    model_loss_lines.append(
+                        (
+                            line[0],
+                            float(line[1].split(",")[1].split(" ")[-1]),
+                            float(line[1].split(",")[2].split(" ")[-1]),
+                        )
+                    )
+                elif "PS got " in line[1]:
+                    splited_text = (line[1].split("from ")[1]).split(" ")
+                    # timedelta, worker id, batch count, epoch
+                    worker_update_lines.append(
+                        (
+                            line[0],
+                            int(splited_text[0].split("_")[1][:-1]),
+                            int(splited_text[2].split("/")[0][1:]),
+                            int(splited_text[-1].split("/")[0]),
+                        )
+                    )
+
+            ####### PLOTS #######
+            # Create a 1x3 grid of subplots
+            fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(26, 5))
+            # First subplot (Model Loss vs Time)
+            timedeltas = [line[0].total_seconds() for line in model_loss_lines]
+            losses = [line[1] for line in model_loss_lines]
+            axs[0].plot(timedeltas, losses, marker="x")
+            axs[0].set_xlabel("Time (MM:SS:sss)")
+            axs[0].set_ylabel("Model Loss")
+            axs[0].set_title(
+                "Synchronous SGD evolution of the model loss in function of time"
+            )
+            formatter = FuncFormatter(format_timedelta)
+            axs[0].xaxis.set_major_formatter(formatter)
+            # Second subplot (Weights L2 norm vs Time)
+            weights_norm = [line[2] for line in model_loss_lines]
+            axs[1].plot(timedeltas, weights_norm, marker="x")
+            axs[1].set_xlabel("Time (MM:SS:sss)")
+            axs[1].set_ylabel("Weights L2 norm")
+            axs[1].set_title(
+                "Synchronous SGD evolution of the model weights L2 norm in function of time"
+            )
+            formatter = FuncFormatter(format_timedelta)
+            axs[1].xaxis.set_major_formatter(formatter)
+            # Third subplot (Cumulative Batch Update Count vs Time)
+            worker_cumulative_updates = {}
+            for line in worker_update_lines:
+                td, worker_id, batch_count, epoch = line
+                worker_cumulative_updates.setdefault(worker_id, []).append(
+                    (td, batch_count)
+                )
+            for worker_id, updates in worker_cumulative_updates.items():
+                x = [td.total_seconds() for td, _ in updates]
+                y = [batch_count for _, batch_count in updates]
+                axs[2].plot(x, y, label=f"Worker {worker_id}", marker="x")
+            axs[2].set_xlabel("Time (MM:SS:sss)")
+            axs[2].set_ylabel("Cumulative Batch Update Count")
+            axs[2].set_title("Synchronous SGD workers speed comparison")
+            axs[2].legend()
+            axs[2].xaxis.set_major_formatter(formatter)
+
+            save_fig(fig, subfolder, model_type)
+
+        elif model_type == "Asynchronous":
+            worker_update_lines = []
+            for i, line in enumerate(lines):
+                if "PS updated model, worker loss: " in line[1]:
+                    splited_text = (line[1].split("PS updated model, worker loss: "))[
+                        1
+                    ].split(" ")
+                    worker_update_lines.append(
+                        (
+                            line[0],
+                            float(splited_text[0]),
+                            float(splited_text[-1]),
+                            int(splited_text[1].split("_")[1].split(")")[0]),
+                        )
+                    )
+
+            ####### PLOTS #######
+            # Create a 1x3 grid of subplots
+            fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(26, 5))
+            # First subplot (Worker Loss vs Time)
+            worker_losses = {}
+            for line in worker_update_lines:
+                td, worker_loss, _, worker_id = line
+                worker_losses.setdefault(worker_id, []).append((td, worker_loss))
+            for worker_id, losses in worker_losses.items():
+                x = [td.total_seconds() for td, _ in losses]
+                y = [worker_loss for _, worker_loss in losses]
+                axs[0].plot(x, y, label=f"Worker {worker_id}", marker="x")
+            axs[0].set_xlabel("Time (MM:SS:sss)")
+            axs[0].set_ylabel("Worker Loss")
+            axs[0].set_title(
+                "Asynchronous SGD evolution of worker loss in function of time"
+            )
+            axs[0].legend()
+            formatter = FuncFormatter(format_timedelta)
+            axs[0].xaxis.set_major_formatter(formatter)
+            # Second subplot (Weigh L2 norm vs Time)
+            weights_norms = {}
+            for line in worker_update_lines:
+                td, _, worker_w_norm, worker_id = line
+                weights_norms.setdefault(worker_id, []).append((td, worker_w_norm))
+            for worker_id, weight_norm in weights_norms.items():
+                x = [td.total_seconds() for td, _ in weight_norm]
+                y = [w_norm for _, w_norm in weight_norm]
+                axs[1].plot(x, y, label=f"Worker {worker_id}", marker="x")
+            axs[1].set_xlabel("Time (MM:SS:sss)")
+            axs[1].set_ylabel("Weights L2 norm")
+            axs[1].set_title(
+                "Asynchronous SGD evolution of the weights L2 norm in function of time"
+            )
+            axs[1].legend()
+            formatter = FuncFormatter(format_timedelta)
+            axs[1].xaxis.set_major_formatter(formatter)
+            # Third subplot (Cumulative Batch Update Count vs Time)
+            worker_cumulative_updates = {}
+            for line in worker_update_lines:
+                td, _, _, worker_id = line
+                worker_cumulative_updates.setdefault(worker_id, []).append(td)
+            for worker_id, updates in worker_cumulative_updates.items():
+                x = [td.total_seconds() for td in updates]
+                y = list(range(1, len(updates) + 1))
+                axs[2].plot(x, y, label=f"Worker {worker_id}", marker="x")
+            axs[2].set_xlabel("Time (MM:SS:sss)")
+            axs[2].set_ylabel("Cumulative Batch Update Count")
+            axs[2].set_title("Asynchronous SGD workers speed comparison")
+            axs[2].legend()
+            # Format x-axis tick labels
+            axs[2].xaxis.set_major_formatter(formatter)
+
+            save_fig(fig, subfolder, model_type)
+
+        if val_lines is not None:
+            if len(val_lines) > 0:
+                time_offset = val_lines[0][0]
+                for idx, v_line in enumerate(val_lines):
+                    splited_text = v_line[1].split(", ")
+                    val_lines[idx] = (
+                        v_line[0] - time_offset,
+                        float(splited_text[0].split("Train loss: ")[-1]),  # train loss
+                        float(
+                            splited_text[1].split("train accuracy: ")[1].split(" ")[0]
+                        ),  # train accuracy
+                        float(splited_text[2].split("val loss: ")[-1]),  # val loss
+                        float(
+                            splited_text[3].split("val accuracy: ")[1].split(" ")[0]
+                        ),  # val accuracy
+                    )
+                fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(20, 5))
+                timedeltas = [line[0].total_seconds() for line in val_lines]
+                tr_losses = [line[1] for line in val_lines]
+                tr_acc = [line[2] for line in val_lines]
+                val_losses = [line[3] for line in val_lines]
+                val_acc = [line[4] for line in val_lines]
+                # First subplot (Model Loss vs Time)
+                axs[0].plot(timedeltas, tr_losses, marker="x", label="Training")
+                axs[0].plot(timedeltas, val_losses, marker="x", label="Validation")
+                axs[0].set_xlabel("Time (MM:SS:sss)")
+                axs[0].set_ylabel("Loss")
+                if model_type == "Classic":
+                    axs[0].set_title(
+                        "Classic SGD evolution of the train and validation loss in function of time"
+                    )
+                elif model_type == "Synchronous":
+                    axs[0].set_title(
+                        "Synchronous SGD evolution of the train and validation loss in function of time"
+                    )
+                formatter = FuncFormatter(format_timedelta)
+                axs[0].xaxis.set_major_formatter(formatter)
+                axs[0].legend()
+                # Second subplot (Weights L2 norm vs Time)
+                axs[1].plot(timedeltas, tr_acc, marker="x", label="Training")
+                axs[1].plot(timedeltas, val_acc, marker="x", label="Validation")
+                axs[1].set_xlabel("Time (MM:SS:sss)")
+                axs[1].set_ylabel("Accuracy")
+                if model_type == "Classic":
+                    axs[1].set_title(
+                        "Classic SGD evolution of the train and validation accuracy in function of time"
+                    )
+                elif model_type == "Synchronous":
+                    axs[1].set_title(
+                        "Synchronous SGD evolution of the train and validation accuracy in function of time"
+                    )
+                formatter = FuncFormatter(format_timedelta)
+                axs[1].xaxis.set_major_formatter(formatter)
+                axs[1].legend()
+
+                save_fig(fig, subfolder, model_type, validation=True)
+
+
+def main(model_path, batch_size, classification_report, training_time, pics, subfolder):
+    # Load the saved model
+    model = _get_model(model_path, LOSS_FUNC)
+    model.load_state_dict(torch.load(model_path))
+
+    if len(subfolder) > 0:
+        if not os.path.exists(subfolder):
+            os.makedirs(subfolder)
+
+        model_filename = os.path.basename(model_path)
+        model_basename, _ = os.path.splitext(model_filename)
+        output_file_path = os.path.join(subfolder, f"{model_basename}_test_output.txt")
+
+        with open(output_file_path, "w") as output_file:
+            with contextlib.redirect_stdout(output_file):
+                print(f"Testing performance of {model_path}")
+                if training_time:
+                    compute_training_time_and_pics(model_path, pics, subfolder)
+                performance(
+                    model_path, model, batch_size, classification_report, test=False
+                )
+                performance(
+                    model_path, model, batch_size, classification_report, test=True
+                )
+
+    print(f"Testing performance of {model_path}")
+    if training_time:
+        compute_training_time_and_pics(model_path, pics, subfolder)
+
+    performance(model_path, model, batch_size, classification_report, test=False)
+    performance(model_path, model, batch_size, classification_report, test=True)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Testing models")
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=None,
+        help="""Batch size of Mini batch SGD [1,len(train set)].""",
+    )
+    parser.add_argument(
+        "model_path", type=argparse.FileType("r"), help="""Path of the trained model."""
+    )
+    parser.add_argument(
+        "--classification_report",
+        action="store_true",
+        help="""If set, prints a classification report (labels performance).""",
+    )
+    parser.add_argument(
+        "--training_time",
+        action="store_true",
+        help="""If set, will read the associated log file to compute the training time.""",
+    )
+    parser.add_argument(
+        "--pics",
+        action="store_true",
+        help="""If set, will compute and save plots from the .log file.""",
+    )
+    parser.add_argument(
+        "--subfolder",
+        type=str,
+        default="",
+        help="""Subfolder name where the test results and plots will be saved.""",
+    )
+
+    args = parser.parse_args()
+
+    if args.batch_size is None:
+        args.batch_size = DEFAULT_BATCH_SIZE
+        print(f"\nUsing default batch_size: {DEFAULT_BATCH_SIZE}")
+    elif args.batch_size < 1:
+        print("Forbidden value !!! batch_size must be between [1,len(train set)]")
+        exit()
+
+    if args.pics and not args.training_time:
+        print("Pictures mode only with --training_time")
+        exit()
+
+    if len(args.subfolder) > 0:
+        print(f"Outputs will be saved to {args.subfolder}/")
+
+    main(
+        args.model_path.name,
+        args.batch_size,
+        args.classification_report,
+        args.training_time,
+        args.pics,
+        args.subfolder,
+    )
+
+
+# backup - will be deleted
+"""def plot_model_loss(data, axs, model_type):
+    timedeltas = [line[0].total_seconds() for line in data]
+    losses = [line[1] for line in data]
+    axs[0].plot(timedeltas, losses, marker="x")
+    axs[0].set_xlabel("Time (MM:SS:sss)")
+    axs[0].set_ylabel("Model Loss")
+    axs[0].set_title(f"{model_type} SGD evolution of the model loss in function of time")
+    # Format x-axis tick labels
+    formatter = FuncFormatter(format_timedelta)
+    axs[0].xaxis.set_major_formatter(formatter)"""
+
+
+"""def compute_training_time_and_pics(model_path, pics, subfolder):
     lines = []
     model_type = None
     if "classic" in model_path:
@@ -337,110 +768,4 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
                 plt.close(fig)
             else:
                 plt.savefig("model_asynchronous.png", bbox_inches="tight")
-                plt.close(fig)
-
-
-def main(model_path, batch_size, classification_report, training_time, pics, subfolder):
-    # Load the saved model
-    model = None
-    if "mnist" in model_path:
-        # print("Loading MNIST CNN\n")
-        model = CNN_MNIST()
-    elif "cifar100" in model_path:
-        # print("Loading CIFAR100 CNN\n")
-        model = CNN_CIFAR100()
-    elif "cifar10" in model_path:
-        # print("Loading CIFAR10 CNN\n")
-        model = CNN_CIFAR10()
-    else:
-        # print("Dataset not supported\n")
-        exit()
-
-    model.load_state_dict(torch.load(model_path))
-    model.eval()
-
-    if len(subfolder) > 0:
-        if not os.path.exists(subfolder):
-            os.makedirs(subfolder)
-
-        model_filename = os.path.basename(model_path)
-        model_basename, _ = os.path.splitext(model_filename)
-        output_file_path = os.path.join(subfolder, f"{model_basename}_test_output.txt")
-
-        with open(output_file_path, "w") as output_file:
-            with contextlib.redirect_stdout(output_file):
-                print(f"Testing performance of {model_path}")
-                if training_time:
-                    compute_training_time_and_pics(model_path, pics, subfolder)
-                performance(
-                    model_path, model, batch_size, classification_report, test=False
-                )
-                performance(
-                    model_path, model, batch_size, classification_report, test=True
-                )
-
-    print(f"Testing performance of {model_path}")
-    if training_time:
-        compute_training_time_and_pics(model_path, pics, subfolder)
-
-    performance(model_path, model, batch_size, classification_report, test=False)
-    performance(model_path, model, batch_size, classification_report, test=True)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Testing models")
-    parser.add_argument(
-        "--batch_size",
-        type=int,
-        default=None,
-        help="""Batch size of Mini batch SGD [1,len(train set)].""",
-    )
-    parser.add_argument(
-        "model_path", type=argparse.FileType("r"), help="""Path of the trained model."""
-    )
-    parser.add_argument(
-        "--classification_report",
-        action="store_true",
-        help="""If set, prints a classification report (labels performance).""",
-    )
-    parser.add_argument(
-        "--training_time",
-        action="store_true",
-        help="""If set, will read the associated log file to compute the training time.""",
-    )
-    parser.add_argument(
-        "--pics",
-        action="store_true",
-        help="""If set, will compute and save plots from the .log file.""",
-    )
-    parser.add_argument(
-        "--subfolder",
-        type=str,
-        default="",
-        help="""Subfolder name where the test results and plots will be saved.""",
-    )
-
-    args = parser.parse_args()
-
-    if args.batch_size is None:
-        args.batch_size = DEFAULT_BATCH_SIZE
-        print(f"\nUsing default batch_size: {DEFAULT_BATCH_SIZE}")
-    elif args.batch_size < 1:
-        print("Forbidden value !!! batch_size must be between [1,len(train set)]")
-        exit()
-
-    if args.pics and not args.training_time:
-        print("Pictures mode only with --training_time")
-        exit()
-
-    if len(args.subfolder) > 0:
-        print(f"Outputs will be saved to {args.subfolder}/")
-
-    main(
-        args.model_path.name,
-        args.batch_size,
-        args.classification_report,
-        args.training_time,
-        args.pics,
-        args.subfolder,
-    )
+                plt.close(fig)"""
