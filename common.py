@@ -22,8 +22,8 @@ DEFAULT_LR = 1e-2
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-# LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer if nll
-LOSS_FUNC = nn.functional.nll_loss
+LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer if nll
+# LOSS_FUNC = nn.functional.nll_loss
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DELAY_MIN = 0.01  # 10 ms
@@ -475,7 +475,7 @@ def read_parser(parser, mode=None):
 #################################### Main utility functions ####################################
 def _get_model(dataset_name, loss_func):
     if "mnist" in dataset_name:
-        print("Created MNIST CNN")
+        print("Created MNIST/FASHION_MNIST CNN")
         return CNN_MNIST(loss_func=loss_func)  # global model
     elif "cifar100" in dataset_name:
         print("Created CIFAR100 CNN")

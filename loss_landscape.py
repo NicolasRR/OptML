@@ -10,7 +10,7 @@ from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
 DEFAULT_GRID_BORDER = 5
-DEFAULT_GRID_SIZE = 25
+DEFAULT_GRID_SIZE = 15
 DEFAULT_BATCH_SIZE = 100
 
 
@@ -58,7 +58,6 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
 
             running_loss = 0.0
             for inputs, labels in loader:
-                inputs, labels = inputs, labels
                 outputs = model(inputs)
                 loss = LOSS_FUNC(outputs, labels)
                 running_loss += loss.item() * inputs.size(0)
@@ -93,7 +92,6 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
 
             running_loss = 0.0
             for inputs, labels in loader:
-                inputs, labels = inputs, labels
                 outputs = model(inputs)
                 loss = LOSS_FUNC(outputs, labels)
                 running_loss += loss.item() * inputs.size(0)
@@ -144,6 +142,8 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
     else:
         output_file_path = f"{model_basename}_loss_landscape.html"
         pio.write_html(fig, output_file_path)
+
+    print(f"Saved 3D figure at: {output_file_path}")
 
 
 if __name__ == "__main__":
