@@ -3,7 +3,6 @@
 if [ "$1" == "--alr" ]
 then
     {
-        echo "Using Adam as optimizer."
         python3 -u kfold.py --dataset mnist --alr
         sleep 0.1
         echo
@@ -19,7 +18,6 @@ then
     } |& tee kfold_alr.txt
 else
     {
-        echo "Using SGD as optimizer."
         python3 -u kfold.py --dataset mnist
         sleep 0.1
         echo
