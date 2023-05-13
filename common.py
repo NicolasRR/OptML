@@ -31,6 +31,7 @@ DELAY_MAX = 0.02  # 20 ms
 DEFAULT_VAL_SPLIT = 0.1
 DEFAULT_LIGHT_MODELS = False
 
+
 #################################### Start and Run ####################################
 def start(args, mode, run_parameter_server):
     if mode == "sync":
@@ -104,6 +105,7 @@ def run(
     delay,
     slow_woker_1,
     val,
+    light_model,
     run_parameter_server,
 ):
     logger = setup_logger(log_queue)
@@ -146,6 +148,7 @@ def run(
                 delay,
                 slow_woker_1,
                 val,
+                light_model,
             )
         elif mode == "async":
             run_parameter_server(
@@ -169,6 +172,7 @@ def run(
                 lrs,
                 delay,
                 slow_woker_1,
+                light_model,
             )
     rpc.shutdown()
 
@@ -383,6 +387,11 @@ def read_parser(parser, mode=None):
         default=None,
         help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
     )
+    parser.add_argument(
+        "--light_model",
+        action="store_true",
+        help="""Will train using lighter CNN models instead of LeNet5 or ResNet18.""",
+    )
     if mode is None:
         parser.add_argument(
             "--val",
@@ -473,7 +482,7 @@ def read_parser(parser, mode=None):
 
 
 #################################### Main utility functions ####################################
-def _get_model(dataset_name, loss_func, light_model = DEFAULT_LIGHT_MODELS):
+def _get_model(dataset_name, loss_func, light_model=DEFAULT_LIGHT_MODELS):
     if light_model == False:
         if "mnist" in dataset_name:
             print("Created MNIST/FASHION_MNIST CNN")
@@ -500,6 +509,7 @@ def _get_model(dataset_name, loss_func, light_model = DEFAULT_LIGHT_MODELS):
         else:
             print("Unknown dataset, cannot create CNN light")
             exit()
+
 
 def get_optimizer(model, learning_rate, momentum, use_alr):
     if use_alr:
@@ -696,7 +706,6 @@ class CNN_MNIST_light(nn.Module):  # PyTorch model for MNIST and Fashion MNIST
         x = self.fc2(x)
         if self.loss_func == nn.functional.nll_loss:
             x = nn.functional.log_softmax(x, dim=1)
-        x = nn.functional.log_softmax(x, dim=1)
         return x
 
 
@@ -787,7 +796,7 @@ class CNN_CIFAR100(ResNet):
         super().__init__(num_classes=100, loss_func=loss_func)
 
 
-class CNN_CIFAR10_light(nn.Module): # Adapted PyTorch model for CIFAR10
+class CNN_CIFAR10_light(nn.Module):  # Adapted PyTorch model for CIFAR10
     def __init__(self, loss_func=nn.functional.nll_loss):
         print(f"CNN using loss: {loss_func}")
         super(CNN_CIFAR10, self).__init__()
@@ -840,7 +849,7 @@ class CNN_CIFAR10_light(nn.Module): # Adapted PyTorch model for CIFAR10
         return x"""
 
 
-class CNN_CIFAR100_light(nn.Module): # Adapted PyTorch model for CIFAR100
+class CNN_CIFAR100_light(nn.Module):  # Adapted PyTorch model for CIFAR100
     def __init__(self, loss_func=nn.functional.nll_loss):
         print(f"CNN using loss: {loss_func}")
         super(CNN_CIFAR100, self).__init__()

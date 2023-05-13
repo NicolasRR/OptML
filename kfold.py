@@ -60,16 +60,42 @@ epochs = [2, 4, 6]
 if args.alr == False:
     total_steps = len(epochs) * len(batch_sizes) * len(learning_rates) * len(momentums)
     avg_losses = np.zeros(
-        (len(epochs),  len(batch_sizes), len(learning_rates), len(momentums),)
+        (
+            len(epochs),
+            len(batch_sizes),
+            len(learning_rates),
+            len(momentums),
+        )
     )
 else:
     total_steps = len(epochs) * len(batch_sizes) * len(learning_rates)
     avg_losses = np.zeros(
-        (len(epochs), len(batch_sizes), len(learning_rates),)
+        (
+            len(epochs),
+            len(batch_sizes),
+            len(learning_rates),
+        )
     )
 
 current_step = 0
-def kfold_loop(kf, indices, alr, learning_rate, batch_size, epoch, dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=None, momentum=None):
+
+
+def kfold_loop(
+    kf,
+    indices,
+    alr,
+    learning_rate,
+    batch_size,
+    epoch,
+    dataset,
+    total_steps,
+    avg_losses,
+    epoch_index,
+    lr_index,
+    batch_size_index,
+    momentum_index=None,
+    momentum=None,
+):
     avg_loss = 0.0
     for fold, (train_indices, val_indices) in enumerate(kf.split(indices)):
         model = _get_model(args.dataset, LOSS_FUNC)
@@ -88,9 +114,7 @@ def kfold_loop(kf, indices, alr, learning_rate, batch_size, epoch, dataset, tota
         train_dataloader = DataLoader(
             dataset, batch_size=batch_size, sampler=train_sampler
         )
-        val_dataloader = DataLoader(
-            dataset, batch_size=batch_size, sampler=val_sampler
-        )
+        val_dataloader = DataLoader(dataset, batch_size=batch_size, sampler=val_sampler)
 
         for _ in range(epoch):
             for data, target in train_dataloader:
@@ -109,33 +133,71 @@ def kfold_loop(kf, indices, alr, learning_rate, batch_size, epoch, dataset, tota
                 val_loss += loss.item()
                 val_count += 1
         avg_loss += val_loss / val_count
-        print(f"Fold: {fold + 1}/{kf.get_n_splits()}, fold_loss: {val_loss / val_count}")
+        print(
+            f"Fold: {fold + 1}/{kf.get_n_splits()}, fold_loss: {val_loss / val_count}"
+        )
 
     avg_loss /= kf.get_n_splits()
 
     if alr == False:
         avg_losses[
-            epoch_index, batch_size_index, lr_index, momentum_index,
+            epoch_index,
+            batch_size_index,
+            lr_index,
+            momentum_index,
         ] = avg_loss
     else:
         avg_losses[
-            epoch_index, batch_size_index, lr_index,
+            epoch_index,
+            batch_size_index,
+            lr_index,
         ] = avg_loss
 
     current_step += 1
     print(
-            f"Step: {current_step}/{total_steps}, avg loss: {avg_loss}, epoch:{epoch}, lr:{learning_rate}, batch_size: {batch_size}"
-        )
+        f"Step: {current_step}/{total_steps}, avg loss: {avg_loss}, epoch:{epoch}, lr:{learning_rate}, batch_size: {batch_size}"
+    )
     return current_step, avg_losses
+
 
 for epoch_index, epoch in enumerate(epochs):
     for batch_size_index, batch_size in enumerate(batch_sizes):
         for lr_index, learning_rate in enumerate(learning_rates):
             if args.alr == False:
                 for momentum_index, momentum in enumerate(momentums):
-                    current_step, avg_losses = kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=momentum_index, momentum=momentum)
+                    current_step, avg_losses = kfold_loop(
+                        kf,
+                        indices,
+                        args.alr,
+                        learning_rate,
+                        batch_size,
+                        epoch,
+                        loader.dataset,
+                        total_steps,
+                        avg_losses,
+                        epoch_index,
+                        lr_index,
+                        batch_size_index,
+                        momentum_index=momentum_index,
+                        momentum=momentum,
+                    )
             else:
-                current_step, avg_losses = kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=None, momentum=None)
+                current_step, avg_losses = kfold_loop(
+                    kf,
+                    indices,
+                    args.alr,
+                    learning_rate,
+                    batch_size,
+                    epoch,
+                    loader.dataset,
+                    total_steps,
+                    avg_losses,
+                    epoch_index,
+                    lr_index,
+                    batch_size_index,
+                    momentum_index=None,
+                    momentum=None,
+                )
 
 min_loss_index = np.unravel_index(np.argmin(avg_losses, axis=None), avg_losses.shape)
 min_loss_value = avg_losses[min_loss_index]
@@ -147,7 +209,12 @@ if args.alr == False:
 
     index = pd.MultiIndex.from_product(
         [epochs, batch_sizes, learning_rates, momentums],
-        names=["epochs",  "batch_size", "learning_rate", "momentum",],
+        names=[
+            "epochs",
+            "batch_size",
+            "learning_rate",
+            "momentum",
+        ],
     )
 else:
     print(
