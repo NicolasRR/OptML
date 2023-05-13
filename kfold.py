@@ -35,6 +35,11 @@ if args.k_splits < 2:
     print("Forbiden value!!! --k_split should be >= 2")
     exit()
 
+if args.alr:
+    print("Using Adam as optimizer.")
+else:
+    print("Using SGD as optimizer.")
+
 print(f"Running Kfold for {args.dataset}, using {args.k_splits} splits.")
 
 loader = create_worker_trainloaders(
@@ -49,77 +54,109 @@ kf = KFold(n_splits=args.k_splits)
 
 learning_rates = [0.001, 0.005, 0.01, 0.05, 0.1]
 momentums = [0.9, 0.95, 0.99]
-batch_sizes = [32, 64, 100, 128]
-epochs = [2, 4, 6, 8, 10]
+batch_sizes = [32, 64, 128]
+epochs = [2, 4, 6]
 
-total_steps = len(epochs) * len(learning_rates) * len(momentums) * len(batch_sizes)
-current_step = 0
-avg_losses = np.zeros(
-    (len(epochs), len(learning_rates), len(momentums), len(batch_sizes))
-)
+if args.alr == False:
+    total_steps = len(epochs) * len(batch_sizes) * len(learning_rates) * len(momentums)
+    avg_losses = np.zeros(
+        (len(epochs),  len(batch_sizes), len(learning_rates), len(momentums),)
+    )
+else:
+    total_steps = len(epochs) * len(batch_sizes) * len(learning_rates)
+    avg_losses = np.zeros(
+        (len(epochs), len(batch_sizes), len(learning_rates),)
+    )
+
+def kfold_loop(kf, indices, alr, learning_rate, batch_size, epoch, dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=None, momentum=None):
+    avg_loss = 0.0
+    current_step = 0
+    for fold, (train_indices, val_indices) in enumerate(kf.split(indices)):
+        model = _get_model(args.dataset, LOSS_FUNC)
+        if alr == False:
+            optimizer = optim.SGD(
+                model.parameters(), lr=learning_rate, momentum=momentum
+            )
+        else:
+            optimizer = optim.Adam(
+                model.parameters(),
+                lr=learning_rate,
+            )
+
+        train_sampler = SubsetRandomSampler(train_indices)
+        val_sampler = SubsetRandomSampler(val_indices)
+        train_dataloader = DataLoader(
+            dataset, batch_size=batch_size, sampler=train_sampler
+        )
+        val_dataloader = DataLoader(
+            dataset, batch_size=batch_size, sampler=val_sampler
+        )
+
+        for _ in range(epoch):
+            for data, target in train_dataloader:
+                optimizer.zero_grad()
+                output = model(data)
+                loss = LOSS_FUNC(output, target)
+                loss.backward()
+                optimizer.step()
+
+        val_loss = 0.0
+        val_count = 0
+        with torch.no_grad():
+            for data, target in val_dataloader:
+                output = model(data)
+                loss = LOSS_FUNC(output, target)
+                val_loss += loss.item()
+                val_count += 1
+        avg_loss += val_loss / val_count
+        print(f"Fold: {fold + 1}/{kf.get_n_splits()}, fold_loss: {val_loss / val_count}")
+
+    avg_loss /= kf.get_n_splits()
+
+    if alr == False:
+        avg_losses[
+            epoch_index, batch_size_index, lr_index, momentum_index,
+        ] = avg_loss
+    else:
+        avg_losses[
+            epoch_index, batch_size_index, lr_index,
+        ] = avg_loss
+
+    current_step += 1
+    print(
+            f"Step: {current_step}/{total_steps}, avg loss: {avg_loss}, epoch:{epoch}, lr:{learning_rate}, batch_size: {batch_size}"
+        )
 
 for epoch_index, epoch in enumerate(epochs):
-    for lr_index, learning_rate in enumerate(learning_rates):
-        for momentum_index, momentum in enumerate(momentums):
-            for batch_size_index, batch_size in enumerate(batch_sizes):
-                avg_loss = 0.0
-                for fold, (train_indices, val_indices) in enumerate(kf.split(indices)):
-                    print(
-                        f"Step: {current_step+1}/{total_steps}, Fold: {fold + 1}/{kf.get_n_splits()}"
-                    )
-                    model = _get_model(args.dataset, LOSS_FUNC)
-                    if args.alr == False:
-                        optimizer = optim.SGD(
-                            model.parameters(), lr=learning_rate, momentum=momentum
-                        )
-                    else:
-                        optimizer = optim.Adam(
-                            model.parameters(),
-                            lr=learning_rate,
-                        )
-
-                    train_sampler = SubsetRandomSampler(train_indices)
-                    val_sampler = SubsetRandomSampler(val_indices)
-                    train_dataloader = DataLoader(
-                        loader.dataset, batch_size=batch_size, sampler=train_sampler
-                    )
-                    val_dataloader = DataLoader(
-                        loader.dataset, batch_size=batch_size, sampler=val_sampler
-                    )
-
-                    for _ in range(epoch):
-                        for data, target in train_dataloader:
-                            optimizer.zero_grad()
-                            output = model(data)
-                            loss = LOSS_FUNC(output, target)
-                            loss.backward()
-                            optimizer.step()
-
-                    val_loss = 0.0
-                    val_count = 0
-                    with torch.no_grad():
-                        for data, target in val_dataloader:
-                            output = model(data)
-                            loss = LOSS_FUNC(output, target)
-                            val_loss += loss.item()
-                            val_count += 1
-                    avg_loss += val_loss / val_count
-
-                avg_loss /= kf.get_n_splits()
-                avg_losses[
-                    epoch_index, lr_index, momentum_index, batch_size_index
-                ] = avg_loss
-                current_step += 1
+    for batch_size_index, batch_size in enumerate(batch_sizes):
+        for lr_index, learning_rate in enumerate(learning_rates):
+            if args.alr == False:
+                for momentum_index, momentum in enumerate(momentums):
+                    kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=momentum_index, momentum=momentum)
+            else:
+                kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=None, momentum=None)
 
 min_loss_index = np.unravel_index(np.argmin(avg_losses, axis=None), avg_losses.shape)
 min_loss_value = avg_losses[min_loss_index]
-print(
-    f"\nBest parameters: epochs={epochs[min_loss_index[0]]}, learning_rate={learning_rates[min_loss_index[1]]}, momentum={momentums[min_loss_index[2]]}, batch_size={batch_sizes[min_loss_index[3]]}, loss={min_loss_value}"
-)
 
-index = pd.MultiIndex.from_product(
-    [epochs, learning_rates, momentums, batch_sizes],
-    names=["epochs", "learning_rate", "momentum", "batch_size"],
-)
+if args.alr == False:
+    print(
+        f"\nBest parameters for {args.dataset}: epochs={epochs[min_loss_index[0]]}, batch_size={batch_sizes[min_loss_index[1]]}, learning_rate={learning_rates[min_loss_index[2]]}, momentum={momentums[min_loss_index[3]]}, loss={min_loss_value}"
+    )
+
+    index = pd.MultiIndex.from_product(
+        [epochs, batch_sizes, learning_rates, momentums],
+        names=["epochs",  "batch_size", "learning_rate", "momentum",],
+    )
+else:
+    print(
+        f"\nBest parameters for {args.dataset}: epochs={epochs[min_loss_index[0]]}, batch_size={batch_sizes[min_loss_index[1]]}, learning_rate={learning_rates[min_loss_index[2]]}, loss={min_loss_value}"
+    )
+
+    index = pd.MultiIndex.from_product(
+        [epochs, batch_sizes, learning_rates],
+        names=["epochs", "batch_size", "learning_rate"],
+    )
+
 df = pd.DataFrame(avg_losses.flatten(), index=index, columns=["Average Loss"])
 print(df.reset_index().to_string(index=False))
