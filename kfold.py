@@ -142,7 +142,7 @@ min_loss_value = avg_losses[min_loss_index]
 
 if args.alr == False:
     print(
-        f"\nBest parameters for {args.dataset}: epochs={epochs[min_loss_index[0]]}, batch_size={batch_sizes[min_loss_index[1]]}, learning_rate={learning_rates[min_loss_index[2]]}, momentum={momentums[min_loss_index[3]]}, loss={min_loss_value}"
+        f"\nBest parameters for {args.dataset} (SGD): epochs={epochs[min_loss_index[0]]}, batch_size={batch_sizes[min_loss_index[1]]}, learning_rate={learning_rates[min_loss_index[2]]}, momentum={momentums[min_loss_index[3]]}, loss={min_loss_value}"
     )
 
     index = pd.MultiIndex.from_product(
@@ -151,7 +151,7 @@ if args.alr == False:
     )
 else:
     print(
-        f"\nBest parameters for {args.dataset}: epochs={epochs[min_loss_index[0]]}, batch_size={batch_sizes[min_loss_index[1]]}, learning_rate={learning_rates[min_loss_index[2]]}, loss={min_loss_value}"
+        f"\nBest parameters for {args.dataset} (ADAM): epochs={epochs[min_loss_index[0]]}, batch_size={batch_sizes[min_loss_index[1]]}, learning_rate={learning_rates[min_loss_index[2]]}, loss={min_loss_value}"
     )
 
     index = pd.MultiIndex.from_product(
