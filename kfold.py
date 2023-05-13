@@ -68,9 +68,9 @@ else:
         (len(epochs), len(batch_sizes), len(learning_rates),)
     )
 
+current_step = 0
 def kfold_loop(kf, indices, alr, learning_rate, batch_size, epoch, dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=None, momentum=None):
     avg_loss = 0.0
-    current_step = 0
     for fold, (train_indices, val_indices) in enumerate(kf.split(indices)):
         model = _get_model(args.dataset, LOSS_FUNC)
         if alr == False:
@@ -126,15 +126,16 @@ def kfold_loop(kf, indices, alr, learning_rate, batch_size, epoch, dataset, tota
     print(
             f"Step: {current_step}/{total_steps}, avg loss: {avg_loss}, epoch:{epoch}, lr:{learning_rate}, batch_size: {batch_size}"
         )
+    return current_step, avg_losses
 
 for epoch_index, epoch in enumerate(epochs):
     for batch_size_index, batch_size in enumerate(batch_sizes):
         for lr_index, learning_rate in enumerate(learning_rates):
             if args.alr == False:
                 for momentum_index, momentum in enumerate(momentums):
-                    kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=momentum_index, momentum=momentum)
+                    current_step, avg_losses = kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=momentum_index, momentum=momentum)
             else:
-                kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=None, momentum=None)
+                current_step, avg_losses = kfold_loop(kf, indices, args.alr, learning_rate, batch_size, epoch, loader.dataset, total_steps, avg_losses, epoch_index, lr_index, batch_size_index, momentum_index=None, momentum=None)
 
 min_loss_index = np.unravel_index(np.argmin(avg_losses, axis=None), avg_losses.shape)
 min_loss_value = avg_losses[min_loss_index]
