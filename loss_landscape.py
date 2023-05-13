@@ -49,6 +49,7 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
             idx = 0
             for key, param in model.state_dict().items():
                 size = np.prod(param.shape)
+                print(idx, size)
                 weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
                     param.shape
                 )
@@ -197,7 +198,7 @@ if __name__ == "__main__":
         args.grid_border = DEFAULT_GRID_BORDER
         print(f"Using default grid_border: {DEFAULT_GRID_BORDER}")
     elif args.grid_border <= 0:
-        print("Forbidden value !!! grid_border must be <= 0")
+        print("Forbidden value !!! grid_border must be > 0")
         exit()
 
     if len(args.subfolder) > 0:
