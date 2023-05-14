@@ -67,9 +67,11 @@ def save_fig(fig, subfolder, model_type, validation=False):
         if len(subfolder) > 0:
             plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {os.path.join(subfolder, save_name)}")
         else:
             plt.savefig(save_name, bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {save_name}")
     else:
         save_name = None
         if model_type == "Classic":
@@ -79,9 +81,11 @@ def save_fig(fig, subfolder, model_type, validation=False):
         if len(subfolder) > 0:
             plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {os.path.join(subfolder, save_name)}")
         else:
             plt.savefig(save_name, bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {save_name}")
 
 
 def compute_training_time_and_pics(model_path, pics, subfolder):
