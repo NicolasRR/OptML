@@ -35,8 +35,9 @@ class ParameterServer_async(object):
         epochs,
         lrs,
         saves_per_epoch,
+        light_model,
     ):
-        self.model = _get_model(dataset_name, LOSS_FUNC)
+        self.model = _get_model(dataset_name, LOSS_FUNC, light_model)
         self.logger = logger
         self.model_lock = threading.Lock()
         self.nb_workers = nb_workers
@@ -236,6 +237,7 @@ def run_parameter_server_async(
     lrs,
     delay,
     slow_worker_1,
+    light_model,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
@@ -264,6 +266,7 @@ def run_parameter_server_async(
             epochs,
             lrs,
             saves_per_epoch,
+            light_model,
         )
     )
     futs = []

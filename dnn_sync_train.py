@@ -36,10 +36,11 @@ class ParameterServer_sync(object):
         lrs,
         saves_per_epoch,
         val,
+        light_model,
         train_loader=None,
         val_loader=None,
     ):
-        self.model = _get_model(dataset_name, LOSS_FUNC)
+        self.model = _get_model(dataset_name, LOSS_FUNC, light_model)
         self.logger = logger
         self.lock = threading.Lock()
         self.future_model = torch.futures.Future()
@@ -265,6 +266,7 @@ def run_parameter_server_sync(
     delay,
     slow_worker_1,
     val,
+    light_model,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
@@ -296,6 +298,7 @@ def run_parameter_server_sync(
                 lrs,
                 saves_per_epoch,
                 val,
+                light_model,
                 train_loader=train_loader,
                 val_loader=val_loader,
             )
@@ -315,6 +318,7 @@ def run_parameter_server_sync(
                 lrs,
                 saves_per_epoch,
                 val,
+                light_model,
             )
         )
     futs = []

@@ -22,13 +22,14 @@ DEFAULT_LR = 1e-2
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-# LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer if nll
-LOSS_FUNC = nn.functional.nll_loss
+LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer if nll
+# LOSS_FUNC = nn.functional.nll_loss
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DELAY_MIN = 0.01  # 10 ms
 DELAY_MAX = 0.02  # 20 ms
 DEFAULT_VAL_SPLIT = 0.1
+DEFAULT_LIGHT_MODELS = False
 
 
 #################################### Start and Run ####################################
@@ -104,6 +105,7 @@ def run(
     delay,
     slow_woker_1,
     val,
+    light_model,
     run_parameter_server,
 ):
     logger = setup_logger(log_queue)
@@ -146,6 +148,7 @@ def run(
                 delay,
                 slow_woker_1,
                 val,
+                light_model,
             )
         elif mode == "async":
             run_parameter_server(
@@ -169,6 +172,7 @@ def run(
                 lrs,
                 delay,
                 slow_woker_1,
+                light_model,
             )
     rpc.shutdown()
 
@@ -383,6 +387,11 @@ def read_parser(parser, mode=None):
         default=None,
         help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
     )
+    parser.add_argument(
+        "--light_model",
+        action="store_true",
+        help="""Will train using lighter CNN models instead of LeNet5 or ResNet18.""",
+    )
     if mode is None:
         parser.add_argument(
             "--val",
@@ -473,19 +482,33 @@ def read_parser(parser, mode=None):
 
 
 #################################### Main utility functions ####################################
-def _get_model(dataset_name, loss_func):
-    if "mnist" in dataset_name:
-        print("Created MNIST CNN")
-        return CNN_MNIST(loss_func=loss_func)  # global model
-    elif "cifar100" in dataset_name:
-        print("Created CIFAR100 CNN")
-        return CNN_CIFAR100(loss_func=loss_func)
-    elif "cifar10" in dataset_name:
-        print("Created CIFAR10 CNN")
-        return CNN_CIFAR10(loss_func=loss_func)
+def _get_model(dataset_name, loss_func, light_model=DEFAULT_LIGHT_MODELS):
+    if light_model == False:
+        if "mnist" in dataset_name:
+            print("Created MNIST/FASHION_MNIST CNN")
+            return CNN_MNIST(loss_func=loss_func)  # global model
+        elif "cifar100" in dataset_name:
+            print("Created CIFAR100 CNN")
+            return CNN_CIFAR100(loss_func=loss_func)
+        elif "cifar10" in dataset_name:
+            print("Created CIFAR10 CNN")
+            return CNN_CIFAR10(loss_func=loss_func)
+        else:
+            print("Unknown dataset, cannot create CNN")
+            exit()
     else:
-        print("Unknown dataset, cannot create CNN")
-        exit()
+        if "mnist" in dataset_name:
+            print("Created MNIST/FASHION_MNIST CNN light")
+            return CNN_MNIST_light(loss_func=loss_func)  # global model
+        elif "cifar100" in dataset_name:
+            print("Created CIFAR100 CNN light")
+            return CNN_CIFAR100_light(loss_func=loss_func)
+        elif "cifar10" in dataset_name:
+            print("Created CIFAR10 CNN light")
+            return CNN_CIFAR10_light(loss_func=loss_func)
+        else:
+            print("Unknown dataset, cannot create CNN light")
+            exit()
 
 
 def get_optimizer(model, learning_rate, momentum, use_alr):
@@ -550,22 +573,6 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
         return average_accuracy, correct_predictions, total_predictions, average_loss
     else:
         return average_accuracy, correct_predictions, total_predictions
-
-
-"""
-def get_worker_accuracy(worker_model, worker_name, worker_train_loader):
-    correct_predictions = 0
-    total_predictions = 0
-    with torch.no_grad():
-        for _, (data, target) in enumerate(worker_train_loader):
-            logits = worker_model(data)
-            predicted_classes = torch.argmax(logits, dim=1)
-            correct_predictions += (predicted_classes == target).sum().item()
-            total_predictions += target.size(0)
-        final_train_accuracy = correct_predictions / total_predictions
-    print(
-        f"Accuracy of {worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
-    )"""
 
 
 def _save_model(
@@ -649,6 +656,7 @@ def random_delay():  # 10 to 50 ms delay
 #################################### NET ####################################
 class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
     def __init__(self, loss_func=nn.functional.nll_loss):
+        print(f"LeNet5 using loss: {loss_func}")
         super(CNN_MNIST, self).__init__()
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
@@ -671,15 +679,17 @@ class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
         return x
 
 
-"""class CNN_MNIST(nn.Module):  # PyTorch model for MNIST and Fashion MNIST, using nll
-    def __init__(self):
-        super(CNN_MNIST, self).__init__()
+class CNN_MNIST_light(nn.Module):  # PyTorch model for MNIST and Fashion MNIST
+    def __init__(self, loss_func=nn.functional.nll_loss):
+        super(CNN_MNIST_light, self).__init__()
+        self.loss_func = loss_func
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout(0.25)
         self.dropout2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(9216, 128)
         self.fc2 = nn.Linear(128, 10)
+        print(f"CNN using loss: {loss_func}")
 
     def forward(self, x):
         x = self.conv1(x)
@@ -694,8 +704,9 @@ class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
         x = nn.functional.relu(x)
         x = self.dropout2(x)
         x = self.fc2(x)
-        output = nn.functional.log_softmax(x, dim=1)
-        return output"""
+        if self.loss_func == nn.functional.nll_loss:
+            x = nn.functional.log_softmax(x, dim=1)
+        return x
 
 
 class BasicBlock(nn.Module):
@@ -740,7 +751,9 @@ class ResNet(nn.Module):  # ResNet18
         num_blocks=[2, 2, 2, 2],
         loss_func=nn.functional.nll_loss,
     ):
+        print(f"ResNet18 using loss: {loss_func}")
         super(ResNet, self).__init__()
+        self.loss_func = loss_func
         self.in_channels = 64
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
@@ -783,9 +796,11 @@ class CNN_CIFAR100(ResNet):
         super().__init__(num_classes=100, loss_func=loss_func)
 
 
-"""class CNN_CIFAR10(nn.Module): # Adapted PyTorch model for CIFAR10 using nll
-    def __init__(self):
-        super(CNN_CIFAR10, self).__init__()
+class CNN_CIFAR10_light(nn.Module):  # Adapted PyTorch model for CIFAR10
+    def __init__(self, loss_func=nn.functional.nll_loss):
+        print(f"CNN using loss: {loss_func}")
+        super(CNN_CIFAR10_light, self).__init__()
+        self.loss_func = loss_func
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
@@ -807,8 +822,9 @@ class CNN_CIFAR100(ResNet):
         x = nn.functional.relu(x)
         x = self.dropout2(x)
         x = self.fc2(x)
-        output = nn.functional.log_softmax(x, dim=1)
-        return output"""
+        if self.loss_func == nn.functional.nll_loss:
+            x = nn.functional.log_softmax(x, dim=1)
+        return x
 
 
 """class CNN_CIFAR10(nn.Module): # Adapted PyTorch model for CIFAR10 using nll (more complex 3 conv layers)
@@ -833,9 +849,11 @@ class CNN_CIFAR100(ResNet):
         return x"""
 
 
-"""class CNN_CIFAR100(nn.Module): # Adapted PyTorch model for CIFAR100 using nll
-    def __init__(self):
-        super(CNN_CIFAR100, self).__init__()
+class CNN_CIFAR100_light(nn.Module):  # Adapted PyTorch model for CIFAR100
+    def __init__(self, loss_func=nn.functional.nll_loss):
+        print(f"CNN using loss: {loss_func}")
+        super(CNN_CIFAR100_light, self).__init__()
+        self.loss_func = loss_func
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
@@ -857,28 +875,9 @@ class CNN_CIFAR100(ResNet):
         x = nn.functional.relu(x)
         x = self.dropout2(x)
         x = self.fc2(x)
-        output = nn.functional.log_softmax(x, dim=1)
-        return output"""
-
-
-"""class CNN_CIFAR100(nn.Module): # Adapted PyTorch model for CIFAR100 using nll (variant 2)
-    def __init__(self):
-        super(CNN_CIFAR100, self).__init__()
-        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
-        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.dropout = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(64 * 16 * 16, 512)
-        self.fc2 = nn.Linear(512, 100)
-
-    def forward(self, x):
-        x = self.pool(torch.nn.functional.relu(self.conv1(x)))
-        x = self.pool(torch.nn.functional.relu(self.conv2(x)))
-        x = x.view(-1, 64 * 16 * 16)
-        x = self.dropout(x)
-        x = torch.nn.functional.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x"""
+        if self.loss_func == nn.functional.nll_loss:
+            x = nn.functional.log_softmax(x, dim=1)
+        return x
 
 
 #################################### Dataloader utility functions ####################################

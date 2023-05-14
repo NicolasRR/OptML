@@ -30,10 +30,11 @@ def run(
     use_alr,
     lrs,
     val,
+    light_model,
 ):
     loss_func = LOSS_FUNC
 
-    model = _get_model(dataset_name, loss_func)
+    model = _get_model(dataset_name, loss_func, light_model)
     optimizer = get_optimizer(model, learning_rate, momentum, use_alr)
 
     train_loaders, batch_size = create_worker_trainloaders(
@@ -173,4 +174,5 @@ if __name__ == "__main__":
         args.alr,
         args.lrs,
         args.val,
+        args.light_model,
     )

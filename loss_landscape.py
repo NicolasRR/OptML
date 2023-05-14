@@ -10,13 +10,34 @@ from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
 DEFAULT_GRID_BORDER = 5
-DEFAULT_GRID_SIZE = 25
+DEFAULT_GRID_SIZE = 15
 DEFAULT_BATCH_SIZE = 100
 
 
-def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border):
+def set_weights(model, flat_weights):
+    idx = 0
+    state_dict = model.state_dict()
+
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    assert total_params == len(
+        flat_weights
+    ), f"Number of model parameters ({total_params}) doesn't match length of weights array ({len(flat_weights)})"
+
+    for key, param in state_dict.items():
+        if param.requires_grad:
+            param_size = torch.prod(torch.tensor(param.shape)).item()
+            param_flat = flat_weights[idx : idx + param_size]
+            state_dict[key] = param_flat.view(param.shape)
+            idx += param_size
+
+    model.load_state_dict(state_dict)
+
+
+def main(
+    batch_size, weights_path, model_path, subfolder, grid_size, grid_border, light_model
+):
     loader = create_testloader(model_path, batch_size)
-    model = _get_model(model_path, LOSS_FUNC)
+    model = _get_model(model_path, LOSS_FUNC, light_model)
 
     model.load_state_dict(torch.load(model_path))
     model.eval()
@@ -44,21 +65,11 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
 
     with torch.no_grad():
         for weights in grid_weights:
-            # Convert the point to a dictionary with the same keys as the model's state_dict
-            weight_dict = {}
-            idx = 0
-            for key, param in model.state_dict().items():
-                size = np.prod(param.shape)
-                weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
-                    param.shape
-                )
-                idx += size
-
-            model.load_state_dict(weight_dict)
+            weights_torch = torch.tensor(weights).float()
+            set_weights(model, weights_torch)
 
             running_loss = 0.0
             for inputs, labels in loader:
-                inputs, labels = inputs, labels
                 outputs = model(inputs)
                 loss = LOSS_FUNC(outputs, labels)
                 running_loss += loss.item() * inputs.size(0)
@@ -79,21 +90,11 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
 
     with torch.no_grad():
         for weights in weights_matrix_np:
-            # Convert the point to a dictionary with the same keys as the model's state_dict
-            weight_dict = {}
-            idx = 0
-            for key, param in model.state_dict().items():
-                size = np.prod(param.shape)
-                weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
-                    param.shape
-                )
-                idx += size
-
-            model.load_state_dict(weight_dict)
+            weights_torch = torch.tensor(weights).float()
+            set_weights(model, weights_torch)
 
             running_loss = 0.0
             for inputs, labels in loader:
-                inputs, labels = inputs, labels
                 outputs = model(inputs)
                 loss = LOSS_FUNC(outputs, labels)
                 running_loss += loss.item() * inputs.size(0)
@@ -145,6 +146,8 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
         output_file_path = f"{model_basename}_loss_landscape.html"
         pio.write_html(fig, output_file_path)
 
+    print(f"Saved 3D figure at: {output_file_path}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Testing models")
@@ -176,6 +179,11 @@ if __name__ == "__main__":
         default="",
         help="""Subfolder name where the test results and plots will be saved.""",
     )
+    parser.add_argument(
+        "--light_model",
+        action="store_true",
+        help="""If set, will use the light CNN models.""",
+    )
 
     args = parser.parse_args()
 
@@ -197,7 +205,7 @@ if __name__ == "__main__":
         args.grid_border = DEFAULT_GRID_BORDER
         print(f"Using default grid_border: {DEFAULT_GRID_BORDER}")
     elif args.grid_border <= 0:
-        print("Forbidden value !!! grid_border must be <= 0")
+        print("Forbidden value !!! grid_border must be > 0")
         exit()
 
     if len(args.subfolder) > 0:
@@ -226,4 +234,5 @@ if __name__ == "__main__":
         args.subfolder,
         args.grid_size,
         args.grid_border,
+        args.light_model,
     )
