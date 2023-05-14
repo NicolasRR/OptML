@@ -19,22 +19,25 @@ def set_weights(model, flat_weights):
     state_dict = model.state_dict()
 
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    assert total_params == len(flat_weights), f"Number of model parameters ({total_params}) doesn't match length of weights array ({len(flat_weights)})"
+    assert total_params == len(
+        flat_weights
+    ), f"Number of model parameters ({total_params}) doesn't match length of weights array ({len(flat_weights)})"
 
     for key, param in state_dict.items():
         if param.requires_grad:
             param_size = torch.prod(torch.tensor(param.shape)).item()
-            param_flat = flat_weights[idx:idx+param_size]
+            param_flat = flat_weights[idx : idx + param_size]
             state_dict[key] = param_flat.view(param.shape)
             idx += param_size
 
     model.load_state_dict(state_dict)
 
 
-
-def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border):
+def main(
+    batch_size, weights_path, model_path, subfolder, grid_size, grid_border, light_model
+):
     loader = create_testloader(model_path, batch_size)
-    model = _get_model(model_path, LOSS_FUNC)
+    model = _get_model(model_path, LOSS_FUNC, light_model)
 
     model.load_state_dict(torch.load(model_path))
     model.eval()
@@ -176,6 +179,11 @@ if __name__ == "__main__":
         default="",
         help="""Subfolder name where the test results and plots will be saved.""",
     )
+    parser.add_argument(
+        "--light_model",
+        action="store_true",
+        help="""If set, will use the light CNN models.""",
+    )
 
     args = parser.parse_args()
 
@@ -226,4 +234,5 @@ if __name__ == "__main__":
         args.subfolder,
         args.grid_size,
         args.grid_border,
+        args.light_model,
     )

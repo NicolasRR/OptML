@@ -389,9 +389,17 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
                 save_fig(fig, subfolder, model_type, validation=True)
 
 
-def main(model_path, batch_size, classification_report, training_time, pics, subfolder):
+def main(
+    model_path,
+    batch_size,
+    classification_report,
+    training_time,
+    pics,
+    subfolder,
+    light_model,
+):
     # Load the saved model
-    model = _get_model(model_path, LOSS_FUNC)
+    model = _get_model(model_path, LOSS_FUNC, light_model)
     model.load_state_dict(torch.load(model_path))
 
     if len(subfolder) > 0:
@@ -454,6 +462,11 @@ if __name__ == "__main__":
         default="",
         help="""Subfolder name where the test results and plots will be saved.""",
     )
+    parser.add_argument(
+        "--light_model",
+        action="store_true",
+        help="""If set, will use the light CNN models..""",
+    )
 
     args = parser.parse_args()
 
@@ -478,6 +491,7 @@ if __name__ == "__main__":
         args.training_time,
         args.pics,
         args.subfolder,
+        args.light_model,
     )
 
 
