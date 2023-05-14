@@ -34,10 +34,10 @@ def set_weights(model, flat_weights):
 
 
 def main(
-    batch_size, weights_path, model_path, subfolder, grid_size, grid_border, light_model
+    batch_size, weights_path, model_path, subfolder, grid_size, grid_border, alt_model
 ):
     loader = create_testloader(model_path, batch_size)
-    model = _get_model(model_path, LOSS_FUNC, light_model)
+    model = _get_model(model_path, LOSS_FUNC, alt_model)
 
     model.load_state_dict(torch.load(model_path))
     model.eval()
@@ -180,9 +180,9 @@ if __name__ == "__main__":
         help="""Subfolder name where the test results and plots will be saved.""",
     )
     parser.add_argument(
-        "--light_model",
+        "--alt_model",
         action="store_true",
-        help="""If set, will use the light CNN models.""",
+        help="""If set, will use the CNN models (alternative).""",
     )
 
     args = parser.parse_args()
@@ -234,5 +234,5 @@ if __name__ == "__main__":
         args.subfolder,
         args.grid_size,
         args.grid_border,
-        args.light_model,
+        args.alt_model,
     )

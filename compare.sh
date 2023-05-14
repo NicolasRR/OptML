@@ -15,7 +15,7 @@ delay=false # Delay
 slow_worker_1=false # Slow Worker 1
 pics=false
 loss_landscape=false # load the weights perform PCA and compute the loss landscape
-light_model=false
+alt_model=false
 
 train_split=0.2
 epoch=2
@@ -46,7 +46,7 @@ while [ "$#" -gt 0 ]; do
     --slow_worker_1) slow_worker_1=true; shift ;;
     --pics) pics=true; shift ;;
     --loss_landscape) loss_landscape=true; shift ;;
-    --light_model) light_model=true; shift ;;
+    --alt_model) alt_model=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
@@ -65,8 +65,8 @@ training_flags=""
 if $alr; then
     training_flags+=" --alr"
 fi
-if $light_model; then
-    training_flags+=" --light_model"
+if $alt_model; then
+    training_flags+=" --alt_model"
 fi
 if [ ! -z "$saves_per_epoch" ]; then
     training_flags+=" --saves_per_epoch $saves_per_epoch"
