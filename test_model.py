@@ -55,34 +55,29 @@ def format_timedelta(x, _):
     return f"{minutes:02d}:{seconds:02d}:{milliseconds:03d}"
 
 
-def save_fig(fig, subfolder, model_type, validation=False):
-    if validation == False:
-        save_name = None
-        if model_type == "Classic":
-            save_name = "model_classic.png"
-        elif model_type == "Synchronous":
-            save_name = "model_synchronous.png"
-        elif model_type == "Asynchronous":
-            save_name = "model_asynchronous.png"
+def save_fig(fig, subfolder, model_path, validation=False):
 
+    model_filename = os.path.basename(model_path)
+    model_basename, _ = os.path.splitext(model_filename)
+    
+    if validation == False:
+        save_name = f"{model_basename}_training_plots.png"
         if len(subfolder) > 0:
-            plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
+            output_file_path = os.path.join(subfolder, save_name)
+            plt.savefig(output_file_path, bbox_inches="tight")
             plt.close(fig)
-            print(f"Saved fig at {os.path.join(subfolder, save_name)}")
+            print(f"Saved fig at {output_file_path}")
         else:
             plt.savefig(save_name, bbox_inches="tight")
             plt.close(fig)
             print(f"Saved fig at {save_name}")
     else:
-        save_name = None
-        if model_type == "Classic":
-            save_name = "validation_classic.png"
-        elif model_type == "Synchronous":
-            save_name = "validation_synchronous.png"
+        save_name = f"{model_basename}_validation_plots.png"
         if len(subfolder) > 0:
-            plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
+            output_file_path = os.path.join(subfolder, save_name)
+            plt.savefig(output_file_path, bbox_inches="tight")
             plt.close(fig)
-            print(f"Saved fig at {os.path.join(subfolder, save_name)}")
+            print(f"Saved fig at {output_file_path}")
         else:
             plt.savefig(save_name, bbox_inches="tight")
             plt.close(fig)
@@ -195,7 +190,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[2].set_title("Classic SGD computation speed")
             axs[2].xaxis.set_major_formatter(formatter)
 
-            save_fig(fig, subfolder, model_type)
+            save_fig(fig, subfolder, model_path)
 
         elif model_type == "Synchronous":
             model_loss_lines = []
@@ -263,7 +258,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[2].legend()
             axs[2].xaxis.set_major_formatter(formatter)
 
-            save_fig(fig, subfolder, model_type)
+            save_fig(fig, subfolder, model_path)
 
         elif model_type == "Asynchronous":
             worker_update_lines = []
@@ -334,7 +329,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             # Format x-axis tick labels
             axs[2].xaxis.set_major_formatter(formatter)
 
-            save_fig(fig, subfolder, model_type)
+            save_fig(fig, subfolder, model_path)
 
         if val_lines is not None:
             if len(val_lines) > 0:
@@ -395,7 +390,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
 
                 axs[1].legend()
 
-                save_fig(fig, subfolder, model_type, validation=True)
+                save_fig(fig, subfolder, model_path, validation=True)
 
 
 def main(
