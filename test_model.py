@@ -6,6 +6,7 @@ from matplotlib.ticker import FuncFormatter
 import matplotlib.pyplot as plt
 import contextlib
 import os
+import numpy as np
 from common import (
     _get_model,
     create_testloader,
@@ -357,37 +358,41 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
                 tr_acc = [line[2] for line in val_lines]
                 val_losses = [line[3] for line in val_lines]
                 val_acc = [line[4] for line in val_lines]
-                # First subplot (Model Loss vs Time)
-                axs[0].plot(timedeltas, tr_losses, marker="x", label="Training")
-                axs[0].plot(timedeltas, val_losses, marker="x", label="Validation")
-                axs[0].set_xlabel("Time (MM:SS:sss)")
+
+                epochs = list(range(1, len(val_lines) + 1))
+                epoch_opt = np.argmin(val_losses) + 1
+                print(f"The early stopping epoch is epoch {epoch_opt}.")
+
+                # First subplot (Model Loss vs Epoch)
+                axs[0].plot(epochs, tr_losses, marker="x", label="Training")
+                axs[0].plot(epochs, val_losses, marker="x", label="Validation")
+                axs[0].axvline(epoch_opt, color='k', linestyle='--', label='Early Stopping Point')
+                axs[0].set_xlabel("Epochs")
                 axs[0].set_ylabel("Loss")
                 if model_type == "Classic":
                     axs[0].set_title(
-                        "Classic SGD evolution of the train and validation loss in function of time"
+                        "Classic SGD evolution of the train and validation loss in function of epoch"
                     )
                 elif model_type == "Synchronous":
                     axs[0].set_title(
-                        "Synchronous SGD evolution of the train and validation loss in function of time"
+                        "Synchronous SGD evolution of the train and validation loss in function of epoch"
                     )
-                formatter = FuncFormatter(format_timedelta)
-                axs[0].xaxis.set_major_formatter(formatter)
                 axs[0].legend()
-                # Second subplot (Weights L2 norm vs Time)
-                axs[1].plot(timedeltas, tr_acc, marker="x", label="Training")
-                axs[1].plot(timedeltas, val_acc, marker="x", label="Validation")
-                axs[1].set_xlabel("Time (MM:SS:sss)")
+                # Second subplot (Weights L2 norm vs Epoch)
+                axs[1].plot(epochs, tr_acc, marker="x", label="Training")
+                axs[1].plot(epochs, val_acc, marker="x", label="Validation")
+                axs[1].axvline(epoch_opt, color='k', linestyle='--', label='Early Stopping Point')
+                axs[1].set_xlabel("Epochs")
                 axs[1].set_ylabel("Accuracy")
                 if model_type == "Classic":
                     axs[1].set_title(
-                        "Classic SGD evolution of the train and validation accuracy in function of time"
+                        "Classic SGD evolution of the train and validation accuracy in function of epoch"
                     )
                 elif model_type == "Synchronous":
                     axs[1].set_title(
-                        "Synchronous SGD evolution of the train and validation accuracy in function of time"
+                        "Synchronous SGD evolution of the train and validation accuracy in function of epoch"
                     )
-                formatter = FuncFormatter(format_timedelta)
-                axs[1].xaxis.set_major_formatter(formatter)
+
                 axs[1].legend()
 
                 save_fig(fig, subfolder, model_type, validation=True)
