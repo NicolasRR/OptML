@@ -9,7 +9,7 @@ then
         python3 -u kfold.py --dataset fashion_mnist --alr
         sleep 0.1
         echo
-        python3 -u kfold.py --dataset cifar10 --alr --light_model
+        python3 -u kfold.py --dataset cifar10 --alr --alt_model
         sleep 0.1
         echo
         # python3 -u kfold.py --dataset cifar100 --alr
@@ -24,7 +24,7 @@ else
         python3 -u kfold.py --dataset fashion_mnist --momentum
         sleep 0.1
         echo
-        python3 -u kfold.py --dataset cifar10 --light_model --momentum
+        python3 -u kfold.py --dataset cifar10 --alt_model
         sleep 0.1
         echo
         # python3 -u kfold.py --dataset cifar100

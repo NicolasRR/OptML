@@ -29,7 +29,7 @@ DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DELAY_MIN = 0.01  # 10 ms
 DELAY_MAX = 0.02  # 20 ms
 DEFAULT_VAL_SPLIT = 0.1
-DEFAULT_LIGHT_MODELS = False
+DEFAULT_ALTERNATE_MODELS = False
 
 
 #################################### Start and Run ####################################
@@ -72,7 +72,7 @@ def start(args, mode, run_parameter_server):
                 args.delay,
                 args.slow_worker_1,
                 args.val if hasattr(args, "val") else None,
-                args.light_model,
+                args.alt_model,
                 run_parameter_server,
             ),
             nprocs=args.world_size,
@@ -106,7 +106,7 @@ def run(
     delay,
     slow_woker_1,
     val,
-    light_model,
+    alt_model,
     run_parameter_server,
 ):
     logger = setup_logger(log_queue)
@@ -149,7 +149,7 @@ def run(
                 delay,
                 slow_woker_1,
                 val,
-                light_model,
+                alt_model,
             )
         elif mode == "async":
             run_parameter_server(
@@ -173,7 +173,7 @@ def run(
                 lrs,
                 delay,
                 slow_woker_1,
-                light_model,
+                alt_model,
             )
     rpc.shutdown()
 
@@ -389,9 +389,9 @@ def read_parser(parser, mode=None):
         help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
     )
     parser.add_argument(
-        "--light_model",
+        "--alt_model",
         action="store_true",
-        help="""Will train using lighter CNN models instead of LeNet5 or ResNet18.""",
+        help="""Will train using alternate CNN models instead of LeNet5 or ResNet18.""",
     )
     if mode is None:
         parser.add_argument(
@@ -483,8 +483,8 @@ def read_parser(parser, mode=None):
 
 
 #################################### Main utility functions ####################################
-def _get_model(dataset_name, loss_func, light_model=DEFAULT_LIGHT_MODELS):
-    if light_model == False:
+def _get_model(dataset_name, loss_func, alt_model=DEFAULT_ALTERNATE_MODELS):
+    if alt_model == False:
         if "mnist" in dataset_name:
             print("Created MNIST/FASHION_MNIST CNN")
             return CNN_MNIST(loss_func=loss_func)  # global model
@@ -499,16 +499,16 @@ def _get_model(dataset_name, loss_func, light_model=DEFAULT_LIGHT_MODELS):
             exit()
     else:
         if "mnist" in dataset_name:
-            print("Created MNIST/FASHION_MNIST CNN light")
-            return CNN_MNIST_light(loss_func=loss_func)  # global model
+            print("Created MNIST/FASHION_MNIST CNN (alternative)")
+            return CNN_MNIST_alt(loss_func=loss_func)  # global model
         elif "cifar100" in dataset_name:
-            print("Created CIFAR100 CNN light")
-            return CNN_CIFAR100_light(loss_func=loss_func)
+            print("Created CIFAR100 CNN (alternative)")
+            return CNN_CIFAR100_alt(loss_func=loss_func)
         elif "cifar10" in dataset_name:
-            print("Created CIFAR10 CNN light")
-            return CNN_CIFAR10_light(loss_func=loss_func)
+            print("Created CIFAR10 CNN (alternative)")
+            return CNN_CIFAR10_alt(loss_func=loss_func)
         else:
-            print("Unknown dataset, cannot create CNN light")
+            print("Unknown dataset, cannot create CNN (alternative)")
             exit()
 
 
@@ -680,9 +680,9 @@ class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
         return x
 
 
-class CNN_MNIST_light(nn.Module):  # PyTorch model for MNIST and Fashion MNIST
+class CNN_MNIST_alt(nn.Module):  # PyTorch model for MNIST and Fashion MNIST
     def __init__(self, loss_func=nn.functional.nll_loss):
-        super(CNN_MNIST_light, self).__init__()
+        super(CNN_MNIST_alt, self).__init__()
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
@@ -797,10 +797,10 @@ class CNN_CIFAR100(ResNet):
         super().__init__(num_classes=100, loss_func=loss_func)
 
 
-class CNN_CIFAR10_light(nn.Module):  # Adapted PyTorch model for CIFAR10
+class CNN_CIFAR10_alt(nn.Module):  # Adapted PyTorch model for CIFAR10
     def __init__(self, loss_func=nn.functional.nll_loss):
         print(f"CNN using loss: {loss_func}")
-        super(CNN_CIFAR10_light, self).__init__()
+        super(CNN_CIFAR10_alt, self).__init__()
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
@@ -850,10 +850,10 @@ class CNN_CIFAR10_light(nn.Module):  # Adapted PyTorch model for CIFAR10
         return x"""
 
 
-class CNN_CIFAR100_light(nn.Module):  # Adapted PyTorch model for CIFAR100
+class CNN_CIFAR100_alt(nn.Module):  # Adapted PyTorch model for CIFAR100
     def __init__(self, loss_func=nn.functional.nll_loss):
         print(f"CNN using loss: {loss_func}")
-        super(CNN_CIFAR100_light, self).__init__()
+        super(CNN_CIFAR100_alt, self).__init__()
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1)

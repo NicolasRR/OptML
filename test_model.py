@@ -6,6 +6,7 @@ from matplotlib.ticker import FuncFormatter
 import matplotlib.pyplot as plt
 import contextlib
 import os
+import numpy as np
 from common import (
     _get_model,
     create_testloader,
@@ -54,34 +55,33 @@ def format_timedelta(x, _):
     return f"{minutes:02d}:{seconds:02d}:{milliseconds:03d}"
 
 
-def save_fig(fig, subfolder, model_type, validation=False):
-    if validation == False:
-        save_name = None
-        if model_type == "Classic":
-            save_name = "model_classic.png"
-        elif model_type == "Synchronous":
-            save_name = "model_synchronous.png"
-        elif model_type == "Asynchronous":
-            save_name = "model_asynchronous.png"
+def save_fig(fig, subfolder, model_path, validation=False):
 
+    model_filename = os.path.basename(model_path)
+    model_basename, _ = os.path.splitext(model_filename)
+    
+    if validation == False:
+        save_name = f"{model_basename}_training_plots.png"
         if len(subfolder) > 0:
-            plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
+            output_file_path = os.path.join(subfolder, save_name)
+            plt.savefig(output_file_path, bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {output_file_path}")
         else:
             plt.savefig(save_name, bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {save_name}")
     else:
-        save_name = None
-        if model_type == "Classic":
-            save_name = "validation_classic.png"
-        elif model_type == "Synchronous":
-            save_name = "validation_synchronous.png"
+        save_name = f"{model_basename}_validation_plots.png"
         if len(subfolder) > 0:
-            plt.savefig(os.path.join(subfolder, save_name), bbox_inches="tight")
+            output_file_path = os.path.join(subfolder, save_name)
+            plt.savefig(output_file_path, bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {output_file_path}")
         else:
             plt.savefig(save_name, bbox_inches="tight")
             plt.close(fig)
+            print(f"Saved fig at {save_name}")
 
 
 def compute_training_time_and_pics(model_path, pics, subfolder):
@@ -190,7 +190,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[2].set_title("Classic SGD computation speed")
             axs[2].xaxis.set_major_formatter(formatter)
 
-            save_fig(fig, subfolder, model_type)
+            save_fig(fig, subfolder, model_path)
 
         elif model_type == "Synchronous":
             model_loss_lines = []
@@ -258,7 +258,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[2].legend()
             axs[2].xaxis.set_major_formatter(formatter)
 
-            save_fig(fig, subfolder, model_type)
+            save_fig(fig, subfolder, model_path)
 
         elif model_type == "Asynchronous":
             worker_update_lines = []
@@ -329,7 +329,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             # Format x-axis tick labels
             axs[2].xaxis.set_major_formatter(formatter)
 
-            save_fig(fig, subfolder, model_type)
+            save_fig(fig, subfolder, model_path)
 
         if val_lines is not None:
             if len(val_lines) > 0:
@@ -353,40 +353,44 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
                 tr_acc = [line[2] for line in val_lines]
                 val_losses = [line[3] for line in val_lines]
                 val_acc = [line[4] for line in val_lines]
-                # First subplot (Model Loss vs Time)
-                axs[0].plot(timedeltas, tr_losses, marker="x", label="Training")
-                axs[0].plot(timedeltas, val_losses, marker="x", label="Validation")
-                axs[0].set_xlabel("Time (MM:SS:sss)")
+
+                epochs = list(range(1, len(val_lines) + 1))
+                epoch_opt = np.argmin(val_losses) + 1
+                print(f"The early stopping epoch is epoch {epoch_opt}.")
+
+                # First subplot (Model Loss vs Epoch)
+                axs[0].plot(epochs, tr_losses, marker="x", label="Training")
+                axs[0].plot(epochs, val_losses, marker="x", label="Validation")
+                axs[0].axvline(epoch_opt, color='k', linestyle='--', label='Early Stopping Point')
+                axs[0].set_xlabel("Epochs")
                 axs[0].set_ylabel("Loss")
                 if model_type == "Classic":
                     axs[0].set_title(
-                        "Classic SGD evolution of the train and validation loss in function of time"
+                        "Classic SGD evolution of the train and validation loss in function of epoch"
                     )
                 elif model_type == "Synchronous":
                     axs[0].set_title(
-                        "Synchronous SGD evolution of the train and validation loss in function of time"
+                        "Synchronous SGD evolution of the train and validation loss in function of epoch"
                     )
-                formatter = FuncFormatter(format_timedelta)
-                axs[0].xaxis.set_major_formatter(formatter)
                 axs[0].legend()
-                # Second subplot (Weights L2 norm vs Time)
-                axs[1].plot(timedeltas, tr_acc, marker="x", label="Training")
-                axs[1].plot(timedeltas, val_acc, marker="x", label="Validation")
-                axs[1].set_xlabel("Time (MM:SS:sss)")
+                # Second subplot (Weights L2 norm vs Epoch)
+                axs[1].plot(epochs, tr_acc, marker="x", label="Training")
+                axs[1].plot(epochs, val_acc, marker="x", label="Validation")
+                axs[1].axvline(epoch_opt, color='k', linestyle='--', label='Early Stopping Point')
+                axs[1].set_xlabel("Epochs")
                 axs[1].set_ylabel("Accuracy")
                 if model_type == "Classic":
                     axs[1].set_title(
-                        "Classic SGD evolution of the train and validation accuracy in function of time"
+                        "Classic SGD evolution of the train and validation accuracy in function of epoch"
                     )
                 elif model_type == "Synchronous":
                     axs[1].set_title(
-                        "Synchronous SGD evolution of the train and validation accuracy in function of time"
+                        "Synchronous SGD evolution of the train and validation accuracy in function of epoch"
                     )
-                formatter = FuncFormatter(format_timedelta)
-                axs[1].xaxis.set_major_formatter(formatter)
+
                 axs[1].legend()
 
-                save_fig(fig, subfolder, model_type, validation=True)
+                save_fig(fig, subfolder, model_path, validation=True)
 
 
 def main(
@@ -396,10 +400,10 @@ def main(
     training_time,
     pics,
     subfolder,
-    light_model,
+    alt_model,
 ):
     # Load the saved model
-    model = _get_model(model_path, LOSS_FUNC, light_model)
+    model = _get_model(model_path, LOSS_FUNC, alt_model)
     model.load_state_dict(torch.load(model_path))
 
     if len(subfolder) > 0:
@@ -463,9 +467,9 @@ if __name__ == "__main__":
         help="""Subfolder name where the test results and plots will be saved.""",
     )
     parser.add_argument(
-        "--light_model",
+        "--alt_model",
         action="store_true",
-        help="""If set, will use the light CNN models..""",
+        help="""If set, will use the CNN models (alternative).""",
     )
 
     args = parser.parse_args()
@@ -491,7 +495,7 @@ if __name__ == "__main__":
         args.training_time,
         args.pics,
         args.subfolder,
-        args.light_model,
+        args.alt_model,
     )
 
 
