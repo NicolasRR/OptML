@@ -72,6 +72,7 @@ def start(args, mode, run_parameter_server):
                 args.delay,
                 args.slow_worker_1,
                 args.val if hasattr(args, "val") else None,
+                args.light_model,
                 run_parameter_server,
             ),
             nprocs=args.world_size,
