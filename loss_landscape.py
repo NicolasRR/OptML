@@ -14,6 +14,24 @@ DEFAULT_GRID_SIZE = 15
 DEFAULT_BATCH_SIZE = 100
 
 
+def set_weights(model, flat_weights):
+    idx = 0
+    state_dict = model.state_dict()
+
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    assert total_params == len(flat_weights), f"Number of model parameters ({total_params}) doesn't match length of weights array ({len(flat_weights)})"
+
+    for key, param in state_dict.items():
+        if param.requires_grad:
+            param_size = torch.prod(torch.tensor(param.shape)).item()
+            param_flat = flat_weights[idx:idx+param_size]
+            state_dict[key] = param_flat.view(param.shape)
+            idx += param_size
+
+    model.load_state_dict(state_dict)
+
+
+
 def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border):
     loader = create_testloader(model_path, batch_size)
     model = _get_model(model_path, LOSS_FUNC)
@@ -44,18 +62,8 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
 
     with torch.no_grad():
         for weights in grid_weights:
-            # Convert the point to a dictionary with the same keys as the model's state_dict
-            weight_dict = {}
-            idx = 0
-            for key, param in model.state_dict().items():
-                size = np.prod(param.shape)
-                print(idx, size)
-                weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
-                    param.shape
-                )
-                idx += size
-
-            model.load_state_dict(weight_dict)
+            weights_torch = torch.tensor(weights).float()
+            set_weights(model, weights_torch)
 
             running_loss = 0.0
             for inputs, labels in loader:
@@ -79,17 +87,8 @@ def main(batch_size, weights_path, model_path, subfolder, grid_size, grid_border
 
     with torch.no_grad():
         for weights in weights_matrix_np:
-            # Convert the point to a dictionary with the same keys as the model's state_dict
-            weight_dict = {}
-            idx = 0
-            for key, param in model.state_dict().items():
-                size = np.prod(param.shape)
-                weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
-                    param.shape
-                )
-                idx += size
-
-            model.load_state_dict(weight_dict)
+            weights_torch = torch.tensor(weights).float()
+            set_weights(model, weights_torch)
 
             running_loss = 0.0
             for inputs, labels in loader:

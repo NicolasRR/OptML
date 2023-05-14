@@ -681,8 +681,7 @@ class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
 
 class CNN_MNIST_light(nn.Module):  # PyTorch model for MNIST and Fashion MNIST
     def __init__(self, loss_func=nn.functional.nll_loss):
-        print(f"CNN using loss: {loss_func}")
-        super(CNN_MNIST, self).__init__()
+        super(CNN_MNIST_light, self).__init__()
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
@@ -690,6 +689,7 @@ class CNN_MNIST_light(nn.Module):  # PyTorch model for MNIST and Fashion MNIST
         self.dropout2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(9216, 128)
         self.fc2 = nn.Linear(128, 10)
+        print(f"CNN using loss: {loss_func}")
 
     def forward(self, x):
         x = self.conv1(x)
@@ -799,7 +799,7 @@ class CNN_CIFAR100(ResNet):
 class CNN_CIFAR10_light(nn.Module):  # Adapted PyTorch model for CIFAR10
     def __init__(self, loss_func=nn.functional.nll_loss):
         print(f"CNN using loss: {loss_func}")
-        super(CNN_CIFAR10, self).__init__()
+        super(CNN_CIFAR10_light, self).__init__()
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
@@ -852,7 +852,7 @@ class CNN_CIFAR10_light(nn.Module):  # Adapted PyTorch model for CIFAR10
 class CNN_CIFAR100_light(nn.Module):  # Adapted PyTorch model for CIFAR100
     def __init__(self, loss_func=nn.functional.nll_loss):
         print(f"CNN using loss: {loss_func}")
-        super(CNN_CIFAR100, self).__init__()
+        super(CNN_CIFAR100_light, self).__init__()
         self.loss_func = loss_func
         self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
