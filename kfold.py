@@ -120,6 +120,7 @@ def kfold_loop(
     lr_index,
     batch_size_index,
     light_model,
+    current_step,
     momentum_index=None,
     momentum=None,
 ):
@@ -206,6 +207,7 @@ for epoch_index, epoch in enumerate(epochs):
                         lr_index,
                         batch_size_index,
                         args.light_model,
+                        current_step,
                         momentum_index=momentum_index,
                         momentum=momentum,
                     )
@@ -224,6 +226,7 @@ for epoch_index, epoch in enumerate(epochs):
                     lr_index,
                     batch_size_index,
                     args.light_model,
+                    current_step,
                     momentum_index=None,
                     momentum=None,
                 )
