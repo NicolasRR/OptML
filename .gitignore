@@ -14,4 +14,4 @@ experience_*/
 *.html
 *.png
 !KFold results/*
-!Validation results/*
+!Validation results/**/*
