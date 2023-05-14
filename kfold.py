@@ -9,6 +9,7 @@ import pandas as pd
 from common import _get_model, create_worker_trainloaders, LOSS_FUNC
 
 DEFAULT_K_SPLITS = 5
+DEFAULT_MOMENTUM = 0.9
 
 parser = argparse.ArgumentParser(description="KFold Cross Validation ")
 parser.add_argument(
@@ -29,6 +30,19 @@ parser.add_argument(
     action="store_true",
     help="""Adam instead of vanilla SGD.""",
 )
+parser.add_argument(
+    "--momentum",
+    type=float,
+    default=None,
+    nargs="?",
+    const=DEFAULT_MOMENTUM,
+    help="""For SGD optimizer, use this momentum for KFold CV.""",
+)
+parser.add_argument(
+    "--light_model",
+    action="store_true",
+    help="""If set, will use the light CNN models.""",
+)
 args = parser.parse_args()
 
 if args.k_splits < 2:
@@ -39,6 +53,12 @@ if args.alr:
     print("Using Adam as optimizer.")
 else:
     print("Using SGD as optimizer.")
+
+if args.light_model:
+    print("Using light CNN models.")
+
+if args.momentum is not None and not args.alr:
+    print(f"Using momentum: {args.momentum}")
 
 print(f"Running Kfold for {args.dataset}, using {args.k_splits} splits.")
 
@@ -52,8 +72,14 @@ indices = np.array(indices)
 
 kf = KFold(n_splits=args.k_splits)
 
-learning_rates = [0.001, 0.005, 0.01, 0.05, 0.1]
-momentums = [0.9, 0.95, 0.99]
+if args.alr is False:
+    learning_rates = [0.001, 0.005, 0.01, 0.05, 0.1]
+else:
+    learning_rates = [0.0005, 0.001, 0.005, 0.01, 0.05]
+if args.momentum is None and args.alr is False:
+    momentums = [0.9, 0.95, 0.99]
+else:
+    momentums = [args.momentum]
 batch_sizes = [32, 64, 128]
 epochs = [2, 4, 6]
 
@@ -93,12 +119,13 @@ def kfold_loop(
     epoch_index,
     lr_index,
     batch_size_index,
+    light_model,
     momentum_index=None,
     momentum=None,
 ):
     avg_loss = 0.0
     for fold, (train_indices, val_indices) in enumerate(kf.split(indices)):
-        model = _get_model(args.dataset, LOSS_FUNC)
+        model = _get_model(args.dataset, LOSS_FUNC, light_model)
         if alr == False:
             optimizer = optim.SGD(
                 model.parameters(), lr=learning_rate, momentum=momentum
@@ -178,6 +205,7 @@ for epoch_index, epoch in enumerate(epochs):
                         epoch_index,
                         lr_index,
                         batch_size_index,
+                        args.light_model,
                         momentum_index=momentum_index,
                         momentum=momentum,
                     )
@@ -195,6 +223,7 @@ for epoch_index, epoch in enumerate(epochs):
                     epoch_index,
                     lr_index,
                     batch_size_index,
+                    args.light_model,
                     momentum_index=None,
                     momentum=None,
                 )

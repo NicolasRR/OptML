@@ -13,3 +13,4 @@ __pycache__/
 experience_*/
 *.html
 *.png
+!KFold results/*

@@ -11,6 +11,7 @@ saves_per_epoch="" # Saves per Epoch
 delay=false # Delay
 slow_worker_1=false # Slow Worker 1
 loss_landscape=false # load the weights perform PCA and compute the loss landscape
+light_model=false
 
 create_subfolder() {
   subfolder_name="experience_"
@@ -52,6 +53,7 @@ while [ "$#" -gt 0 ]; do
     --delay) delay=true; shift ;;
     --slow_worker_1) slow_worker_1=true; shift ;;
     --loss_landscape) loss_landscape=true; shift ;;
+    --light_model) light_model=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
@@ -86,6 +88,9 @@ for world_size in "${world_sizes[@]}"; do
     training_flags=""
     if $alr; then
         training_flags+=" --alr"
+    fi
+    if $light_model; then
+        training_flags+=" --light_model"
     fi
     if [ ! -z "$saves_per_epoch" ]; then
         training_flags+=" --saves_per_epoch $saves_per_epoch"
