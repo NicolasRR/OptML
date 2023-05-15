@@ -9,7 +9,7 @@ then
         python3 -u kfold.py --dataset fashion_mnist --alr
         sleep 0.1
         echo
-        python3 -u kfold.py --dataset cifar10 --alr --alt_model
+        python3 -u kfold.py --dataset cifar10 --alr
         sleep 0.1
         echo
         # python3 -u kfold.py --dataset cifar100 --alr
@@ -18,13 +18,13 @@ then
     } |& tee kfold_alr.txt
 else
     {
-        python3 -u kfold.py --dataset mnist --momentum
-        sleep 0.1
-        echo
-        python3 -u kfold.py --dataset fashion_mnist --momentum
-        sleep 0.1
-        echo
-        python3 -u kfold.py --dataset cifar10 --alt_model
+        # python3 -u kfold.py --dataset mnist --momentum
+        # sleep 0.1
+        # echo
+        # python3 -u kfold.py --dataset fashion_mnist --momentum
+        # sleep 0.1
+        # echo
+        python3 -u kfold.py --dataset cifar10 --momentum
         sleep 0.1
         echo
         # python3 -u kfold.py --dataset cifar100
