@@ -89,7 +89,11 @@ class ParameterServer_async(object):
 
         with self.model_lock:
             self.loss = loss
-            if self.scheduler is not None or self.saves_per_epoch is not None or self.val:
+            if (
+                self.scheduler is not None
+                or self.saves_per_epoch is not None
+                or self.val
+            ):
                 self.global_batch_counter += 1
             for param, grad in zip(self.model.parameters(), grads):
                 param.grad = grad
