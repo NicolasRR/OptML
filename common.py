@@ -552,7 +552,7 @@ def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
             return None
 
 
-def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False, worker_mode=False, dataset_name=None):
+def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False, worker_mode=False, dataset_name=None, worker_name=None):
     average_loss = 0
     correct_predictions = 0
     total_predictions = 0
@@ -576,6 +576,7 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
     average_accuracy = correct_predictions / total_predictions
 
     if worker_mode:
+        print(f"Train CR of {worker_name}:")
         report = CR(targets, predictions, zero_division=0)
         print(report)
         loader = create_testloader(dataset_name, DEFAULT_BATCH_SIZE)
@@ -594,8 +595,9 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
                 predictions_.extend(pred.view(-1).tolist())
 
         average_accuracy_ = correct_predictions_ / total_predictions_
-        print(f"Accuracy on test set: {average_accuracy_ * 100} % ({correct_predictions_}/{total_predictions_})")
+        print(f"Accuracy on test set of {worker_name}: {average_accuracy_ * 100} % ({correct_predictions_}/{total_predictions_})")
         report = CR(targets_, predictions_, zero_division=0)
+        print(f"Test CR of {worker_name}:")
         print(report)
         
 
