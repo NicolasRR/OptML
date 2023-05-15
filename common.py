@@ -579,7 +579,7 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
         print(f"Train CR of {worker_name}:")
         report = CR(targets, predictions, zero_division=0)
         print(report)
-        loader = create_testloader(dataset_name, DEFAULT_BATCH_SIZE)
+        """loader = create_testloader(dataset_name, DEFAULT_BATCH_SIZE)
         targets_ = []
         predictions_ = []
         correct_predictions_ = 0
@@ -598,7 +598,7 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
         print(f"Accuracy on test set of {worker_name}: {average_accuracy_ * 100} % ({correct_predictions_}/{total_predictions_})")
         report = CR(targets_, predictions_, zero_division=0)
         print(f"Test CR of {worker_name}:")
-        print(report)
+        print(report)"""
         
 
     if test_mode:
