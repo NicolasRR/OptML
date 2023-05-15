@@ -228,7 +228,7 @@ class Worker_sync(object):
                 correct_predictions,
                 total_predictions,
             ) = compute_accuracy_loss(
-                worker_model, self.train_loader, loss_func=LOSS_FUNC
+                worker_model, self.train_loader, loss_func=LOSS_FUNC, worker_mode=True,
             )
             print(
                 f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"

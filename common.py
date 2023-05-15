@@ -13,6 +13,7 @@ import threading
 import torch.multiprocessing as mp
 import torch.distributed.rpc as rpc
 import time
+from sklearn.metrics import classification_report as CR
 
 
 DEFAULT_DATASET = "mnist"
@@ -551,7 +552,7 @@ def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
             return None
 
 
-def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False):
+def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False, worker_mode=False):
     average_loss = 0
     correct_predictions = 0
     total_predictions = 0
@@ -573,6 +574,10 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
 
     average_loss /= total_predictions
     average_accuracy = correct_predictions / total_predictions
+
+    if worker_mode:
+        report = CR(targets, predictions, zero_division=0)
+        print(report)
 
     if test_mode:
         return (
