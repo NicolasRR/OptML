@@ -16,7 +16,7 @@ import time
 
 
 DEFAULT_DATASET = "mnist"
-DEFAULT_WORLD_SIZE = 4
+DEFAULT_WORLD_SIZE = 3
 DEFAULT_TRAIN_SPLIT = 1
 DEFAULT_LR = 1e-2
 DEFAULT_MOMENTUM = 0.0
@@ -71,7 +71,7 @@ def start(args, mode, run_parameter_server):
                 args.lrs,
                 args.delay,
                 args.slow_worker_1,
-                args.val if hasattr(args, "val") else None,
+                args.val,
                 args.alt_model,
                 run_parameter_server,
             ),
@@ -173,6 +173,7 @@ def run(
                 lrs,
                 delay,
                 slow_woker_1,
+                val,
                 alt_model,
             )
     rpc.shutdown()
@@ -303,13 +304,19 @@ def check_args(args, mode):
     if args.lrs is not None:
         print(f"Using learning rate scheduler: {args.lrs}")
 
-    if mode == "sync":
+    if mode == "sync" or mode == "async":
         if args.val and args.split_dataset:
             print("Please do not use --args.val and --args.split_dataset together")
             exit()
         elif args.val and args.split_labels:
             print("Please do not use --args.val and --args.split_labels together")
             exit()
+        
+        if mode == "async":
+            if args.val and args.split_labels_unscaled:
+                print("Please do not use --args.val and --args.split_labels_unscaled together")
+                exit()
+
 
         elif args.val:
             print("Using validation to analyze regularization.")
@@ -405,7 +412,12 @@ def read_parser(parser, mode=None):
             action="store_true",
             help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch. Please use --val without --split_dataset or --split_labels.""",
         )
-
+    if mode == "async":
+        parser.add_argument(
+            "--val",
+            action="store_true",
+            help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch. Please use --val without --split_dataset or --split_labels or --split_labels_unscaled.""",
+        )
     if mode is not None:
         parser.add_argument(
             "--master_port",

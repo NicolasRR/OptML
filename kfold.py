@@ -39,9 +39,9 @@ parser.add_argument(
     help="""For SGD optimizer, use this momentum for KFold CV.""",
 )
 parser.add_argument(
-    "--light_model",
+    "--alt_model",
     action="store_true",
-    help="""If set, will use the light CNN models.""",
+    help="""If set, will use the CNN models (alternative).""",
 )
 args = parser.parse_args()
 
@@ -54,8 +54,8 @@ if args.alr:
 else:
     print("Using SGD as optimizer.")
 
-if args.light_model:
-    print("Using light CNN models.")
+if args.alt_model:
+    print("Using CNN models (alternative).")
 
 if args.momentum is not None and not args.alr:
     print(f"Using momentum: {args.momentum}")
@@ -119,14 +119,14 @@ def kfold_loop(
     epoch_index,
     lr_index,
     batch_size_index,
-    light_model,
+    alt_model,
     current_step,
     momentum_index=None,
     momentum=None,
 ):
     avg_loss = 0.0
     for fold, (train_indices, val_indices) in enumerate(kf.split(indices)):
-        model = _get_model(args.dataset, LOSS_FUNC, light_model)
+        model = _get_model(args.dataset, LOSS_FUNC, alt_model)
         if alr == False:
             optimizer = optim.SGD(
                 model.parameters(), lr=learning_rate, momentum=momentum
@@ -206,7 +206,7 @@ for epoch_index, epoch in enumerate(epochs):
                         epoch_index,
                         lr_index,
                         batch_size_index,
-                        args.light_model,
+                        args.alt_model,
                         current_step,
                         momentum_index=momentum_index,
                         momentum=momentum,
@@ -225,13 +225,13 @@ for epoch_index, epoch in enumerate(epochs):
                     epoch_index,
                     lr_index,
                     batch_size_index,
-                    args.light_model,
+                    args.alt_model,
                     current_step,
                     momentum_index=None,
                     momentum=None,
                 )
 
-min_loss_index = np.unravel_index(np.argmin(avg_losses, axis=None), avg_losses.shape)
+min_loss_index = np.unravel_index(np.nanargmin(avg_losses, axis=None), avg_losses.shape)
 min_loss_value = avg_losses[min_loss_index]
 
 if args.alr == False:

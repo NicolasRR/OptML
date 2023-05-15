@@ -35,7 +35,10 @@ class ParameterServer_async(object):
         epochs,
         lrs,
         saves_per_epoch,
+        val,
         alt_model,
+        train_loader=None,
+        val_loader=None,
     ):
         self.model = _get_model(dataset_name, LOSS_FUNC, alt_model)
         self.logger = logger
@@ -46,7 +49,7 @@ class ParameterServer_async(object):
         self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
         self.weights_matrix = []
         self.saves_per_epoch = saves_per_epoch
-        if lrs is not None or saves_per_epoch is not None:
+        if lrs is not None or saves_per_epoch is not None or val:
             self.global_batch_counter = 0
         if saves_per_epoch is not None:
             save_idx = np.linspace(0, len_trainloader - 1, saves_per_epoch, dtype=int)
@@ -54,6 +57,10 @@ class ParameterServer_async(object):
             if len(unique_idx) < saves_per_epoch:
                 save_idx = np.array(sorted(unique_idx))
             self.save_idx = save_idx
+        self.val = val
+        if val:
+            self.train_loader = train_loader
+            self.val_loader = val_loader
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
 
@@ -82,7 +89,7 @@ class ParameterServer_async(object):
 
         with self.model_lock:
             self.loss = loss
-            if self.scheduler is not None or self.saves_per_epoch is not None:
+            if self.scheduler is not None or self.saves_per_epoch is not None or self.val:
                 self.global_batch_counter += 1
             for param, grad in zip(self.model.parameters(), grads):
                 param.grad = grad
@@ -101,12 +108,28 @@ class ParameterServer_async(object):
                     ]
                     self.weights_matrix.append(weights)
 
-            if self.scheduler is not None:
+            if self.scheduler is not None or self.val:
                 if (
                     self.global_batch_counter % (total_batches_to_run * self.nb_workers)
                     == 0
                 ):
-                    self.scheduler.step()
+                    if self.scheduler is not None:
+                        self.scheduler.step()
+                    if self.val:
+                        (
+                            train_acc,
+                            train_corr,
+                            train_tot,
+                            train_loss,
+                        ) = compute_accuracy_loss(
+                            self.model, self.train_loader, LOSS_FUNC, return_loss=True
+                        )
+                        val_acc, val_corr, val_tot, val_loss = compute_accuracy_loss(
+                            self.model, self.val_loader, LOSS_FUNC, return_loss=True
+                        )
+                        self.logger.debug(
+                            f"Train loss: {train_loss}, train accuracy: {train_acc*100} % ({train_corr}/{train_tot}), val loss: {val_loss}, val accuracy: {val_acc*100} % ({val_corr}/{val_tot}), epoch: {worker_epoch}/{total_epochs}"
+                        )
 
             self.logger.debug(
                 f"PS updated model, worker loss: {loss} ({worker_name}), weight norm: weights norm {compute_weights_l2_norm(self.model)}"
@@ -237,6 +260,7 @@ def run_parameter_server_async(
     lrs,
     delay,
     slow_worker_1,
+    val,
     alt_model,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
@@ -248,27 +272,53 @@ def run_parameter_server_async(
         split_dataset,
         split_labels,
         split_labels_unscaled,
+        validation=val,
     )
     train_loader_full = None
     if model_accuracy:
         train_loader_full = train_loaders[1]
         train_loaders = train_loaders[0]
 
-    ps_rref = rpc.RRef(
-        ParameterServer_async(
-            len(workers),
-            logger,
-            dataset_name,
-            learning_rate,
-            momentum,
-            use_alr,
-            len(train_loaders),
-            epochs,
-            lrs,
-            saves_per_epoch,
-            alt_model,
+    if val:
+        train_loader = train_loaders[0]
+        val_loader = train_loaders[1]
+        ps_rref = rpc.RRef(
+            ParameterServer_async(
+                len(workers),
+                logger,
+                dataset_name,
+                learning_rate,
+                momentum,
+                use_alr,
+                len(train_loader),
+                epochs,
+                lrs,
+                saves_per_epoch,
+                val,
+                alt_model,
+                train_loader=train_loader,
+                val_loader=val_loader,
+            )
         )
-    )
+    else:
+        train_loader = train_loaders
+        ps_rref = rpc.RRef(
+            ParameterServer_async(
+                len(workers),
+                logger,
+                dataset_name,
+                learning_rate,
+                momentum,
+                use_alr,
+                len(train_loader),
+                epochs,
+                lrs,
+                saves_per_epoch,
+                val,
+                alt_model,
+            )
+        )
+
     futs = []
 
     if (
@@ -283,7 +333,7 @@ def run_parameter_server_async(
                     args=(
                         ps_rref,
                         logger,
-                        train_loaders,
+                        train_loader,
                         epochs,
                         worker_accuracy,
                         delay,
@@ -302,7 +352,7 @@ def run_parameter_server_async(
                     args=(
                         ps_rref,
                         logger,
-                        train_loaders[idx],
+                        train_loader[idx],
                         epochs,
                         worker_accuracy,
                         delay,
