@@ -231,7 +231,7 @@ for epoch_index, epoch in enumerate(epochs):
                     momentum=None,
                 )
 
-min_loss_index = np.unravel_index(np.argmin(avg_losses, axis=None), avg_losses.shape)
+min_loss_index = np.unravel_index(np.nanargmin(avg_losses, axis=None), avg_losses.shape)
 min_loss_value = avg_losses[min_loss_index]
 
 if args.alr == False:
