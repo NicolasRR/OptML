@@ -18,6 +18,7 @@ from common import (
 
 DEFAULT_BATCH_SIZE = 500
 
+
 class Tee:
     def __init__(self, file):
         self.file = file
@@ -30,6 +31,7 @@ class Tee:
     def flush(self):
         self.stdout.flush()
         self.file.flush()
+
 
 @contextlib.contextmanager
 def redirect_stdout_to_file(file):
@@ -78,10 +80,9 @@ def format_timedelta(x, _):
 
 
 def save_fig(fig, subfolder, model_path, validation=False):
-
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
-    
+
     if validation == False:
         save_name = f"{model_basename}_training_plots.png"
         if len(subfolder) > 0:
@@ -382,27 +383,31 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
                 # First subplot (Model Loss vs Epoch)
                 axs[0].plot(epochs, tr_losses, marker="x", label="Training")
                 axs[0].plot(epochs, val_losses, marker="x", label="Validation")
-                axs[0].axvline(epoch_opt, color='k', linestyle='--', label='Early Stopping Point')
+                axs[0].axvline(
+                    epoch_opt, color="k", linestyle="--", label="Early Stopping Point"
+                )
                 if model_type == "Asynchronous":
                     axs[0].set_xlabel("Pseudo Epochs")
                 else:
                     axs[0].set_xlabel("Epochs")
                 axs[0].set_ylabel("Loss")
                 axs[0].set_title(
-                        f"{model_type} SGD evolution of the train and validation loss in function of epoch"
+                    f"{model_type} SGD evolution of the train and validation loss in function of epoch"
                 )
                 axs[0].legend()
                 # Second subplot (Weights L2 norm vs Epoch)
                 axs[1].plot(epochs, tr_acc, marker="x", label="Training")
                 axs[1].plot(epochs, val_acc, marker="x", label="Validation")
-                axs[1].axvline(epoch_opt, color='k', linestyle='--', label='Early Stopping Point')
+                axs[1].axvline(
+                    epoch_opt, color="k", linestyle="--", label="Early Stopping Point"
+                )
                 if model_type == "Asynchronous":
                     axs[1].set_xlabel("Pseudo Epochs")
                 else:
                     axs[1].set_xlabel("Epochs")
                 axs[1].set_ylabel("Accuracy")
                 axs[1].set_title(
-                        f"{model_type} SGD evolution of the train and validation loss in function of epoch"
+                    f"{model_type} SGD evolution of the train and validation loss in function of epoch"
                 )
 
                 axs[1].legend()
@@ -429,7 +434,9 @@ def main(
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
-            output_file_path = os.path.join(subfolder, f"{model_basename}_test_output.txt")
+            output_file_path = os.path.join(
+                subfolder, f"{model_basename}_test_output.txt"
+            )
     else:
         output_file_path = f"{model_basename}_test_output.txt"
 
@@ -443,9 +450,8 @@ def main(
             performance(
                 model_path, model, batch_size, classification_report, test=False
             )
-            performance(
-                model_path, model, batch_size, classification_report, test=True
-            )
+            performance(model_path, model, batch_size, classification_report, test=True)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Testing models")

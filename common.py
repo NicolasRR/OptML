@@ -311,12 +311,13 @@ def check_args(args, mode):
         elif args.val and args.split_labels:
             print("Please do not use --args.val and --args.split_labels together")
             exit()
-        
+
         if mode == "async":
             if args.val and args.split_labels_unscaled:
-                print("Please do not use --args.val and --args.split_labels_unscaled together")
+                print(
+                    "Please do not use --args.val and --args.split_labels_unscaled together"
+                )
                 exit()
-
 
         elif args.val:
             print("Using validation to analyze regularization.")
