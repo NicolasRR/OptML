@@ -552,7 +552,7 @@ def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
             return None
 
 
-def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False, worker_mode=False):
+def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False, worker_mode=False, dataset_name=None):
     average_loss = 0
     correct_predictions = 0
     total_predictions = 0
@@ -578,6 +578,26 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
     if worker_mode:
         report = CR(targets, predictions, zero_division=0)
         print(report)
+        loader = create_testloader(dataset_name, DEFAULT_BATCH_SIZE)
+        targets_ = []
+        predictions_ = []
+        correct_predictions_ = 0
+        total_predictions_ = 0
+        with torch.no_grad():
+            model.eval()
+            for images, labels in loader:
+                outputs = model(images)
+                _, pred = torch.max(outputs, 1)
+                correct_predictions_ += torch.sum(pred == labels.data)
+                total_predictions_ += images.size(0)
+                targets_.extend(labels.view(-1).tolist())
+                predictions_.extend(pred.view(-1).tolist())
+
+        average_accuracy_ = correct_predictions_ / total_predictions_
+        print(f"Accuracy on test set: {average_accuracy_ * 100} % ({correct_predictions_}/{total_predictions_})")
+        report = CR(targets_, predictions_, zero_division=0)
+        print(report)
+        
 
     if test_mode:
         return (
