@@ -1,0 +1,11 @@
+Testing performance of mnist_classic_0_10_001_00_32_50.pt
+Classic training time: 27:29:517
+Saved fig at mnist_classic_0_10_001_00_32_50_training_plots.png
+The early stopping epoch is epoch 20
+Saved fig at mnist_classic_0_10_001_00_32_50_validation_plots.png
+Train Performance
+Average train accuracy: 99.91 % (59944/60000)
+Average train loss: 0.0056
+Test Performance
+Average test accuracy: 98.95 % (9895/10000)
+Average test loss: 0.0460

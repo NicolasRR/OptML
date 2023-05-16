@@ -1,0 +1,668 @@
+2023-05-16 22:20:56,246 - common - INFO - Starting synchronous SGD training with 3 workers
+2023-05-16 22:20:56,265 - common - DEBUG - Worker_1 is working on a dataset of size 60000
+2023-05-16 22:20:56,275 - common - DEBUG - Worker_3 is working on a dataset of size 60000
+2023-05-16 22:20:56,275 - common - DEBUG - Worker_2 is working on a dataset of size 60000
+2023-05-16 22:20:57,081 - common - DEBUG - PS got 1/3 updates (from Worker_1, 1/600 (1/3600), epoch 1/6)
+2023-05-16 22:20:57,094 - common - DEBUG - PS got 1/3 updates (from Worker_2, 1/600 (1/3600), epoch 1/6)
+2023-05-16 22:20:57,111 - common - DEBUG - PS got 3/3 updates (from Worker_3, 1/600 (1/3600), epoch 1/6)
+2023-05-16 22:20:57,125 - common - DEBUG - PS updated model, global loss is 2.307622035344442, weights norm is 8.937593967854662
+2023-05-16 22:20:57,708 - common - DEBUG - PS got 1/3 updates (from Worker_2, 2/600 (2/3600), epoch 1/6)
+2023-05-16 22:20:57,753 - common - DEBUG - PS got 2/3 updates (from Worker_3, 2/600 (2/3600), epoch 1/6)
+2023-05-16 22:20:57,758 - common - DEBUG - PS got 3/3 updates (from Worker_1, 2/600 (2/3600), epoch 1/6)
+2023-05-16 22:20:57,768 - common - DEBUG - PS updated model, global loss is 2.2775587240854898, weights norm is 8.937717200577822
+2023-05-16 22:20:58,322 - common - DEBUG - PS got 1/3 updates (from Worker_2, 3/600 (3/3600), epoch 1/6)
+2023-05-16 22:20:58,412 - common - DEBUG - PS got 2/3 updates (from Worker_3, 3/600 (3/3600), epoch 1/6)
+2023-05-16 22:20:58,430 - common - DEBUG - PS got 2/3 updates (from Worker_1, 3/600 (3/3600), epoch 1/6)
+2023-05-16 22:20:58,441 - common - DEBUG - PS updated model, global loss is 2.249974807103475, weights norm is 8.938168495002106
+2023-05-16 22:20:58,882 - common - DEBUG - PS got 1/3 updates (from Worker_3, 4/600 (4/3600), epoch 1/6)
+2023-05-16 22:20:58,970 - common - DEBUG - PS got 2/3 updates (from Worker_1, 4/600 (4/3600), epoch 1/6)
+2023-05-16 22:20:58,982 - common - DEBUG - PS got 3/3 updates (from Worker_2, 4/600 (4/3600), epoch 1/6)
+2023-05-16 22:20:58,993 - common - DEBUG - PS updated model, global loss is 2.2030463218688965, weights norm is 8.939179048909022
+2023-05-16 22:20:59,634 - common - DEBUG - PS got 1/3 updates (from Worker_2, 5/600 (5/3600), epoch 1/6)
+2023-05-16 22:20:59,643 - common - DEBUG - PS got 2/3 updates (from Worker_1, 5/600 (5/3600), epoch 1/6)
+2023-05-16 22:20:59,650 - common - DEBUG - PS got 3/3 updates (from Worker_3, 5/600 (5/3600), epoch 1/6)
+2023-05-16 22:20:59,661 - common - DEBUG - PS updated model, global loss is 2.1512162685394287, weights norm is 8.940980275269249
+2023-05-16 22:21:00,347 - common - DEBUG - PS got 1/3 updates (from Worker_2, 6/600 (6/3600), epoch 1/6)
+2023-05-16 22:21:00,364 - common - DEBUG - PS got 2/3 updates (from Worker_3, 6/600 (6/3600), epoch 1/6)
+2023-05-16 22:21:00,376 - common - DEBUG - PS got 3/3 updates (from Worker_1, 6/600 (6/3600), epoch 1/6)
+2023-05-16 22:21:00,385 - common - DEBUG - PS updated model, global loss is 2.0940005779266357, weights norm is 8.943782723320105
+2023-05-16 22:21:00,861 - common - DEBUG - PS got 1/3 updates (from Worker_1, 7/600 (7/3600), epoch 1/6)
+2023-05-16 22:21:01,014 - common - DEBUG - PS got 2/3 updates (from Worker_3, 7/600 (7/3600), epoch 1/6)
+2023-05-16 22:21:01,038 - common - DEBUG - PS got 3/3 updates (from Worker_2, 7/600 (7/3600), epoch 1/6)
+2023-05-16 22:21:01,052 - common - DEBUG - PS updated model, global loss is 2.030087868372599, weights norm is 8.947734208811022
+2023-05-16 22:21:01,661 - common - DEBUG - PS got 1/3 updates (from Worker_3, 8/600 (8/3600), epoch 1/6)
+2023-05-16 22:21:01,672 - common - DEBUG - PS got 2/3 updates (from Worker_1, 8/600 (8/3600), epoch 1/6)
+2023-05-16 22:21:01,683 - common - DEBUG - PS got 3/3 updates (from Worker_2, 8/600 (8/3600), epoch 1/6)
+2023-05-16 22:21:01,692 - common - DEBUG - PS updated model, global loss is 1.9239902098973591, weights norm is 8.953227801795384
+2023-05-16 22:21:02,095 - common - DEBUG - PS got 1/3 updates (from Worker_2, 9/600 (9/3600), epoch 1/6)
+2023-05-16 22:21:02,223 - common - DEBUG - PS got 2/3 updates (from Worker_1, 9/600 (9/3600), epoch 1/6)
+2023-05-16 22:21:02,234 - common - DEBUG - PS got 3/3 updates (from Worker_3, 9/600 (9/3600), epoch 1/6)
+2023-05-16 22:21:02,244 - common - DEBUG - PS updated model, global loss is 1.8537919123967488, weights norm is 8.960303887123509
+2023-05-16 22:21:02,719 - common - DEBUG - PS got 1/3 updates (from Worker_1, 10/600 (10/3600), epoch 1/6)
+2023-05-16 22:21:02,764 - common - DEBUG - PS got 2/3 updates (from Worker_2, 10/600 (10/3600), epoch 1/6)
+2023-05-16 22:21:02,804 - common - DEBUG - PS got 3/3 updates (from Worker_3, 10/600 (10/3600), epoch 1/6)
+2023-05-16 22:21:02,812 - common - DEBUG - PS updated model, global loss is 1.7163440783818562, weights norm is 8.969170726407162
+2023-05-16 22:21:03,243 - common - DEBUG - PS got 1/3 updates (from Worker_1, 11/600 (11/3600), epoch 1/6)
+2023-05-16 22:21:03,304 - common - DEBUG - PS got 2/3 updates (from Worker_3, 11/600 (11/3600), epoch 1/6)
+2023-05-16 22:21:03,321 - common - DEBUG - PS got 3/3 updates (from Worker_2, 11/600 (11/3600), epoch 1/6)
+2023-05-16 22:21:03,333 - common - DEBUG - PS updated model, global loss is 1.578379472096761, weights norm is 8.97992785926042
+2023-05-16 22:21:03,920 - common - DEBUG - PS got 1/3 updates (from Worker_1, 12/600 (12/3600), epoch 1/6)
+2023-05-16 22:21:04,091 - common - DEBUG - PS got 2/3 updates (from Worker_2, 12/600 (12/3600), epoch 1/6)
+2023-05-16 22:21:04,100 - common - DEBUG - PS got 3/3 updates (from Worker_3, 12/600 (12/3600), epoch 1/6)
+2023-05-16 22:21:04,113 - common - DEBUG - PS updated model, global loss is 1.4971030950546265, weights norm is 8.992371501453055
+2023-05-16 22:21:05,000 - common - DEBUG - PS got 1/3 updates (from Worker_2, 13/600 (13/3600), epoch 1/6)
+2023-05-16 22:21:05,046 - common - DEBUG - PS got 2/3 updates (from Worker_3, 13/600 (13/3600), epoch 1/6)
+2023-05-16 22:21:05,053 - common - DEBUG - PS got 3/3 updates (from Worker_1, 13/600 (13/3600), epoch 1/6)
+2023-05-16 22:21:05,064 - common - DEBUG - PS updated model, global loss is 1.4670451879501343, weights norm is 9.005677061806479
+2023-05-16 22:21:05,572 - common - DEBUG - PS got 1/3 updates (from Worker_1, 14/600 (14/3600), epoch 1/6)
+2023-05-16 22:21:05,662 - common - DEBUG - PS got 2/3 updates (from Worker_2, 14/600 (14/3600), epoch 1/6)
+2023-05-16 22:21:05,687 - common - DEBUG - PS got 3/3 updates (from Worker_3, 14/600 (14/3600), epoch 1/6)
+2023-05-16 22:21:05,700 - common - DEBUG - PS updated model, global loss is 1.2781670093536377, weights norm is 9.019648577176733
+2023-05-16 22:21:06,230 - common - DEBUG - PS got 1/3 updates (from Worker_2, 15/600 (15/3600), epoch 1/6)
+2023-05-16 22:21:06,250 - common - DEBUG - PS got 2/3 updates (from Worker_3, 15/600 (15/3600), epoch 1/6)
+2023-05-16 22:21:06,317 - common - DEBUG - PS got 3/3 updates (from Worker_1, 15/600 (15/3600), epoch 1/6)
+2023-05-16 22:21:06,326 - common - DEBUG - PS updated model, global loss is 1.241318980852763, weights norm is 9.033800533912645
+2023-05-16 22:21:06,832 - common - DEBUG - PS got 1/3 updates (from Worker_1, 16/600 (16/3600), epoch 1/6)
+2023-05-16 22:21:06,998 - common - DEBUG - PS got 2/3 updates (from Worker_3, 16/600 (16/3600), epoch 1/6)
+2023-05-16 22:21:07,013 - common - DEBUG - PS got 3/3 updates (from Worker_2, 16/600 (16/3600), epoch 1/6)
+2023-05-16 22:21:07,024 - common - DEBUG - PS updated model, global loss is 1.1041239500045776, weights norm is 9.048177990652965
+2023-05-16 22:21:07,439 - common - DEBUG - PS got 1/3 updates (from Worker_1, 17/600 (17/3600), epoch 1/6)
+2023-05-16 22:21:07,636 - common - DEBUG - PS got 2/3 updates (from Worker_3, 17/600 (17/3600), epoch 1/6)
+2023-05-16 22:21:07,653 - common - DEBUG - PS got 3/3 updates (from Worker_2, 17/600 (17/3600), epoch 1/6)
+2023-05-16 22:21:07,662 - common - DEBUG - PS updated model, global loss is 1.1893890301386516, weights norm is 9.06165597626198
+2023-05-16 22:21:08,245 - common - DEBUG - PS got 1/3 updates (from Worker_3, 18/600 (18/3600), epoch 1/6)
+2023-05-16 22:21:08,294 - common - DEBUG - PS got 2/3 updates (from Worker_2, 18/600 (18/3600), epoch 1/6)
+2023-05-16 22:21:08,325 - common - DEBUG - PS got 3/3 updates (from Worker_1, 18/600 (18/3600), epoch 1/6)
+2023-05-16 22:21:08,337 - common - DEBUG - PS updated model, global loss is 1.0986430644989014, weights norm is 9.07430877380834
+2023-05-16 22:21:08,991 - common - DEBUG - PS got 1/3 updates (from Worker_1, 19/600 (19/3600), epoch 1/6)
+2023-05-16 22:21:09,006 - common - DEBUG - PS got 2/3 updates (from Worker_2, 19/600 (19/3600), epoch 1/6)
+2023-05-16 22:21:09,025 - common - DEBUG - PS got 3/3 updates (from Worker_3, 19/600 (19/3600), epoch 1/6)
+2023-05-16 22:21:09,038 - common - DEBUG - PS updated model, global loss is 1.117308259010315, weights norm is 9.085797657606618
+2023-05-16 22:21:09,667 - common - DEBUG - PS got 1/3 updates (from Worker_3, 20/600 (20/3600), epoch 1/6)
+2023-05-16 22:21:09,678 - common - DEBUG - PS got 2/3 updates (from Worker_1, 20/600 (20/3600), epoch 1/6)
+2023-05-16 22:21:09,698 - common - DEBUG - PS got 3/3 updates (from Worker_2, 20/600 (20/3600), epoch 1/6)
+2023-05-16 22:21:09,708 - common - DEBUG - PS updated model, global loss is 1.1774577299753826, weights norm is 9.09578392924954
+2023-05-16 22:21:10,308 - common - DEBUG - PS got 1/3 updates (from Worker_3, 21/600 (21/3600), epoch 1/6)
+2023-05-16 22:21:10,412 - common - DEBUG - PS got 2/3 updates (from Worker_2, 21/600 (21/3600), epoch 1/6)
+2023-05-16 22:21:10,432 - common - DEBUG - PS got 3/3 updates (from Worker_1, 21/600 (21/3600), epoch 1/6)
+2023-05-16 22:21:10,442 - common - DEBUG - PS updated model, global loss is 1.1329056024551392, weights norm is 9.104666291172842
+2023-05-16 22:21:10,931 - common - DEBUG - PS got 1/3 updates (from Worker_3, 22/600 (22/3600), epoch 1/6)
+2023-05-16 22:21:10,940 - common - DEBUG - PS got 2/3 updates (from Worker_1, 22/600 (22/3600), epoch 1/6)
+2023-05-16 22:21:11,002 - common - DEBUG - PS got 3/3 updates (from Worker_2, 22/600 (22/3600), epoch 1/6)
+2023-05-16 22:21:11,010 - common - DEBUG - PS updated model, global loss is 1.146444280942281, weights norm is 9.11236743792695
+2023-05-16 22:21:11,424 - common - DEBUG - PS got 1/3 updates (from Worker_3, 23/600 (23/3600), epoch 1/6)
+2023-05-16 22:21:11,547 - common - DEBUG - PS got 2/3 updates (from Worker_1, 23/600 (23/3600), epoch 1/6)
+2023-05-16 22:21:11,625 - common - DEBUG - PS got 3/3 updates (from Worker_2, 23/600 (23/3600), epoch 1/6)
+2023-05-16 22:21:11,636 - common - DEBUG - PS updated model, global loss is 0.9557456970214844, weights norm is 9.119675177956411
+2023-05-16 22:21:12,011 - common - DEBUG - PS got 1/3 updates (from Worker_2, 24/600 (24/3600), epoch 1/6)
+2023-05-16 22:21:12,193 - common - DEBUG - PS got 2/3 updates (from Worker_3, 24/600 (24/3600), epoch 1/6)
+2023-05-16 22:21:12,241 - common - DEBUG - PS got 3/3 updates (from Worker_1, 24/600 (24/3600), epoch 1/6)
+2023-05-16 22:21:12,253 - common - DEBUG - PS updated model, global loss is 0.9952216744422913, weights norm is 9.126134839537889
+2023-05-16 22:21:13,020 - common - DEBUG - PS got 1/3 updates (from Worker_1, 25/600 (25/3600), epoch 1/6)
+2023-05-16 22:21:13,031 - common - DEBUG - PS got 2/3 updates (from Worker_2, 25/600 (25/3600), epoch 1/6)
+2023-05-16 22:21:13,036 - common - DEBUG - PS got 3/3 updates (from Worker_3, 25/600 (25/3600), epoch 1/6)
+2023-05-16 22:21:13,047 - common - DEBUG - PS updated model, global loss is 1.0755685170491536, weights norm is 9.131710097355295
+2023-05-16 22:21:13,571 - common - DEBUG - PS got 1/3 updates (from Worker_3, 26/600 (26/3600), epoch 1/6)
+2023-05-16 22:21:13,748 - common - DEBUG - PS got 2/3 updates (from Worker_2, 26/600 (26/3600), epoch 1/6)
+2023-05-16 22:21:13,752 - common - DEBUG - PS got 3/3 updates (from Worker_1, 26/600 (26/3600), epoch 1/6)
+2023-05-16 22:21:13,762 - common - DEBUG - PS updated model, global loss is 0.9031882484753927, weights norm is 9.137208453304197
+2023-05-16 22:21:14,208 - common - DEBUG - PS got 1/3 updates (from Worker_1, 27/600 (27/3600), epoch 1/6)
+2023-05-16 22:21:14,276 - common - DEBUG - PS got 2/3 updates (from Worker_2, 27/600 (27/3600), epoch 1/6)
+2023-05-16 22:21:14,286 - common - DEBUG - PS got 3/3 updates (from Worker_3, 27/600 (27/3600), epoch 1/6)
+2023-05-16 22:21:14,297 - common - DEBUG - PS updated model, global loss is 0.8031408985455831, weights norm is 9.143219959017074
+2023-05-16 22:21:15,118 - common - DEBUG - PS got 1/3 updates (from Worker_3, 28/600 (28/3600), epoch 1/6)
+2023-05-16 22:21:15,171 - common - DEBUG - PS got 2/3 updates (from Worker_1, 28/600 (28/3600), epoch 1/6)
+2023-05-16 22:21:15,201 - common - DEBUG - PS got 3/3 updates (from Worker_2, 28/600 (28/3600), epoch 1/6)
+2023-05-16 22:21:15,222 - common - DEBUG - PS updated model, global loss is 0.9249995946884155, weights norm is 9.149032183751299
+2023-05-16 22:21:15,950 - common - DEBUG - PS got 1/3 updates (from Worker_3, 29/600 (29/3600), epoch 1/6)
+2023-05-16 22:21:15,954 - common - DEBUG - PS got 1/3 updates (from Worker_1, 29/600 (29/3600), epoch 1/6)
+2023-05-16 22:21:15,961 - common - DEBUG - PS got 1/3 updates (from Worker_2, 29/600 (29/3600), epoch 1/6)
+2023-05-16 22:21:15,980 - common - DEBUG - PS updated model, global loss is 0.9002326130867004, weights norm is 9.154689219035928
+2023-05-16 22:21:16,741 - common - DEBUG - PS got 1/3 updates (from Worker_2, 30/600 (30/3600), epoch 1/6)
+2023-05-16 22:21:16,800 - common - DEBUG - PS got 2/3 updates (from Worker_3, 30/600 (30/3600), epoch 1/6)
+2023-05-16 22:21:16,820 - common - DEBUG - PS got 3/3 updates (from Worker_1, 30/600 (30/3600), epoch 1/6)
+2023-05-16 22:21:16,832 - common - DEBUG - PS updated model, global loss is 0.8753491044044495, weights norm is 9.160629973702527
+2023-05-16 22:21:17,374 - common - DEBUG - PS got 1/3 updates (from Worker_3, 31/600 (31/3600), epoch 1/6)
+2023-05-16 22:21:17,450 - common - DEBUG - PS got 2/3 updates (from Worker_2, 31/600 (31/3600), epoch 1/6)
+2023-05-16 22:21:17,503 - common - DEBUG - PS got 3/3 updates (from Worker_1, 31/600 (31/3600), epoch 1/6)
+2023-05-16 22:21:17,515 - common - DEBUG - PS updated model, global loss is 0.9093266526858012, weights norm is 9.167004552313504
+2023-05-16 22:21:18,205 - common - DEBUG - PS got 1/3 updates (from Worker_1, 32/600 (32/3600), epoch 1/6)
+2023-05-16 22:21:18,226 - common - DEBUG - PS got 2/3 updates (from Worker_3, 32/600 (32/3600), epoch 1/6)
+2023-05-16 22:21:18,354 - common - DEBUG - PS got 3/3 updates (from Worker_2, 32/600 (32/3600), epoch 1/6)
+2023-05-16 22:21:18,371 - common - DEBUG - PS updated model, global loss is 0.803891102472941, weights norm is 9.17390863536476
+2023-05-16 22:21:18,854 - common - DEBUG - PS got 1/3 updates (from Worker_2, 33/600 (33/3600), epoch 1/6)
+2023-05-16 22:21:19,115 - common - DEBUG - PS got 2/3 updates (from Worker_3, 33/600 (33/3600), epoch 1/6)
+2023-05-16 22:21:19,135 - common - DEBUG - PS got 3/3 updates (from Worker_1, 33/600 (33/3600), epoch 1/6)
+2023-05-16 22:21:19,149 - common - DEBUG - PS updated model, global loss is 0.8415001034736633, weights norm is 9.181062984732403
+2023-05-16 22:21:19,970 - common - DEBUG - PS got 1/3 updates (from Worker_3, 34/600 (34/3600), epoch 1/6)
+2023-05-16 22:21:20,059 - common - DEBUG - PS got 2/3 updates (from Worker_1, 34/600 (34/3600), epoch 1/6)
+2023-05-16 22:21:20,072 - common - DEBUG - PS got 2/3 updates (from Worker_2, 34/600 (34/3600), epoch 1/6)
+2023-05-16 22:21:20,086 - common - DEBUG - PS updated model, global loss is 0.7651681701342264, weights norm is 9.188335229074047
+2023-05-16 22:21:20,820 - common - DEBUG - PS got 1/3 updates (from Worker_3, 35/600 (35/3600), epoch 1/6)
+2023-05-16 22:21:20,942 - common - DEBUG - PS got 2/3 updates (from Worker_1, 35/600 (35/3600), epoch 1/6)
+2023-05-16 22:21:20,950 - common - DEBUG - PS got 3/3 updates (from Worker_2, 35/600 (35/3600), epoch 1/6)
+2023-05-16 22:21:20,962 - common - DEBUG - PS updated model, global loss is 0.8158879478772482, weights norm is 9.195742373451695
+2023-05-16 22:21:21,395 - common - DEBUG - PS got 1/3 updates (from Worker_2, 36/600 (36/3600), epoch 1/6)
+2023-05-16 22:21:21,507 - common - DEBUG - PS got 2/3 updates (from Worker_1, 36/600 (36/3600), epoch 1/6)
+2023-05-16 22:21:21,569 - common - DEBUG - PS got 3/3 updates (from Worker_3, 36/600 (36/3600), epoch 1/6)
+2023-05-16 22:21:21,579 - common - DEBUG - PS updated model, global loss is 0.8814810911814371, weights norm is 9.203067836953393
+2023-05-16 22:21:22,432 - common - DEBUG - PS got 1/3 updates (from Worker_3, 37/600 (37/3600), epoch 1/6)
+2023-05-16 22:21:22,478 - common - DEBUG - PS got 2/3 updates (from Worker_1, 37/600 (37/3600), epoch 1/6)
+2023-05-16 22:21:22,552 - common - DEBUG - PS got 3/3 updates (from Worker_2, 37/600 (37/3600), epoch 1/6)
+2023-05-16 22:21:22,564 - common - DEBUG - PS updated model, global loss is 0.7511419256528219, weights norm is 9.210230984381658
+2023-05-16 22:21:23,144 - common - DEBUG - PS got 1/3 updates (from Worker_3, 38/600 (38/3600), epoch 1/6)
+2023-05-16 22:21:23,388 - common - DEBUG - PS got 2/3 updates (from Worker_2, 38/600 (38/3600), epoch 1/6)
+2023-05-16 22:21:23,409 - common - DEBUG - PS got 3/3 updates (from Worker_1, 38/600 (38/3600), epoch 1/6)
+2023-05-16 22:21:23,420 - common - DEBUG - PS updated model, global loss is 0.7658225893974304, weights norm is 9.217375117438408
+2023-05-16 22:21:24,037 - common - DEBUG - PS got 1/3 updates (from Worker_1, 39/600 (39/3600), epoch 1/6)
+2023-05-16 22:21:24,142 - common - DEBUG - PS got 2/3 updates (from Worker_3, 39/600 (39/3600), epoch 1/6)
+2023-05-16 22:21:24,177 - common - DEBUG - PS got 3/3 updates (from Worker_2, 39/600 (39/3600), epoch 1/6)
+2023-05-16 22:21:24,188 - common - DEBUG - PS updated model, global loss is 0.7406555811564127, weights norm is 9.22449652009177
+2023-05-16 22:21:24,737 - common - DEBUG - PS got 1/3 updates (from Worker_1, 40/600 (40/3600), epoch 1/6)
+2023-05-16 22:21:24,742 - common - DEBUG - PS got 1/3 updates (from Worker_2, 40/600 (40/3600), epoch 1/6)
+2023-05-16 22:21:24,761 - common - DEBUG - PS got 3/3 updates (from Worker_3, 40/600 (40/3600), epoch 1/6)
+2023-05-16 22:21:24,772 - common - DEBUG - PS updated model, global loss is 0.7059288422266642, weights norm is 9.23172974277886
+2023-05-16 22:21:25,283 - common - DEBUG - PS got 1/3 updates (from Worker_2, 41/600 (41/3600), epoch 1/6)
+2023-05-16 22:21:25,414 - common - DEBUG - PS got 2/3 updates (from Worker_3, 41/600 (41/3600), epoch 1/6)
+2023-05-16 22:21:25,436 - common - DEBUG - PS got 3/3 updates (from Worker_1, 41/600 (41/3600), epoch 1/6)
+2023-05-16 22:21:25,447 - common - DEBUG - PS updated model, global loss is 0.7194169759750366, weights norm is 9.239050431814817
+2023-05-16 22:21:25,958 - common - DEBUG - PS got 1/3 updates (from Worker_1, 42/600 (42/3600), epoch 1/6)
+2023-05-16 22:21:25,964 - common - DEBUG - PS got 1/3 updates (from Worker_2, 42/600 (42/3600), epoch 1/6)
+2023-05-16 22:21:26,048 - common - DEBUG - PS got 3/3 updates (from Worker_3, 42/600 (42/3600), epoch 1/6)
+2023-05-16 22:21:26,059 - common - DEBUG - PS updated model, global loss is 0.6738918622334799, weights norm is 9.246475157803076
+2023-05-16 22:21:26,501 - common - DEBUG - PS got 1/3 updates (from Worker_1, 43/600 (43/3600), epoch 1/6)
+2023-05-16 22:21:26,544 - common - DEBUG - PS got 2/3 updates (from Worker_3, 43/600 (43/3600), epoch 1/6)
+2023-05-16 22:21:26,570 - common - DEBUG - PS got 3/3 updates (from Worker_2, 43/600 (43/3600), epoch 1/6)
+2023-05-16 22:21:26,593 - common - DEBUG - PS updated model, global loss is 0.68057648340861, weights norm is 9.253972952854436
+2023-05-16 22:21:27,181 - common - DEBUG - PS got 1/3 updates (from Worker_2, 44/600 (44/3600), epoch 1/6)
+2023-05-16 22:21:27,294 - common - DEBUG - PS got 2/3 updates (from Worker_3, 44/600 (44/3600), epoch 1/6)
+2023-05-16 22:21:27,311 - common - DEBUG - PS got 3/3 updates (from Worker_1, 44/600 (44/3600), epoch 1/6)
+2023-05-16 22:21:27,322 - common - DEBUG - PS updated model, global loss is 0.7937157352765402, weights norm is 9.260833744886018
+2023-05-16 22:21:27,979 - common - DEBUG - PS got 1/3 updates (from Worker_1, 45/600 (45/3600), epoch 1/6)
+2023-05-16 22:21:28,009 - common - DEBUG - PS got 2/3 updates (from Worker_2, 45/600 (45/3600), epoch 1/6)
+2023-05-16 22:21:28,026 - common - DEBUG - PS got 3/3 updates (from Worker_3, 45/600 (45/3600), epoch 1/6)
+2023-05-16 22:21:28,057 - common - DEBUG - PS updated model, global loss is 0.7784512042999268, weights norm is 9.267225137604703
+2023-05-16 22:21:28,602 - common - DEBUG - PS got 1/3 updates (from Worker_3, 46/600 (46/3600), epoch 1/6)
+2023-05-16 22:21:28,620 - common - DEBUG - PS got 2/3 updates (from Worker_2, 46/600 (46/3600), epoch 1/6)
+2023-05-16 22:21:28,686 - common - DEBUG - PS got 3/3 updates (from Worker_1, 46/600 (46/3600), epoch 1/6)
+2023-05-16 22:21:28,698 - common - DEBUG - PS updated model, global loss is 0.6995070974032084, weights norm is 9.273234500793558
+2023-05-16 22:21:29,305 - common - DEBUG - PS got 1/3 updates (from Worker_1, 47/600 (47/3600), epoch 1/6)
+2023-05-16 22:21:29,322 - common - DEBUG - PS got 2/3 updates (from Worker_3, 47/600 (47/3600), epoch 1/6)
+2023-05-16 22:21:29,348 - common - DEBUG - PS got 3/3 updates (from Worker_2, 47/600 (47/3600), epoch 1/6)
+2023-05-16 22:21:29,357 - common - DEBUG - PS updated model, global loss is 0.7143583099047343, weights norm is 9.278990215402287
+2023-05-16 22:21:30,001 - common - DEBUG - PS got 1/3 updates (from Worker_3, 48/600 (48/3600), epoch 1/6)
+2023-05-16 22:21:30,004 - common - DEBUG - PS got 1/3 updates (from Worker_1, 48/600 (48/3600), epoch 1/6)
+2023-05-16 22:21:30,037 - common - DEBUG - PS got 3/3 updates (from Worker_2, 48/600 (48/3600), epoch 1/6)
+2023-05-16 22:21:30,047 - common - DEBUG - PS updated model, global loss is 0.7383981148401896, weights norm is 9.284469597175056
+2023-05-16 22:21:30,917 - common - DEBUG - PS got 1/3 updates (from Worker_3, 49/600 (49/3600), epoch 1/6)
+2023-05-16 22:21:30,933 - common - DEBUG - PS got 2/3 updates (from Worker_2, 49/600 (49/3600), epoch 1/6)
+2023-05-16 22:21:30,951 - common - DEBUG - PS got 3/3 updates (from Worker_1, 49/600 (49/3600), epoch 1/6)
+2023-05-16 22:21:30,961 - common - DEBUG - PS updated model, global loss is 0.7913404703140259, weights norm is 9.289184750116625
+2023-05-16 22:21:31,490 - common - DEBUG - PS got 1/3 updates (from Worker_1, 50/600 (50/3600), epoch 1/6)
+2023-05-16 22:21:31,541 - common - DEBUG - PS got 2/3 updates (from Worker_3, 50/600 (50/3600), epoch 1/6)
+2023-05-16 22:21:31,549 - common - DEBUG - PS got 3/3 updates (from Worker_2, 50/600 (50/3600), epoch 1/6)
+2023-05-16 22:21:31,565 - common - DEBUG - PS updated model, global loss is 0.7211879293123881, weights norm is 9.293640094475615
+2023-05-16 22:21:32,171 - common - DEBUG - PS got 1/3 updates (from Worker_2, 51/600 (51/3600), epoch 1/6)
+2023-05-16 22:21:32,178 - common - DEBUG - PS got 2/3 updates (from Worker_1, 51/600 (51/3600), epoch 1/6)
+2023-05-16 22:21:32,230 - common - DEBUG - PS got 3/3 updates (from Worker_3, 51/600 (51/3600), epoch 1/6)
+2023-05-16 22:21:32,239 - common - DEBUG - PS updated model, global loss is 0.6979387203852335, weights norm is 9.29775913590936
+2023-05-16 22:21:32,648 - common - DEBUG - PS got 1/3 updates (from Worker_2, 52/600 (52/3600), epoch 1/6)
+2023-05-16 22:21:32,708 - common - DEBUG - PS got 2/3 updates (from Worker_1, 52/600 (52/3600), epoch 1/6)
+2023-05-16 22:21:32,812 - common - DEBUG - PS got 3/3 updates (from Worker_3, 52/600 (52/3600), epoch 1/6)
+2023-05-16 22:21:32,825 - common - DEBUG - PS updated model, global loss is 0.6668833295504252, weights norm is 9.301917858022433
+2023-05-16 22:21:33,381 - common - DEBUG - PS got 1/3 updates (from Worker_2, 53/600 (53/3600), epoch 1/6)
+2023-05-16 22:21:33,517 - common - DEBUG - PS got 2/3 updates (from Worker_1, 53/600 (53/3600), epoch 1/6)
+2023-05-16 22:21:33,533 - common - DEBUG - PS got 3/3 updates (from Worker_3, 53/600 (53/3600), epoch 1/6)
+2023-05-16 22:21:33,543 - common - DEBUG - PS updated model, global loss is 0.7367338339487711, weights norm is 9.306031031414438
+2023-05-16 22:21:34,145 - common - DEBUG - PS got 1/3 updates (from Worker_3, 54/600 (54/3600), epoch 1/6)
+2023-05-16 22:21:34,170 - common - DEBUG - PS got 2/3 updates (from Worker_2, 54/600 (54/3600), epoch 1/6)
+2023-05-16 22:21:34,180 - common - DEBUG - PS got 3/3 updates (from Worker_1, 54/600 (54/3600), epoch 1/6)
+2023-05-16 22:21:34,190 - common - DEBUG - PS updated model, global loss is 0.6255398790041605, weights norm is 9.310365152868341
+2023-05-16 22:21:34,579 - common - DEBUG - PS got 1/3 updates (from Worker_1, 55/600 (55/3600), epoch 1/6)
+2023-05-16 22:21:34,774 - common - DEBUG - PS got 2/3 updates (from Worker_3, 55/600 (55/3600), epoch 1/6)
+2023-05-16 22:21:34,787 - common - DEBUG - PS got 3/3 updates (from Worker_2, 55/600 (55/3600), epoch 1/6)
+2023-05-16 22:21:34,797 - common - DEBUG - PS updated model, global loss is 0.6854165395100912, weights norm is 9.31482210812532
+2023-05-16 22:21:35,394 - common - DEBUG - PS got 1/3 updates (from Worker_3, 56/600 (56/3600), epoch 1/6)
+2023-05-16 22:21:35,417 - common - DEBUG - PS got 2/3 updates (from Worker_2, 56/600 (56/3600), epoch 1/6)
+2023-05-16 22:21:35,434 - common - DEBUG - PS got 3/3 updates (from Worker_1, 56/600 (56/3600), epoch 1/6)
+2023-05-16 22:21:35,443 - common - DEBUG - PS updated model, global loss is 0.6370131373405457, weights norm is 9.319312069034995
+2023-05-16 22:21:36,079 - common - DEBUG - PS got 1/3 updates (from Worker_2, 57/600 (57/3600), epoch 1/6)
+2023-05-16 22:21:36,095 - common - DEBUG - PS got 2/3 updates (from Worker_3, 57/600 (57/3600), epoch 1/6)
+2023-05-16 22:21:36,107 - common - DEBUG - PS got 3/3 updates (from Worker_1, 57/600 (57/3600), epoch 1/6)
+2023-05-16 22:21:36,116 - common - DEBUG - PS updated model, global loss is 0.6306291818618774, weights norm is 9.32388518743719
+2023-05-16 22:21:36,507 - common - DEBUG - PS got 1/3 updates (from Worker_2, 58/600 (58/3600), epoch 1/6)
+2023-05-16 22:21:36,518 - common - DEBUG - PS got 2/3 updates (from Worker_1, 58/600 (58/3600), epoch 1/6)
+2023-05-16 22:21:36,527 - common - DEBUG - PS got 3/3 updates (from Worker_3, 58/600 (58/3600), epoch 1/6)
+2023-05-16 22:21:36,538 - common - DEBUG - PS updated model, global loss is 0.5744334359963735, weights norm is 9.328845191802797
+2023-05-16 22:21:36,921 - common - DEBUG - PS got 1/3 updates (from Worker_1, 59/600 (59/3600), epoch 1/6)
+2023-05-16 22:21:37,021 - common - DEBUG - PS got 2/3 updates (from Worker_2, 59/600 (59/3600), epoch 1/6)
+2023-05-16 22:21:37,045 - common - DEBUG - PS got 3/3 updates (from Worker_3, 59/600 (59/3600), epoch 1/6)
+2023-05-16 22:21:37,054 - common - DEBUG - PS updated model, global loss is 0.754433790842692, weights norm is 9.333176276615013
+2023-05-16 22:21:37,438 - common - DEBUG - PS got 1/3 updates (from Worker_1, 60/600 (60/3600), epoch 1/6)
+2023-05-16 22:21:37,504 - common - DEBUG - PS got 2/3 updates (from Worker_3, 60/600 (60/3600), epoch 1/6)
+2023-05-16 22:21:37,517 - common - DEBUG - PS got 3/3 updates (from Worker_2, 60/600 (60/3600), epoch 1/6)
+2023-05-16 22:21:37,529 - common - DEBUG - PS updated model, global loss is 0.7210105260213217, weights norm is 9.337199161720072
+2023-05-16 22:21:37,868 - common - DEBUG - PS got 1/3 updates (from Worker_3, 61/600 (61/3600), epoch 1/6)
+2023-05-16 22:21:37,913 - common - DEBUG - PS got 2/3 updates (from Worker_2, 61/600 (61/3600), epoch 1/6)
+2023-05-16 22:21:37,989 - common - DEBUG - PS got 3/3 updates (from Worker_1, 61/600 (61/3600), epoch 1/6)
+2023-05-16 22:21:37,999 - common - DEBUG - PS updated model, global loss is 0.6180744568506876, weights norm is 9.340927689899207
+2023-05-16 22:21:38,434 - common - DEBUG - PS got 1/3 updates (from Worker_1, 62/600 (62/3600), epoch 1/6)
+2023-05-16 22:21:38,507 - common - DEBUG - PS got 2/3 updates (from Worker_3, 62/600 (62/3600), epoch 1/6)
+2023-05-16 22:21:38,516 - common - DEBUG - PS got 3/3 updates (from Worker_2, 62/600 (62/3600), epoch 1/6)
+2023-05-16 22:21:38,528 - common - DEBUG - PS updated model, global loss is 0.7258714437484741, weights norm is 9.34435947560406
+2023-05-16 22:21:38,989 - common - DEBUG - PS got 1/3 updates (from Worker_1, 63/600 (63/3600), epoch 1/6)
+2023-05-16 22:21:39,093 - common - DEBUG - PS got 2/3 updates (from Worker_2, 63/600 (63/3600), epoch 1/6)
+2023-05-16 22:21:39,117 - common - DEBUG - PS got 3/3 updates (from Worker_3, 63/600 (63/3600), epoch 1/6)
+2023-05-16 22:21:39,126 - common - DEBUG - PS updated model, global loss is 0.672494649887085, weights norm is 9.34766434520058
+2023-05-16 22:21:39,618 - common - DEBUG - PS got 1/3 updates (from Worker_3, 64/600 (64/3600), epoch 1/6)
+2023-05-16 22:21:39,622 - common - DEBUG - PS got 1/3 updates (from Worker_1, 64/600 (64/3600), epoch 1/6)
+2023-05-16 22:21:39,639 - common - DEBUG - PS got 3/3 updates (from Worker_2, 64/600 (64/3600), epoch 1/6)
+2023-05-16 22:21:39,648 - common - DEBUG - PS updated model, global loss is 0.5772851308186849, weights norm is 9.351067716588389
+2023-05-16 22:21:39,910 - common - DEBUG - PS got 1/3 updates (from Worker_2, 65/600 (65/3600), epoch 1/6)
+2023-05-16 22:21:40,009 - common - DEBUG - PS got 2/3 updates (from Worker_3, 65/600 (65/3600), epoch 1/6)
+2023-05-16 22:21:40,050 - common - DEBUG - PS got 3/3 updates (from Worker_1, 65/600 (65/3600), epoch 1/6)
+2023-05-16 22:21:40,059 - common - DEBUG - PS updated model, global loss is 0.6272996862729391, weights norm is 9.354629587020652
+2023-05-16 22:21:40,728 - common - DEBUG - PS got 1/3 updates (from Worker_1, 66/600 (66/3600), epoch 1/6)
+2023-05-16 22:21:40,774 - common - DEBUG - PS got 2/3 updates (from Worker_3, 66/600 (66/3600), epoch 1/6)
+2023-05-16 22:21:40,790 - common - DEBUG - PS got 3/3 updates (from Worker_2, 66/600 (66/3600), epoch 1/6)
+2023-05-16 22:21:40,800 - common - DEBUG - PS updated model, global loss is 0.5694462855656942, weights norm is 9.358385310511952
+2023-05-16 22:21:41,131 - common - DEBUG - PS got 1/3 updates (from Worker_3, 67/600 (67/3600), epoch 1/6)
+2023-05-16 22:21:41,165 - common - DEBUG - PS got 2/3 updates (from Worker_1, 67/600 (67/3600), epoch 1/6)
+2023-05-16 22:21:41,258 - common - DEBUG - PS got 3/3 updates (from Worker_2, 67/600 (67/3600), epoch 1/6)
+2023-05-16 22:21:41,268 - common - DEBUG - PS updated model, global loss is 0.6639610727628072, weights norm is 9.362032629786935
+2023-05-16 22:21:41,765 - common - DEBUG - PS got 1/3 updates (from Worker_3, 68/600 (68/3600), epoch 1/6)
+2023-05-16 22:21:41,797 - common - DEBUG - PS got 2/3 updates (from Worker_2, 68/600 (68/3600), epoch 1/6)
+2023-05-16 22:21:41,846 - common - DEBUG - PS got 3/3 updates (from Worker_1, 68/600 (68/3600), epoch 1/6)
+2023-05-16 22:21:41,855 - common - DEBUG - PS updated model, global loss is 0.6181512276331583, weights norm is 9.365774195808122
+2023-05-16 22:21:42,319 - common - DEBUG - PS got 1/3 updates (from Worker_2, 69/600 (69/3600), epoch 1/6)
+2023-05-16 22:21:42,411 - common - DEBUG - PS got 2/3 updates (from Worker_1, 69/600 (69/3600), epoch 1/6)
+2023-05-16 22:21:42,429 - common - DEBUG - PS got 3/3 updates (from Worker_3, 69/600 (69/3600), epoch 1/6)
+2023-05-16 22:21:42,438 - common - DEBUG - PS updated model, global loss is 0.6945005257924398, weights norm is 9.369421560450611
+2023-05-16 22:21:42,864 - common - DEBUG - PS got 1/3 updates (from Worker_2, 70/600 (70/3600), epoch 1/6)
+2023-05-16 22:21:43,003 - common - DEBUG - PS got 2/3 updates (from Worker_3, 70/600 (70/3600), epoch 1/6)
+2023-05-16 22:21:43,057 - common - DEBUG - PS got 3/3 updates (from Worker_1, 70/600 (70/3600), epoch 1/6)
+2023-05-16 22:21:43,065 - common - DEBUG - PS updated model, global loss is 0.5919510324796041, weights norm is 9.373202789663141
+2023-05-16 22:21:43,451 - common - DEBUG - PS got 1/3 updates (from Worker_2, 71/600 (71/3600), epoch 1/6)
+2023-05-16 22:21:43,465 - common - DEBUG - PS got 2/3 updates (from Worker_1, 71/600 (71/3600), epoch 1/6)
+2023-05-16 22:21:43,529 - common - DEBUG - PS got 3/3 updates (from Worker_3, 71/600 (71/3600), epoch 1/6)
+2023-05-16 22:21:43,539 - common - DEBUG - PS updated model, global loss is 0.6385291218757629, weights norm is 9.376684777199372
+2023-05-16 22:21:44,135 - common - DEBUG - PS got 1/3 updates (from Worker_3, 72/600 (72/3600), epoch 1/6)
+2023-05-16 22:21:44,214 - common - DEBUG - PS got 2/3 updates (from Worker_2, 72/600 (72/3600), epoch 1/6)
+2023-05-16 22:21:44,226 - common - DEBUG - PS got 3/3 updates (from Worker_1, 72/600 (72/3600), epoch 1/6)
+2023-05-16 22:21:44,234 - common - DEBUG - PS updated model, global loss is 0.5901815096537272, weights norm is 9.38032212080073
+2023-05-16 22:21:44,601 - common - DEBUG - PS got 1/3 updates (from Worker_3, 73/600 (73/3600), epoch 1/6)
+2023-05-16 22:21:44,694 - common - DEBUG - PS got 2/3 updates (from Worker_2, 73/600 (73/3600), epoch 1/6)
+2023-05-16 22:21:44,701 - common - DEBUG - PS got 3/3 updates (from Worker_1, 73/600 (73/3600), epoch 1/6)
+2023-05-16 22:21:44,710 - common - DEBUG - PS updated model, global loss is 0.6868750055631002, weights norm is 9.384007460945693
+2023-05-16 22:21:45,127 - common - DEBUG - PS got 1/3 updates (from Worker_3, 74/600 (74/3600), epoch 1/6)
+2023-05-16 22:21:45,259 - common - DEBUG - PS got 2/3 updates (from Worker_2, 74/600 (74/3600), epoch 1/6)
+2023-05-16 22:21:45,272 - common - DEBUG - PS got 3/3 updates (from Worker_1, 74/600 (74/3600), epoch 1/6)
+2023-05-16 22:21:45,282 - common - DEBUG - PS updated model, global loss is 0.6410961051781973, weights norm is 9.387599876821303
+2023-05-16 22:21:45,646 - common - DEBUG - PS got 1/3 updates (from Worker_2, 75/600 (75/3600), epoch 1/6)
+2023-05-16 22:21:45,680 - common - DEBUG - PS got 2/3 updates (from Worker_3, 75/600 (75/3600), epoch 1/6)
+2023-05-16 22:21:45,693 - common - DEBUG - PS got 2/3 updates (from Worker_1, 75/600 (75/3600), epoch 1/6)
+2023-05-16 22:21:45,703 - common - DEBUG - PS updated model, global loss is 0.5543901920318604, weights norm is 9.391357799378834
+2023-05-16 22:21:46,274 - common - DEBUG - PS got 1/3 updates (from Worker_2, 76/600 (76/3600), epoch 1/6)
+2023-05-16 22:21:46,451 - common - DEBUG - PS got 2/3 updates (from Worker_1, 76/600 (76/3600), epoch 1/6)
+2023-05-16 22:21:46,477 - common - DEBUG - PS got 3/3 updates (from Worker_3, 76/600 (76/3600), epoch 1/6)
+2023-05-16 22:21:46,490 - common - DEBUG - PS updated model, global loss is 0.6012381315231323, weights norm is 9.395151155612258
+2023-05-16 22:21:47,034 - common - DEBUG - PS got 1/3 updates (from Worker_1, 77/600 (77/3600), epoch 1/6)
+2023-05-16 22:21:47,068 - common - DEBUG - PS got 2/3 updates (from Worker_3, 77/600 (77/3600), epoch 1/6)
+2023-05-16 22:21:47,087 - common - DEBUG - PS got 3/3 updates (from Worker_2, 77/600 (77/3600), epoch 1/6)
+2023-05-16 22:21:47,095 - common - DEBUG - PS updated model, global loss is 0.6001529097557068, weights norm is 9.398719786714059
+2023-05-16 22:21:47,510 - common - DEBUG - PS got 1/3 updates (from Worker_1, 78/600 (78/3600), epoch 1/6)
+2023-05-16 22:21:47,572 - common - DEBUG - PS got 2/3 updates (from Worker_3, 78/600 (78/3600), epoch 1/6)
+2023-05-16 22:21:47,596 - common - DEBUG - PS got 3/3 updates (from Worker_2, 78/600 (78/3600), epoch 1/6)
+2023-05-16 22:21:47,606 - common - DEBUG - PS updated model, global loss is 0.6374888221422831, weights norm is 9.40215535885463
+2023-05-16 22:21:48,059 - common - DEBUG - PS got 1/3 updates (from Worker_1, 79/600 (79/3600), epoch 1/6)
+2023-05-16 22:21:48,097 - common - DEBUG - PS got 2/3 updates (from Worker_3, 79/600 (79/3600), epoch 1/6)
+2023-05-16 22:21:48,145 - common - DEBUG - PS got 3/3 updates (from Worker_2, 79/600 (79/3600), epoch 1/6)
+2023-05-16 22:21:48,155 - common - DEBUG - PS updated model, global loss is 0.7213588158289591, weights norm is 9.405091103128775
+2023-05-16 22:21:48,468 - common - DEBUG - PS got 1/3 updates (from Worker_2, 80/600 (80/3600), epoch 1/6)
+2023-05-16 22:21:48,505 - common - DEBUG - PS got 2/3 updates (from Worker_1, 80/600 (80/3600), epoch 1/6)
+2023-05-16 22:21:48,574 - common - DEBUG - PS got 3/3 updates (from Worker_3, 80/600 (80/3600), epoch 1/6)
+2023-05-16 22:21:48,583 - common - DEBUG - PS updated model, global loss is 0.6282228231430054, weights norm is 9.408030820264589
+2023-05-16 22:21:49,048 - common - DEBUG - PS got 1/3 updates (from Worker_2, 81/600 (81/3600), epoch 1/6)
+2023-05-16 22:21:49,054 - common - DEBUG - PS got 2/3 updates (from Worker_1, 81/600 (81/3600), epoch 1/6)
+2023-05-16 22:21:49,068 - common - DEBUG - PS got 3/3 updates (from Worker_3, 81/600 (81/3600), epoch 1/6)
+2023-05-16 22:21:49,077 - common - DEBUG - PS updated model, global loss is 0.5989211002985636, weights norm is 9.411048577069712
+2023-05-16 22:21:49,553 - common - DEBUG - PS got 1/3 updates (from Worker_3, 82/600 (82/3600), epoch 1/6)
+2023-05-16 22:21:49,592 - common - DEBUG - PS got 2/3 updates (from Worker_2, 82/600 (82/3600), epoch 1/6)
+2023-05-16 22:21:49,600 - common - DEBUG - PS got 3/3 updates (from Worker_1, 82/600 (82/3600), epoch 1/6)
+2023-05-16 22:21:49,609 - common - DEBUG - PS updated model, global loss is 0.5312946438789368, weights norm is 9.414290043142158
+2023-05-16 22:21:50,013 - common - DEBUG - PS got 1/3 updates (from Worker_1, 83/600 (83/3600), epoch 1/6)
+2023-05-16 22:21:50,153 - common - DEBUG - PS got 2/3 updates (from Worker_3, 83/600 (83/3600), epoch 1/6)
+2023-05-16 22:21:50,183 - common - DEBUG - PS got 3/3 updates (from Worker_2, 83/600 (83/3600), epoch 1/6)
+2023-05-16 22:21:50,192 - common - DEBUG - PS updated model, global loss is 0.5854235092798868, weights norm is 9.417444496876891
+2023-05-16 22:21:50,648 - common - DEBUG - PS got 1/3 updates (from Worker_1, 84/600 (84/3600), epoch 1/6)
+2023-05-16 22:21:50,655 - common - DEBUG - PS got 1/3 updates (from Worker_2, 84/600 (84/3600), epoch 1/6)
+2023-05-16 22:21:50,713 - common - DEBUG - PS got 3/3 updates (from Worker_3, 84/600 (84/3600), epoch 1/6)
+2023-05-16 22:21:50,722 - common - DEBUG - PS updated model, global loss is 0.6243953307469686, weights norm is 9.420201134503925
+2023-05-16 22:21:51,138 - common - DEBUG - PS got 1/3 updates (from Worker_2, 85/600 (85/3600), epoch 1/6)
+2023-05-16 22:21:51,174 - common - DEBUG - PS got 2/3 updates (from Worker_1, 85/600 (85/3600), epoch 1/6)
+2023-05-16 22:21:51,208 - common - DEBUG - PS got 3/3 updates (from Worker_3, 85/600 (85/3600), epoch 1/6)
+2023-05-16 22:21:51,217 - common - DEBUG - PS updated model, global loss is 0.5945725540320078, weights norm is 9.422914929652007
+2023-05-16 22:21:51,511 - common - DEBUG - PS got 1/3 updates (from Worker_1, 86/600 (86/3600), epoch 1/6)
+2023-05-16 22:21:51,737 - common - DEBUG - PS got 2/3 updates (from Worker_2, 86/600 (86/3600), epoch 1/6)
+2023-05-16 22:21:51,749 - common - DEBUG - PS got 3/3 updates (from Worker_3, 86/600 (86/3600), epoch 1/6)
+2023-05-16 22:21:51,758 - common - DEBUG - PS updated model, global loss is 0.5678196549415588, weights norm is 9.425748030435226
+2023-05-16 22:21:52,123 - common - DEBUG - PS got 1/3 updates (from Worker_1, 87/600 (87/3600), epoch 1/6)
+2023-05-16 22:21:52,224 - common - DEBUG - PS got 2/3 updates (from Worker_2, 87/600 (87/3600), epoch 1/6)
+2023-05-16 22:21:52,250 - common - DEBUG - PS got 3/3 updates (from Worker_3, 87/600 (87/3600), epoch 1/6)
+2023-05-16 22:21:52,259 - common - DEBUG - PS updated model, global loss is 0.6700456341107687, weights norm is 9.428201691990832
+2023-05-16 22:21:52,658 - common - DEBUG - PS got 1/3 updates (from Worker_2, 88/600 (88/3600), epoch 1/6)
+2023-05-16 22:21:52,694 - common - DEBUG - PS got 2/3 updates (from Worker_1, 88/600 (88/3600), epoch 1/6)
+2023-05-16 22:21:52,726 - common - DEBUG - PS got 3/3 updates (from Worker_3, 88/600 (88/3600), epoch 1/6)
+2023-05-16 22:21:52,734 - common - DEBUG - PS updated model, global loss is 0.6551976402600607, weights norm is 9.430619911110252
+2023-05-16 22:21:52,982 - common - DEBUG - PS got 1/3 updates (from Worker_2, 89/600 (89/3600), epoch 1/6)
+2023-05-16 22:21:53,131 - common - DEBUG - PS got 2/3 updates (from Worker_3, 89/600 (89/3600), epoch 1/6)
+2023-05-16 22:21:53,158 - common - DEBUG - PS got 3/3 updates (from Worker_1, 89/600 (89/3600), epoch 1/6)
+2023-05-16 22:21:53,166 - common - DEBUG - PS updated model, global loss is 0.6552751262982687, weights norm is 9.432786630814796
+2023-05-16 22:21:53,523 - common - DEBUG - PS got 1/3 updates (from Worker_2, 90/600 (90/3600), epoch 1/6)
+2023-05-16 22:21:53,710 - common - DEBUG - PS got 2/3 updates (from Worker_3, 90/600 (90/3600), epoch 1/6)
+2023-05-16 22:21:53,728 - common - DEBUG - PS got 3/3 updates (from Worker_1, 90/600 (90/3600), epoch 1/6)
+2023-05-16 22:21:53,737 - common - DEBUG - PS updated model, global loss is 0.6097749074300131, weights norm is 9.434854401303983
+2023-05-16 22:21:54,208 - common - DEBUG - PS got 1/3 updates (from Worker_1, 91/600 (91/3600), epoch 1/6)
+2023-05-16 22:21:54,275 - common - DEBUG - PS got 2/3 updates (from Worker_3, 91/600 (91/3600), epoch 1/6)
+2023-05-16 22:21:54,279 - common - DEBUG - PS got 3/3 updates (from Worker_2, 91/600 (91/3600), epoch 1/6)
+2023-05-16 22:21:54,288 - common - DEBUG - PS updated model, global loss is 0.5755556126435598, weights norm is 9.437154844133126
+2023-05-16 22:21:54,608 - common - DEBUG - PS got 1/3 updates (from Worker_2, 92/600 (92/3600), epoch 1/6)
+2023-05-16 22:21:54,739 - common - DEBUG - PS got 2/3 updates (from Worker_3, 92/600 (92/3600), epoch 1/6)
+2023-05-16 22:21:54,802 - common - DEBUG - PS got 3/3 updates (from Worker_1, 92/600 (92/3600), epoch 1/6)
+2023-05-16 22:21:54,809 - common - DEBUG - PS updated model, global loss is 0.6359641750653585, weights norm is 9.439258583629124
+2023-05-16 22:21:55,166 - common - DEBUG - PS got 1/3 updates (from Worker_1, 93/600 (93/3600), epoch 1/6)
+2023-05-16 22:21:55,196 - common - DEBUG - PS got 2/3 updates (from Worker_3, 93/600 (93/3600), epoch 1/6)
+2023-05-16 22:21:55,285 - common - DEBUG - PS got 3/3 updates (from Worker_2, 93/600 (93/3600), epoch 1/6)
+2023-05-16 22:21:55,292 - common - DEBUG - PS updated model, global loss is 0.6143850088119507, weights norm is 9.441433948655519
+2023-05-16 22:21:55,592 - common - DEBUG - PS got 1/3 updates (from Worker_3, 94/600 (94/3600), epoch 1/6)
+2023-05-16 22:21:55,689 - common - DEBUG - PS got 2/3 updates (from Worker_2, 94/600 (94/3600), epoch 1/6)
+2023-05-16 22:21:55,765 - common - DEBUG - PS got 3/3 updates (from Worker_1, 94/600 (94/3600), epoch 1/6)
+2023-05-16 22:21:55,774 - common - DEBUG - PS updated model, global loss is 0.6250190933545431, weights norm is 9.443706968060136
+2023-05-16 22:21:56,235 - common - DEBUG - PS got 1/3 updates (from Worker_1, 95/600 (95/3600), epoch 1/6)
+2023-05-16 22:21:56,301 - common - DEBUG - PS got 2/3 updates (from Worker_3, 95/600 (95/3600), epoch 1/6)
+2023-05-16 22:21:56,313 - common - DEBUG - PS got 3/3 updates (from Worker_2, 95/600 (95/3600), epoch 1/6)
+2023-05-16 22:21:56,322 - common - DEBUG - PS updated model, global loss is 0.5371566812197367, weights norm is 9.446193627129025
+2023-05-16 22:21:56,663 - common - DEBUG - PS got 1/3 updates (from Worker_2, 96/600 (96/3600), epoch 1/6)
+2023-05-16 22:21:56,792 - common - DEBUG - PS got 2/3 updates (from Worker_1, 96/600 (96/3600), epoch 1/6)
+2023-05-16 22:21:56,832 - common - DEBUG - PS got 3/3 updates (from Worker_3, 96/600 (96/3600), epoch 1/6)
+2023-05-16 22:21:56,840 - common - DEBUG - PS updated model, global loss is 0.628274659315745, weights norm is 9.448671249867703
+2023-05-16 22:21:57,109 - common - DEBUG - PS got 1/3 updates (from Worker_2, 97/600 (97/3600), epoch 1/6)
+2023-05-16 22:21:57,251 - common - DEBUG - PS got 2/3 updates (from Worker_3, 97/600 (97/3600), epoch 1/6)
+2023-05-16 22:21:57,264 - common - DEBUG - PS got 3/3 updates (from Worker_1, 97/600 (97/3600), epoch 1/6)
+2023-05-16 22:21:57,272 - common - DEBUG - PS updated model, global loss is 0.632150411605835, weights norm is 9.451077657922346
+2023-05-16 22:21:57,742 - common - DEBUG - PS got 1/3 updates (from Worker_2, 98/600 (98/3600), epoch 1/6)
+2023-05-16 22:21:57,802 - common - DEBUG - PS got 2/3 updates (from Worker_1, 98/600 (98/3600), epoch 1/6)
+2023-05-16 22:21:57,816 - common - DEBUG - PS got 3/3 updates (from Worker_3, 98/600 (98/3600), epoch 1/6)
+2023-05-16 22:21:57,824 - common - DEBUG - PS updated model, global loss is 0.6098965207735697, weights norm is 9.453547605399065
+2023-05-16 22:21:58,342 - common - DEBUG - PS got 1/3 updates (from Worker_3, 99/600 (99/3600), epoch 1/6)
+2023-05-16 22:21:58,345 - common - DEBUG - PS got 1/3 updates (from Worker_2, 99/600 (99/3600), epoch 1/6)
+2023-05-16 22:21:58,354 - common - DEBUG - PS got 2/3 updates (from Worker_1, 99/600 (99/3600), epoch 1/6)
+2023-05-16 22:21:58,362 - common - DEBUG - PS updated model, global loss is 0.5967134038607279, weights norm is 9.45607420182836
+2023-05-16 22:21:58,648 - common - DEBUG - PS got 1/3 updates (from Worker_2, 100/600 (100/3600), epoch 1/6)
+2023-05-16 22:21:58,659 - common - DEBUG - PS got 1/3 updates (from Worker_3, 100/600 (100/3600), epoch 1/6)
+2023-05-16 22:21:58,708 - common - DEBUG - PS got 3/3 updates (from Worker_1, 100/600 (100/3600), epoch 1/6)
+2023-05-16 22:21:58,717 - common - DEBUG - PS updated model, global loss is 0.5569905241330465, weights norm is 9.458760926496614
+2023-05-16 22:21:59,003 - common - DEBUG - PS got 1/3 updates (from Worker_2, 101/600 (101/3600), epoch 1/6)
+2023-05-16 22:21:59,329 - common - DEBUG - PS got 2/3 updates (from Worker_3, 101/600 (101/3600), epoch 1/6)
+2023-05-16 22:21:59,354 - common - DEBUG - PS got 3/3 updates (from Worker_1, 101/600 (101/3600), epoch 1/6)
+2023-05-16 22:21:59,362 - common - DEBUG - PS updated model, global loss is 0.5370274186134338, weights norm is 9.461615409158044
+2023-05-16 22:21:59,832 - common - DEBUG - PS got 1/3 updates (from Worker_2, 102/600 (102/3600), epoch 1/6)
+2023-05-16 22:21:59,842 - common - DEBUG - PS got 2/3 updates (from Worker_3, 102/600 (102/3600), epoch 1/6)
+2023-05-16 22:21:59,862 - common - DEBUG - PS got 3/3 updates (from Worker_1, 102/600 (102/3600), epoch 1/6)
+2023-05-16 22:21:59,870 - common - DEBUG - PS updated model, global loss is 0.6011200348536173, weights norm is 9.464714460254912
+2023-05-16 22:22:00,336 - common - DEBUG - PS got 1/3 updates (from Worker_3, 103/600 (103/3600), epoch 1/6)
+2023-05-16 22:22:00,361 - common - DEBUG - PS got 2/3 updates (from Worker_1, 103/600 (103/3600), epoch 1/6)
+2023-05-16 22:22:00,367 - common - DEBUG - PS got 3/3 updates (from Worker_2, 103/600 (103/3600), epoch 1/6)
+2023-05-16 22:22:00,375 - common - DEBUG - PS updated model, global loss is 0.5502614279588064, weights norm is 9.468008740741594
+2023-05-16 22:22:00,714 - common - DEBUG - PS got 1/3 updates (from Worker_1, 104/600 (104/3600), epoch 1/6)
+2023-05-16 22:22:00,751 - common - DEBUG - PS got 2/3 updates (from Worker_2, 104/600 (104/3600), epoch 1/6)
+2023-05-16 22:22:00,788 - common - DEBUG - PS got 3/3 updates (from Worker_3, 104/600 (104/3600), epoch 1/6)
+2023-05-16 22:22:00,796 - common - DEBUG - PS updated model, global loss is 0.7147620916366577, weights norm is 9.470739524718313
+2023-05-16 22:22:01,168 - common - DEBUG - PS got 1/3 updates (from Worker_3, 105/600 (105/3600), epoch 1/6)
+2023-05-16 22:22:01,250 - common - DEBUG - PS got 2/3 updates (from Worker_2, 105/600 (105/3600), epoch 1/6)
+2023-05-16 22:22:01,300 - common - DEBUG - PS got 3/3 updates (from Worker_1, 105/600 (105/3600), epoch 1/6)
+2023-05-16 22:22:01,309 - common - DEBUG - PS updated model, global loss is 0.542873352766037, weights norm is 9.473552856049105
+2023-05-16 22:22:01,659 - common - DEBUG - PS got 1/3 updates (from Worker_2, 106/600 (106/3600), epoch 1/6)
+2023-05-16 22:22:01,726 - common - DEBUG - PS got 2/3 updates (from Worker_1, 106/600 (106/3600), epoch 1/6)
+2023-05-16 22:22:01,740 - common - DEBUG - PS got 3/3 updates (from Worker_3, 106/600 (106/3600), epoch 1/6)
+2023-05-16 22:22:01,751 - common - DEBUG - PS updated model, global loss is 0.5309382379055023, weights norm is 9.47664186585803
+2023-05-16 22:22:02,062 - common - DEBUG - PS got 1/3 updates (from Worker_3, 107/600 (107/3600), epoch 1/6)
+2023-05-16 22:22:02,170 - common - DEBUG - PS got 2/3 updates (from Worker_2, 107/600 (107/3600), epoch 1/6)
+2023-05-16 22:22:02,177 - common - DEBUG - PS got 3/3 updates (from Worker_1, 107/600 (107/3600), epoch 1/6)
+2023-05-16 22:22:02,187 - common - DEBUG - PS updated model, global loss is 0.47341014941533405, weights norm is 9.479963799133614
+2023-05-16 22:22:02,509 - common - DEBUG - PS got 1/3 updates (from Worker_2, 108/600 (108/3600), epoch 1/6)
+2023-05-16 22:22:02,525 - common - DEBUG - PS got 2/3 updates (from Worker_3, 108/600 (108/3600), epoch 1/6)
+2023-05-16 22:22:02,582 - common - DEBUG - PS got 3/3 updates (from Worker_1, 108/600 (108/3600), epoch 1/6)
+2023-05-16 22:22:02,593 - common - DEBUG - PS updated model, global loss is 0.5244534015655518, weights norm is 9.483274959367328
+2023-05-16 22:22:03,061 - common - DEBUG - PS got 1/3 updates (from Worker_3, 109/600 (109/3600), epoch 1/6)
+2023-05-16 22:22:03,203 - common - DEBUG - PS got 2/3 updates (from Worker_1, 109/600 (109/3600), epoch 1/6)
+2023-05-16 22:22:03,215 - common - DEBUG - PS got 3/3 updates (from Worker_2, 109/600 (109/3600), epoch 1/6)
+2023-05-16 22:22:03,224 - common - DEBUG - PS updated model, global loss is 0.5898949901262919, weights norm is 9.4864780204639
+2023-05-16 22:22:03,827 - common - DEBUG - PS got 1/3 updates (from Worker_1, 110/600 (110/3600), epoch 1/6)
+2023-05-16 22:22:03,842 - common - DEBUG - PS got 1/3 updates (from Worker_3, 110/600 (110/3600), epoch 1/6)
+2023-05-16 22:22:03,853 - common - DEBUG - PS got 3/3 updates (from Worker_2, 110/600 (110/3600), epoch 1/6)
+2023-05-16 22:22:03,862 - common - DEBUG - PS updated model, global loss is 0.5970606009165446, weights norm is 9.48961356267832
+2023-05-16 22:22:04,263 - common - DEBUG - PS got 1/3 updates (from Worker_2, 111/600 (111/3600), epoch 1/6)
+2023-05-16 22:22:04,282 - common - DEBUG - PS got 2/3 updates (from Worker_1, 111/600 (111/3600), epoch 1/6)
+2023-05-16 22:22:04,325 - common - DEBUG - PS got 3/3 updates (from Worker_3, 111/600 (111/3600), epoch 1/6)
+2023-05-16 22:22:04,334 - common - DEBUG - PS updated model, global loss is 0.5603742301464081, weights norm is 9.492870364297543
+2023-05-16 22:22:04,774 - common - DEBUG - PS got 1/3 updates (from Worker_2, 112/600 (112/3600), epoch 1/6)
+2023-05-16 22:22:04,877 - common - DEBUG - PS got 2/3 updates (from Worker_3, 112/600 (112/3600), epoch 1/6)
+2023-05-16 22:22:04,890 - common - DEBUG - PS got 2/3 updates (from Worker_1, 112/600 (112/3600), epoch 1/6)
+2023-05-16 22:22:04,901 - common - DEBUG - PS updated model, global loss is 0.5203443566958109, weights norm is 9.496149019731185
+2023-05-16 22:22:05,349 - common - DEBUG - PS got 1/3 updates (from Worker_2, 113/600 (113/3600), epoch 1/6)
+2023-05-16 22:22:05,442 - common - DEBUG - PS got 2/3 updates (from Worker_1, 113/600 (113/3600), epoch 1/6)
+2023-05-16 22:22:05,461 - common - DEBUG - PS got 3/3 updates (from Worker_3, 113/600 (113/3600), epoch 1/6)
+2023-05-16 22:22:05,470 - common - DEBUG - PS updated model, global loss is 0.5470932523409525, weights norm is 9.49945552778638
+2023-05-16 22:22:06,238 - common - DEBUG - PS got 1/3 updates (from Worker_1, 114/600 (114/3600), epoch 1/6)
+2023-05-16 22:22:06,245 - common - DEBUG - PS got 2/3 updates (from Worker_3, 114/600 (114/3600), epoch 1/6)
+2023-05-16 22:22:06,266 - common - DEBUG - PS got 3/3 updates (from Worker_2, 114/600 (114/3600), epoch 1/6)
+2023-05-16 22:22:06,277 - common - DEBUG - PS updated model, global loss is 0.7528935074806213, weights norm is 9.50207732476765
+2023-05-16 22:22:06,685 - common - DEBUG - PS got 1/3 updates (from Worker_1, 115/600 (115/3600), epoch 1/6)
+2023-05-16 22:22:06,689 - common - DEBUG - PS got 2/3 updates (from Worker_3, 115/600 (115/3600), epoch 1/6)
+2023-05-16 22:22:06,763 - common - DEBUG - PS got 3/3 updates (from Worker_2, 115/600 (115/3600), epoch 1/6)
+2023-05-16 22:22:06,771 - common - DEBUG - PS updated model, global loss is 0.6025652090708414, weights norm is 9.504498433719663
+2023-05-16 22:22:07,149 - common - DEBUG - PS got 1/3 updates (from Worker_2, 116/600 (116/3600), epoch 1/6)
+2023-05-16 22:22:07,312 - common - DEBUG - PS got 2/3 updates (from Worker_3, 116/600 (116/3600), epoch 1/6)
+2023-05-16 22:22:07,319 - common - DEBUG - PS got 3/3 updates (from Worker_1, 116/600 (116/3600), epoch 1/6)
+2023-05-16 22:22:07,326 - common - DEBUG - PS updated model, global loss is 0.6729255119959513, weights norm is 9.506320050785053
+2023-05-16 22:22:07,776 - common - DEBUG - PS got 1/3 updates (from Worker_2, 117/600 (117/3600), epoch 1/6)
+2023-05-16 22:22:07,794 - common - DEBUG - PS got 2/3 updates (from Worker_1, 117/600 (117/3600), epoch 1/6)
+2023-05-16 22:22:07,858 - common - DEBUG - PS got 3/3 updates (from Worker_3, 117/600 (117/3600), epoch 1/6)
+2023-05-16 22:22:07,867 - common - DEBUG - PS updated model, global loss is 0.5552785893281301, weights norm is 9.50808085949954
+2023-05-16 22:22:08,412 - common - DEBUG - PS got 1/3 updates (from Worker_2, 118/600 (118/3600), epoch 1/6)
+2023-05-16 22:22:08,418 - common - DEBUG - PS got 2/3 updates (from Worker_3, 118/600 (118/3600), epoch 1/6)
+2023-05-16 22:22:08,425 - common - DEBUG - PS got 3/3 updates (from Worker_1, 118/600 (118/3600), epoch 1/6)
+2023-05-16 22:22:08,434 - common - DEBUG - PS updated model, global loss is 0.5429963866869608, weights norm is 9.509862384663416
+2023-05-16 22:22:08,775 - common - DEBUG - PS got 1/3 updates (from Worker_3, 119/600 (119/3600), epoch 1/6)
+2023-05-16 22:22:08,825 - common - DEBUG - PS got 2/3 updates (from Worker_1, 119/600 (119/3600), epoch 1/6)
+2023-05-16 22:22:08,872 - common - DEBUG - PS got 3/3 updates (from Worker_2, 119/600 (119/3600), epoch 1/6)
+2023-05-16 22:22:08,879 - common - DEBUG - PS updated model, global loss is 0.5937326749165853, weights norm is 9.511697656713148
+2023-05-16 22:22:09,178 - common - DEBUG - PS got 1/3 updates (from Worker_1, 120/600 (120/3600), epoch 1/6)
+2023-05-16 22:22:09,417 - common - DEBUG - PS got 2/3 updates (from Worker_3, 120/600 (120/3600), epoch 1/6)
+2023-05-16 22:22:09,433 - common - DEBUG - PS got 3/3 updates (from Worker_2, 120/600 (120/3600), epoch 1/6)
+2023-05-16 22:22:09,442 - common - DEBUG - PS updated model, global loss is 0.5363442699114481, weights norm is 9.513757458158281
+2023-05-16 22:22:09,795 - common - DEBUG - PS got 1/3 updates (from Worker_1, 121/600 (121/3600), epoch 1/6)
+2023-05-16 22:22:09,873 - common - DEBUG - PS got 2/3 updates (from Worker_2, 121/600 (121/3600), epoch 1/6)
+2023-05-16 22:22:09,910 - common - DEBUG - PS got 3/3 updates (from Worker_3, 121/600 (121/3600), epoch 1/6)
+2023-05-16 22:22:09,919 - common - DEBUG - PS updated model, global loss is 0.5320139129956564, weights norm is 9.516146587625476
+2023-05-16 22:22:10,339 - common - DEBUG - PS got 1/3 updates (from Worker_2, 122/600 (122/3600), epoch 1/6)
+2023-05-16 22:22:10,368 - common - DEBUG - PS got 2/3 updates (from Worker_3, 122/600 (122/3600), epoch 1/6)
+2023-05-16 22:22:10,373 - common - DEBUG - PS got 3/3 updates (from Worker_1, 122/600 (122/3600), epoch 1/6)
+2023-05-16 22:22:10,381 - common - DEBUG - PS updated model, global loss is 0.5989312728246053, weights norm is 9.518634618588917
+2023-05-16 22:22:10,898 - common - DEBUG - PS got 1/3 updates (from Worker_2, 123/600 (123/3600), epoch 1/6)
+2023-05-16 22:22:10,913 - common - DEBUG - PS got 2/3 updates (from Worker_1, 123/600 (123/3600), epoch 1/6)
+2023-05-16 22:22:10,930 - common - DEBUG - PS got 3/3 updates (from Worker_3, 123/600 (123/3600), epoch 1/6)
+2023-05-16 22:22:10,941 - common - DEBUG - PS updated model, global loss is 0.5556253989537557, weights norm is 9.521199213962264
+2023-05-16 22:22:11,383 - common - DEBUG - PS got 1/3 updates (from Worker_2, 124/600 (124/3600), epoch 1/6)
+2023-05-16 22:22:11,470 - common - DEBUG - PS got 2/3 updates (from Worker_1, 124/600 (124/3600), epoch 1/6)
+2023-05-16 22:22:11,490 - common - DEBUG - PS got 3/3 updates (from Worker_3, 124/600 (124/3600), epoch 1/6)
+2023-05-16 22:22:11,498 - common - DEBUG - PS updated model, global loss is 0.5936832030614217, weights norm is 9.523882955815116
+2023-05-16 22:22:11,954 - common - DEBUG - PS got 1/3 updates (from Worker_1, 125/600 (125/3600), epoch 1/6)
+2023-05-16 22:22:11,994 - common - DEBUG - PS got 2/3 updates (from Worker_3, 125/600 (125/3600), epoch 1/6)
+2023-05-16 22:22:12,063 - common - DEBUG - PS got 3/3 updates (from Worker_2, 125/600 (125/3600), epoch 1/6)
+2023-05-16 22:22:12,071 - common - DEBUG - PS updated model, global loss is 0.6419270634651184, weights norm is 9.526452927122941
+2023-05-16 22:22:12,587 - common - DEBUG - PS got 1/3 updates (from Worker_2, 126/600 (126/3600), epoch 1/6)
+2023-05-16 22:22:12,608 - common - DEBUG - PS got 2/3 updates (from Worker_1, 126/600 (126/3600), epoch 1/6)
+2023-05-16 22:22:12,622 - common - DEBUG - PS got 3/3 updates (from Worker_3, 126/600 (126/3600), epoch 1/6)
+2023-05-16 22:22:12,631 - common - DEBUG - PS updated model, global loss is 0.607189267873764, weights norm is 9.528915595687094
+2023-05-16 22:22:12,966 - common - DEBUG - PS got 1/3 updates (from Worker_1, 127/600 (127/3600), epoch 1/6)
+2023-05-16 22:22:12,976 - common - DEBUG - PS got 1/3 updates (from Worker_2, 127/600 (127/3600), epoch 1/6)
+2023-05-16 22:22:12,985 - common - DEBUG - PS got 1/3 updates (from Worker_3, 127/600 (127/3600), epoch 1/6)
+2023-05-16 22:22:12,994 - common - DEBUG - PS updated model, global loss is 0.5281044244766235, weights norm is 9.53172685647309
+2023-05-16 22:22:13,334 - common - DEBUG - PS got 1/3 updates (from Worker_3, 128/600 (128/3600), epoch 1/6)
+2023-05-16 22:22:13,486 - common - DEBUG - PS got 2/3 updates (from Worker_2, 128/600 (128/3600), epoch 1/6)
+2023-05-16 22:22:13,524 - common - DEBUG - PS got 3/3 updates (from Worker_1, 128/600 (128/3600), epoch 1/6)
+2023-05-16 22:22:13,538 - common - DEBUG - PS updated model, global loss is 0.5774779518445333, weights norm is 9.534638660906877
+2023-05-16 22:22:14,045 - common - DEBUG - PS got 1/3 updates (from Worker_1, 129/600 (129/3600), epoch 1/6)
+2023-05-16 22:22:14,067 - common - DEBUG - PS got 2/3 updates (from Worker_2, 129/600 (129/3600), epoch 1/6)
+2023-05-16 22:22:14,069 - common - DEBUG - PS got 2/3 updates (from Worker_3, 129/600 (129/3600), epoch 1/6)
+2023-05-16 22:22:14,076 - common - DEBUG - PS updated model, global loss is 0.5776135822137197, weights norm is 9.537475963012106
+2023-05-16 22:22:14,380 - common - DEBUG - PS got 1/3 updates (from Worker_3, 130/600 (130/3600), epoch 1/6)
+2023-05-16 22:22:14,453 - common - DEBUG - PS got 2/3 updates (from Worker_1, 130/600 (130/3600), epoch 1/6)
+2023-05-16 22:22:14,516 - common - DEBUG - PS got 3/3 updates (from Worker_2, 130/600 (130/3600), epoch 1/6)
+2023-05-16 22:22:14,525 - common - DEBUG - PS updated model, global loss is 0.518900990486145, weights norm is 9.540413845785894
+2023-05-16 22:22:14,916 - common - DEBUG - PS got 1/3 updates (from Worker_2, 131/600 (131/3600), epoch 1/6)
+2023-05-16 22:22:14,969 - common - DEBUG - PS got 2/3 updates (from Worker_1, 131/600 (131/3600), epoch 1/6)
+2023-05-16 22:22:15,013 - common - DEBUG - PS got 3/3 updates (from Worker_3, 131/600 (131/3600), epoch 1/6)
+2023-05-16 22:22:15,021 - common - DEBUG - PS updated model, global loss is 0.44163747628529865, weights norm is 9.543791119770905
+2023-05-16 22:22:15,340 - common - DEBUG - PS got 1/3 updates (from Worker_2, 132/600 (132/3600), epoch 1/6)
+2023-05-16 22:22:15,430 - common - DEBUG - PS got 2/3 updates (from Worker_1, 132/600 (132/3600), epoch 1/6)
+2023-05-16 22:22:15,462 - common - DEBUG - PS got 3/3 updates (from Worker_3, 132/600 (132/3600), epoch 1/6)
+2023-05-16 22:22:15,470 - common - DEBUG - PS updated model, global loss is 0.5855293671290079, weights norm is 9.547351943759114
+2023-05-16 22:22:15,773 - common - DEBUG - PS got 1/3 updates (from Worker_1, 133/600 (133/3600), epoch 1/6)
+2023-05-16 22:22:15,852 - common - DEBUG - PS got 2/3 updates (from Worker_2, 133/600 (133/3600), epoch 1/6)
+2023-05-16 22:22:15,884 - common - DEBUG - PS got 3/3 updates (from Worker_3, 133/600 (133/3600), epoch 1/6)
+2023-05-16 22:22:15,892 - common - DEBUG - PS updated model, global loss is 0.5923769176006317, weights norm is 9.550545954610222
+2023-05-16 22:22:16,278 - common - DEBUG - PS got 1/3 updates (from Worker_3, 134/600 (134/3600), epoch 1/6)
+2023-05-16 22:22:16,304 - common - DEBUG - PS got 2/3 updates (from Worker_1, 134/600 (134/3600), epoch 1/6)
+2023-05-16 22:22:16,350 - common - DEBUG - PS got 3/3 updates (from Worker_2, 134/600 (134/3600), epoch 1/6)
+2023-05-16 22:22:16,357 - common - DEBUG - PS updated model, global loss is 0.5796025991439819, weights norm is 9.55348427993815
+2023-05-16 22:22:16,655 - common - DEBUG - PS got 1/3 updates (from Worker_2, 135/600 (135/3600), epoch 1/6)
+2023-05-16 22:22:16,734 - common - DEBUG - PS got 2/3 updates (from Worker_1, 135/600 (135/3600), epoch 1/6)
+2023-05-16 22:22:16,810 - common - DEBUG - PS got 3/3 updates (from Worker_3, 135/600 (135/3600), epoch 1/6)
+2023-05-16 22:22:16,819 - common - DEBUG - PS updated model, global loss is 0.493465522925059, weights norm is 9.556595727356692
+2023-05-16 22:22:17,263 - common - DEBUG - PS got 1/3 updates (from Worker_3, 136/600 (136/3600), epoch 1/6)
+2023-05-16 22:22:17,382 - common - DEBUG - PS got 2/3 updates (from Worker_1, 136/600 (136/3600), epoch 1/6)
+2023-05-16 22:22:17,402 - common - DEBUG - PS got 3/3 updates (from Worker_2, 136/600 (136/3600), epoch 1/6)
+2023-05-16 22:22:17,411 - common - DEBUG - PS updated model, global loss is 0.6338869531949362, weights norm is 9.559386557867095
+2023-05-16 22:22:17,970 - common - DEBUG - PS got 1/3 updates (from Worker_1, 137/600 (137/3600), epoch 1/6)
+2023-05-16 22:22:18,003 - common - DEBUG - PS got 2/3 updates (from Worker_2, 137/600 (137/3600), epoch 1/6)
+2023-05-16 22:22:18,021 - common - DEBUG - PS got 3/3 updates (from Worker_3, 137/600 (137/3600), epoch 1/6)
+2023-05-16 22:22:18,029 - common - DEBUG - PS updated model, global loss is 0.4782601197560628, weights norm is 9.562183976991554
+2023-05-16 22:22:18,444 - common - DEBUG - PS got 1/3 updates (from Worker_3, 138/600 (138/3600), epoch 1/6)
+2023-05-16 22:22:18,694 - common - DEBUG - PS got 2/3 updates (from Worker_2, 138/600 (138/3600), epoch 1/6)
+2023-05-16 22:22:18,703 - common - DEBUG - PS got 3/3 updates (from Worker_1, 138/600 (138/3600), epoch 1/6)
+2023-05-16 22:22:18,712 - common - DEBUG - PS updated model, global loss is 0.5118014017740885, weights norm is 9.565185699999551
+2023-05-16 22:22:18,998 - common - DEBUG - PS got 1/3 updates (from Worker_3, 139/600 (139/3600), epoch 1/6)
+2023-05-16 22:22:19,142 - common - DEBUG - PS got 2/3 updates (from Worker_2, 139/600 (139/3600), epoch 1/6)
+2023-05-16 22:22:19,210 - common - DEBUG - PS got 3/3 updates (from Worker_1, 139/600 (139/3600), epoch 1/6)
+2023-05-16 22:22:19,218 - common - DEBUG - PS updated model, global loss is 0.5609503587086996, weights norm is 9.568017228931389
+2023-05-16 22:22:19,609 - common - DEBUG - PS got 1/3 updates (from Worker_1, 140/600 (140/3600), epoch 1/6)
+2023-05-16 22:22:19,717 - common - DEBUG - PS got 2/3 updates (from Worker_2, 140/600 (140/3600), epoch 1/6)
+2023-05-16 22:22:19,721 - common - DEBUG - PS got 2/3 updates (from Worker_3, 140/600 (140/3600), epoch 1/6)
+2023-05-16 22:22:19,729 - common - DEBUG - PS updated model, global loss is 0.5448403358459473, weights norm is 9.570799483748925
+2023-05-16 22:22:20,161 - common - DEBUG - PS got 1/3 updates (from Worker_1, 141/600 (141/3600), epoch 1/6)
+2023-05-16 22:22:20,257 - common - DEBUG - PS got 2/3 updates (from Worker_3, 141/600 (141/3600), epoch 1/6)
+2023-05-16 22:22:20,268 - common - DEBUG - PS got 2/3 updates (from Worker_2, 141/600 (141/3600), epoch 1/6)
+2023-05-16 22:22:20,275 - common - DEBUG - PS updated model, global loss is 0.5345677733421326, weights norm is 9.573630832674134
+2023-05-16 22:22:20,696 - common - DEBUG - PS got 1/3 updates (from Worker_3, 142/600 (142/3600), epoch 1/6)
+2023-05-16 22:22:20,775 - common - DEBUG - PS got 2/3 updates (from Worker_1, 142/600 (142/3600), epoch 1/6)
+2023-05-16 22:22:20,783 - common - DEBUG - PS got 3/3 updates (from Worker_2, 142/600 (142/3600), epoch 1/6)
+2023-05-16 22:22:20,790 - common - DEBUG - PS updated model, global loss is 0.48239245017369586, weights norm is 9.57649167518854
+2023-05-16 22:22:21,096 - common - DEBUG - PS got 1/3 updates (from Worker_2, 143/600 (143/3600), epoch 1/6)
+2023-05-16 22:22:21,196 - common - DEBUG - PS got 2/3 updates (from Worker_1, 143/600 (143/3600), epoch 1/6)
+2023-05-16 22:22:21,207 - common - DEBUG - PS got 3/3 updates (from Worker_3, 143/600 (143/3600), epoch 1/6)
+2023-05-16 22:22:21,216 - common - DEBUG - PS updated model, global loss is 0.5164886713027954, weights norm is 9.579265303971315
+2023-05-16 22:22:21,664 - common - DEBUG - PS got 1/3 updates (from Worker_2, 144/600 (144/3600), epoch 1/6)
+2023-05-16 22:22:21,738 - common - DEBUG - PS got 2/3 updates (from Worker_3, 144/600 (144/3600), epoch 1/6)
+2023-05-16 22:22:21,757 - common - DEBUG - PS got 3/3 updates (from Worker_1, 144/600 (144/3600), epoch 1/6)
+2023-05-16 22:22:21,766 - common - DEBUG - PS updated model, global loss is 0.5462446312109629, weights norm is 9.582070479495927
+2023-05-16 22:22:22,280 - common - DEBUG - PS got 1/3 updates (from Worker_3, 145/600 (145/3600), epoch 1/6)
+2023-05-16 22:22:22,286 - common - DEBUG - PS got 2/3 updates (from Worker_1, 145/600 (145/3600), epoch 1/6)
+2023-05-16 22:22:22,290 - common - DEBUG - PS got 3/3 updates (from Worker_2, 145/600 (145/3600), epoch 1/6)
+2023-05-16 22:22:22,298 - common - DEBUG - PS updated model, global loss is 0.5293923616409302, weights norm is 9.58497237498915
+2023-05-16 22:22:22,579 - common - DEBUG - PS got 1/3 updates (from Worker_3, 146/600 (146/3600), epoch 1/6)
+2023-05-16 22:22:22,655 - common - DEBUG - PS got 2/3 updates (from Worker_1, 146/600 (146/3600), epoch 1/6)
+2023-05-16 22:22:22,746 - common - DEBUG - PS got 3/3 updates (from Worker_2, 146/600 (146/3600), epoch 1/6)
+2023-05-16 22:22:22,754 - common - DEBUG - PS updated model, global loss is 0.5386147300402323, weights norm is 9.587873385585658
+2023-05-16 22:22:23,144 - common - DEBUG - PS got 1/3 updates (from Worker_3, 147/600 (147/3600), epoch 1/6)
+2023-05-16 22:22:23,158 - common - DEBUG - PS got 2/3 updates (from Worker_2, 147/600 (147/3600), epoch 1/6)
+2023-05-16 22:22:23,161 - common - DEBUG - PS got 3/3 updates (from Worker_1, 147/600 (147/3600), epoch 1/6)
+2023-05-16 22:22:23,169 - common - DEBUG - PS updated model, global loss is 0.5053070485591888, weights norm is 9.590685562804639
+2023-05-16 22:22:23,690 - common - DEBUG - PS got 1/3 updates (from Worker_1, 148/600 (148/3600), epoch 1/6)
+2023-05-16 22:22:23,700 - common - DEBUG - PS got 2/3 updates (from Worker_3, 148/600 (148/3600), epoch 1/6)
+2023-05-16 22:22:23,709 - common - DEBUG - PS got 3/3 updates (from Worker_2, 148/600 (148/3600), epoch 1/6)
+2023-05-16 22:22:23,717 - common - DEBUG - PS updated model, global loss is 0.5111381014188131, weights norm is 9.593551276982895
+2023-05-16 22:22:23,972 - common - DEBUG - PS got 1/3 updates (from Worker_2, 149/600 (149/3600), epoch 1/6)
+2023-05-16 22:22:24,097 - common - DEBUG - PS got 2/3 updates (from Worker_3, 149/600 (149/3600), epoch 1/6)
+2023-05-16 22:22:24,103 - common - DEBUG - PS got 2/3 updates (from Worker_1, 149/600 (149/3600), epoch 1/6)
+2023-05-16 22:22:24,121 - common - DEBUG - PS updated model, global loss is 0.5259660383065542, weights norm is 9.596345752425036
+2023-05-16 22:22:24,367 - common - DEBUG - PS got 1/3 updates (from Worker_3, 150/600 (150/3600), epoch 1/6)
+2023-05-16 22:22:24,387 - common - DEBUG - PS got 2/3 updates (from Worker_1, 150/600 (150/3600), epoch 1/6)
+2023-05-16 22:22:24,393 - common - DEBUG - PS got 3/3 updates (from Worker_2, 150/600 (150/3600), epoch 1/6)
+2023-05-16 22:22:24,401 - common - DEBUG - PS updated model, global loss is 0.5731579462687174, weights norm is 9.598926736336113
+2023-05-16 22:22:24,797 - common - DEBUG - PS got 1/3 updates (from Worker_3, 151/600 (151/3600), epoch 1/6)
+2023-05-16 22:22:24,874 - common - DEBUG - PS got 2/3 updates (from Worker_1, 151/600 (151/3600), epoch 1/6)
+2023-05-16 22:22:24,877 - common - DEBUG - PS got 3/3 updates (from Worker_2, 151/600 (151/3600), epoch 1/6)
+2023-05-16 22:22:24,885 - common - DEBUG - PS updated model, global loss is 0.5395872990290324, weights norm is 9.60142468132309
+2023-05-16 22:22:25,181 - common - DEBUG - PS got 1/3 updates (from Worker_3, 152/600 (152/3600), epoch 1/6)
+2023-05-16 22:22:25,269 - common - DEBUG - PS got 2/3 updates (from Worker_2, 152/600 (152/3600), epoch 1/6)
+2023-05-16 22:22:25,279 - common - DEBUG - PS got 3/3 updates (from Worker_1, 152/600 (152/3600), epoch 1/6)
+2023-05-16 22:22:25,292 - common - DEBUG - PS updated model, global loss is 0.5807205637296041, weights norm is 9.603658268757242
+2023-05-16 22:22:25,579 - common - DEBUG - PS got 1/3 updates (from Worker_1, 153/600 (153/3600), epoch 1/6)
+2023-05-16 22:22:25,685 - common - DEBUG - PS got 2/3 updates (from Worker_3, 153/600 (153/3600), epoch 1/6)
+2023-05-16 22:22:25,696 - common - DEBUG - PS got 3/3 updates (from Worker_2, 153/600 (153/3600), epoch 1/6)
+2023-05-16 22:22:25,706 - common - DEBUG - PS updated model, global loss is 0.5343306759993235, weights norm is 9.605938168805533
+2023-05-16 22:22:26,112 - common - DEBUG - PS got 1/3 updates (from Worker_2, 154/600 (154/3600), epoch 1/6)
+2023-05-16 22:22:26,208 - common - DEBUG - PS got 2/3 updates (from Worker_1, 154/600 (154/3600), epoch 1/6)
+2023-05-16 22:22:26,225 - common - DEBUG - PS got 3/3 updates (from Worker_3, 154/600 (154/3600), epoch 1/6)
+2023-05-16 22:22:26,234 - common - DEBUG - PS updated model, global loss is 0.5336918234825134, weights norm is 9.60820178856417
+2023-05-16 22:22:26,656 - common - DEBUG - PS got 1/3 updates (from Worker_1, 155/600 (155/3600), epoch 1/6)
+2023-05-16 22:22:26,673 - common - DEBUG - PS got 2/3 updates (from Worker_3, 155/600 (155/3600), epoch 1/6)
+2023-05-16 22:22:26,701 - common - DEBUG - PS got 3/3 updates (from Worker_2, 155/600 (155/3600), epoch 1/6)
+2023-05-16 22:22:26,709 - common - DEBUG - PS updated model, global loss is 0.462918092807134, weights norm is 9.61078522903853
+2023-05-16 22:22:26,981 - common - DEBUG - PS got 1/3 updates (from Worker_2, 156/600 (156/3600), epoch 1/6)
+2023-05-16 22:22:27,190 - common - DEBUG - PS got 2/3 updates (from Worker_3, 156/600 (156/3600), epoch 1/6)
+2023-05-16 22:22:27,194 - common - DEBUG - PS got 3/3 updates (from Worker_1, 156/600 (156/3600), epoch 1/6)
+2023-05-16 22:22:27,217 - common - DEBUG - PS updated model, global loss is 0.5366690456867218, weights norm is 9.613350750659514
+2023-05-16 22:22:27,626 - common - DEBUG - PS got 1/3 updates (from Worker_2, 157/600 (157/3600), epoch 1/6)
+2023-05-16 22:22:27,678 - common - DEBUG - PS got 2/3 updates (from Worker_1, 157/600 (157/3600), epoch 1/6)
+2023-05-16 22:22:27,690 - common - DEBUG - PS got 3/3 updates (from Worker_3, 157/600 (157/3600), epoch 1/6)
+2023-05-16 22:22:27,697 - common - DEBUG - PS updated model, global loss is 0.5621966222922007, weights norm is 9.615883538787028
+2023-05-16 22:22:28,076 - common - DEBUG - PS got 1/3 updates (from Worker_2, 158/600 (158/3600), epoch 1/6)
+2023-05-16 22:22:28,084 - common - DEBUG - PS got 2/3 updates (from Worker_1, 158/600 (158/3600), epoch 1/6)
+2023-05-16 22:22:28,092 - common - DEBUG - PS got 3/3 updates (from Worker_3, 158/600 (158/3600), epoch 1/6)
+2023-05-16 22:22:28,101 - common - DEBUG - PS updated model, global loss is 0.5450429916381836, weights norm is 9.618412155670363
+2023-05-16 22:22:28,496 - common - DEBUG - PS got 1/3 updates (from Worker_3, 159/600 (159/3600), epoch 1/6)
+2023-05-16 22:22:28,575 - common - DEBUG - PS got 2/3 updates (from Worker_1, 159/600 (159/3600), epoch 1/6)
+2023-05-16 22:22:28,617 - common - DEBUG - PS got 3/3 updates (from Worker_2, 159/600 (159/3600), epoch 1/6)
+2023-05-16 22:22:28,625 - common - DEBUG - PS updated model, global loss is 0.5696373085180918, weights norm is 9.620726338545651
+2023-05-16 22:22:29,055 - common - DEBUG - PS got 1/3 updates (from Worker_3, 160/600 (160/3600), epoch 1/6)
+2023-05-16 22:22:29,139 - common - DEBUG - PS got 2/3 updates (from Worker_1, 160/600 (160/3600), epoch 1/6)
+2023-05-16 22:22:29,157 - common - DEBUG - PS got 3/3 updates (from Worker_2, 160/600 (160/3600), epoch 1/6)
+2023-05-16 22:22:29,164 - common - DEBUG - PS updated model, global loss is 0.499896119038264, weights norm is 9.623237038507133
+2023-05-16 22:22:29,697 - common - DEBUG - PS got 1/3 updates (from Worker_3, 161/600 (161/3600), epoch 1/6)
+2023-05-16 22:22:29,701 - common - DEBUG - PS got 1/3 updates (from Worker_1, 161/600 (161/3600), epoch 1/6)
+2023-05-16 22:22:29,712 - common - DEBUG - PS got 3/3 updates (from Worker_2, 161/600 (161/3600), epoch 1/6)
+2023-05-16 22:22:29,720 - common - DEBUG - PS updated model, global loss is 0.6556851267814636, weights norm is 9.62539617406207
+2023-05-16 22:22:30,094 - common - DEBUG - PS got 1/3 updates (from Worker_2, 162/600 (162/3600), epoch 1/6)
+2023-05-16 22:22:30,111 - common - DEBUG - PS got 2/3 updates (from Worker_1, 162/600 (162/3600), epoch 1/6)
+2023-05-16 22:22:30,177 - common - DEBUG - PS got 3/3 updates (from Worker_3, 162/600 (162/3600), epoch 1/6)
+2023-05-16 22:22:30,188 - common - DEBUG - PS updated model, global loss is 0.45300687352816266, weights norm is 9.627996199979663
+2023-05-16 22:22:30,478 - common - DEBUG - PS got 1/3 updates (from Worker_3, 163/600 (163/3600), epoch 1/6)
+2023-05-16 22:22:30,590 - common - DEBUG - PS got 2/3 updates (from Worker_1, 163/600 (163/3600), epoch 1/6)
+2023-05-16 22:22:30,623 - common - DEBUG - PS got 3/3 updates (from Worker_2, 163/600 (163/3600), epoch 1/6)
+2023-05-16 22:22:30,632 - common - DEBUG - PS updated model, global loss is 0.5828369855880737, weights norm is 9.630527257637818
+2023-05-16 22:22:30,916 - common - DEBUG - PS got 1/3 updates (from Worker_3, 164/600 (164/3600), epoch 1/6)
+2023-05-16 22:22:31,087 - common - DEBUG - PS got 2/3 updates (from Worker_1, 164/600 (164/3600), epoch 1/6)
+2023-05-16 22:22:31,113 - common - DEBUG - PS got 3/3 updates (from Worker_2, 164/600 (164/3600), epoch 1/6)
+2023-05-16 22:22:31,123 - common - DEBUG - PS updated model, global loss is 0.5357670982678732, weights norm is 9.632977941834197
+2023-05-16 22:22:31,510 - common - DEBUG - PS got 1/3 updates (from Worker_1, 165/600 (165/3600), epoch 1/6)
+2023-05-16 22:22:31,524 - common - DEBUG - PS got 2/3 updates (from Worker_3, 165/600 (165/3600), epoch 1/6)
+2023-05-16 22:22:31,535 - common - DEBUG - PS got 3/3 updates (from Worker_2, 165/600 (165/3600), epoch 1/6)
+2023-05-16 22:22:31,543 - common - DEBUG - PS updated model, global loss is 0.49126296242078143, weights norm is 9.635663797930217
+2023-05-16 22:22:31,838 - common - DEBUG - PS got 1/3 updates (from Worker_1, 166/600 (166/3600), epoch 1/6)
+2023-05-16 22:22:31,867 - common - DEBUG - PS got 2/3 updates (from Worker_3, 166/600 (166/3600), epoch 1/6)
+2023-05-16 22:22:31,879 - common - DEBUG - PS got 3/3 updates (from Worker_2, 166/600 (166/3600), epoch 1/6)
+2023-05-16 22:22:31,887 - common - DEBUG - PS updated model, global loss is 0.535379946231842, weights norm is 9.638218759145094

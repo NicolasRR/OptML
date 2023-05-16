@@ -1,0 +1,2606 @@
+Using SGD as optimizer.
+Running Kfold for mnist, using 5 splits.
+Created MNIST trainloaders
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.10097168216481806
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.13751679922888677
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.14323509099582832
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.14431802701453367
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.11497709028919538
+Step: 1/108, avg loss: 0.12820373793865242, epoch:2, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.08669527073390781
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.09348389188200236
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.09034399910892049
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.09856973396676282
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.07711640828630577
+Step: 2/108, avg loss: 0.08924186079557986, epoch:2, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06528211770408476
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06566833272622898
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06582233852567151
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07477308101579547
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06605542948298777
+Step: 3/108, avg loss: 0.0675202598909537, epoch:2, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.07791702357244988
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.0747895147446543
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07058425391931086
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07939923107313614
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06601009467476979
+Step: 4/108, avg loss: 0.0737400235968642, epoch:2, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06403017805202399
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.07416469572236141
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.056539921280927954
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08314322322855393
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06314410915086045
+Step: 5/108, avg loss: 0.06820442548694554, epoch:2, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3030291906992595
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.303813273111979
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3070187594095866
+Created MNIST CNN
+Fold: 4/5, fold_loss: 1.387607267697652
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3050222333272297
+Step: 6/108, avg loss: 2.121298144849141, epoch:2, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06604081277331958
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05040523491279843
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07208683601239076
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06626769585628063
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05155821662958866
+Step: 7/108, avg loss: 0.06127175923687561, epoch:2, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.0761141695077531
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06958686137370144
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06390975509785736
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08762292151199653
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05883160141160867
+Step: 8/108, avg loss: 0.07121306178058341, epoch:2, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3149117679595945
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3087398052215575
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3037756265004474
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3073791535695394
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.312576940536499
+Step: 9/108, avg loss: 2.3094766587575273, epoch:2, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.5842053942680359
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.24847521663740432
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.303506346384684
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.305174086888631
+Created MNIST CNN
+Fold: 5/5, fold_loss: 1.1880426656405132
+Step: 10/108, avg loss: 1.3258807419638536, epoch:2, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.305113093694051
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3083816922505696
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3083386319478354
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.31571817334493
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.304914883931478
+Step: 11/108, avg loss: 2.308493295033773, epoch:2, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3361684869130452
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.337842575073242
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.338305435816447
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3140056330362957
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.346662612279256
+Step: 12/108, avg loss: 2.334596948623657, epoch:2, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.21317855090378446
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.21260474198200602
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.18482809902188627
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.21997500361597283
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.1879765707206853
+Step: 13/108, avg loss: 0.20371259324886698, epoch:2, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.1038687740566526
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.12046195373454309
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.13177435791635134
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.12542379743597926
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.10242282759219884
+Step: 14/108, avg loss: 0.11679034214714501, epoch:2, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.07631470639496407
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06772630825698217
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07325205863131448
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0861234816777064
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.07281745248226489
+Step: 15/108, avg loss: 0.0752468014886464, epoch:2, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.09901142550354942
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.08128138090622553
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.08459098860708145
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08712533297155925
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.07076381162017029
+Step: 16/108, avg loss: 0.08455458792171719, epoch:2, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06632694533649594
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06253226977237995
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.055308778705868
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07047229328569263
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06376396428838253
+Step: 17/108, avg loss: 0.06368085027776381, epoch:2, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.12675599549758307
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.08486860210170097
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.10350026067239827
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.12364316753364425
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.11234794517216135
+Step: 18/108, avg loss: 0.11022319419549757, epoch:2, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05885489385059856
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.057629645207619415
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0702474310813333
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07327331748835623
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06468737791936369
+Step: 19/108, avg loss: 0.06493853310945424, epoch:2, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06880317505094857
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06361591606772446
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06067841778326027
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0881947554001446
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05320205470606526
+Step: 20/108, avg loss: 0.06689886380162863, epoch:2, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.302267883686309
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3046642453112502
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3074713197160275
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3039690661937633
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.304917428087681
+Step: 21/108, avg loss: 2.3046579885990064, epoch:2, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.07055994902150409
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.12624096697037843
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.12982132102788843
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.09649187485201959
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.09325956831255214
+Step: 22/108, avg loss: 0.10327473603686854, epoch:2, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3056226334673293
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.7117801884070356
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3050824289626264
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3037537095394542
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.306624328836482
+Step: 23/108, avg loss: 1.9865726578425853, epoch:2, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3216086537279983
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3253708126697132
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.307978905261831
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3221608603254276
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3084886086748
+Step: 24/108, avg loss: 2.317121568131954, epoch:2, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3518619603933172
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3136204978887071
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.37792888458104845
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3125779915680277
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.30366454352723793
+Step: 25/108, avg loss: 0.3319307755916676, epoch:2, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.1950983260857298
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.22824713777988515
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.21407224800675473
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.2214074916345008
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.20301769277516832
+Step: 26/108, avg loss: 0.21236857925640776, epoch:2, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.11139743666144762
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.10014906038153679
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.09081512630144332
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.11296418428103974
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.10755216419459024
+Step: 27/108, avg loss: 0.10457559436401154, epoch:2, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.12557092804382455
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.09754094065345348
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.11186033784550556
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.12264793415732206
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.09745979554792668
+Step: 28/108, avg loss: 0.11101598724960646, epoch:2, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.07772981001936058
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.08276028267325873
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0810965137120257
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.09479409711871375
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.08623814775033835
+Step: 29/108, avg loss: 0.08452377025473942, epoch:2, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.09791783494082221
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.08407283788348766
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07928701822566701
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.11021459202698254
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.09027553071327349
+Step: 30/108, avg loss: 0.09235356275804658, epoch:2, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.08797957833380775
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.07849794021867057
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07861964796927381
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.1033841610113357
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.07674302837434918
+Step: 31/108, avg loss: 0.0850448711814874, epoch:2, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.08275608000583312
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.0677907411999842
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07406237248846508
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08256124823968461
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06888104091210172
+Step: 32/108, avg loss: 0.07521029656921376, epoch:2, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.16127847578931362
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.13785376427497
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.13762787681944827
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.17548165034423482
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.13426173866746274
+Step: 33/108, avg loss: 0.1493007011790859, epoch:2, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.0762910451343719
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.07938349128581901
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07835262345070852
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08432135839966383
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.08044777726358239
+Step: 34/108, avg loss: 0.07975925910682913, epoch:2, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.1701201834577195
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.1284696491474801
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.09283664448067863
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.118913379121334
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.09346767489184091
+Step: 35/108, avg loss: 0.12076150621981063, epoch:2, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3133057913881667
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3135167005214283
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3119311992158282
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3103512855286295
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.309713487929486
+Step: 36/108, avg loss: 2.3117636929167076, epoch:2, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.07605223914794623
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.07382600717370709
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07667487368515383
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08529458517115564
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0794597179821382
+Step: 37/108, avg loss: 0.07826148463202019, epoch:4, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06370347797342886
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06302761676938584
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0711905871409302
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07693120181995133
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05888330900754469
+Step: 38/108, avg loss: 0.06674723854224818, epoch:4, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.057503627508568265
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.052684639948575446
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.048022130641931046
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08088792329607532
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06727778508895427
+Step: 39/108, avg loss: 0.06127522129682087, epoch:4, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.04920694148726761
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.036193921784559886
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0484232252042663
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05732110823124337
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05479613535251701
+Step: 40/108, avg loss: 0.049188266411970834, epoch:4, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.0524153958716585
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04485763809405034
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06823673939862056
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06845843760560577
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.050226807638964
+Step: 41/108, avg loss: 0.056839003721779836, epoch:4, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.30194531695048
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3033179435729982
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3039865894317626
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.306658525466919
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3074613355000815
+Step: 42/108, avg loss: 2.304673942184448, epoch:4, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.058623392656746244
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04268614767231823
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05087839714292204
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.061767169983941134
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.047070508511834
+Step: 43/108, avg loss: 0.052205123193552326, epoch:4, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.07094562906131614
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04659494826673351
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.062404875139259575
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0641742164750079
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05832629345623233
+Step: 44/108, avg loss: 0.060489192479709894, epoch:4, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.305638677597046
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3051141522725422
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.313704341252645
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.303229965845744
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3098888263702393
+Step: 45/108, avg loss: 2.307515192667643, epoch:4, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3054556102752684
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.301814968109131
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3028714440663656
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3040694382985434
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.30455370203654
+Step: 46/108, avg loss: 2.3037530325571693, epoch:4, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3105999851226806
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3039193013509114
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3068603757222492
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3055109418233237
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3080702927907306
+Step: 47/108, avg loss: 2.306992179361979, epoch:4, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3231828708648683
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.37152300008138
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.317961036046346
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3253874963124592
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3213809820810956
+Step: 48/108, avg loss: 2.3318870770772295, epoch:4, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.11921274820540814
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.10363868713636507
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0931063258346725
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.13391904023654283
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.1211173467912731
+Step: 49/108, avg loss: 0.11419882964085233, epoch:4, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.08359162553282891
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.08004316925739949
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0743687981714871
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08631128464092283
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0739313636465553
+Step: 50/108, avg loss: 0.07964924824983872, epoch:4, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06622921643429436
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05534797970470576
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05380466832696371
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05012567386469566
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06110547726665515
+Step: 51/108, avg loss: 0.057322603119462925, epoch:4, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06278094717430228
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06162804224221234
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05897932804803899
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06370429207689743
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.059621131877065636
+Step: 52/108, avg loss: 0.06134274828370334, epoch:4, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.060010566418257326
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04647300402916215
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.04608727685247667
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.051209796964069534
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0463780947037331
+Step: 53/108, avg loss: 0.05003174779353976, epoch:4, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.10361814147859634
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.07462246116785459
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.08257123766320837
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.11442000010921471
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.10283678651792294
+Step: 54/108, avg loss: 0.09561372538735939, epoch:4, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.054303697173847774
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04578196643009544
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05277249203139403
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.052912555797833036
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.053056030464854013
+Step: 55/108, avg loss: 0.05176534837960486, epoch:4, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.04425074528541138
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05351810188941717
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05483294963314039
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06167564682874264
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.053213480566789276
+Step: 56/108, avg loss: 0.053498184840700166, epoch:4, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3048629621241954
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3036440712340336
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3085826495860484
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.305488444389181
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.304190600172002
+Step: 57/108, avg loss: 2.3053537455010926, epoch:4, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06989942341974807
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.09420224352977535
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0643018836880343
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0958720563404371
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05596932986697945
+Step: 58/108, avg loss: 0.07604898736899486, epoch:4, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3060069971896233
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3042917796906006
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.302149590025557
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3066418741611723
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3051201308027225
+Step: 59/108, avg loss: 2.3048420743739353, epoch:4, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3082719470592257
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.31186022276574
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3136885064713497
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3183482733178646
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.310867984244164
+Step: 60/108, avg loss: 2.3126073867716688, epoch:4, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.15405242509664374
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.18509846426388052
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.16340941967482261
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.17608557665284644
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.19165133324233777
+Step: 61/108, avg loss: 0.17405944378610622, epoch:4, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.10625766948895886
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.13120510734300664
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.12710041168363803
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.13802308569404673
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.10977059204448411
+Step: 62/108, avg loss: 0.12247137325082688, epoch:4, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.0637176009291347
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06352658678301946
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06660088864056037
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06537559890049569
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.07199705148393169
+Step: 63/108, avg loss: 0.06624354534742839, epoch:4, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06198937217011414
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.07356694017715276
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06330184560229486
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07239802195591495
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0741302930809399
+Step: 64/108, avg loss: 0.06907729459728332, epoch:4, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.054582976012867185
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05539348287547522
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06181716351730234
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0737930535180296
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.052892885309584595
+Step: 65/108, avg loss: 0.059695912246651786, epoch:4, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.0644838271434716
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05170903179517135
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0700364203496955
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.10137240178486769
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06311172620452782
+Step: 66/108, avg loss: 0.07014268145554678, epoch:4, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06064835524662061
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.050390508977022574
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05797952483903537
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08117785552476948
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05833765180741853
+Step: 67/108, avg loss: 0.06170677927897331, epoch:4, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.04894984612598064
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05093248574400043
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05022690005283406
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06522103552607462
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.051908803157548006
+Step: 68/108, avg loss: 0.05344781412128756, epoch:4, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.1546081023270938
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.11325146459003395
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0939368853008652
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.1277473318846302
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.09535117066425687
+Step: 69/108, avg loss: 0.11697899095337601, epoch:4, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06900278856839112
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06449216902454166
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06993848601098548
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06381122690645304
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05311315176770725
+Step: 70/108, avg loss: 0.06407156445561571, epoch:4, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.09767328313690551
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.08117027726381067
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.10104739307822223
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.18883441658096112
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0988928769279192
+Step: 71/108, avg loss: 0.11352364939756376, epoch:4, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3114614334512265
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3080951431964305
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3056798589990493
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3058703909529017
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.309951033998043
+Step: 72/108, avg loss: 2.30821157211953, epoch:4, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06356719909391055
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06789798288738044
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05963871812913567
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07183238834577302
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.060129334423380594
+Step: 73/108, avg loss: 0.06461312457591604, epoch:6, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05555497921068066
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04658339477237314
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05149786339250083
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.053558316722124195
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.04895998075332803
+Step: 74/108, avg loss: 0.05123090697020137, epoch:6, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05425832680312063
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.044440360393413966
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05211350886300594
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05592561490713464
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05495306021770618
+Step: 75/108, avg loss: 0.05233817423687627, epoch:6, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.04465721068222774
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.038142198389502786
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.04683536380239336
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.056323097916242355
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.051322959802103774
+Step: 76/108, avg loss: 0.047456166118494, epoch:6, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05394210673837612
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.050119665855493316
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.04574948227255178
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06459844916994917
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.04310953545176502
+Step: 77/108, avg loss: 0.051503847897627075, epoch:6, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.303110467910767
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3056272684733075
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.302573854446411
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3039806098937987
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3044823576609295
+Step: 78/108, avg loss: 2.3039549116770432, epoch:6, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.050211582112761485
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04510106622295765
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05195342209644635
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.059979476096428695
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.045390294933487896
+Step: 79/108, avg loss: 0.050527168292416415, epoch:6, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05818068673937523
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.0663560247264492
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0571936340250395
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05573009189889611
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0467956295654094
+Step: 80/108, avg loss: 0.056851213391033883, epoch:6, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.308557535171509
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3132708950042726
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.307623926798503
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3090873699188235
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3103996238708495
+Step: 81/108, avg loss: 2.3097878701527916, epoch:6, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.304677883783976
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3106295477549237
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.307866367975871
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3038954493204753
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3043196773529053
+Step: 82/108, avg loss: 2.30627778523763, epoch:6, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.305910772959391
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.307387736638387
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.30884490331014
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3080828653971355
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3080383224487306
+Step: 83/108, avg loss: 2.307652920150757, epoch:6, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3513626810709636
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3224585183461506
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3230259456634523
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3850399856567384
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3505137418111164
+Step: 84/108, avg loss: 2.346480174509684, epoch:6, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.09789343638979692
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.08002857730644657
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.08165194918500616
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08791942301483706
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.08039551463097017
+Step: 85/108, avg loss: 0.08557778010541138, epoch:6, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06733849799468558
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05371665666399999
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.06362641615015356
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0872304441340446
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06560074622331663
+Step: 86/108, avg loss: 0.06750255223324007, epoch:6, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.08434984972948169
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04407741624411156
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05346605670940257
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0583331825888463
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.050209783947100226
+Step: 87/108, avg loss: 0.05808725784378847, epoch:6, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06616530319963126
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04246896771810691
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.04047316834058098
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05615155999437272
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.054089033662866645
+Step: 88/108, avg loss: 0.0518696065831117, epoch:6, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.051741114132690856
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.03672876407329161
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05119509324140381
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05447145261333641
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05263391115233312
+Step: 89/108, avg loss: 0.04935406704261116, epoch:6, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.08871890800079935
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.0719132256892524
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.13469902674563505
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.11346833251461268
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.08066373793189996
+Step: 90/108, avg loss: 0.09789264617643989, epoch:6, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.04341525076829675
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.03605110958117021
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05011609279980358
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05728766040200308
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.048107605561412164
+Step: 91/108, avg loss: 0.04699554382253716, epoch:6, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.043472535352153265
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.03910335149378218
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.04681116888550992
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.054967765907891354
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.06604656903228
+Step: 92/108, avg loss: 0.05008027813432334, epoch:6, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3059423654637436
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.303992469260033
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.304576594778832
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3038006703904332
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.303515185701086
+Step: 93/108, avg loss: 2.3043654571188257, epoch:6, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.0875316561649286
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.05829143464909569
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.15727977246600897
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07083514098307438
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0764583654836702
+Step: 94/108, avg loss: 0.09007927394935555, epoch:6, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3024903548524733
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.303467685871936
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.305016184106786
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.303321646883133
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.305449587233523
+Step: 95/108, avg loss: 2.3039490917895704, epoch:6, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3222674816212754
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.31622281226706
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.310562888358502
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3073911324460457
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.32289823445868
+Step: 96/108, avg loss: 2.3158685098303127, epoch:6, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.12790463734021845
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.12626247183281056
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.13459576012447794
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.1457827036526609
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.12008759224826986
+Step: 97/108, avg loss: 0.13092663303968752, epoch:6, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.08881828091800847
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.07432824298937588
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07748110638931394
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.08874454618768489
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.0930619976939039
+Step: 98/108, avg loss: 0.08448683483565742, epoch:6, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05448536703145092
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.051649647428000225
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05044906503184045
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06522718891550965
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05856837062264218
+Step: 99/108, avg loss: 0.056075927805888694, epoch:6, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.06505111039200044
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.047473004058082684
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.053410028905033116
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.0765386368841567
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.058620707320168296
+Step: 100/108, avg loss: 0.06021869751188824, epoch:6, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05618032062069533
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04518048737713314
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.061629876098100174
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.058064296306606304
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.057184023901503137
+Step: 101/108, avg loss: 0.05564780086080762, epoch:6, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.07904678483572887
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.04488169038643506
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.07052545877114097
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.07203955120194029
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.053843563784191265
+Step: 102/108, avg loss: 0.06406740979588729, epoch:6, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05101147840948815
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.044827061259445355
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.05283957147386242
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05449076117997236
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.048428875017673415
+Step: 103/108, avg loss: 0.050319549468088344, epoch:6, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.04589600944668649
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.037548025401229874
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.04803121427044352
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.05838850840549678
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.05019001896335852
+Step: 104/108, avg loss: 0.048010755297443045, epoch:6, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.15315181066460432
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.0751337762624818
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.10869961298328448
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.10430276293822742
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.10598999736434285
+Step: 105/108, avg loss: 0.10945559204258817, epoch:6, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.05125783772475304
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.06463697832077742
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.0711151807422829
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.06467305743036435
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.04924425910885862
+Step: 106/108, avg loss: 0.060185462665407266, epoch:6, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.10785140771854748
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.16887934973582308
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.09461185001233156
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.09774996439165912
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.07116285912157531
+Step: 107/108, avg loss: 0.10805108619598731, epoch:6, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3069561618439693
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3135221156668155
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3086903424973184
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.30663988945332
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.314545915481892
+Step: 108/108, avg loss: 2.310070884988663, epoch:6, lr:0.05, batch_size: 128
+
+Best parameters for mnist (SGD): epochs=6, batch_size=64, learning_rate=0.01, momentum=0.9, loss=0.04699554382253716
+ epochs  batch_size  learning_rate  momentum  Average Loss
+      2          32          0.001      0.90      0.128204
+      2          32          0.001      0.95      0.089242
+      2          32          0.001      0.99      0.067520
+      2          32          0.005      0.90      0.073740
+      2          32          0.005      0.95      0.068204
+      2          32          0.005      0.99      2.121298
+      2          32          0.010      0.90      0.061272
+      2          32          0.010      0.95      0.071213
+      2          32          0.010      0.99      2.309477
+      2          32          0.050      0.90      1.325881
+      2          32          0.050      0.95      2.308493
+      2          32          0.050      0.99      2.334597
+      2          64          0.001      0.90      0.203713
+      2          64          0.001      0.95      0.116790
+      2          64          0.001      0.99      0.075247
+      2          64          0.005      0.90      0.084555
+      2          64          0.005      0.95      0.063681
+      2          64          0.005      0.99      0.110223
+      2          64          0.010      0.90      0.064939
+      2          64          0.010      0.95      0.066899
+      2          64          0.010      0.99      2.304658
+      2          64          0.050      0.90      0.103275
+      2          64          0.050      0.95      1.986573
+      2          64          0.050      0.99      2.317122
+      2         128          0.001      0.90      0.331931
+      2         128          0.001      0.95      0.212369
+      2         128          0.001      0.99      0.104576
+      2         128          0.005      0.90      0.111016
+      2         128          0.005      0.95      0.084524
+      2         128          0.005      0.99      0.092354
+      2         128          0.010      0.90      0.085045
+      2         128          0.010      0.95      0.075210
+      2         128          0.010      0.99      0.149301
+      2         128          0.050      0.90      0.079759
+      2         128          0.050      0.95      0.120762
+      2         128          0.050      0.99      2.311764
+      4          32          0.001      0.90      0.078261
+      4          32          0.001      0.95      0.066747
+      4          32          0.001      0.99      0.061275
+      4          32          0.005      0.90      0.049188
+      4          32          0.005      0.95      0.056839
+      4          32          0.005      0.99      2.304674
+      4          32          0.010      0.90      0.052205
+      4          32          0.010      0.95      0.060489
+      4          32          0.010      0.99      2.307515
+      4          32          0.050      0.90      2.303753
+      4          32          0.050      0.95      2.306992
+      4          32          0.050      0.99      2.331887
+      4          64          0.001      0.90      0.114199
+      4          64          0.001      0.95      0.079649
+      4          64          0.001      0.99      0.057323
+      4          64          0.005      0.90      0.061343
+      4          64          0.005      0.95      0.050032
+      4          64          0.005      0.99      0.095614
+      4          64          0.010      0.90      0.051765
+      4          64          0.010      0.95      0.053498
+      4          64          0.010      0.99      2.305354
+      4          64          0.050      0.90      0.076049
+      4          64          0.050      0.95      2.304842
+      4          64          0.050      0.99      2.312607
+      4         128          0.001      0.90      0.174059
+      4         128          0.001      0.95      0.122471
+      4         128          0.001      0.99      0.066244
+      4         128          0.005      0.90      0.069077
+      4         128          0.005      0.95      0.059696
+      4         128          0.005      0.99      0.070143
+      4         128          0.010      0.90      0.061707
+      4         128          0.010      0.95      0.053448
+      4         128          0.010      0.99      0.116979
+      4         128          0.050      0.90      0.064072
+      4         128          0.050      0.95      0.113524
+      4         128          0.050      0.99      2.308212
+      6          32          0.001      0.90      0.064613
+      6          32          0.001      0.95      0.051231
+      6          32          0.001      0.99      0.052338
+      6          32          0.005      0.90      0.047456
+      6          32          0.005      0.95      0.051504
+      6          32          0.005      0.99      2.303955
+      6          32          0.010      0.90      0.050527
+      6          32          0.010      0.95      0.056851
+      6          32          0.010      0.99      2.309788
+      6          32          0.050      0.90      2.306278
+      6          32          0.050      0.95      2.307653
+      6          32          0.050      0.99      2.346480
+      6          64          0.001      0.90      0.085578
+      6          64          0.001      0.95      0.067503
+      6          64          0.001      0.99      0.058087
+      6          64          0.005      0.90      0.051870
+      6          64          0.005      0.95      0.049354
+      6          64          0.005      0.99      0.097893
+      6          64          0.010      0.90      0.046996
+      6          64          0.010      0.95      0.050080
+      6          64          0.010      0.99      2.304365
+      6          64          0.050      0.90      0.090079
+      6          64          0.050      0.95      2.303949
+      6          64          0.050      0.99      2.315869
+      6         128          0.001      0.90      0.130927
+      6         128          0.001      0.95      0.084487
+      6         128          0.001      0.99      0.056076
+      6         128          0.005      0.90      0.060219
+      6         128          0.005      0.95      0.055648
+      6         128          0.005      0.99      0.064067
+      6         128          0.010      0.90      0.050320
+      6         128          0.010      0.95      0.048011
+      6         128          0.010      0.99      0.109456
+      6         128          0.050      0.90      0.060185
+      6         128          0.050      0.95      0.108051
+      6         128          0.050      0.99      2.310071
+
+Using SGD as optimizer.
+Running Kfold for fashion_mnist, using 5 splits.
+Created FashionMNIST trainloaders
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.5050509004791578
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.5049698998530706
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5380775637229284
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.49623547681172686
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5482972278992335
+Step: 1/108, avg loss: 0.5185262137532234, epoch:2, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.39413276720046997
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.43425905871391296
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.4186092505455017
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.4032052587866783
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.43441306964556375
+Step: 2/108, avg loss: 0.41692388097842537, epoch:2, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3364753815929095
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.35747617127497994
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3491162304282188
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.38278170708815257
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.33393766166766486
+Step: 3/108, avg loss: 0.3519574304103851, epoch:2, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.34227936509251594
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3625562416116397
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3678060394426187
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3583967193563779
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3595927950938543
+Step: 4/108, avg loss: 0.3581262321194013, epoch:2, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.31660901971161365
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3205305649836858
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3304357968469461
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.34331478278835614
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.35871341452995936
+Step: 5/108, avg loss: 0.3339207157721122, epoch:2, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.6182225289742151
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.6051678667068482
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5185617903470993
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.6250496702392896
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5295544446706771
+Step: 6/108, avg loss: 0.5793112601876259, epoch:2, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3376780831813812
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.322545568883419
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3533839995662371
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3128379952510198
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3422961796025435
+Step: 7/108, avg loss: 0.3337483652969201, epoch:2, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.36216933153072994
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3365244963169098
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.32614082979162534
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.35498928250869116
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3680938566426436
+Step: 8/108, avg loss: 0.34958355935811997, epoch:2, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 1.2031851751009623
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3163902333577475
+Created MNIST CNN
+Fold: 3/5, fold_loss: 1.1633183603286743
+Created MNIST CNN
+Fold: 4/5, fold_loss: 1.3307403842608134
+Created MNIST CNN
+Fold: 5/5, fold_loss: 1.3331512991587322
+Step: 9/108, avg loss: 1.469357090441386, epoch:2, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.48003761772314707
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4733694090247154
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.457050471107165
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.4534659200310707
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4607442952990532
+Step: 10/108, avg loss: 0.46493354263703024, epoch:2, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 1.2502708388964334
+Created MNIST CNN
+Fold: 2/5, fold_loss: 1.2198384801546733
+Created MNIST CNN
+Fold: 3/5, fold_loss: 1.1053372680346172
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.308526955922445
+Created MNIST CNN
+Fold: 5/5, fold_loss: 1.1183476111094157
+Step: 11/108, avg loss: 1.400464230823517, epoch:2, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.375136999766032
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3314514433542888
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.334364840825399
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3288671805063883
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.34910701751709
+Step: 12/108, avg loss: 2.3437854963938394, epoch:2, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.6589409821528069
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.6022434345585235
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.618981920658274
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.6691807673332539
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.7057494048742537
+Step: 13/108, avg loss: 0.6510193019154223, epoch:2, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.5311278550231711
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.5466429740983121
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5204221095810545
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.5241866552449287
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5363569405484707
+Step: 14/108, avg loss: 0.5317473068991874, epoch:2, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4040565245804634
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4144692861653389
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.37637713313736815
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3977941867518932
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.38668189633716926
+Step: 15/108, avg loss: 0.39587580539444656, epoch:2, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.40723105107850216
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4020980676596469
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.38907119766511816
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.39673134082175315
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.401644193428628
+Step: 16/108, avg loss: 0.3993551701307297, epoch:2, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3447952704068194
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3615256849914155
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.38655821622369135
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.37708990949582544
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3592307356760857
+Step: 17/108, avg loss: 0.36583996335876756, epoch:2, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4133932617433528
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4089230608115805
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.41886881120661473
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.39330938735857923
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.41960294180093927
+Step: 18/108, avg loss: 0.4108194925842133, epoch:2, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3409664606318829
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.35851552369112666
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.33077182818917517
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3574264433948284
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.34421343326647863
+Step: 19/108, avg loss: 0.34637873783469836, epoch:2, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3288145558710428
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.33248460966538873
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.35914170702404163
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3452846738410757
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3721998285581457
+Step: 20/108, avg loss: 0.3475850749919389, epoch:2, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.7602829481375978
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.5931715175826499
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.6669713480675474
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.6369494574659682
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5748961753350623
+Step: 21/108, avg loss: 0.646454289317765, epoch:2, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.33322264880258984
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.36749822590896425
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3660975519092159
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3532718021343363
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.38218609909427925
+Step: 22/108, avg loss: 0.36045526556987706, epoch:2, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.45423874338256554
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.549849326940293
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.4609700912966373
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.5236413027060792
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4905063457628514
+Step: 23/108, avg loss: 0.4958411620176853, epoch:2, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.311556974624066
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.318304436003908
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.317477009397872
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3267851268991513
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3137685161955814
+Step: 24/108, avg loss: 2.317578412624116, epoch:2, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.8007001908535653
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.8264761510047507
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.8140922302895404
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.817387764758252
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.84604781992892
+Step: 25/108, avg loss: 0.8209408313670057, epoch:2, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.6379308592765889
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.6319217780169021
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.6509814772834169
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.6158599723526772
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.6360069300900114
+Step: 26/108, avg loss: 0.6345402034039193, epoch:2, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4697778522968292
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.46072966716390973
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5172424576383956
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.4944066281648392
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4727182473908079
+Step: 27/108, avg loss: 0.48297497053095634, epoch:2, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4830999602662756
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4995930809923943
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.502206027190736
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.48130808358496807
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5076897077737971
+Step: 28/108, avg loss: 0.49477937196163424, epoch:2, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4006803742748626
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4073414808892189
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.4638051305045473
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.42393881336171574
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.42305014789738554
+Step: 29/108, avg loss: 0.423763189385546, epoch:2, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3834654841017216
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.39829781651496887
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.38270419598259825
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.4003641673542084
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3729836753708251
+Step: 30/108, avg loss: 0.38756306786486444, epoch:2, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.42005189064335313
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.41601300651722767
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.4200333280766264
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.41324586659035784
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4021308016269765
+Step: 31/108, avg loss: 0.41429497869090837, epoch:2, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.38129721201480704
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.36550499847594725
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.37019380705153687
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3720272666913398
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.36809862468470916
+Step: 32/108, avg loss: 0.37142438178366805, epoch:2, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4221748097779903
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.432341420270027
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.4603935464265499
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.45956761659459866
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4633868133768122
+Step: 33/108, avg loss: 0.44757284128919556, epoch:2, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.35933581612845683
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.33435983622961857
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.31239873662273937
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.35289364545903307
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.32990784895546893
+Step: 34/108, avg loss: 0.3377791766790633, epoch:2, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4052067608275312
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4728916671047819
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.46987936756712323
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3809740107427252
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4028132974784425
+Step: 35/108, avg loss: 0.42635302074412074, epoch:2, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3121066118808504
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.315274378086658
+Created MNIST CNN
+Fold: 3/5, fold_loss: 1.487240972671103
+Created MNIST CNN
+Fold: 4/5, fold_loss: 1.5115387845546642
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.306774002440432
+Step: 36/108, avg loss: 1.9865869499267415, epoch:2, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3885291890303294
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3871924345890681
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.40670439261198044
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.40459359562397
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3870454246997833
+Step: 37/108, avg loss: 0.39481300731102625, epoch:4, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3529821401834488
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.34235155177116394
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3326340532501539
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3453522865772247
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.36626117273171743
+Step: 38/108, avg loss: 0.34791624090274176, epoch:4, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.34626474072535834
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.31798650745550794
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.290304800649484
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3177898700038592
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.33199559372663495
+Step: 39/108, avg loss: 0.3208683025121689, epoch:4, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.30224585661292075
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3155898241996765
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.2977474189698696
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.31670359057188036
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3106171772877375
+Step: 40/108, avg loss: 0.30858077352841695, epoch:4, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3019013665020466
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.29725070173045
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.29966742678483327
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.31216110087931154
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3073603907128175
+Step: 41/108, avg loss: 0.30366819732189176, epoch:4, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.533291018207868
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4560961907108625
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.48230700798829396
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.6400017513036728
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.6410447438955307
+Step: 42/108, avg loss: 0.5505481424212455, epoch:4, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.28334418364365893
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.31018837296962737
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.28132183268666267
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3073794009288152
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3530323732395967
+Step: 43/108, avg loss: 0.30705323269367224, epoch:4, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3121379082600276
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3266472314794858
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3116687587896983
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.31491137156883875
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3021065725882848
+Step: 44/108, avg loss: 0.31349436853726703, epoch:4, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.31149769337972
+Created MNIST CNN
+Fold: 2/5, fold_loss: 1.2094643499056499
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.310027589162191
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3111560700734457
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3129794260660805
+Step: 45/108, avg loss: 2.091025025717417, epoch:4, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.552481950044632
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.45001831062634784
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5170307201544444
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.41756020464499793
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4607537335952123
+Step: 46/108, avg loss: 0.47956898381312685, epoch:4, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 1.4950287656784058
+Created MNIST CNN
+Fold: 2/5, fold_loss: 1.6945439109802245
+Created MNIST CNN
+Fold: 3/5, fold_loss: 1.3432830193837484
+Created MNIST CNN
+Fold: 4/5, fold_loss: 1.0116411363283793
+Created MNIST CNN
+Fold: 5/5, fold_loss: 1.2628968264261882
+Step: 47/108, avg loss: 1.3614787317593893, epoch:4, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.366886858622233
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3781936569213866
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3439612159729
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.389472354253133
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3397715606689453
+Step: 48/108, avg loss: 2.3636571292877195, epoch:4, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.5037516642441141
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.5027662430037844
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.48986220930485014
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.49200445683078564
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5019408971705335
+Step: 49/108, avg loss: 0.4980650941108136, epoch:4, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4103241256893949
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4034892424465494
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.40306398756009465
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.41242667557077206
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.41185419713246063
+Step: 50/108, avg loss: 0.40823164567985437, epoch:4, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3096528613662466
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.32085818381227077
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.33154557439241006
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.33108123855546434
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.33616565877294285
+Step: 51/108, avg loss: 0.32586070337986695, epoch:4, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3397894374867703
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.32370207442882215
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.34706857459659274
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.35372117213270765
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3513209287949065
+Step: 52/108, avg loss: 0.34312043748795984, epoch:4, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.30645218412292763
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.29669529881249085
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3146659578493935
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.30998727496951184
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3155317742060474
+Step: 53/108, avg loss: 0.30866649799207424, epoch:4, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3658281759695804
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.35725524141750437
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.36554594520241657
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.33466892213897503
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.39259015015782195
+Step: 54/108, avg loss: 0.36317768697725966, epoch:4, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.30115215167244697
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3112857019964685
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3195326216518879
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3307310156127874
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.2993395121649225
+Step: 55/108, avg loss: 0.31240820061970265, epoch:4, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.30466076541454234
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.31186416856151944
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.28935560358173035
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.30711280384120787
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3261349308205412
+Step: 56/108, avg loss: 0.30782565444390825, epoch:4, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.5648026870603257
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.7024487605754365
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.6721627127299917
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.5779069926034897
+Created MNIST CNN
+Fold: 5/5, fold_loss: 1.3183550216416096
+Step: 57/108, avg loss: 0.7671352349221706, epoch:4, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3327442630332835
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3621131363225744
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3262758101237581
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3576839212724503
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.35751746896099534
+Step: 58/108, avg loss: 0.34726691994261233, epoch:4, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4449819121113483
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.5338770575979923
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5290617111356969
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.5504764191647793
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5634900769020649
+Step: 59/108, avg loss: 0.5243774353823764, epoch:4, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.31354295573336
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3078292494124555
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.311029444349573
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.315898021484943
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.324866628393214
+Step: 60/108, avg loss: 2.3146332598747095, epoch:4, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.603340116270045
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.6902244997785446
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.6435900809282952
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.6450355769471919
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5492720083987459
+Step: 61/108, avg loss: 0.6262924564645644, epoch:4, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4835499559945248
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.5633002728857892
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5741595606854621
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.4965173560888209
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4812003897225603
+Step: 62/108, avg loss: 0.5197455070754315, epoch:4, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3425650303351118
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3561433637712864
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.32947797264824524
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.35018856649069074
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3696338434485679
+Step: 63/108, avg loss: 0.34960175533878046, epoch:4, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3976824058497206
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3987953642264326
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3713507078429486
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.405856117606163
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.39793022325698363
+Step: 64/108, avg loss: 0.3943229637564497, epoch:4, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.33200800624933646
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3316384362096482
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.32462923736014265
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3742545391333864
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3403803945538845
+Step: 65/108, avg loss: 0.3405821227012797, epoch:4, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.31929708256366407
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.33929488712802847
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.32575016040751276
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.34855708860336465
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3442865782912741
+Step: 66/108, avg loss: 0.3354371593987688, epoch:4, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3314263069249214
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.36375109772098824
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.31235346324900365
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.33980743159004984
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3473667354976877
+Step: 67/108, avg loss: 0.3389410069965302, epoch:4, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.32208053355521343
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.31236639476202904
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.2901758589643113
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.2987787057744696
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.32446536469332715
+Step: 68/108, avg loss: 0.3095733715498701, epoch:4, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4192584198206029
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.40444831978133383
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.44277805200916653
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.4314549986986404
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.396982415559444
+Step: 69/108, avg loss: 0.4189844411738376, epoch:4, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3031618463549208
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3215090033221752
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3142317395578039
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.31939215086241984
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3326709265721605
+Step: 70/108, avg loss: 0.3181931333338961, epoch:4, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3422036981011959
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.363715631372117
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.36256548350161694
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3523083245183559
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5179687492707943
+Step: 71/108, avg loss: 0.38775237735281604, epoch:4, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.32161005760761
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.798105733191713
+Created MNIST CNN
+Fold: 3/5, fold_loss: 1.679658090814631
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.307426538873226
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.312618727379657
+Step: 72/108, avg loss: 2.2838838295733677, epoch:4, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3518301051457723
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.35570293239752454
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3596469990412394
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.34974098738034565
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.36810827924807865
+Step: 73/108, avg loss: 0.35700586064259215, epoch:6, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3093130051692327
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3136786693930626
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.29814294399817787
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.31664134160677593
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.32012608865896863
+Step: 74/108, avg loss: 0.31158040976524354, epoch:6, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.285008336742719
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.30568181335926053
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3203867582877477
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.30703071736296017
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.29716705008347827
+Step: 75/108, avg loss: 0.3030549351672331, epoch:6, lr:0.001, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.2772850785702467
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3090154263774554
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.28311145518223446
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.2786382382810116
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.2886330794195334
+Step: 76/108, avg loss: 0.28733665556609633, epoch:6, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.29439621450503667
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3058034061392148
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.2712863725622495
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.30548364006479584
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.29907220874230067
+Step: 77/108, avg loss: 0.29520836840271947, epoch:6, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.5851288875341415
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.6443740166823069
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5095549448728561
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.5504291596015295
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5867003353436788
+Step: 78/108, avg loss: 0.5752374688069025, epoch:6, lr:0.005, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.2780714723318815
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.283778555581967
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.2980937811732292
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.31550856577853365
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.2940098613500595
+Step: 79/108, avg loss: 0.2938924472431342, epoch:6, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3135798057814439
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.2997287956873576
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.32041421113411583
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3429854683677355
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3362116433382034
+Step: 80/108, avg loss: 0.32258398486177126, epoch:6, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3108738441467285
+Created MNIST CNN
+Fold: 2/5, fold_loss: 1.249328673839569
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.309017702738444
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3098621101379395
+Created MNIST CNN
+Fold: 5/5, fold_loss: 1.2100650552113852
+Step: 81/108, avg loss: 1.8778294772148132, epoch:6, lr:0.01, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.4963144023021062
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4717711181441943
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5259144587516784
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.43875611515839896
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4985357519388199
+Step: 82/108, avg loss: 0.48625836925903954, epoch:6, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 1.3152677086194355
+Created MNIST CNN
+Fold: 2/5, fold_loss: 1.323443288008372
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.3069427178700765
+Created MNIST CNN
+Fold: 4/5, fold_loss: 1.1662226034800212
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.310213627497355
+Step: 83/108, avg loss: 1.6844179890950521, epoch:6, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.346024866104126
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3375963433583578
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.315053498586019
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.3345318876902263
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.336430090586344
+Step: 84/108, avg loss: 2.3339273372650147, epoch:6, lr:0.05, batch_size: 32
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.40950642613337396
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4451567467222822
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.410045390512715
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.4047728559755264
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.45838780637751236
+Step: 85/108, avg loss: 0.425573845144282, epoch:6, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.36002251125396567
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.36489253641760094
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.348957277279585
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.40031727110134796
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3522574502895487
+Step: 86/108, avg loss: 0.3652894092684097, epoch:6, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.2797058250041718
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.29248618600057796
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.2998396783591585
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.29140949166043006
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3048220952140524
+Step: 87/108, avg loss: 0.29365265524767814, epoch:6, lr:0.001, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.284058098146256
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.29719005386404534
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.2968853395432234
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3016063397393582
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.30575981752035464
+Step: 88/108, avg loss: 0.2970999297626475, epoch:6, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.2960196697410751
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.30176275009487535
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.26707656279285535
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.27892936556104647
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.2918969173222146
+Step: 89/108, avg loss: 0.2871370531024134, epoch:6, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3554576522809394
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3564611369783574
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3448724390819986
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.36515088486386105
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.33156411845157757
+Step: 90/108, avg loss: 0.3507012463313468, epoch:6, lr:0.005, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.27780171998954833
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3107683941167086
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.29518450281404435
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.27892562116872754
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.28428461814814426
+Step: 91/108, avg loss: 0.2893929712474346, epoch:6, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.2854550262080862
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.30987623944244486
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.29891497843918646
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.29685162031587137
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.29261692910593873
+Step: 92/108, avg loss: 0.2967429587023055, epoch:6, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.6809816912926258
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.6913650912490297
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5356165373578985
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.7219491910110128
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5828556852771881
+Step: 93/108, avg loss: 0.642553639237551, epoch:6, lr:0.01, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3216479444440375
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.33657338541555915
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.31079182468671745
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3453233074000541
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.32408280583455207
+Step: 94/108, avg loss: 0.32768385355618407, epoch:6, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.5560643991574328
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.6084259822964668
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.4751044529232573
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.6422701831510726
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.5350023732381932
+Step: 95/108, avg loss: 0.5633734781532845, epoch:6, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 2.3133823021929314
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.3119554545017
+Created MNIST CNN
+Fold: 3/5, fold_loss: 2.318479058590341
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.318608614992588
+Created MNIST CNN
+Fold: 5/5, fold_loss: 2.3163697732255812
+Step: 96/108, avg loss: 2.315759040700628, epoch:6, lr:0.05, batch_size: 64
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.504511944791104
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.590798131328948
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.5599164208199116
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.5165735058327938
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.567751186642241
+Step: 97/108, avg loss: 0.5479102378829996, epoch:6, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.43258784362610353
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.4239236766353567
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.4398543577879033
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.43566239863000017
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4525297832615832
+Step: 98/108, avg loss: 0.4369116119881894, epoch:6, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.32571395930457625
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3258587179031778
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3150161829717616
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3189788042230809
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3104857914942376
+Step: 99/108, avg loss: 0.3192106911793668, epoch:6, lr:0.001, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3536928175611699
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3392132653834972
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.340045782955403
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.39284969755309695
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3450223372337666
+Step: 100/108, avg loss: 0.3541647801373867, epoch:6, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.30758150223087755
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.30965275888113264
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.29491908990956367
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3020438147669143
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.32980825815429077
+Step: 101/108, avg loss: 0.3088010847885557, epoch:6, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3108441593482139
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.32091227142100637
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.32104406172924854
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3017412948798626
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3296155129024323
+Step: 102/108, avg loss: 0.3168314600561527, epoch:6, lr:0.005, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.30760900501875166
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3090429948048389
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.29125146187366324
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.30131212130505985
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3134094608273912
+Step: 103/108, avg loss: 0.30452500876594096, epoch:6, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.29075561352866763
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.2842344670219624
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.28584804877321773
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.2948357607138918
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.2789144089564364
+Step: 104/108, avg loss: 0.2869176597988352, epoch:6, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.35203525487412796
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.42029083218980345
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3592188432812691
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3886457256814267
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.4048201080332411
+Step: 105/108, avg loss: 0.38500215281197364, epoch:6, lr:0.01, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.3010765469454704
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.2951589194225504
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.36644414954997123
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.33189182744381274
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.32041711265102346
+Step: 106/108, avg loss: 0.3229977112025656, epoch:6, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 0.33663520169384936
+Created MNIST CNN
+Fold: 2/5, fold_loss: 0.3535125288874545
+Created MNIST CNN
+Fold: 3/5, fold_loss: 0.3325297217419807
+Created MNIST CNN
+Fold: 4/5, fold_loss: 0.3994064890640847
+Created MNIST CNN
+Fold: 5/5, fold_loss: 0.3464439660310745
+Step: 107/108, avg loss: 0.35370558148368875, epoch:6, lr:0.05, batch_size: 128
+Created MNIST CNN
+Fold: 1/5, fold_loss: 1.3524816403997706
+Created MNIST CNN
+Fold: 2/5, fold_loss: 2.311563126584317
+Created MNIST CNN
+Fold: 3/5, fold_loss: 1.416754536172177
+Created MNIST CNN
+Fold: 4/5, fold_loss: 2.311398480800872
+Created MNIST CNN
+Fold: 5/5, fold_loss: 1.2432063513613762
+Step: 108/108, avg loss: 1.7270808270637026, epoch:6, lr:0.05, batch_size: 128
+
+Best parameters for fashion_mnist (SGD): epochs=6, batch_size=128, learning_rate=0.01, momentum=0.95, loss=0.2869176597988352
+ epochs  batch_size  learning_rate  momentum  Average Loss
+      2          32          0.001      0.90      0.518526
+      2          32          0.001      0.95      0.416924
+      2          32          0.001      0.99      0.351957
+      2          32          0.005      0.90      0.358126
+      2          32          0.005      0.95      0.333921
+      2          32          0.005      0.99      0.579311
+      2          32          0.010      0.90      0.333748
+      2          32          0.010      0.95      0.349584
+      2          32          0.010      0.99      1.469357
+      2          32          0.050      0.90      0.464934
+      2          32          0.050      0.95      1.400464
+      2          32          0.050      0.99      2.343785
+      2          64          0.001      0.90      0.651019
+      2          64          0.001      0.95      0.531747
+      2          64          0.001      0.99      0.395876
+      2          64          0.005      0.90      0.399355
+      2          64          0.005      0.95      0.365840
+      2          64          0.005      0.99      0.410819
+      2          64          0.010      0.90      0.346379
+      2          64          0.010      0.95      0.347585
+      2          64          0.010      0.99      0.646454
+      2          64          0.050      0.90      0.360455
+      2          64          0.050      0.95      0.495841
+      2          64          0.050      0.99      2.317578
+      2         128          0.001      0.90      0.820941
+      2         128          0.001      0.95      0.634540
+      2         128          0.001      0.99      0.482975
+      2         128          0.005      0.90      0.494779
+      2         128          0.005      0.95      0.423763
+      2         128          0.005      0.99      0.387563
+      2         128          0.010      0.90      0.414295
+      2         128          0.010      0.95      0.371424
+      2         128          0.010      0.99      0.447573
+      2         128          0.050      0.90      0.337779
+      2         128          0.050      0.95      0.426353
+      2         128          0.050      0.99      1.986587
+      4          32          0.001      0.90      0.394813
+      4          32          0.001      0.95      0.347916
+      4          32          0.001      0.99      0.320868
+      4          32          0.005      0.90      0.308581
+      4          32          0.005      0.95      0.303668
+      4          32          0.005      0.99      0.550548
+      4          32          0.010      0.90      0.307053
+      4          32          0.010      0.95      0.313494
+      4          32          0.010      0.99      2.091025
+      4          32          0.050      0.90      0.479569
+      4          32          0.050      0.95      1.361479
+      4          32          0.050      0.99      2.363657
+      4          64          0.001      0.90      0.498065
+      4          64          0.001      0.95      0.408232
+      4          64          0.001      0.99      0.325861
+      4          64          0.005      0.90      0.343120
+      4          64          0.005      0.95      0.308666
+      4          64          0.005      0.99      0.363178
+      4          64          0.010      0.90      0.312408
+      4          64          0.010      0.95      0.307826
+      4          64          0.010      0.99      0.767135
+      4          64          0.050      0.90      0.347267
+      4          64          0.050      0.95      0.524377
+      4          64          0.050      0.99      2.314633
+      4         128          0.001      0.90      0.626292
+      4         128          0.001      0.95      0.519746
+      4         128          0.001      0.99      0.349602
+      4         128          0.005      0.90      0.394323
+      4         128          0.005      0.95      0.340582
+      4         128          0.005      0.99      0.335437
+      4         128          0.010      0.90      0.338941
+      4         128          0.010      0.95      0.309573
+      4         128          0.010      0.99      0.418984
+      4         128          0.050      0.90      0.318193
+      4         128          0.050      0.95      0.387752
+      4         128          0.050      0.99      2.283884
+      6          32          0.001      0.90      0.357006
+      6          32          0.001      0.95      0.311580
+      6          32          0.001      0.99      0.303055
+      6          32          0.005      0.90      0.287337
+      6          32          0.005      0.95      0.295208
+      6          32          0.005      0.99      0.575237
+      6          32          0.010      0.90      0.293892
+      6          32          0.010      0.95      0.322584
+      6          32          0.010      0.99      1.877829
+      6          32          0.050      0.90      0.486258
+      6          32          0.050      0.95      1.684418
+      6          32          0.050      0.99      2.333927
+      6          64          0.001      0.90      0.425574
+      6          64          0.001      0.95      0.365289
+      6          64          0.001      0.99      0.293653
+      6          64          0.005      0.90      0.297100
+      6          64          0.005      0.95      0.287137
+      6          64          0.005      0.99      0.350701
+      6          64          0.010      0.90      0.289393
+      6          64          0.010      0.95      0.296743
+      6          64          0.010      0.99      0.642554
+      6          64          0.050      0.90      0.327684
+      6          64          0.050      0.95      0.563373
+      6          64          0.050      0.99      2.315759
+      6         128          0.001      0.90      0.547910
+      6         128          0.001      0.95      0.436912
+      6         128          0.001      0.99      0.319211
+      6         128          0.005      0.90      0.354165
+      6         128          0.005      0.95      0.308801
+      6         128          0.005      0.99      0.316831
+      6         128          0.010      0.90      0.304525
+      6         128          0.010      0.95      0.286918
+      6         128          0.010      0.99      0.385002
+      6         128          0.050      0.90      0.322998
+      6         128          0.050      0.95      0.353706
+      6         128          0.050      0.99      1.727081
+
