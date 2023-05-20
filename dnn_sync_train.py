@@ -391,8 +391,9 @@ def run_parameter_server_sync(
             batch_size,
             epochs,
             subfolder,
-            split_dataset,
-            split_labels,
+            alt_model=alt_model,
+            split_dataset=split_dataset,
+            split_labels=split_labels,
         )
 
     if saves_per_epoch is not None:

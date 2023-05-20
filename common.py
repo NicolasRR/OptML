@@ -627,11 +627,14 @@ def _save_model(
     batch_size,
     epochs,
     subfolder,
+    alt_model=False,
     split_dataset=False,
     split_labels=False,
     split_labels_unscaled=False,
 ):
     suffix = ""
+    if alt_model:
+        suffix = "_alt_model"
     if split_dataset:
         suffix = "_split_dataset"
     elif split_labels:

@@ -12,7 +12,7 @@ from common import _get_model, create_testloader, LOSS_FUNC
 DEFAULT_GRID_BORDER = 5
 DEFAULT_GRID_SIZE = 15
 DEFAULT_BATCH_SIZE = 100
-
+DEFAULT_GRID_WARNING = 10
 
 def set_weights(model, flat_weights):
     idx = 0
@@ -34,10 +34,13 @@ def set_weights(model, flat_weights):
 
 
 def main(
-    batch_size, weights_path, model_path, subfolder, grid_size, grid_border, alt_model
+    batch_size, weights_path, model_path, subfolder, grid_size, grid_border,
 ):
     loader = create_testloader(model_path, batch_size)
-    model = _get_model(model_path, LOSS_FUNC, alt_model)
+    if "alt_model" in model_path:
+        model = _get_model(model_path, LOSS_FUNC, alt_model=True)
+    else:
+        model = _get_model(model_path, LOSS_FUNC, alt_model= False)
 
     model.load_state_dict(torch.load(model_path))
     model.eval()
@@ -48,6 +51,16 @@ def main(
 
     pca = PCA(n_components=2)
     reduced_weights = pca.fit_transform(weights_matrix_np)
+
+    max_abs_reduced_weight = np.max(np.abs(reduced_weights))
+    print(max_abs_reduced_weight, grid_border)
+    # Check if the grid is too small
+    if max_abs_reduced_weight > grid_border:
+        print(f"Warning: The grid might be too small. The maximum absolute value of the reduced weights ({max_abs_reduced_weight}) is outside the grid border ({grid_border}).")
+
+    # Check if the grid is too big
+    if np.abs(max_abs_reduced_weight - grid_border) > DEFAULT_GRID_WARNING:
+        print(f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights ({max_abs_reduced_weight}) to the grid border ({grid_border}) is greater than 10.")
 
     grid_range = np.linspace(-grid_border, grid_border, grid_size)
     xx, yy = np.meshgrid(grid_range, grid_range)
@@ -170,19 +183,12 @@ if __name__ == "__main__":
         help="""The grid will be created between [-grid_border, grid_border]x[-grid_border, grid_border].""",
     )
     parser.add_argument("model_path", type=str, help="""Path of the model.""")
-    parser.add_argument(
-        "weights_path", type=str, help="""Weights of the trained model."""
-    )
+    parser.add_argument("weights_path", type=str, help="""Weights of the trained model.""")
     parser.add_argument(
         "--subfolder",
         type=str,
         default="",
         help="""Subfolder name where the test results and plots will be saved.""",
-    )
-    parser.add_argument(
-        "--alt_model",
-        action="store_true",
-        help="""If set, will use the CNN models (alternative).""",
     )
 
     args = parser.parse_args()
@@ -220,11 +226,11 @@ if __name__ == "__main__":
         exit()
 
     if not args.weights_path.endswith(".npy"):
-        print("weights_path should be a .npy file")
+        print("weights_path should be a .npy file, the order should be: model first weights second")
         exit()
 
     if not args.model_path.endswith(".pt"):
-        print("model_path should be a .pt file")
+        print("model_path should be a .pt file, the order should be: model first weights second")
         exit()
 
     main(
@@ -234,5 +240,4 @@ if __name__ == "__main__":
         args.subfolder,
         args.grid_size,
         args.grid_border,
-        args.alt_model,
     )

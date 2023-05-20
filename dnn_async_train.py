@@ -395,9 +395,10 @@ def run_parameter_server_async(
             batch_size,
             epochs,
             subfolder,
-            split_dataset,
-            split_labels,
-            split_labels_unscaled,
+            alt_model=alt_model,
+            split_dataset=split_dataset,
+            split_labels=split_labels,
+            split_labels_unscaled=split_labels_unscaled,
         )
 
     if saves_per_epoch is not None:
