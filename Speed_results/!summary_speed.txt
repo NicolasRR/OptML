@@ -1,0 +1,92 @@
+# non sync
+nn_train.py fashion_mnist 
+Final train loss: 0.28086480498313904
+Final train accuracy: 91.36499786376953 % (54819/60000)
+Time: 00:04:12,240
+
+nn_train.py fashion_mnist alt_model
+Final train loss: 0.1966463029384613
+Final train accuracy: 93.69166564941406 % (56215/60000)
+Time: 00:01:52,164
+
+# sync
+dnn_sync_train.py fashion_mnist world_size_1
+Final train loss: 0.22216742734114328
+Final train accuracy: 91.32833862304688 % (54797/60000)
+Time: 00:25:19,413
+
+dnn_sync_train.py fashion_mnist world_size_1 split_dataset
+Final train loss: 0.26159045100212097
+Final train accuracy: 88.43499755859375 % (53061/60000)
+Time: 00:01:51,543
+
+dnn_sync_train.py fashion_mnist world_size_1 alt_model
+Final train loss: 0.17422635853290558
+Final train accuracy: 95.14833068847656 % (57089/60000)
+Time: 00:21:36,198
+
+dnn_sync_train.py fashion_mnist world_size_1 split_dataset alt_model
+Final train loss: 0.30951647957166034
+Final train accuracy: 90.73332977294922 % (54440/60000)
+Time: 00:07:06,832
+
+dnn_sync_train.py fashion_mnist world_size_2
+Final train loss: 0.1935698166489601
+Final train accuracy: 92.961669921875 % (55777/60000)
+Time: 01:22:05,194
+
+dnn_sync_train.py fashion_mnist world_size_2 split_dataset 
+Final train loss: 0.32881395518779755
+Final train accuracy: 85.72833251953125 % (51437/60000)
+Time: 00:13:45,562
+
+dnn_sync_train.py fashion_mnist world_size_2 alt_model 
+Final train loss: 0.1782121223707994
+Final train accuracy: 95.78499603271484 % (57471/60000)
+Time: 01:33:22,187
+
+dnn_sync_train.py fashion_mnist world_size_2 split_dataset alt_model 
+Final train loss: 0.3650221526622772
+Final train accuracy: 88.87332916259766 % (53324/60000)
+Time: 00:15:33,862
+
+# async
+dnn_async_train.py fashion_mnist world_size_1 
+Final train loss: 0.20198506116867065
+Final train accuracy: 92.68333435058594 % (55610/60000)
+Time: 00:06:29,069
+
+dnn_async_train.py fashion_mnist world_size_1 split_dataset
+Final train loss: 0.32700034976005554
+Final train accuracy: 87.48333740234375 % (52490/60000)
+Time: 00:02:12,695
+
+dnn_async_train.py fashion_mnist world_size_1 alt_model
+Final train loss: nan
+Final train accuracy: 10.0 % (6000/60000)
+Time: 00:22:47,217
+
+python3 dnn_async_train.py fashion_mnist world_size_1 split_dataset alt_model
+Final train loss: nan
+Final train accuracy: 10.0 % (6000/60000)
+Time: 00:07:30,633
+
+dnn_async_train.py fashion_mnist world_size_2
+Final train loss: 0.31386348605155945
+Final train accuracy: 89.19833374023438 % (53519/60000)
+Time: 01:28:53,332
+
+dnn_async_train.py fashion_mnist world_size_2 split_dataset
+Final train loss: 2.3012301921844482                                                                                                                                                                             
+Final train accuracy: 10.0 % (6000/60000)
+Time: 00:14:52,324
+
+dnn_async_train.py fashion_mnist world_size_2 alt_model 
+Final train loss: nan
+Final train accuracy: 10.0 % (6000/60000)
+Time: 01:33:00,323
+
+dnn_async_train.py fashion_mnist world_size_2 split_dataset alt_model 
+Final train loss: nan
+Final train accuracy: 10.0 % (6000/60000)
+Time: 00:15:32,134

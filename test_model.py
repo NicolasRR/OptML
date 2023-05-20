@@ -422,10 +422,13 @@ def main(
     training_time,
     pics,
     subfolder,
-    alt_model,
 ):
     # Load the saved model
-    model = _get_model(model_path, LOSS_FUNC, alt_model)
+    if "alt_model" in model_path:
+        model = _get_model(model_path, LOSS_FUNC, alt_model=True)
+    else:
+        model = _get_model(model_path, LOSS_FUNC, alt_model=False)
+
     model.load_state_dict(torch.load(model_path))
 
     model_filename = os.path.basename(model_path)
@@ -485,11 +488,6 @@ if __name__ == "__main__":
         default="",
         help="""Subfolder name where the test results and plots will be saved.""",
     )
-    parser.add_argument(
-        "--alt_model",
-        action="store_true",
-        help="""If set, will use the CNN models (alternative).""",
-    )
 
     args = parser.parse_args()
 
@@ -514,5 +512,4 @@ if __name__ == "__main__":
         args.training_time,
         args.pics,
         args.subfolder,
-        args.alt_model,
     )
