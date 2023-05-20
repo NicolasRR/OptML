@@ -86,9 +86,10 @@ else:
     momentums = [args.momentum]
 batch_sizes = [32, 64, 128]
 if "cifar" in args.dataset:
-    epochs = [2, 4]
+    epochs = [2, 3]
+    kf = KFold(n_splits=4)
 else:
-    epochs = [2, 4, 6]
+    epochs = [2, 3, 4]
 
 if args.alr == False:
     total_steps = len(epochs) * len(batch_sizes) * len(learning_rates) * len(momentums)
