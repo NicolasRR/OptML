@@ -190,9 +190,14 @@ def kfold_loop(
         ] = avg_loss
 
     current_step += 1
-    print(
-        f"Step: {current_step}/{total_steps}, avg loss: {avg_loss}, epoch:{epoch}, lr:{learning_rate}, batch_size: {batch_size}"
-    )
+    if alr == False and momentum is not None:
+        print(
+            f"Step: {current_step}/{total_steps}, avg loss: {avg_loss}, epoch:{epoch}, lr:{learning_rate}, batch_size: {batch_size}, momentum: {momentum}"
+        )
+    else:
+        print(
+            f"Step: {current_step}/{total_steps}, avg loss: {avg_loss}, epoch:{epoch}, lr:{learning_rate}, batch_size: {batch_size}"
+        )
     return current_step, avg_losses
 
 
