@@ -1,0 +1,1544 @@
+Using Adam as optimizer.
+Running Kfold for mnist, using 5 splits.
+Created MNIST trainloaders
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.07282719148074587
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.059788602197542784
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07130661084565024
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.08359462409000844
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06805784958911439
+Step: 1/45, avg loss: 0.07111497564061234, epoch:2, lr:0.0005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.05921745761545996
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.05031028739161168
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.06165582810256941
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06357736705693727
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.05756652184467142
+Step: 2/45, avg loss: 0.05846549240224995, epoch:2, lr:0.001, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.08269359081262762
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.09626818293643495
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.08671669007139281
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.11734998119154867
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.07742883331871903
+Step: 3/45, avg loss: 0.09209145566614461, epoch:2, lr:0.005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.12858028446619088
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.2244757483949264
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.10740721169606937
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.16760095110783974
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.1186606745487079
+Step: 4/45, avg loss: 0.14934497404274685, epoch:2, lr:0.01, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.30834272257487
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.31173811340332
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.313369993209839
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3129111143747965
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3050050748189292
+Step: 5/45, avg loss: 2.3102734036763506, epoch:2, lr:0.05, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.08544812116653044
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.07017441890995077
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07821440858459298
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.08900804472393653
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.08334839748505979
+Step: 6/45, avg loss: 0.0812386781740141, epoch:2, lr:0.0005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.06909077405617474
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.05380289382400348
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07141765126304582
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.07197997760909432
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06489808233380516
+Step: 7/45, avg loss: 0.0662378758172247, epoch:2, lr:0.001, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.07988442749186281
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.06301096231711314
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.06824100641855732
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.07489533698002986
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06496518509440183
+Step: 8/45, avg loss: 0.070199383660393, epoch:2, lr:0.005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.11415975008338214
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.11213960751217414
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.10592164420720904
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.1481350899842429
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.09501936631475358
+Step: 9/45, avg loss: 0.11507509162035237, epoch:2, lr:0.01, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.301341495615371
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.305259552407772
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.304204798759298
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.588137463052222
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3070040332510118
+Step: 10/45, avg loss: 1.9611894686171347, epoch:2, lr:0.05, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.0994766864608577
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.0997474721850867
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.10202812546111167
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.10574544248904319
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.09716395482896491
+Step: 11/45, avg loss: 0.10083233628501283, epoch:2, lr:0.0005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.07489764379297799
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.08547883742350212
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07575899525050153
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.08985788428640747
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.07625983886301835
+Step: 12/45, avg loss: 0.0804506399232815, epoch:2, lr:0.001, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.061113646367881844
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.048543384491882106
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.06998173496685922
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06697248123051162
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.05924779145007438
+Step: 13/45, avg loss: 0.06117180770144183, epoch:2, lr:0.005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.0924861907879723
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.0711205912298186
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.06439464945009256
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.0708297388256587
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.08054307400883037
+Step: 14/45, avg loss: 0.07587484886047449, epoch:2, lr:0.01, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3026654263760182
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.304741255780484
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.3056205993003034
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.307746742634063
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3045850840020687
+Step: 15/45, avg loss: 2.3050718216185873, epoch:2, lr:0.05, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.0552083380119099
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.054685666831210254
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.04925643807121863
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.07247328981757165
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.05434075561631471
+Step: 16/45, avg loss: 0.057192897669645026, epoch:3, lr:0.0005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.06961380205664318
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.05237086104694754
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.05119285676527458
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06116940782545134
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.052349519434385004
+Step: 17/45, avg loss: 0.05733928942574033, epoch:3, lr:0.001, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.06750108627897376
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.07441380464627097
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.08816895989033705
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.10936832308381175
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.11030681511402751
+Step: 18/45, avg loss: 0.08995179780268421, epoch:3, lr:0.005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.18261113535643866
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.1969607598905762
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.15782967827127625
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.15714960878683876
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.16684490903404853
+Step: 19/45, avg loss: 0.17227921826783565, epoch:3, lr:0.01, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3118128210703532
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3095755659739177
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.3079657675425214
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 1.5181377207438151
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.311745237350464
+Step: 20/45, avg loss: 2.151847422536214, epoch:3, lr:0.05, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.05752412197204861
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.05591505034851465
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.05824962136722071
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.07559724555331025
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06035577159057906
+Step: 21/45, avg loss: 0.06152836216633466, epoch:3, lr:0.0005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.05178794418176775
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.048456884068535995
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.05082269431094322
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06000803238860866
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.05265569417400563
+Step: 22/45, avg loss: 0.05274624982477225, epoch:3, lr:0.001, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.08671509428135556
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.08056942597180208
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07375295322383457
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.08073336663135783
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.05975726950527268
+Step: 23/45, avg loss: 0.07630562192272454, epoch:3, lr:0.005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.09681729292695193
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.09757800911989142
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.12351926810484617
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.15665283180807935
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.0884400894630086
+Step: 24/45, avg loss: 0.1126014982845555, epoch:3, lr:0.01, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.30270498483739
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3030035470394377
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.3044381205071796
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3086357040608183
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3147783127236874
+Step: 25/45, avg loss: 2.306712133833703, epoch:3, lr:0.05, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.089572451414263
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.07619777779550628
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.08088126665654968
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.08062910211292353
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.07996543895136168
+Step: 26/45, avg loss: 0.08144920738612083, epoch:3, lr:0.0005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.0628987205353506
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.05782141387858923
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.06648355825467313
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06905566680027132
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06742765398775326
+Step: 27/45, avg loss: 0.06473740269132751, epoch:3, lr:0.001, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.057565973690175944
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.05980331887134371
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07091060711784249
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06909981633516703
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06446765086791933
+Step: 28/45, avg loss: 0.06436947337648971, epoch:3, lr:0.005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.12353318801367695
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.08997535296378935
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.0881106927594606
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.08619787697581217
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06742938869989458
+Step: 29/45, avg loss: 0.09104929988252672, epoch:3, lr:0.01, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3042980128146233
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3035534772467106
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.302976795967589
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3040132243582545
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3050726094144456
+Step: 30/45, avg loss: 2.3039828239603244, epoch:3, lr:0.05, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.05592406820552424
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.043808615064714104
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.06915768975613173
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.05694747172676337
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06026915030057232
+Step: 31/45, avg loss: 0.05722139901074116, epoch:4, lr:0.0005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.05006074999916988
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.048270658062111275
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.05456423217003854
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.057937538199398356
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.04141904050309677
+Step: 32/45, avg loss: 0.05045044378676296, epoch:4, lr:0.001, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.07686584501544712
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.06595875795956332
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07260788835118244
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.1319430876501283
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.07033528801449332
+Step: 33/45, avg loss: 0.0835421733981629, epoch:4, lr:0.005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.11258524845161204
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.14113015284823874
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.2109964544729252
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.13415902377554448
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.14547556397124814
+Step: 34/45, avg loss: 0.14886928870391372, epoch:4, lr:0.01, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3097576853434245
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.303805793126424
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.3081125520070396
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3072453950246175
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.302463154474894
+Step: 35/45, avg loss: 2.30627691599528, epoch:4, lr:0.05, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.05549602297709343
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.06068669691771031
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.06364288844138463
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06585348662523989
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06379244798432758
+Step: 36/45, avg loss: 0.06189430858915117, epoch:4, lr:0.0005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.04912114748173948
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.045360755132005964
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.0569617909947757
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.05423685027121695
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06528041993287649
+Step: 37/45, avg loss: 0.05419219276252292, epoch:4, lr:0.001, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.06684872243080307
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.060428525402924003
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.07229756893371195
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.08610408128384114
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.07954004016659035
+Step: 38/45, avg loss: 0.0730437876435741, epoch:4, lr:0.005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.11061427907886955
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.13116956641649866
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.13128452516916986
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.20963550217578464
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.11010783419314589
+Step: 39/45, avg loss: 0.1385623414066937, epoch:4, lr:0.01, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3085727438013603
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.308380975368175
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.4562077490969541
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3033151563177716
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3037917385710047
+Step: 40/45, avg loss: 1.936053672631053, epoch:4, lr:0.05, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.06686969932683921
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.06102715316723953
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.0660113589937224
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06972850584722262
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.0629908847226266
+Step: 41/45, avg loss: 0.06532552041153007, epoch:4, lr:0.0005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.05704440805625091
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.05762961448388214
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.05214060351569602
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.0723288400207666
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.060471292089750155
+Step: 42/45, avg loss: 0.059922951633269175, epoch:4, lr:0.001, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.060178616920119506
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.046337390057197676
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.05412738653831184
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.06713958691924493
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.06308497579154024
+Step: 43/45, avg loss: 0.05817359124528283, epoch:4, lr:0.005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.11670801272378006
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.08118838980358015
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.118446271708037
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.11175538379540469
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.07912252104761912
+Step: 44/45, avg loss: 0.1014441158156842, epoch:4, lr:0.01, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 1.3360397777658828
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3045819997787476
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.304369175687749
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.395868847344784
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.38785741002635754
+Step: 45/45, avg loss: 1.345743442120704, epoch:4, lr:0.05, batch_size: 128
+
+Best parameters for mnist (ADAM): epochs=4, batch_size=32, learning_rate=0.001, loss=0.05045044378676296
+ epochs  batch_size  learning_rate  Average Loss
+      2          32         0.0005      0.071115
+      2          32         0.0010      0.058465
+      2          32         0.0050      0.092091
+      2          32         0.0100      0.149345
+      2          32         0.0500      2.310273
+      2          64         0.0005      0.081239
+      2          64         0.0010      0.066238
+      2          64         0.0050      0.070199
+      2          64         0.0100      0.115075
+      2          64         0.0500      1.961189
+      2         128         0.0005      0.100832
+      2         128         0.0010      0.080451
+      2         128         0.0050      0.061172
+      2         128         0.0100      0.075875
+      2         128         0.0500      2.305072
+      3          32         0.0005      0.057193
+      3          32         0.0010      0.057339
+      3          32         0.0050      0.089952
+      3          32         0.0100      0.172279
+      3          32         0.0500      2.151847
+      3          64         0.0005      0.061528
+      3          64         0.0010      0.052746
+      3          64         0.0050      0.076306
+      3          64         0.0100      0.112601
+      3          64         0.0500      2.306712
+      3         128         0.0005      0.081449
+      3         128         0.0010      0.064737
+      3         128         0.0050      0.064369
+      3         128         0.0100      0.091049
+      3         128         0.0500      2.303983
+      4          32         0.0005      0.057221
+      4          32         0.0010      0.050450
+      4          32         0.0050      0.083542
+      4          32         0.0100      0.148869
+      4          32         0.0500      2.306277
+      4          64         0.0005      0.061894
+      4          64         0.0010      0.054192
+      4          64         0.0050      0.073044
+      4          64         0.0100      0.138562
+      4          64         0.0500      1.936054
+      4         128         0.0005      0.065326
+      4         128         0.0010      0.059923
+      4         128         0.0050      0.058174
+      4         128         0.0100      0.101444
+      4         128         0.0500      1.345743
+
+Using Adam as optimizer.
+Running Kfold for fashion_mnist, using 5 splits.
+Created FashionMNIST trainloaders
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.4014820980429649
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.38173209989070894
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3586826593875885
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.35992256661256156
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3839367281794548
+Step: 1/45, avg loss: 0.37715123042265575, epoch:2, lr:0.0005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.32400129952033363
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3307233958443006
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.33620643081267676
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3546550609469414
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.33229169607162473
+Step: 2/45, avg loss: 0.33557557663917537, epoch:2, lr:0.001, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.34450252158443134
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.35628189468383786
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.37102141561110813
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.35612551455696423
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3740484191179276
+Step: 3/45, avg loss: 0.3603959531108538, epoch:2, lr:0.005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.40013805238405864
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.4191874135931333
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.43302054797609646
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.4763937463760376
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.4634726336201032
+Step: 4/45, avg loss: 0.4384424787898859, epoch:2, lr:0.01, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.305913714090983
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3068027903238932
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.310580551783244
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.310784111658732
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.308508166631063
+Step: 5/45, avg loss: 2.308517866897583, epoch:2, lr:0.05, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.41086143619836646
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.40569527407592915
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3990433021904306
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.4072717516187658
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.398191085521211
+Step: 6/45, avg loss: 0.4042125699209406, epoch:2, lr:0.0005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3551692345992048
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3680259976139728
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3774788170418841
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3277413170546927
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.39977389169817273
+Step: 7/45, avg loss: 0.36563785160158546, epoch:2, lr:0.001, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3676489068472639
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3403772439886915
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3908227599681692
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.34843133286909855
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.335849385312263
+Step: 8/45, avg loss: 0.35662592579709723, epoch:2, lr:0.005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3735402361192602
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.40713107736503823
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3710689904524925
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3588572951390388
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3779806831574186
+Step: 9/45, avg loss: 0.3777156564466496, epoch:2, lr:0.01, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.305807353334224
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3108034527048154
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.307889829290674
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.9960448719719623
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3085782883015087
+Step: 10/45, avg loss: 2.045824759120637, epoch:2, lr:0.05, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.42054926873521603
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.4654346634732916
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.471514437109866
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.44883720545058553
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.4502661193304874
+Step: 11/45, avg loss: 0.4513203388198893, epoch:2, lr:0.0005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.39531853573119385
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.41907294633540704
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.39182737628196146
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3910883693618977
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.4025845096466389
+Step: 12/45, avg loss: 0.3999783474714198, epoch:2, lr:0.001, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3403323235663962
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3187549144346663
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.31031763949926866
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3187521745232826
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3463531461484889
+Step: 13/45, avg loss: 0.32690203963442055, epoch:2, lr:0.005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3699937916182457
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.35182238465293925
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3247835640894606
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.33711836899214603
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3648865020021479
+Step: 14/45, avg loss: 0.3497209222709879, epoch:2, lr:0.01, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.304693876428807
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3046264394800713
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.304779666535398
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3047217764752976
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.30542128644091
+Step: 15/45, avg loss: 2.3048486090720965, epoch:2, lr:0.05, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3340078117251396
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3267922517557939
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.35791515808304153
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.33438414615392686
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.34111395982901255
+Step: 16/45, avg loss: 0.33884266550938286, epoch:3, lr:0.0005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.29961435714364054
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.34186333524187407
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3066070160071055
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.315388980170091
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3282648794054985
+Step: 17/45, avg loss: 0.31834771359364195, epoch:3, lr:0.001, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.396439648270607
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3331982914010684
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.33198236066599685
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3782111643453439
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3647934803565343
+Step: 18/45, avg loss: 0.3609249890079101, epoch:3, lr:0.005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.4079874165256818
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.4292265280683835
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.4402808956503868
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.4364834920167923
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.4925981470743815
+Step: 19/45, avg loss: 0.4413152958671252, epoch:3, lr:0.01, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3132373905181884
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3044575475056965
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.3065221989949545
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3070751107533773
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 1.2076833907763163
+Step: 20/45, avg loss: 2.0877951277097067, epoch:3, lr:0.05, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3571754627405329
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3844828841851113
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.34335879287979704
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.373849768667145
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3658670328874537
+Step: 21/45, avg loss: 0.364946788272008, epoch:3, lr:0.0005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.30688814307622453
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.33049993902603364
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3198786496799043
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.33493405303105395
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3463112157075963
+Step: 22/45, avg loss: 0.3277024001041625, epoch:3, lr:0.001, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3213299871521427
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3318898158266823
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3011380595333399
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3203041561027157
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.32471770063993777
+Step: 23/45, avg loss: 0.31987594385096363, epoch:3, lr:0.005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.36310193124920764
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.37857115237002675
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.37914980202913284
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3893349310185047
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.380013921476425
+Step: 24/45, avg loss: 0.37803434762865934, epoch:3, lr:0.01, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3054280496658164
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.305063377035425
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.3069624456953495
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3069489877274694
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3087878392097796
+Step: 25/45, avg loss: 2.306638139866768, epoch:3, lr:0.05, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3766066587351738
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.41441997949113235
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3913303128582366
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.4027649401984316
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.4080187756013363
+Step: 26/45, avg loss: 0.3986281333768621, epoch:3, lr:0.0005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3788768393879241
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3565536504413219
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.343098503319507
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3554987744130987
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.35057321935892105
+Step: 27/45, avg loss: 0.35692019738415454, epoch:3, lr:0.001, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.29821837503225246
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3181168706493175
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3132732976624306
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.30873928758058145
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.29769969081625025
+Step: 28/45, avg loss: 0.30720950434816646, epoch:3, lr:0.005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.32352913694178803
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.369690883825434
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.32992761883329835
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3416895576296969
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3611543240382316
+Step: 29/45, avg loss: 0.34519830425368975, epoch:3, lr:0.01, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.7471024235512348
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3052149351606976
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.3058499757279742
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3060093560117356
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3062400285233844
+Step: 30/45, avg loss: 1.9940833437950054, epoch:3, lr:0.05, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3008590136965116
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3198567504982154
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.33829870162407555
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.31492586074272794
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3155495391090711
+Step: 31/45, avg loss: 0.31789797313412027, epoch:4, lr:0.0005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.29461252931753795
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.2826399161616961
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.27546664534012477
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.2867029208143552
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.30460020450750985
+Step: 32/45, avg loss: 0.2888044432282448, epoch:4, lr:0.001, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.34289881481726964
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3682617811759313
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3141941862901052
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.3446814819077651
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.35033214549223585
+Step: 33/45, avg loss: 0.34407368193666144, epoch:4, lr:0.005, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.4196342483361562
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.38518363078435264
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.41481484069426855
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.5241059096654256
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.45423575752973555
+Step: 34/45, avg loss: 0.4395948774019877, epoch:4, lr:0.01, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3066818415323893
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3079377930959066
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.308262943267822
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3116920674641928
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.308448740005493
+Step: 35/45, avg loss: 2.308604677073161, epoch:4, lr:0.05, batch_size: 32
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.32673301630990303
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.34570284837737997
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.32762858620349394
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.33433425034138753
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.39606709310666044
+Step: 36/45, avg loss: 0.34609315886776504, epoch:4, lr:0.0005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.2940017219157295
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.30633474478220685
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.2954648297597119
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.32593053971674846
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.31048857024375426
+Step: 37/45, avg loss: 0.30644408128363015, epoch:4, lr:0.001, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.2885539136985515
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.33410903803528624
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.33219382428425426
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.30496632062057233
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.30822006054222584
+Step: 38/45, avg loss: 0.313608631436178, epoch:4, lr:0.005, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.4214821897764155
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.36429553875263704
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.36435630687690795
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.37384208941713293
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.42859709357961695
+Step: 39/45, avg loss: 0.39051464368054206, epoch:4, lr:0.01, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.312706470489502
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.307222881215684
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 2.305236981270161
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 2.3179258767594684
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.3059055944706532
+Step: 40/45, avg loss: 2.3097995608410935, epoch:4, lr:0.05, batch_size: 64
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.3857781487576505
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.34882383048534393
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3690760539884263
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.38982373793074426
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.40488738804421526
+Step: 41/45, avg loss: 0.379677831841276, epoch:4, lr:0.0005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.31899771427220486
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.3560216212843327
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.3116810025369867
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.33856161842320825
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.3340350934799681
+Step: 42/45, avg loss: 0.3318594099993401, epoch:4, lr:0.001, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.2743750222502871
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.29927434629582345
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.30199674342540983
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.2832503431337945
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.29889992513555164
+Step: 43/45, avg loss: 0.2915592760481733, epoch:4, lr:0.005, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 0.30073230459969097
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 0.34828018682434203
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.37253554117806414
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.32251905649900436
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 0.34108252236817743
+Step: 44/45, avg loss: 0.3370299222938558, epoch:4, lr:0.01, batch_size: 128
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 1/5, fold_loss: 2.3031268398812474
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 2/5, fold_loss: 2.3094312535955552
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 3/5, fold_loss: 0.6985059868782124
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 4/5, fold_loss: 0.8404682544951744
+Created MNIST/FASHION_MNIST CNN
+LeNet5 using loss: CrossEntropyLoss()
+Fold: 5/5, fold_loss: 2.30761692625411
+Step: 45/45, avg loss: 1.6918298522208601, epoch:4, lr:0.05, batch_size: 128
+
+Best parameters for fashion_mnist (ADAM): epochs=4, batch_size=32, learning_rate=0.001, loss=0.2888044432282448
+ epochs  batch_size  learning_rate  Average Loss
+      2          32         0.0005      0.377151
+      2          32         0.0010      0.335576
+      2          32         0.0050      0.360396
+      2          32         0.0100      0.438442
+      2          32         0.0500      2.308518
+      2          64         0.0005      0.404213
+      2          64         0.0010      0.365638
+      2          64         0.0050      0.356626
+      2          64         0.0100      0.377716
+      2          64         0.0500      2.045825
+      2         128         0.0005      0.451320
+      2         128         0.0010      0.399978
+      2         128         0.0050      0.326902
+      2         128         0.0100      0.349721
+      2         128         0.0500      2.304849
+      3          32         0.0005      0.338843
+      3          32         0.0010      0.318348
+      3          32         0.0050      0.360925
+      3          32         0.0100      0.441315
+      3          32         0.0500      2.087795
+      3          64         0.0005      0.364947
+      3          64         0.0010      0.327702
+      3          64         0.0050      0.319876
+      3          64         0.0100      0.378034
+      3          64         0.0500      2.306638
+      3         128         0.0005      0.398628
+      3         128         0.0010      0.356920
+      3         128         0.0050      0.307210
+      3         128         0.0100      0.345198
+      3         128         0.0500      1.994083
+      4          32         0.0005      0.317898
+      4          32         0.0010      0.288804
+      4          32         0.0050      0.344074
+      4          32         0.0100      0.439595
+      4          32         0.0500      2.308605
+      4          64         0.0005      0.346093
+      4          64         0.0010      0.306444
+      4          64         0.0050      0.313609
+      4          64         0.0100      0.390515
+      4          64         0.0500      2.309800
+      4         128         0.0005      0.379678
+      4         128         0.0010      0.331859
+      4         128         0.0050      0.291559
+      4         128         0.0100      0.337030
+      4         128         0.0500      1.691830
+

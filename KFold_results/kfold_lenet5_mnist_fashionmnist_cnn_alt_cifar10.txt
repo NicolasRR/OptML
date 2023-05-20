@@ -1494,9 +1494,9 @@ Fold: 4/5, fold_loss: 2.3059053522475224
 Created MNIST/FASHION_MNIST CNN
 LeNet5 using loss: CrossEntropyLoss()
 Fold: 5/5, fold_loss: 0.38556499446326115
-Step: 45/45, avg loss: 0.7663949613875531, epoch:6, lr:0.1, batch_size: 128
+Step: 45/45, avg loss: 0.7663949613875531, epoch:6, lr:0.005, batch_size: 32
 
-Best parameters for fashion_mnist (SGD): epochs=6, batch_size=32, learning_rate=0.1, momentum=0.9, loss=nan
+Best parameters for fashion_mnist (SGD): epochs=6, batch_size=32, learning_rate=0.005, momentum=0.9, loss=0.282172
  epochs  batch_size  learning_rate  momentum  Average Loss
       2          32          0.001       0.9      0.500500
       2          32          0.005       0.9      0.352296
@@ -1545,7 +1545,7 @@ Best parameters for fashion_mnist (SGD): epochs=6, batch_size=32, learning_rate=
       6         128          0.100       0.9      0.766395
 
 Using SGD as optimizer.
-Using light CNN models.
+Using alt CNN models.
 Using momentum: 0.9
 Running Kfold for cifar10, using 5 splits.
 Files already downloaded and verified
