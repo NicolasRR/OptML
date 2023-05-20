@@ -61,10 +61,14 @@ if args.momentum is not None and not args.alr:
     print(f"Using momentum: {args.momentum}")
 
 print(f"Running Kfold for {args.dataset}, using {args.k_splits} splits.")
-
-loader = create_worker_trainloaders(
-    args.dataset, train_split=1, batch_size=100, model_accuracy=False
-)[0]
+if "cifar" in args.dataset:
+    loader = create_worker_trainloaders(
+        args.dataset, train_split=0.5, batch_size=100, model_accuracy=False
+    )[0]
+else:
+    loader = create_worker_trainloaders(
+        args.dataset, train_split=1, batch_size=100, model_accuracy=False
+    )[0]
 indices = []
 for batch_indices, _ in loader:
     indices.extend(batch_indices.numpy())
@@ -81,7 +85,11 @@ if args.momentum is None and args.alr is False:
 else:
     momentums = [args.momentum]
 batch_sizes = [32, 64, 128]
-epochs = [2, 4, 6]
+if "cifar" in args.dataset:
+    epochs = [2, 3]
+    kf = KFold(n_splits=4)
+else:
+    epochs = [2, 3, 4]
 
 if args.alr == False:
     total_steps = len(epochs) * len(batch_sizes) * len(learning_rates) * len(momentums)

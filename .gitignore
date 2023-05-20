@@ -9,5 +9,6 @@ __pycache__/
 *.npy
 *.log
 *.html
-!KFold results/*
-!Validation results/**/*
+!KFold_results/*
+!Speed_results/*
+!Validation_results/**/*
