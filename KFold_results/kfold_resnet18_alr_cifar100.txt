@@ -1,0 +1,429 @@
+Using Adam as optimizer.
+Running Kfold for cifar100, using 5 splits.
+Files already downloaded and verified
+Files already downloaded and verified
+Created CIFAR100 trainloaders
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.2680446833980326
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.0793782606416817
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.2093979655479896
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.298872638721855
+Step: 1/30, avg loss: 3.2139233870773896, epoch:2, lr:0.0005, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.4649505724712295
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.324175185086776
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.438298668180193
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.518589878568844
+Step: 2/30, avg loss: 3.4365035760767606, epoch:2, lr:0.001, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.7161438452954196
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.7160581046221206
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.6505245870473435
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.740371608004278
+Step: 3/30, avg loss: 3.7057745362422905, epoch:2, lr:0.005, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.7940262422269706
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.8634549987559414
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.793200955098989
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.903113422345142
+Step: 4/30, avg loss: 3.8384489046067607, epoch:2, lr:0.01, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 4.201717342649188
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 4.30980547228638
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 4.322310605827643
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 4.069126675323564
+Step: 5/30, avg loss: 4.225740024021693, epoch:2, lr:0.05, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.1640758052164193
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.067924421660754
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.033402669186495
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.242752250359983
+Step: 6/30, avg loss: 3.1270387866059126, epoch:2, lr:0.0005, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.345540007766412
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.2920082126344954
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.368572938198946
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.425017074662812
+Step: 7/30, avg loss: 3.3577845583156662, epoch:2, lr:0.001, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.700421710403598
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.690071811481398
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.704969744293057
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.6902450274448007
+Step: 8/30, avg loss: 3.696427073405714, epoch:2, lr:0.005, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.8117417048434823
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.8999626320235583
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.8678670051146526
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.8012180498668124
+Step: 9/30, avg loss: 3.8451973479621264, epoch:2, lr:0.01, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 4.03457155276318
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 4.350848047100768
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 4.122431925364903
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 4.323856300237227
+Step: 10/30, avg loss: 4.20792695636652, epoch:2, lr:0.05, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.0857761782042834
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.049388432989315
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.0930867243786246
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.016851152692522
+Step: 11/30, avg loss: 3.0612756220661863, epoch:2, lr:0.0005, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.3661003599361496
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.337884703461005
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.2610503800061283
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.336123281595658
+Step: 12/30, avg loss: 3.325289681249735, epoch:2, lr:0.001, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.6913587171204236
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.68924135577922
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.7726323945181712
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.7960949917228852
+Step: 13/30, avg loss: 3.7373318647851748, epoch:2, lr:0.005, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.895498158980389
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.7940675044546324
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.886634787734674
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.8909483101903177
+Step: 14/30, avg loss: 3.8667871903400033, epoch:2, lr:0.01, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 4.29639670313621
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 4.330332503026845
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 4.373263651010942
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 4.248626222415846
+Step: 15/30, avg loss: 4.312154769897461, epoch:2, lr:0.05, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 2.7566502891024767
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 2.906910871972843
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 2.85479951634699
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 2.8638562803365746
+Step: 16/30, avg loss: 2.8455542394397213, epoch:3, lr:0.0005, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.023276195234182
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.19087614696853
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.12612331156828
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.12168780516605
+Step: 17/30, avg loss: 3.1154908647342605, epoch:3, lr:0.001, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.40718920376836
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.409000730027958
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.4587371884560096
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.3859219319966374
+Step: 18/30, avg loss: 3.4152122635622413, epoch:3, lr:0.005, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.63022195198098
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.5758329374449596
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.4638081922823067
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.469279566589667
+Step: 19/30, avg loss: 3.534785662074478, epoch:3, lr:0.01, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 4.177484996464788
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 4.076838610123615
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 4.128396907631232
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 4.3235266123499185
+Step: 20/30, avg loss: 4.176561781642389, epoch:3, lr:0.05, batch_size: 32
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 2.7013099704469954
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 2.7249399618226655
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 2.740241194257931
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 2.771740879331316
+Step: 21/30, avg loss: 2.7345580014647273, epoch:3, lr:0.0005, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.1355550386467756
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.05108042639129
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.1442274901331686
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.2467115582252037
+Step: 22/30, avg loss: 3.1443936283491096, epoch:3, lr:0.001, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.4763669164813296
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.381826960310644
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.4430938204940484
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.449334365980966
+Step: 23/30, avg loss: 3.437655515816747, epoch:3, lr:0.005, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.5331587158903783
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.4560592807069117
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.5731007006703592
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.682982714808717
+Step: 24/30, avg loss: 3.5613253530190914, epoch:3, lr:0.01, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.975435760556435
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 4.078082814508555
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 4.065354738916669
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 4.035193007819506
+Step: 25/30, avg loss: 4.038516580450292, epoch:3, lr:0.05, batch_size: 64
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 2.713379903715484
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 2.7223351196366914
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 2.7009416794290346
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 2.793744588384823
+Step: 26/30, avg loss: 2.732600322791508, epoch:3, lr:0.0005, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.0794027386879432
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 2.91302752494812
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.0981905119759694
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 2.9407582185706316
+Step: 27/30, avg loss: 3.007844748545666, epoch:3, lr:0.001, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.4880030203838737
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.399147023960036
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.494017537759275
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.542266762986475
+Step: 28/30, avg loss: 3.480858586272415, epoch:3, lr:0.005, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 3.6834954826199278
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.8047775395062504
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.7149802324723225
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 3.6911187512534007
+Step: 29/30, avg loss: 3.7235930014629752, epoch:3, lr:0.01, batch_size: 128
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 1/4, fold_loss: 4.253787994384766
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 2/4, fold_loss: 3.9203667835313447
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 3/4, fold_loss: 3.9021045869710496
+Created CIFAR100 CNN
+ResNet18 using loss: CrossEntropyLoss()
+Fold: 4/4, fold_loss: 4.255134913386131
+Step: 30/30, avg loss: 4.0828485695683225, epoch:3, lr:0.05, batch_size: 128
+
+Best parameters for cifar100 (ADAM): epochs=3, batch_size=128, learning_rate=0.0005, loss=2.732600322791508
+ epochs  batch_size  learning_rate  Average Loss
+      2          32         0.0005      3.213923
+      2          32         0.0010      3.436504
+      2          32         0.0050      3.705775
+      2          32         0.0100      3.838449
+      2          32         0.0500      4.225740
+      2          64         0.0005      3.127039
+      2          64         0.0010      3.357785
+      2          64         0.0050      3.696427
+      2          64         0.0100      3.845197
+      2          64         0.0500      4.207927
+      2         128         0.0005      3.061276
+      2         128         0.0010      3.325290
+      2         128         0.0050      3.737332
+      2         128         0.0100      3.866787
+      2         128         0.0500      4.312155
+      3          32         0.0005      2.845554
+      3          32         0.0010      3.115491
+      3          32         0.0050      3.415212
+      3          32         0.0100      3.534786
+      3          32         0.0500      4.176562
+      3          64         0.0005      2.734558
+      3          64         0.0010      3.144394
+      3          64         0.0050      3.437656
+      3          64         0.0100      3.561325
+      3          64         0.0500      4.038517
+      3         128         0.0005      2.732600
+      3         128         0.0010      3.007845
+      3         128         0.0050      3.480859
+      3         128         0.0100      3.723593
+      3         128         0.0500      4.082849
+
