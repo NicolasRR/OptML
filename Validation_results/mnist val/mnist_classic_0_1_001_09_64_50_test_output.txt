@@ -1,0 +1,49 @@
+Testing performance of mnist_classic_0_1_001_09_64_50.pt
+Classic training time: 13:27:259
+Saved fig at mnist_classic_0_1_001_09_64_50_training_plots.png
+The early stopping epoch is epoch 13
+Saved fig at mnist_classic_0_1_001_09_64_50_validation_plots.png
+Train Performance
+Average train accuracy: 99.92 % (59954/60000)
+Average train loss: 0.0057
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00      5923
+           1       1.00      1.00      1.00      6742
+           2       1.00      1.00      1.00      5958
+           3       1.00      1.00      1.00      6131
+           4       1.00      1.00      1.00      5842
+           5       1.00      1.00      1.00      5421
+           6       1.00      1.00      1.00      5918
+           7       1.00      1.00      1.00      6265
+           8       1.00      1.00      1.00      5851
+           9       1.00      1.00      1.00      5949
+
+    accuracy                           1.00     60000
+   macro avg       1.00      1.00      1.00     60000
+weighted avg       1.00      1.00      1.00     60000
+
+Test Performance
+Average test accuracy: 99.25 % (9925/10000)
+Average test loss: 0.0450
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.99      1.00      1.00       980
+           1       1.00      1.00      1.00      1135
+           2       0.99      0.99      0.99      1032
+           3       0.99      0.99      0.99      1010
+           4       0.99      0.99      0.99       982
+           5       0.99      0.99      0.99       892
+           6       0.99      0.99      0.99       958
+           7       0.99      0.99      0.99      1028
+           8       0.99      0.99      0.99       974
+           9       0.99      0.99      0.99      1009
+
+    accuracy                           0.99     10000
+   macro avg       0.99      0.99      0.99     10000
+weighted avg       0.99      0.99      0.99     10000
+
