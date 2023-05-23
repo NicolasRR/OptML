@@ -56,10 +56,19 @@ formatted_train_split=$(echo $train_split | tr -d '.')
 formatted_lr=$(echo $lr | tr -d '.')
 formatted_momentum=$(echo $momentum | tr -d '.')
 if $include_model_classic; then
-    model_classic="${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    if $alt_model; then
+        model_classic="${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.pt"
+    else    
+        model_classic="${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    fi
 fi
-model_sync="${dataset}_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
-model_async="${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+if $alt_model; then
+    model_sync="${dataset}_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.pt"
+    model_async="${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.pt"
+else
+    model_sync="${dataset}_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    model_async="${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+fi
 
 training_flags=""
 if $alr; then
@@ -152,11 +161,20 @@ if $loss_landscape; then
         echo "saves_per_epoch is not defined or less than 1, skipping loss landscape computation."
     else
         if $include_model_classic; then
-            classic_weights="${dataset}_classic_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.npy"
+            if $alt_model; then
+                classic_weights="${dataset}_classic_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.npy"
+            else
+                classic_weights="${dataset}_classic_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.npy"
+            fi
             python3 loss_landscape.py $model_classic $classic_weights 
         fi
-        sync_weights="${dataset}_sync_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.npy"   
-        async_weights="${dataset}_async_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.npy"
+        if $alt_model; then
+            sync_weights="${dataset}_sync_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.npy"   
+            async_weights="${dataset}_async_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.npy"
+        else
+            sync_weights="${dataset}_sync_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.npy"   
+            async_weights="${dataset}_async_weights_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.npy"
+        fi
         python3 loss_landscape.py $model_sync $sync_weights 
         python3 loss_landscape.py $model_async $async_weights 
     fi
