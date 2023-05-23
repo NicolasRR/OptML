@@ -1,3 +1,10 @@
+epochs=6
+lr=0.01
+momentum=0.9
+batch_size=100
+world_size_1=4
+world_size_2=7
+
 # non sync
 nn_train.py fashion_mnist 
 Final train loss: 0.28086480498313904

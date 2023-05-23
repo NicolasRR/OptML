@@ -457,7 +457,9 @@ def main(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Testing models")
+    parser = argparse.ArgumentParser(
+        description="Computing train and test performance, reading .log and generating images"
+    )
     parser.add_argument(
         "--batch_size",
         type=int,

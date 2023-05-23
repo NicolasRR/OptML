@@ -153,6 +153,7 @@ def run(
             batch_size,
             epochs,
             subfolder,
+            alt_model=alt_model,
         )
 
 

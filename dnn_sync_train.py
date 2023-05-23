@@ -230,7 +230,12 @@ class Worker_sync(object):
                 correct_predictions,
                 total_predictions,
             ) = compute_accuracy_loss(
-                worker_model, self.train_loader, loss_func=LOSS_FUNC, worker_mode=True, dataset_name= self.dataset_name, worker_name= self.worker_name,
+                worker_model,
+                self.train_loader,
+                loss_func=LOSS_FUNC,
+                worker_mode=True,
+                dataset_name=self.dataset_name,
+                worker_name=self.worker_name,
             )
             print(
                 f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
@@ -239,10 +244,24 @@ class Worker_sync(object):
 
 #################################### GLOBAL FUNCTIONS ####################################
 def run_worker_sync(
-    ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1, dataset_name= None,
+    ps_rref,
+    logger,
+    train_loader,
+    epochs,
+    worker_accuracy,
+    delay,
+    slow_worker_1,
+    dataset_name=None,
 ):
     worker = Worker_sync(
-        ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1, dataset_name,
+        ps_rref,
+        logger,
+        train_loader,
+        epochs,
+        worker_accuracy,
+        delay,
+        slow_worker_1,
+        dataset_name,
     )
     worker.train_sync()
 
@@ -407,6 +426,9 @@ def run_parameter_server_sync(
             batch_size,
             epochs,
             subfolder,
+            alt_model=alt_model,
+            split_dataset=split_dataset,
+            split_labels=split_labels,
         )
 
 

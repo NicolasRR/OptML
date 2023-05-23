@@ -228,7 +228,12 @@ class Worker_async(object):
                 correct_predictions,
                 total_preidctions,
             ) = compute_accuracy_loss(
-                worker_model, self.train_loader, loss_func=LOSS_FUNC, worker_mode=True, dataset_name= self.dataset_name, worker_name= self.worker_name,
+                worker_model,
+                self.train_loader,
+                loss_func=LOSS_FUNC,
+                worker_mode=True,
+                dataset_name=self.dataset_name,
+                worker_name=self.worker_name,
             )
             print(
                 f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
@@ -237,10 +242,24 @@ class Worker_async(object):
 
 #################################### GLOBAL FUNCTIONS ####################################
 def run_worker_async(
-    ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1, dataset_name=None,
+    ps_rref,
+    logger,
+    train_loader,
+    epochs,
+    worker_accuracy,
+    delay,
+    slow_worker_1,
+    dataset_name=None,
 ):
     worker = Worker_async(
-        ps_rref, logger, train_loader, epochs, worker_accuracy, delay, slow_worker_1, dataset_name,
+        ps_rref,
+        logger,
+        train_loader,
+        epochs,
+        worker_accuracy,
+        delay,
+        slow_worker_1,
+        dataset_name,
     )
     worker.train_async()
 
@@ -412,6 +431,10 @@ def run_parameter_server_async(
             batch_size,
             epochs,
             subfolder,
+            alt_model=alt_model,
+            split_dataset=split_dataset,
+            split_labels=split_labels,
+            split_labels_unscaled=split_labels_unscaled,
         )
 
 

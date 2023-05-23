@@ -2,8 +2,6 @@ lenet5 mnist:
 Best parameters for mnist (SGD): epochs=4, batch_size=32, learning_rate=0.01, momentum=0.9, loss=0.0478330999647112
 Best parameters for mnist (SGD): epochs=6, batch_size=64, learning_rate=0.01, momentum=0.9, loss=0.04699554382253716
 Best parameters for mnist (SGD): epochs=6, batch_size=64, learning_rate=0.01, momentum=0.9, loss=0.046903741573747694
-
-lenet5 adam mnist:
 Best parameters for mnist (ADAM): epochs=6, batch_size=64, learning_rate=0.001, loss=0.04760470111598013
 Best parameters for mnist (ADAM): epochs=6, batch_size=128, learning_rate=0.001, loss=0.04961940354439728
 Best parameters for mnist (ADAM): epochs=4, batch_size=32, learning_rate=0.001, loss=0.05045044378676296
@@ -12,13 +10,16 @@ lenet5 fashion_mnist:
 Best parameters for fashion_mnist (SGD): epochs=6, batch_size=32, learning_rate=0.005, momentum=0.9, loss=0.282172
 Best parameters for fashion_mnist (SGD): epochs=6, batch_size=128, learning_rate=0.01, momentum=0.95, loss=0.2869176597988352
 Best parameters for fashion_mnist (SGD): epochs=6, batch_size=32, learning_rate=0.005, momentum=0.9, loss=0.2831058066487312
-
-lenet5 adam fashion_mnist:
 Best parameters for fashion_mnist (ADAM): epochs=6, batch_size=32, learning_rate=0.001, loss=0.2805232353051504
 Best parameters for fashion_mnist (ADAM): epochs=4, batch_size=32, learning_rate=0.001, loss=0.2888044432282448
 
 resnet18 cifar10:
 Best parameters for cifar10 (SGD): epochs=3, batch_size=32, learning_rate=0.005, momentum=0.9, loss=0.8991112561554325
+Best parameters for cifar10 (ADAM): epochs=3, batch_size=64, learning_rate=0.0005, loss=0.8359136792774104
 
 alt_model cifar10:
 Best parameters for cifar10 (SGD): epochs=6, batch_size=64, learning_rate=0.01, momentum=0.9, loss=0.942016988992691
+
+resnet18 cifar100:
+Best parameters for cifar100 (SGD): epochs=3, batch_size=64, learning_rate=0.005, momentum=0.9, loss=2.7686256693333995
+Best parameters for cifar100 (ADAM): epochs=3, batch_size=128, learning_rate=0.0005, loss=2.732600322791508
