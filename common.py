@@ -552,7 +552,16 @@ def get_scheduler(lrs, optimizer, len_trainloader, epochs, gamma=EXPO_DECAY):
             return None
 
 
-def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode=False, worker_mode=False, dataset_name=None, worker_name=None):
+def compute_accuracy_loss(
+    model,
+    loader,
+    loss_func,
+    return_loss=False,
+    test_mode=False,
+    worker_mode=False,
+    dataset_name=None,
+    worker_name=None,
+):
     average_loss = 0
     correct_predictions = 0
     total_predictions = 0
@@ -599,7 +608,6 @@ def compute_accuracy_loss(model, loader, loss_func, return_loss=False, test_mode
         report = CR(targets_, predictions_, zero_division=0)
         print(f"Test CR of {worker_name}:")
         print(report)"""
-        
 
     if test_mode:
         return (
@@ -663,14 +671,28 @@ def save_weights(
     batch_size,
     epochs,
     subfolder,
+    alt_model=False,
+    split_dataset=False,
+    split_labels=False,
+    split_labels_unscaled=False,
 ):
+    suffix = ""
+    if alt_model:
+        suffix = "_alt_model"
+    if split_dataset:
+        suffix = "_split_dataset"
+    elif split_labels:
+        suffix = "_labels"
+    elif split_labels_unscaled:
+        suffix = "_labels_unscaled"
+
     flat_weights = [
         np.hstack([w.flatten() for w in epoch_weights])
         for epoch_weights in weights_matrix
     ]
     weights_matrix_np = np.vstack(flat_weights)
 
-    filename = f"{dataset_name}_{mode}_weights_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}.npy"
+    filename = f"{dataset_name}_{mode}_weights_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.npy"
     if len(subfolder) > 0:
         filepath = os.path.join(subfolder, filename)
     else:

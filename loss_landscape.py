@@ -14,6 +14,7 @@ DEFAULT_GRID_SIZE = 15
 DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
 
+
 def set_weights(model, flat_weights):
     idx = 0
     state_dict = model.state_dict()
@@ -34,13 +35,18 @@ def set_weights(model, flat_weights):
 
 
 def main(
-    batch_size, weights_path, model_path, subfolder, grid_size, grid_border,
+    batch_size,
+    weights_path,
+    model_path,
+    subfolder,
+    grid_size,
+    grid_border,
 ):
     loader = create_testloader(model_path, batch_size)
     if "alt_model" in model_path:
         model = _get_model(model_path, LOSS_FUNC, alt_model=True)
     else:
-        model = _get_model(model_path, LOSS_FUNC, alt_model= False)
+        model = _get_model(model_path, LOSS_FUNC, alt_model=False)
 
     model.load_state_dict(torch.load(model_path))
     model.eval()
@@ -53,14 +59,20 @@ def main(
     reduced_weights = pca.fit_transform(weights_matrix_np)
 
     max_abs_reduced_weight = np.max(np.abs(reduced_weights))
-    print(max_abs_reduced_weight, grid_border)
+    print(
+        f"Norm of largest weights in the PCA space: {max_abs_reduced_weight}, grid border is: {grid_border}"
+    )
     # Check if the grid is too small
     if max_abs_reduced_weight > grid_border:
-        print(f"Warning: The grid might be too small. The maximum absolute value of the reduced weights ({max_abs_reduced_weight}) is outside the grid border ({grid_border}).")
+        print(
+            f"Warning: The grid might be too small. The maximum absolute value of the reduced weights ({max_abs_reduced_weight}) is outside the grid border ({grid_border})."
+        )
 
     # Check if the grid is too big
     if np.abs(max_abs_reduced_weight - grid_border) > DEFAULT_GRID_WARNING:
-        print(f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights ({max_abs_reduced_weight}) to the grid border ({grid_border}) is greater than 10.")
+        print(
+            f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights ({max_abs_reduced_weight}) to the grid border ({grid_border}) is greater than 10."
+        )
 
     grid_range = np.linspace(-grid_border, grid_border, grid_size)
     xx, yy = np.meshgrid(grid_range, grid_range)
@@ -91,6 +103,8 @@ def main(
             progress_bar.update(1)
             progress_bar.set_postfix(grid_loss=grid_losses[-1])
 
+    progress_bar.close()
+
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
     trajectory_loss_reevaluted = []
@@ -115,6 +129,8 @@ def main(
             trajectory_loss_reevaluted.append(running_loss / len(loader.dataset))
             progress_bar2.update(1)
             progress_bar2.set_postfix(trajectory_loss=trajectory_loss_reevaluted[-1])
+
+    progress_bar2.close()
 
     surface = go.Surface(
         x=xx,
@@ -163,7 +179,9 @@ def main(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Testing models")
+    parser = argparse.ArgumentParser(
+        description="Computing the loss landscape with the training trajectory, please model path (.pt) first, weights (.npy) second"
+    )
     parser.add_argument(
         "--batch_size",
         type=int,
@@ -183,7 +201,9 @@ if __name__ == "__main__":
         help="""The grid will be created between [-grid_border, grid_border]x[-grid_border, grid_border].""",
     )
     parser.add_argument("model_path", type=str, help="""Path of the model.""")
-    parser.add_argument("weights_path", type=str, help="""Weights of the trained model.""")
+    parser.add_argument(
+        "weights_path", type=str, help="""Weights of the trained model."""
+    )
     parser.add_argument(
         "--subfolder",
         type=str,
@@ -226,11 +246,15 @@ if __name__ == "__main__":
         exit()
 
     if not args.weights_path.endswith(".npy"):
-        print("weights_path should be a .npy file, the order should be: model first weights second")
+        print(
+            "weights_path should be a .npy file, the order should be: model first weights second"
+        )
         exit()
 
     if not args.model_path.endswith(".pt"):
-        print("model_path should be a .pt file, the order should be: model first weights second")
+        print(
+            "model_path should be a .pt file, the order should be: model first weights second"
+        )
         exit()
 
     main(
