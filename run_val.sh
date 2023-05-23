@@ -43,10 +43,18 @@ formatted_train_split=$(echo $train_split | tr -d '.')
 formatted_lr=$(echo $lr | tr -d '.')
 formatted_momentum=$(echo $momentum | tr -d '.')
 
-model_classic="${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+if $alt_model; then
+    model_classic="${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.pt"
+else
+    model_classic="${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+fi
 
 if $include_model_sgd; then
-    model_sync="${dataset}_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    if $alt_model; then
+        model_sync="${dataset}_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_alt_model.pt"
+    else
+        model_sync="${dataset}_sync_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}.pt"
+    fi
 fi
 
 training_flags="--val"
