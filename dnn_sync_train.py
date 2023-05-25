@@ -424,6 +424,10 @@ def run_parameter_server_sync(
             alt_model=alt_model,
             split_dataset=split_dataset,
             split_labels=split_labels,
+            delay_intensity=delay_intensity,
+            delay_type=delay_type,
+            delay=delay,
+            slow_worker_1=slow_worker_1,
         )
 
     if saves_per_epoch is not None:
@@ -440,6 +444,10 @@ def run_parameter_server_sync(
             alt_model=alt_model,
             split_dataset=split_dataset,
             split_labels=split_labels,
+            delay_intensity=delay_intensity,
+            delay_type=delay_type,
+            delay=delay,
+            slow_worker_1=slow_worker_1,
         )
 
 
