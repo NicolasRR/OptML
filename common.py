@@ -27,8 +27,14 @@ LOSS_FUNC = nn.CrossEntropyLoss()  # nn.functional.nll_loss # add softmax layer 
 # LOSS_FUNC = nn.functional.nll_loss
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
-DELAY_MIN = 0.01  # 10 ms
-DELAY_MAX = 0.02  # 20 ms
+DEFAULT_DELAY_INTENSITY = "small"
+DEFAULT_DELAY_TYPE = "gaussian"
+DELAY_VALUES = {
+    "small": (0.01, 0.002),  # 10 ms, 2 ms std
+    "medium": (0.02, 0.004),  # 20 ms, 4 ms std
+    "long": (0.03, 0.006),  # 30 ms, 6 ms std
+}
+DELAY_WORKER_1_FACTOR = 2
 DEFAULT_VAL_SPLIT = 0.1
 DEFAULT_ALTERNATE_MODELS = False
 
@@ -71,6 +77,8 @@ def start(args, mode, run_parameter_server):
                 args.alr,
                 args.lrs,
                 args.delay,
+                args.delay_intensity,
+                args.delay_type,
                 args.slow_worker_1,
                 args.val,
                 args.alt_model,
@@ -105,6 +113,8 @@ def run(
     use_alr,
     lrs,
     delay,
+    delay_intensity,
+    delay_type,
     slow_woker_1,
     val,
     alt_model,
@@ -148,6 +158,8 @@ def run(
                 saves_per_epoch,
                 lrs,
                 delay,
+                delay_intensity,
+                delay_type,
                 slow_woker_1,
                 val,
                 alt_model,
@@ -173,6 +185,8 @@ def run(
                 saves_per_epoch,
                 lrs,
                 delay,
+                delay_intensity,
+                delay_type,
                 slow_woker_1,
                 val,
                 alt_model,
@@ -219,11 +233,27 @@ def check_args(args, mode):
                 print("Please use --split_labels_unscaled with the --batch_size 1")
                 exit()
 
+            if args.delay_intensity is not None and (not args.delay and not args.slow_worker_1):
+                print("Please use --delay_intensity with --delay or --slow_worker_1")
+                exit()
+
+            if args.delay_type is not None and (not args.delay and not args.slow_worker_1):
+                print("Please use --delay_type with --delay or --slow_worker_1")
+                exit()
+
             if args.delay:
-                print("Adding random delay to all workers")
+                print("Adding delay to all workers")
 
             if args.slow_worker_1:
-                print("Slowing down worker 1 with strong delay")
+                print("Slowing down worker 1 with long delay")
+
+            if (args.delay or args.slow_worker_1) and args.delay_intensity is None:
+                args.delay_intensity = DEFAULT_DELAY_INTENSITY
+                print(f"Using the default delay intensity: {args.delay_intensity}")
+
+            if (args.delay or args.slow_worker_1) and args.delay_type is None:
+                args.delay_type = DEFAULT_DELAY_TYPE
+                print(f"Using the default delay type: {args.delay_type}")
 
         if args.dataset == "mnist":
             valid_world_sizes = {3, 6, 11}
@@ -450,12 +480,26 @@ def read_parser(parser, mode=None):
         parser.add_argument(
             "--delay",
             action="store_true",
-            help="""Add a random delay to all workers at each mini-batch update.""",
+            help="""Add a delay to all workers at each mini-batch update.""",
         )
         parser.add_argument(
             "--slow_worker_1",
             action="store_true",
-            help="""Add a long random delay only to worker 1 at each mini-batch update.""",
+            help="""Add a longer delay only to worker 1 at each mini-batch update.""",
+        )
+        parser.add_argument(
+            "--delay_intensity",
+            type=str,
+            choices=["small", "medium", "long"],
+            default=None,
+            help="""Choose the delay intensity: small 10ms, medium 20ms, long 30ms.""",
+        )
+        parser.add_argument(
+            "--delay_type",
+            type=str,
+            choices=["constant", "gaussian"],
+            default=None,
+            help="""Choose the delay type: constant or gaussian.""",
         )
         if mode is not None:
             parser.add_argument(
@@ -559,7 +603,6 @@ def compute_accuracy_loss(
     return_loss=False,
     test_mode=False,
     worker_mode=False,
-    dataset_name=None,
     worker_name=None,
 ):
     average_loss = 0
@@ -588,26 +631,6 @@ def compute_accuracy_loss(
         print(f"Train CR of {worker_name}:")
         report = CR(targets, predictions, zero_division=0)
         print(report)
-        """loader = create_testloader(dataset_name, DEFAULT_BATCH_SIZE)
-        targets_ = []
-        predictions_ = []
-        correct_predictions_ = 0
-        total_predictions_ = 0
-        with torch.no_grad():
-            model.eval()
-            for images, labels in loader:
-                outputs = model(images)
-                _, pred = torch.max(outputs, 1)
-                correct_predictions_ += torch.sum(pred == labels.data)
-                total_predictions_ += images.size(0)
-                targets_.extend(labels.view(-1).tolist())
-                predictions_.extend(pred.view(-1).tolist())
-
-        average_accuracy_ = correct_predictions_ / total_predictions_
-        print(f"Accuracy on test set of {worker_name}: {average_accuracy_ * 100} % ({correct_predictions_}/{total_predictions_})")
-        report = CR(targets_, predictions_, zero_division=0)
-        print(f"Test CR of {worker_name}:")
-        print(report)"""
 
     if test_mode:
         return (
@@ -711,12 +734,18 @@ def compute_weights_l2_norm(model):
     return total_norm
 
 
-def long_random_delay():
-    time.sleep(np.random.uniform((DELAY_MIN + DELAY_MAX) / 2.0, DELAY_MAX * 2))
+def _delay(intensity= DEFAULT_DELAY_INTENSITY, _type= DEFAULT_DELAY_TYPE, worker_1=False):
+    delay_mean, delay_std = DELAY_VALUES[intensity]
+    if worker_1:
+        delay_mean *= DELAY_WORKER_1_FACTOR
+        delay_std *= DELAY_WORKER_1_FACTOR
 
-
-def random_delay():  # 10 to 50 ms delay
-    time.sleep(np.random.uniform(DELAY_MIN, DELAY_MAX))
+    if _type == "gaussian":
+        delay_time = np.random.normal(delay_mean, delay_std)
+        delay_time = max(0, delay_time)  # Ensure the delay is not negative
+    elif _type == "constant":
+        delay_time = delay_mean
+    time.sleep(delay_time)
 
 
 #################################### NET ####################################
@@ -891,28 +920,6 @@ class CNN_CIFAR10_alt(nn.Module):  # Adapted PyTorch model for CIFAR10
         if self.loss_func == nn.functional.nll_loss:
             x = nn.functional.log_softmax(x, dim=1)
         return x
-
-
-"""class CNN_CIFAR10(nn.Module): # Adapted PyTorch model for CIFAR10 using nll (more complex 3 conv layers)
-    def __init__(self):
-        super(CNN_CIFAR10, self).__init__()
-        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
-        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
-        self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(128 * 4 * 4, 512)
-        self.fc2 = nn.Linear(512, 10)
-        self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(0.5)
-
-    def forward(self, x):
-        x = self.relu(self.conv1(x))
-        x = self.pool(self.relu(self.conv2(x)))
-        x = self.pool(self.relu(self.conv3(x)))
-        x = x.view(-1, 128 * 4 * 4)
-        x = self.dropout(self.relu(self.fc1(x)))
-        x = self.fc2(x)
-        return x"""
 
 
 class CNN_CIFAR100_alt(nn.Module):  # Adapted PyTorch model for CIFAR100
