@@ -15,8 +15,7 @@ from common import (
     compute_weights_l2_norm,
     read_parser,
     start,
-    long_random_delay,
-    random_delay,
+    _delay,
     LOSS_FUNC,
 )
 
@@ -156,6 +155,8 @@ class Worker_sync(object):
         epochs,
         worker_accuracy,
         delay,
+        delay_intensity,
+        delay_type,
         slow_worker_1,
         dataset_name,
     ):
@@ -169,6 +170,8 @@ class Worker_sync(object):
         self.worker_name = rpc.get_worker_info().name
         self.worker_accuracy = worker_accuracy
         self.delay = delay
+        self.delay_intensity = delay_intensity
+        self.delay_type= delay_type
         self.slow_worker_1 = slow_worker_1
         self.dataset_name = dataset_name
         self.logger.debug(
@@ -206,9 +209,9 @@ class Worker_sync(object):
             self.batch_count += 1
 
             if self.worker_name == "Worker_1" and self.slow_worker_1:
-                long_random_delay()
+                _delay(intensity=self.delay_intensity, _type= self.delay_type, worker_1= True)
             elif self.delay:
-                random_delay()
+                _delay(intensity=self.delay_intensity, _type= self.delay_type, worker_1= False)
 
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
@@ -250,6 +253,8 @@ def run_worker_sync(
     epochs,
     worker_accuracy,
     delay,
+    delay_intensity,
+    delay_type,
     slow_worker_1,
     dataset_name=None,
 ):
@@ -260,6 +265,8 @@ def run_worker_sync(
         epochs,
         worker_accuracy,
         delay,
+        delay_intensity,
+        delay_type,
         slow_worker_1,
         dataset_name,
     )
@@ -285,6 +292,8 @@ def run_parameter_server_sync(
     saves_per_epoch,
     lrs,
     delay,
+    delay_intensity,
+    delay_type,
     slow_worker_1,
     val,
     alt_model,
@@ -343,9 +352,8 @@ def run_parameter_server_sync(
             )
         )
     futs = []
-
+    logger.info(f"Starting synchronous SGD training with {len(workers)} workers")
     if not split_dataset and not split_labels:  # workers sharing samples
-        logger.info(f"Starting synchronous SGD training with {len(workers)} workers")
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -358,13 +366,14 @@ def run_parameter_server_sync(
                         epochs,
                         worker_accuracy,
                         delay,
+                        delay_intensity,
+                        delay_type,
                         slow_worker_1,
                     ),
                 )
             )
 
     else:
-        logger.info("Start training")
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -377,6 +386,8 @@ def run_parameter_server_sync(
                         epochs,
                         worker_accuracy,
                         delay,
+                        delay_intensity,
+                        delay_type,
                         slow_worker_1,
                         dataset_name,
                     ),
