@@ -139,6 +139,7 @@ def run(
             batch_size,
             epochs,
             subfolder,
+            val,
             alt_model=alt_model,
         )
 
@@ -153,6 +154,7 @@ def run(
             batch_size,
             epochs,
             subfolder,
+            val,
             alt_model=alt_model,
         )
 
