@@ -20,7 +20,7 @@ Time: 00:01:52,164
 dnn_sync_train.py fashion_mnist world_size_1
 Final train loss: 0.22216742734114328
 Final train accuracy: 91.32833862304688 % (54797/60000)
-Time: 00:25:19,413
+Time: 00:25:19,413 
 
 dnn_sync_train.py fashion_mnist world_size_1 split_dataset
 Final train loss: 0.26159045100212097
@@ -84,7 +84,7 @@ Final train accuracy: 89.19833374023438 % (53519/60000)
 Time: 01:28:53,332
 
 dnn_async_train.py fashion_mnist world_size_2 split_dataset
-Final train loss: 2.3012301921844482                                                                                                                                                                             
+Final train loss: 2.3012301921844482                                                                                                                                                                            
 Final train accuracy: 10.0 % (6000/60000)
 Time: 00:14:52,324
 
