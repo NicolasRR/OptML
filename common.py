@@ -647,6 +647,27 @@ def compute_accuracy_loss(
         return average_accuracy, correct_predictions, total_predictions
 
 
+def get_suffix(alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type):
+    suffix = ""
+    if alt_model:
+        suffix = "_alt_model"
+    if split_dataset:
+        suffix += "_split_dataset"
+    elif split_labels:
+        suffix += "_labels"
+    elif split_labels_unscaled:
+        suffix += "_labels_unscaled"
+    if delay:
+        suffix += "_delay"
+    if slow_worker_1:
+        suffix += "_slow_worker_1"
+    if delay_intensity is not None:
+        suffix += f"_{delay_intensity}"
+    if delay_type is not None:
+        suffix += f"_{delay_type}"
+    return suffix
+
+
 def _save_model(
     mode,
     dataset_name,
@@ -662,16 +683,13 @@ def _save_model(
     split_dataset=False,
     split_labels=False,
     split_labels_unscaled=False,
+    delay=False,
+    slow_worker_1=False,
+    delay_intensity=None,
+    delay_type=None,
 ):
-    suffix = ""
-    if alt_model:
-        suffix = "_alt_model"
-    if split_dataset:
-        suffix = "_split_dataset"
-    elif split_labels:
-        suffix = "_labels"
-    elif split_labels_unscaled:
-        suffix = "_labels_unscaled"
+    
+    suffix = get_suffix(alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type)
 
     filename = f"{dataset_name}_{mode}_{len_workers+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
 
@@ -698,16 +716,13 @@ def save_weights(
     split_dataset=False,
     split_labels=False,
     split_labels_unscaled=False,
+    delay=False,
+    slow_worker_1=False,
+    delay_intensity=None,
+    delay_type=None,
 ):
-    suffix = ""
-    if alt_model:
-        suffix = "_alt_model"
-    if split_dataset:
-        suffix = "_split_dataset"
-    elif split_labels:
-        suffix = "_labels"
-    elif split_labels_unscaled:
-        suffix = "_labels_unscaled"
+    
+    suffix = get_suffix(alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type)
 
     flat_weights = [
         np.hstack([w.flatten() for w in epoch_weights])

@@ -429,6 +429,10 @@ def run_parameter_server_async(
             split_dataset=split_dataset,
             split_labels=split_labels,
             split_labels_unscaled=split_labels_unscaled,
+            delay_intensity=delay_intensity,
+            delay_type=delay_type,
+            delay=delay,
+            slow_worker_1=slow_worker_1,
         )
 
     if saves_per_epoch is not None:
@@ -446,6 +450,10 @@ def run_parameter_server_async(
             split_dataset=split_dataset,
             split_labels=split_labels,
             split_labels_unscaled=split_labels_unscaled,
+            delay_intensity=delay_intensity,
+            delay_type=delay_type,
+            delay=delay,
+            slow_worker_1=slow_worker_1,
         )
 
 
