@@ -3,8 +3,8 @@ Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nico
 
 # Objective
 
-<u>**Asynchronous SGD: How do different delays affect convergence? How does it interplay with momentum?
-Does it act as a regularizer, like drop-out?**</u>
+**<ins>Asynchronous SGD: How do different delays affect convergence? How does it interplay with momentum?
+Does it act as a regularizer, like drop-out?</ins>**
 
 Asynchronous SGD: What role does momentum plays? Does it act as regularizer as well SGD? 
 We can then analyze the shape of the minima using perhaps the two techniques in summary? What impact do different delays or learning schedulers have on the minima and converge time?
