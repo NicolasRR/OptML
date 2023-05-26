@@ -5,7 +5,7 @@ world_size=4
 lr=0.005 
 momentum=0.9
 batch_size=32
-epochs=50
+epochs=30
 subfolder_name="Delay_results"
 
 # sync

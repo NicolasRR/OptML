@@ -2,8 +2,8 @@ epochs=6
 lr=0.01
 momentum=0.9
 batch_size=100
-world_size_1=4
-world_size_2=7
+world_size_1=4 # 3 workers
+world_size_2=7 # 6 workers
 
 # non sync
 nn_train.py fashion_mnist 
