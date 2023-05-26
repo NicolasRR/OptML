@@ -374,6 +374,13 @@ def run_parameter_server_sync(
             )
 
     else:
+        num_full_batches = len(train_loader[0])
+        num_expected_batches = len(train_loader[0].dataset) / len(workers) / float(batch_size)
+        print(f"There will be an incomplete batch: {num_full_batches} < {num_expected_batches}, {len(train_loader[0].dataset) / len(workers)}, {batch_size}")
+        
+        num_lost_images = len(train_loader[0].dataset) / len(workers) % batch_size
+        print(f"The number of lost images is {num_lost_images}")
+        
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(

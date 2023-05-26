@@ -186,7 +186,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             # First subplot (Model Loss vs Time)
             timedeltas = [line[0].total_seconds() for line in model_update_lines]
             losses = [line[1] for line in model_update_lines]
-            axs[0].plot(timedeltas, losses, marker="x")
+            axs[0].plot(timedeltas, losses)
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Model Loss")
             axs[0].set_title(
@@ -197,7 +197,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[0].xaxis.set_major_formatter(formatter)
             # Second subplot (Weights L2 norm vs Time)
             weights_norm = [line[2] for line in model_update_lines]
-            axs[1].plot(timedeltas, weights_norm, marker="x")
+            axs[1].plot(timedeltas, weights_norm)
             axs[1].set_xlabel("Time (MM:SS:sss)")
             axs[1].set_ylabel("Weights L2 norm")
             axs[1].set_title(
@@ -206,7 +206,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[1].xaxis.set_major_formatter(formatter)
             # Thirst subplot (Cumulative Batch Update Count vs Time)
             batches = [line[3] for line in model_update_lines]
-            axs[2].plot(timedeltas, batches, marker="x")
+            axs[2].plot(timedeltas, batches)
             axs[2].set_xlabel("Time (MM:SS:sss)")
             axs[2].set_ylabel("Cumulative Batch Update Count")
             axs[2].set_title("Classic SGD computation speed")
@@ -245,7 +245,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             # First subplot (Model Loss vs Time)
             timedeltas = [line[0].total_seconds() for line in model_loss_lines]
             losses = [line[1] for line in model_loss_lines]
-            axs[0].plot(timedeltas, losses, marker="x")
+            axs[0].plot(timedeltas, losses)
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Model Loss")
             axs[0].set_title(
@@ -255,7 +255,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[0].xaxis.set_major_formatter(formatter)
             # Second subplot (Weights L2 norm vs Time)
             weights_norm = [line[2] for line in model_loss_lines]
-            axs[1].plot(timedeltas, weights_norm, marker="x")
+            axs[1].plot(timedeltas, weights_norm)
             axs[1].set_xlabel("Time (MM:SS:sss)")
             axs[1].set_ylabel("Weights L2 norm")
             axs[1].set_title(
@@ -273,7 +273,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, updates in worker_cumulative_updates.items():
                 x = [td.total_seconds() for td, _ in updates]
                 y = [batch_count for _, batch_count in updates]
-                axs[2].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[2].plot(x, y, label=f"Worker {worker_id}")
             axs[2].set_xlabel("Time (MM:SS:sss)")
             axs[2].set_ylabel("Cumulative Batch Update Count")
             axs[2].set_title("Synchronous SGD workers speed comparison")
@@ -309,7 +309,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, losses in worker_losses.items():
                 x = [td.total_seconds() for td, _ in losses]
                 y = [worker_loss for _, worker_loss in losses]
-                axs[0].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[0].plot(x, y, label=f"Worker {worker_id}")
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Worker Loss")
             axs[0].set_title(
@@ -326,7 +326,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, weight_norm in weights_norms.items():
                 x = [td.total_seconds() for td, _ in weight_norm]
                 y = [w_norm for _, w_norm in weight_norm]
-                axs[1].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[1].plot(x, y, label=f"Worker {worker_id}")
             axs[1].set_xlabel("Time (MM:SS:sss)")
             axs[1].set_ylabel("Weights L2 norm")
             axs[1].set_title(
@@ -343,7 +343,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, updates in worker_cumulative_updates.items():
                 x = [td.total_seconds() for td in updates]
                 y = list(range(1, len(updates) + 1))
-                axs[2].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[2].plot(x, y, label=f"Worker {worker_id}")
             axs[2].set_xlabel("Time (MM:SS:sss)")
             axs[2].set_ylabel("Cumulative Batch Update Count")
             axs[2].set_title("Asynchronous SGD workers speed comparison")
