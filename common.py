@@ -214,10 +214,6 @@ def check_args(args, mode):
             print("Please use --split_labels without --split_dataset")
             exit()
 
-        if args.split_labels and args.batch_size != 1:
-            print("Please use --split_labels with the --batch_size 1")
-            exit()
-
         if mode == "async":
             if args.split_labels_unscaled and args.split_dataset:
                 print("Please use --split_labels_unscaled without --split_dataset")
@@ -227,10 +223,6 @@ def check_args(args, mode):
                 print(
                     "Please do not use --split_labels and --split_labels_unscaled together"
                 )
-                exit()
-
-            if args.split_labels_unscaled and args.batch_size != 1:
-                print("Please use --split_labels_unscaled with the --batch_size 1")
                 exit()
 
             if args.delay_intensity is not None and (not args.delay and not args.slow_worker_1):
@@ -514,7 +506,7 @@ def read_parser(parser, mode=None):
                 action="store_true",
                 help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
                 Workers will not share samples and the labels are randomly assigned.
-                Requires --batch_size 1, don't use with --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+                Don't use with --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
             )
         elif mode == "async":
             parser.add_argument(
@@ -522,14 +514,14 @@ def read_parser(parser, mode=None):
                 action="store_true",
                 help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
                 Workers will not share samples and the labels are randomly assigned.
-                Requires --batch_size 1, don't use with --split_dataset or --split_labels_unscaled. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+                Don't use with --split_dataset or --split_labels_unscaled. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
             )
             parser.add_argument(
                 "--split_labels_unscaled",
                 action="store_true",
                 help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
                 Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has.
-                Requires --batch_size 1, don't use --split_dataset or split_labels. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+                Don't use --split_dataset or split_labels. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
             )
 
     args = parser.parse_args()
