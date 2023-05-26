@@ -686,7 +686,7 @@ def _save_model(
     
     suffix = get_suffix(val, alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type)
 
-    filename = f"{dataset_name}_{mode}_{len_workers+1}_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
+    filename = f"{dataset_name}_{mode}_{len_workers+1}_{str(float(train_split)*10).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
 
     if len(subfolder) > 0:
         filepath = os.path.join(subfolder, filename)
