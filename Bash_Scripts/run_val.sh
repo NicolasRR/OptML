@@ -1,8 +1,13 @@
 #!/bin/bash
 
-#dos2unix compare.sh
-#bash compare.sh
-#bash compare.sh > compare_result.txt
+script_dir=$(dirname "$0")
+project_dir=$(realpath "$script_dir/..")
+nn_train_py="$project_dir/nn_train.py"
+dnn_sync_train_py="$project_dir/dnn_sync_train.py"
+dnn_async_train_py="$project_dir/dnn_async_train.py"
+test_model_py="$project_dir/test_model.py"
+subfolder="$project_dir/Speed_results"
+
 
 include_model_sgd=false # include classic sgd to compare with sync and async
 include_classification_report=false # include labels classification report
