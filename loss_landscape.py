@@ -9,7 +9,6 @@ import plotly.graph_objs as go
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_BORDER = 5
 DEFAULT_GRID_SIZE = 15
 DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
@@ -40,7 +39,7 @@ def main(
     model_path,
     subfolder,
     grid_size,
-    grid_border,
+    grid_border=None,
 ):
     loader = create_testloader(model_path, batch_size)
     if "alt_model" in model_path:
@@ -57,24 +56,30 @@ def main(
 
     pca = PCA(n_components=2)
     reduced_weights = pca.fit_transform(weights_matrix_np)
-
-    max_abs_reduced_weight = np.max(np.abs(reduced_weights))
+    print(reduced_weights.shape)
+    max_reduced_weight = np.max(reduced_weights, axis = 0)
+    min_reduced_weight = np.min(reduced_weights, axis = 0)
     print(
-        f"Norm of largest weights in the PCA space: {max_abs_reduced_weight}, grid border is: {grid_border}"
+        f"Norm of largest weights in the PCA space: {max_reduced_weight, min_reduced_weight}"
     )
-    # Check if the grid is too small
-    if max_abs_reduced_weight > grid_border:
-        print(
-            f"Warning: The grid might be too small. The maximum absolute value of the reduced weights ({max_abs_reduced_weight}) is outside the grid border ({grid_border})."
-        )
+    grid_center = np.array([np.mean(max_reduced_weight), np.mean(min_reduced_weight)])
+    if grid_border is None:
+        grid_border = np.max(max_reduced_weight-min_reduced_weight)
+    
+    else:
+        # Check if the grid is too small
+        if np.max(max_reduced_weight-min_reduced_weight) > grid_border:
+            print(
+                f"Warning: The grid might be too small. The maximum absolute value of the reduced weights ({max_abs_reduced_weight}) is outside the grid border ({grid_border})."
+            )
 
-    # Check if the grid is too big
-    if np.abs(max_abs_reduced_weight - grid_border) > DEFAULT_GRID_WARNING:
-        print(
-            f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights ({max_abs_reduced_weight}) to the grid border ({grid_border}) is greater than 10."
-        )
+        # Check if the grid is too big
+        if np.abs(np.max(max_reduced_weight-min_reduced_weight) - grid_border) > DEFAULT_GRID_WARNING:
+            print(
+                f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights ({max_abs_reduced_weight}) to the grid border ({grid_border}) is greater than 10."
+            )
 
-    grid_range = np.linspace(-grid_border, grid_border, grid_size)
+    grid_range = np.linspace(-grid_border+grid_center[0], grid_border+grid_center[1], grid_size)
     xx, yy = np.meshgrid(grid_range, grid_range)
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
@@ -198,7 +203,7 @@ if __name__ == "__main__":
         "--grid_border",
         type=int,
         default=None,
-        help="""The grid will be created between [-grid_border, grid_border]x[-grid_border, grid_border].""",
+        help="""The grid will be created between [-grid_border+center, grid_border+center]x[-grid_border+center, grid_border+center].""",
     )
     parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(
@@ -227,10 +232,7 @@ if __name__ == "__main__":
         print("Forbidden value !!! grid_size must be > 1")
         exit()
 
-    if args.grid_border is None:
-        args.grid_border = DEFAULT_GRID_BORDER
-        print(f"Using default grid_border: {DEFAULT_GRID_BORDER}")
-    elif args.grid_border <= 0:
+    if not(args.grid_border is None) and args.grid_border <= 0:
         print("Forbidden value !!! grid_border must be > 0")
         exit()
 
