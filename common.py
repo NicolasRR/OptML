@@ -42,10 +42,12 @@ DEFAULT_ALTERNATE_MODELS = False
 #################################### Start and Run ####################################
 def start(args, mode, run_parameter_server):
     if mode == "sync":
-        log_name = "log_sync.log"
-    elif mode == "async":
-        log_name = "log_async.log"
-
+        base_name = get_base_name(mode, args.dataset, args.world_size, args.train_split, args.lr, args.momentum, args.batch_size, args.epochs, args.val, alt_model=args.alt_model, split_dataset=args.split_dataset, split_labels=args.split_labels, delay= args.delay, slow_worker_1= args.slow_worker_1, delay_intensity= args.delay_intensity, delay_type= args.delay_type)
+    if mode == "async":
+        base_name = get_base_name(mode, args.dataset, args.world_size, args.train_split, args.lr, args.momentum, args.batch_size, args.epochs, args.val, alt_model=args.alt_model, split_dataset=args.split_dataset, split_labels=args.split_labels, split_labels_unscaled= args.split_labels_unscaled, delay= args.delay, slow_worker_1= args.slow_worker_1, delay_intensity= args.delay_intensity, delay_type= args.delay_type)
+    
+    log_name = f"{base_name}_log.log"
+        
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(
@@ -199,6 +201,10 @@ def check_args(args, mode):
     if args.dataset is None:
         args.dataset = DEFAULT_DATASET
         print(f"Using default dataset: {DEFAULT_DATASET}")
+
+    if args.batch_size is None:
+        args.batch_size = DEFAULT_BATCH_SIZE
+        print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
 
     if mode is not None:
         if args.world_size is None:
@@ -662,17 +668,15 @@ def get_suffix(val, alt_model, split_dataset, split_labels, split_labels_unscale
     return suffix
 
 
-def _save_model(
+def get_base_name(
     mode,
     dataset_name,
-    model,
-    len_workers,
+    world_size,
     train_split,
     learning_rate,
     momentum,
     batch_size,
     epochs,
-    subfolder,
     val,
     alt_model=False,
     split_dataset=False,
@@ -686,7 +690,18 @@ def _save_model(
     
     suffix = get_suffix(val, alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type)
 
-    filename = f"{dataset_name}_{mode}_{len_workers+1}_{str(float(train_split)*10).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.pt"
+    base_name = f"{dataset_name}_{mode}_{world_size}_{str(float(train_split)*10).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}"
+
+    return base_name
+
+
+def _save_model(
+    base_name,
+    subfolder,
+    model,
+):
+    
+    filename = base_name + "_model.pt"
 
     if len(subfolder) > 0:
         filepath = os.path.join(subfolder, filename)
@@ -698,27 +713,12 @@ def _save_model(
 
 
 def save_weights(
-    weights_matrix,
-    mode,
-    dataset_name,
-    train_split,
-    learning_rate,
-    momentum,
-    batch_size,
-    epochs,
+    base_name,
     subfolder,
-    val,
-    alt_model=False,
-    split_dataset=False,
-    split_labels=False,
-    split_labels_unscaled=False,
-    delay=False,
-    slow_worker_1=False,
-    delay_intensity=None,
-    delay_type=None,
+    weights_matrix,
 ):
     
-    suffix = get_suffix(val, alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type)
+    filename = base_name + "_weights.npy"
 
     flat_weights = [
         np.hstack([w.flatten() for w in epoch_weights])
@@ -726,7 +726,6 @@ def save_weights(
     ]
     weights_matrix_np = np.vstack(flat_weights)
 
-    filename = f"{dataset_name}_{mode}_weights_{str(train_split).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}.npy"
     if len(subfolder) > 0:
         filepath = os.path.join(subfolder, filename)
     else:
@@ -987,10 +986,7 @@ def get_shuffled_indices(dataset_length, train_split):
 
 
 def get_batch_size(batch_size, train_length):
-    if batch_size is None:
-        batch_size = DEFAULT_BATCH_SIZE
-        print(f"Using default batch_size: {DEFAULT_BATCH_SIZE}")
-    elif batch_size < 1 or batch_size > train_length:
+    if batch_size < 1 or batch_size > train_length:
         print("Forbidden value !!! batch_size must be between [1,len(train set)]")
         exit()
 
@@ -1667,17 +1663,19 @@ def create_trainloader(model_path, batch_size):
 
 
 #################################### LOGGER ####################################
-def setup_simple_logger(subfolder):
+def setup_simple_logger(subfolder, base_name):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
+
+    log_filename = f"{base_name}_log.log"
 
     # create file handler which logs even debug messages
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
-        fh = logging.FileHandler(os.path.join(subfolder, "log.log"), mode="w")
+        fh = logging.FileHandler(os.path.join(subfolder, log_filename), mode="w")
     else:
-        fh = logging.FileHandler("log.log", mode="w")
+        fh = logging.FileHandler(log_filename, mode="w")
     fh.setLevel(logging.DEBUG)
     # create console handler with a higher log level
     ch = logging.StreamHandler()

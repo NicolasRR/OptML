@@ -82,7 +82,6 @@ def format_timedelta(x, _):
 def save_fig(fig, subfolder, model_path, validation=False):
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
-
     if validation == False:
         save_name = f"{model_basename}_training_plots.png"
         if len(subfolder) > 0:
@@ -107,32 +106,23 @@ def save_fig(fig, subfolder, model_path, validation=False):
             print(f"Saved fig at {save_name}")
 
 
-def compute_training_time_and_pics(model_path, pics, subfolder):
-    lines = []
-    model_type = None
-    log_file_name = None
+def compute_training_time_and_pics(model_path, log_path, pics, subfolder):
+
     if "classic" in model_path:
         model_type = "Classic"
-        log_file_name = "log.log"
     elif "async" in model_path:
         model_type = "Asynchronous"
-        log_file_name = "log_async.log"
     elif "sync" in model_path:
         model_type = "Synchronous"
-        log_file_name = "log_sync.log"
     else:
         print("Unrecognized model path")
         exit()
 
-    if len(subfolder) > 0:
-        with open(os.path.join(subfolder, log_file_name), "r") as log_file:
-            # Iterate through each line in the log file
-            for line in log_file:
-                lines.append(line.split(" - common - "))
-    else:
-        with open(log_file_name, "r") as log_file:
-            for line in log_file:
-                lines.append(line.split(" - common - "))
+    lines = []
+
+    with open(log_path, "r") as log_file:
+        for line in log_file:
+            lines.append(line.split(" - common - "))
 
     for i, line in enumerate(lines):
         timestamp = datetime.strptime(line[0], "%Y-%m-%d %H:%M:%S,%f")
@@ -417,6 +407,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
 
 def main(
     model_path,
+    log_path,
     batch_size,
     classification_report,
     training_time,
@@ -438,10 +429,10 @@ def main(
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
             output_file_path = os.path.join(
-                subfolder, f"{model_basename}_test_output.txt"
+                subfolder, f"{model_basename}_test_performance.txt"
             )
     else:
-        output_file_path = f"{model_basename}_test_output.txt"
+        output_file_path = f"{model_basename}_test_performance.txt"
 
     print(f"Saving to outputs to {output_file_path}")
 
@@ -449,7 +440,7 @@ def main(
         with redirect_stdout_to_file(output_file):
             print(f"Testing performance of {model_path}")
             if training_time:
-                compute_training_time_and_pics(model_path, pics, subfolder)
+                compute_training_time_and_pics(model_path, log_path, pics, subfolder)
             performance(
                 model_path, model, batch_size, classification_report, test=False
             )
@@ -466,9 +457,8 @@ if __name__ == "__main__":
         default=None,
         help="""Batch size of Mini batch SGD [1,len(train set)].""",
     )
-    parser.add_argument(
-        "model_path", type=argparse.FileType("r"), help="""Path of the trained model."""
-    )
+    parser.add_argument("model_path", type=str, help="""Path of the model.""")
+    parser.add_argument("log_path", type=str, help="""Path of the log file.""")
     parser.add_argument(
         "--classification_report",
         action="store_true",
@@ -507,8 +497,10 @@ if __name__ == "__main__":
     if len(args.subfolder) > 0:
         print(f"Outputs will be saved to {args.subfolder}/")
 
+
     main(
-        args.model_path.name,
+        args.model_path,
+        args.log_path,
         args.batch_size,
         args.classification_report,
         args.training_time,
