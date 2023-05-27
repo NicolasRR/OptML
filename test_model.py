@@ -427,7 +427,7 @@ def main(
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
-            output_file_path = os.path.join(
+        output_file_path = os.path.join(
                 subfolder, f"{model_basename}_test_performance.txt"
             )
     else:
