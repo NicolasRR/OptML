@@ -361,10 +361,7 @@ def check_args(args, mode):
         np.random.seed(DEFAULT_SEED)
 
     if len(args.subfolder) > 0:
-        if mode is not None:
-            print(f"Saving model and log_{mode}.log to {args.subfolder}")
-        else:
-            print(f"Saving model and log.log to {args.subfolder}")
+        print(f"Saving model and log file to {args.subfolder}")
 
     if args.alr:
         print("Using Adam as optimizer instead of SGD")
