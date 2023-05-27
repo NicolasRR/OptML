@@ -23,7 +23,7 @@ Use Windows Subsystem for Linux (WSL). To install WSL take the following steps:
 - In bash run (**disable firewall** if needed):
   - `sudo apt update`
   - `sudo apt upgrade`
-  - `sudo apt install python3-pip dos2unix`
+  - `sudo apt install python3-pip dos2unix bc`
   - `pip3 install torch torchvision torchaudio tqdm --index-url https://download.pytorch.org/whl/cpu`
   - `pip3 install matplotlib scikit-learn papermill plotly`
 
