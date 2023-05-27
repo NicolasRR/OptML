@@ -52,7 +52,7 @@ def start(args, mode, run_parameter_server):
             args.batch_size,
             args.epochs,
             args.val,
-            args.use_alr,
+            args.alr,
             args.lrs,
             args.saves_per_epoch,
             alt_model=args.alt_model,
