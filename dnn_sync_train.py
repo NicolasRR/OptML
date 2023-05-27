@@ -10,6 +10,7 @@ from common import (
     get_optimizer,
     get_scheduler,
     compute_accuracy_loss,
+    get_base_name,
     _save_model,
     save_weights,
     compute_weights_l2_norm,
@@ -335,6 +336,10 @@ def run_parameter_server_sync(
         )
     else:
         train_loader = train_loaders
+        if split_dataset or split_labels:
+            len_train_loader = len(train_loader[0])
+        else:
+            len_train_loader = len(train_loader)
         ps_rref = rpc.RRef(
             ParameterServer_sync(
                 len(workers),
@@ -343,7 +348,7 @@ def run_parameter_server_sync(
                 learning_rate,
                 momentum,
                 use_alr,
-                len(train_loader),
+                len_train_loader,
                 epochs,
                 lrs,
                 saves_per_epoch,
@@ -374,6 +379,7 @@ def run_parameter_server_sync(
             )
 
     else:
+        
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -409,47 +415,20 @@ def run_parameter_server_sync(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
         )
 
+    base_name = get_base_name("sync", dataset_name, len(workers)+1, train_split, learning_rate, momentum, batch_size, epochs, val, alt_model=alt_model, split_dataset= split_dataset, split_labels= split_labels, delay= delay, slow_worker_1= slow_worker_1, delay_intensity= delay_intensity, delay_type= delay_type)
+
     if save_model:
         _save_model(
-            "sync",
-            dataset_name,
-            ps_rref.to_here().model,
-            len(workers),
-            train_split,
-            learning_rate,
-            momentum,
-            batch_size,
-            epochs,
+            base_name,
             subfolder,
-            val,
-            alt_model=alt_model,
-            split_dataset=split_dataset,
-            split_labels=split_labels,
-            delay_intensity=delay_intensity,
-            delay_type=delay_type,
-            delay=delay,
-            slow_worker_1=slow_worker_1,
+            ps_rref.to_here().model,
         )
 
     if saves_per_epoch is not None:
         save_weights(
-            ps_rref.to_here().weights_matrix,
-            "sync",
-            dataset_name,
-            train_split,
-            learning_rate,
-            momentum,
-            batch_size,
-            epochs,
+            base_name,
             subfolder,
-            val,
-            alt_model=alt_model,
-            split_dataset=split_dataset,
-            split_labels=split_labels,
-            delay_intensity=delay_intensity,
-            delay_type=delay_type,
-            delay=delay,
-            slow_worker_1=slow_worker_1,
+            ps_rref.to_here().weights_matrix,
         )
 
 

@@ -82,7 +82,6 @@ def format_timedelta(x, _):
 def save_fig(fig, subfolder, model_path, validation=False):
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
-
     if validation == False:
         save_name = f"{model_basename}_training_plots.png"
         if len(subfolder) > 0:
@@ -107,32 +106,23 @@ def save_fig(fig, subfolder, model_path, validation=False):
             print(f"Saved fig at {save_name}")
 
 
-def compute_training_time_and_pics(model_path, pics, subfolder):
-    lines = []
-    model_type = None
-    log_file_name = None
+def compute_training_time_and_pics(model_path, log_path, pics, subfolder):
+
     if "classic" in model_path:
         model_type = "Classic"
-        log_file_name = "log.log"
     elif "async" in model_path:
         model_type = "Asynchronous"
-        log_file_name = "log_async.log"
     elif "sync" in model_path:
         model_type = "Synchronous"
-        log_file_name = "log_sync.log"
     else:
         print("Unrecognized model path")
         exit()
 
-    if len(subfolder) > 0:
-        with open(os.path.join(subfolder, log_file_name), "r") as log_file:
-            # Iterate through each line in the log file
-            for line in log_file:
-                lines.append(line.split(" - common - "))
-    else:
-        with open(log_file_name, "r") as log_file:
-            for line in log_file:
-                lines.append(line.split(" - common - "))
+    lines = []
+
+    with open(log_path, "r") as log_file:
+        for line in log_file:
+            lines.append(line.split(" - common - "))
 
     for i, line in enumerate(lines):
         timestamp = datetime.strptime(line[0], "%Y-%m-%d %H:%M:%S,%f")
@@ -186,7 +176,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             # First subplot (Model Loss vs Time)
             timedeltas = [line[0].total_seconds() for line in model_update_lines]
             losses = [line[1] for line in model_update_lines]
-            axs[0].plot(timedeltas, losses, marker="x")
+            axs[0].plot(timedeltas, losses)
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Model Loss")
             axs[0].set_title(
@@ -197,7 +187,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[0].xaxis.set_major_formatter(formatter)
             # Second subplot (Weights L2 norm vs Time)
             weights_norm = [line[2] for line in model_update_lines]
-            axs[1].plot(timedeltas, weights_norm, marker="x")
+            axs[1].plot(timedeltas, weights_norm)
             axs[1].set_xlabel("Time (MM:SS:sss)")
             axs[1].set_ylabel("Weights L2 norm")
             axs[1].set_title(
@@ -206,7 +196,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[1].xaxis.set_major_formatter(formatter)
             # Thirst subplot (Cumulative Batch Update Count vs Time)
             batches = [line[3] for line in model_update_lines]
-            axs[2].plot(timedeltas, batches, marker="x")
+            axs[2].plot(timedeltas, batches)
             axs[2].set_xlabel("Time (MM:SS:sss)")
             axs[2].set_ylabel("Cumulative Batch Update Count")
             axs[2].set_title("Classic SGD computation speed")
@@ -245,7 +235,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             # First subplot (Model Loss vs Time)
             timedeltas = [line[0].total_seconds() for line in model_loss_lines]
             losses = [line[1] for line in model_loss_lines]
-            axs[0].plot(timedeltas, losses, marker="x")
+            axs[0].plot(timedeltas, losses)
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Model Loss")
             axs[0].set_title(
@@ -255,7 +245,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             axs[0].xaxis.set_major_formatter(formatter)
             # Second subplot (Weights L2 norm vs Time)
             weights_norm = [line[2] for line in model_loss_lines]
-            axs[1].plot(timedeltas, weights_norm, marker="x")
+            axs[1].plot(timedeltas, weights_norm)
             axs[1].set_xlabel("Time (MM:SS:sss)")
             axs[1].set_ylabel("Weights L2 norm")
             axs[1].set_title(
@@ -273,7 +263,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, updates in worker_cumulative_updates.items():
                 x = [td.total_seconds() for td, _ in updates]
                 y = [batch_count for _, batch_count in updates]
-                axs[2].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[2].plot(x, y, label=f"Worker {worker_id}")
             axs[2].set_xlabel("Time (MM:SS:sss)")
             axs[2].set_ylabel("Cumulative Batch Update Count")
             axs[2].set_title("Synchronous SGD workers speed comparison")
@@ -309,7 +299,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, losses in worker_losses.items():
                 x = [td.total_seconds() for td, _ in losses]
                 y = [worker_loss for _, worker_loss in losses]
-                axs[0].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[0].plot(x, y, label=f"Worker {worker_id}")
             axs[0].set_xlabel("Time (MM:SS:sss)")
             axs[0].set_ylabel("Worker Loss")
             axs[0].set_title(
@@ -326,7 +316,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, weight_norm in weights_norms.items():
                 x = [td.total_seconds() for td, _ in weight_norm]
                 y = [w_norm for _, w_norm in weight_norm]
-                axs[1].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[1].plot(x, y, label=f"Worker {worker_id}")
             axs[1].set_xlabel("Time (MM:SS:sss)")
             axs[1].set_ylabel("Weights L2 norm")
             axs[1].set_title(
@@ -343,7 +333,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
             for worker_id, updates in worker_cumulative_updates.items():
                 x = [td.total_seconds() for td in updates]
                 y = list(range(1, len(updates) + 1))
-                axs[2].plot(x, y, label=f"Worker {worker_id}", marker="x")
+                axs[2].plot(x, y, label=f"Worker {worker_id}")
             axs[2].set_xlabel("Time (MM:SS:sss)")
             axs[2].set_ylabel("Cumulative Batch Update Count")
             axs[2].set_title("Asynchronous SGD workers speed comparison")
@@ -417,6 +407,7 @@ def compute_training_time_and_pics(model_path, pics, subfolder):
 
 def main(
     model_path,
+    log_path,
     batch_size,
     classification_report,
     training_time,
@@ -438,10 +429,10 @@ def main(
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
             output_file_path = os.path.join(
-                subfolder, f"{model_basename}_test_output.txt"
+                subfolder, f"{model_basename}_test_performance.txt"
             )
     else:
-        output_file_path = f"{model_basename}_test_output.txt"
+        output_file_path = f"{model_basename}_test_performance.txt"
 
     print(f"Saving to outputs to {output_file_path}")
 
@@ -449,7 +440,7 @@ def main(
         with redirect_stdout_to_file(output_file):
             print(f"Testing performance of {model_path}")
             if training_time:
-                compute_training_time_and_pics(model_path, pics, subfolder)
+                compute_training_time_and_pics(model_path, log_path, pics, subfolder)
             performance(
                 model_path, model, batch_size, classification_report, test=False
             )
@@ -466,9 +457,8 @@ if __name__ == "__main__":
         default=None,
         help="""Batch size of Mini batch SGD [1,len(train set)].""",
     )
-    parser.add_argument(
-        "model_path", type=argparse.FileType("r"), help="""Path of the trained model."""
-    )
+    parser.add_argument("model_path", type=str, help="""Path of the model.""")
+    parser.add_argument("log_path", type=str, help="""Path of the log file.""")
     parser.add_argument(
         "--classification_report",
         action="store_true",
@@ -507,8 +497,10 @@ if __name__ == "__main__":
     if len(args.subfolder) > 0:
         print(f"Outputs will be saved to {args.subfolder}/")
 
+
     main(
-        args.model_path.name,
+        args.model_path,
+        args.log_path,
         args.batch_size,
         args.classification_report,
         args.training_time,
