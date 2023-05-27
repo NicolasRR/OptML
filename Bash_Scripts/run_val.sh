@@ -38,7 +38,8 @@ formatted_lr=$(echo $lr | tr -d '.')
 formatted_momentum=$(echo $momentum | tr -d '.')
 
 
-model_classic="${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epochs}.pt"
+model_name="${subfolder}/${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epochs}_SGD_spe3_val_model.pt"
+log_name="${subfolder}/${dataset}_classic_0_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epochs}_SGD_spe3_val_log.log"
 
 python3 $nn_train_py --train_split $train_split --epochs $epochs --dataset $dataset --lr $lr --momentum $momentum --batch_size $batch_size --seed --val --saves_per_epoch 3 --subfolder $subfolder
 sleep 0.1
@@ -46,7 +47,7 @@ echo
 
 if $notebook; then 
     papermill_command="papermill Compare_and_Plot.ipynb Compare_and_Plot_out.ipynb"
-    papermill_command+=" -p model_classic $model_classic"
+    papermill_command+=" -p model_classic $model_name -p log_classic $log_name"
     if $include_classification_report; then
         papermill_command+=" -p include_classification_report $include_classification_report"
     fi
@@ -58,12 +59,7 @@ else
     if $include_classification_report; then
         test_model_flags+=" --classification_report"
     fi
-    python3 test_model.py $model_classic $test_model_flags
+    python3 $test_model_py $model_name $log_name $test_model_flags
     sleep 0.1
     echo
-    if $include_model_sgd; then
-        python3 test_model.py $model_sync $test_model_flags
-        sleep 0.1
-        echo
-    fi
 fi
