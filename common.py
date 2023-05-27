@@ -691,8 +691,19 @@ def get_suffix(
     slow_worker_1,
     delay_intensity,
     delay_type,
+    use_alr,
+    lrs,
+    saves_per_epoch,
 ):
     suffix = ""
+    if use_alr:
+        suffix += f"_ADAM"
+    else:
+        suffix += f"_SGD"
+    if lrs is not None:
+        suffix += f"_{lrs}"
+    if saves_per_epoch is not None:
+        suffix += f"_spe{saves_per_epoch}"
     if val:
         suffix += "_val"
     if alt_model:
@@ -711,6 +722,8 @@ def get_suffix(
         suffix += f"_{delay_intensity}"
     if delay_type is not None:
         suffix += f"_{delay_type}"
+    
+        
     return suffix
 
 
@@ -724,6 +737,9 @@ def get_base_name(
     batch_size,
     epochs,
     val,
+    use_alr,
+    lrs,
+    saves_per_epoch,
     alt_model=False,
     split_dataset=False,
     split_labels=False,
@@ -743,6 +759,9 @@ def get_base_name(
         slow_worker_1,
         delay_intensity,
         delay_type,
+        use_alr,
+        lrs,
+        saves_per_epoch,
     )
 
     base_name = f"{dataset_name}_{mode}_{world_size}_{str(float(train_split)*10).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}"
