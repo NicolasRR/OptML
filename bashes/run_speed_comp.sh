@@ -13,8 +13,9 @@ epochs=6 # from !summary_kfold_.txt
 lr=0.005
 momentum=0.9
 batch_size=32
-world_size_1=4 # 3 workers
-world_size_2=7 # 6 workers
+world_size_1=3 # 2 workers
+world_size_2=6 # 5 workers
+world_size_2=11 # 10 workers
 train_split=1
 
 # Parse command-line arguments using flags
@@ -49,9 +50,10 @@ mode3="--split_labels"
 for file in $dnn_sync_train_py $dnn_async_train_py; do
   for mode in $mode1 $mode2 $mode3;do
     for world_size in $world_size_1 $world_size_2; do
+      echo $file $mode $world_size
       python3 $file --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split $mode
       sleep 0.1
-      echo
+      echo 
 done
 done
 done
