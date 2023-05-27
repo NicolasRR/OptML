@@ -52,6 +52,9 @@ def start(args, mode, run_parameter_server):
             args.batch_size,
             args.epochs,
             args.val,
+            args.alr,
+            args.lrs,
+            args.saves_per_epoch,
             alt_model=args.alt_model,
             split_dataset=args.split_dataset,
             split_labels=args.split_labels,
@@ -361,10 +364,7 @@ def check_args(args, mode):
         np.random.seed(DEFAULT_SEED)
 
     if len(args.subfolder) > 0:
-        if mode is not None:
-            print(f"Saving model and log_{mode}.log to {args.subfolder}")
-        else:
-            print(f"Saving model and log.log to {args.subfolder}")
+        print(f"Saving model and log file to {args.subfolder}")
 
     if args.alr:
         print("Using Adam as optimizer instead of SGD")
@@ -694,8 +694,19 @@ def get_suffix(
     slow_worker_1,
     delay_intensity,
     delay_type,
+    use_alr,
+    lrs,
+    saves_per_epoch,
 ):
     suffix = ""
+    if use_alr:
+        suffix += f"_ADAM"
+    else:
+        suffix += f"_SGD"
+    if lrs is not None:
+        suffix += f"_{lrs}"
+    if saves_per_epoch is not None:
+        suffix += f"_spe{saves_per_epoch}"
     if val:
         suffix += "_val"
     if alt_model:
@@ -714,6 +725,8 @@ def get_suffix(
         suffix += f"_{delay_intensity}"
     if delay_type is not None:
         suffix += f"_{delay_type}"
+    
+        
     return suffix
 
 
@@ -727,6 +740,9 @@ def get_base_name(
     batch_size,
     epochs,
     val,
+    use_alr,
+    lrs,
+    saves_per_epoch,
     alt_model=False,
     split_dataset=False,
     split_labels=False,
@@ -746,6 +762,9 @@ def get_base_name(
         slow_worker_1,
         delay_intensity,
         delay_type,
+        use_alr,
+        lrs,
+        saves_per_epoch,
     )
 
     base_name = f"{dataset_name}_{mode}_{world_size}_{str(float(train_split)*10).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}"

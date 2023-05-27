@@ -68,6 +68,9 @@ def run(
         batch_size,
         epochs,
         val,
+        use_alr,
+        lrs,
+        saves_per_epoch,
         alt_model=alt_model,
     )
 
