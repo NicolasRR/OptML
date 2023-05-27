@@ -107,7 +107,6 @@ def save_fig(fig, subfolder, model_path, validation=False):
 
 
 def compute_training_time_and_pics(model_path, log_path, pics, subfolder):
-
     if "classic" in model_path:
         model_type = "Classic"
     elif "async" in model_path:
@@ -496,7 +495,6 @@ if __name__ == "__main__":
 
     if len(args.subfolder) > 0:
         print(f"Outputs will be saved to {args.subfolder}/")
-
 
     main(
         args.model_path,

@@ -172,7 +172,7 @@ class Worker_sync(object):
         self.worker_accuracy = worker_accuracy
         self.delay = delay
         self.delay_intensity = delay_intensity
-        self.delay_type= delay_type
+        self.delay_type = delay_type
         self.slow_worker_1 = slow_worker_1
         self.dataset_name = dataset_name
         self.logger.debug(
@@ -210,9 +210,15 @@ class Worker_sync(object):
             self.batch_count += 1
 
             if self.worker_name == "Worker_1" and self.slow_worker_1:
-                _delay(intensity=self.delay_intensity, _type= self.delay_type, worker_1= True)
+                _delay(
+                    intensity=self.delay_intensity, _type=self.delay_type, worker_1=True
+                )
             elif self.delay:
-                _delay(intensity=self.delay_intensity, _type= self.delay_type, worker_1= False)
+                _delay(
+                    intensity=self.delay_intensity,
+                    _type=self.delay_type,
+                    worker_1=False,
+                )
 
             worker_model = rpc.rpc_sync(
                 self.ps_rref.owner(),
@@ -379,7 +385,6 @@ def run_parameter_server_sync(
             )
 
     else:
-        
         for idx, worker in enumerate(workers):
             futs.append(
                 rpc.rpc_async(
@@ -415,7 +420,24 @@ def run_parameter_server_sync(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
         )
 
-    base_name = get_base_name("sync", dataset_name, len(workers)+1, train_split, learning_rate, momentum, batch_size, epochs, val, alt_model=alt_model, split_dataset= split_dataset, split_labels= split_labels, delay= delay, slow_worker_1= slow_worker_1, delay_intensity= delay_intensity, delay_type= delay_type)
+    base_name = get_base_name(
+        "sync",
+        dataset_name,
+        len(workers) + 1,
+        train_split,
+        learning_rate,
+        momentum,
+        batch_size,
+        epochs,
+        val,
+        alt_model=alt_model,
+        split_dataset=split_dataset,
+        split_labels=split_labels,
+        delay=delay,
+        slow_worker_1=slow_worker_1,
+        delay_intensity=delay_intensity,
+        delay_type=delay_type,
+    )
 
     if save_model:
         _save_model(

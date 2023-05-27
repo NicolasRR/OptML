@@ -42,12 +42,47 @@ DEFAULT_ALTERNATE_MODELS = False
 #################################### Start and Run ####################################
 def start(args, mode, run_parameter_server):
     if mode == "sync":
-        base_name = get_base_name(mode, args.dataset, args.world_size, args.train_split, args.lr, args.momentum, args.batch_size, args.epochs, args.val, alt_model=args.alt_model, split_dataset=args.split_dataset, split_labels=args.split_labels, delay= args.delay, slow_worker_1= args.slow_worker_1, delay_intensity= args.delay_intensity, delay_type= args.delay_type)
+        base_name = get_base_name(
+            mode,
+            args.dataset,
+            args.world_size,
+            args.train_split,
+            args.lr,
+            args.momentum,
+            args.batch_size,
+            args.epochs,
+            args.val,
+            alt_model=args.alt_model,
+            split_dataset=args.split_dataset,
+            split_labels=args.split_labels,
+            delay=args.delay,
+            slow_worker_1=args.slow_worker_1,
+            delay_intensity=args.delay_intensity,
+            delay_type=args.delay_type,
+        )
     if mode == "async":
-        base_name = get_base_name(mode, args.dataset, args.world_size, args.train_split, args.lr, args.momentum, args.batch_size, args.epochs, args.val, alt_model=args.alt_model, split_dataset=args.split_dataset, split_labels=args.split_labels, split_labels_unscaled= args.split_labels_unscaled, delay= args.delay, slow_worker_1= args.slow_worker_1, delay_intensity= args.delay_intensity, delay_type= args.delay_type)
-    
+        base_name = get_base_name(
+            mode,
+            args.dataset,
+            args.world_size,
+            args.train_split,
+            args.lr,
+            args.momentum,
+            args.batch_size,
+            args.epochs,
+            args.val,
+            alt_model=args.alt_model,
+            split_dataset=args.split_dataset,
+            split_labels=args.split_labels,
+            split_labels_unscaled=args.split_labels_unscaled,
+            delay=args.delay,
+            slow_worker_1=args.slow_worker_1,
+            delay_intensity=args.delay_intensity,
+            delay_type=args.delay_type,
+        )
+
     log_name = f"{base_name}_log.log"
-        
+
     with Manager() as manager:
         log_queue = manager.Queue()
         log_writer_thread = threading.Thread(
@@ -231,11 +266,15 @@ def check_args(args, mode):
                 )
                 exit()
 
-            if args.delay_intensity is not None and (not args.delay and not args.slow_worker_1):
+            if args.delay_intensity is not None and (
+                not args.delay and not args.slow_worker_1
+            ):
                 print("Please use --delay_intensity with --delay or --slow_worker_1")
                 exit()
 
-            if args.delay_type is not None and (not args.delay and not args.slow_worker_1):
+            if args.delay_type is not None and (
+                not args.delay and not args.slow_worker_1
+            ):
                 print("Please use --delay_type with --delay or --slow_worker_1")
                 exit()
 
@@ -645,7 +684,17 @@ def compute_accuracy_loss(
         return average_accuracy, correct_predictions, total_predictions
 
 
-def get_suffix(val, alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type):
+def get_suffix(
+    val,
+    alt_model,
+    split_dataset,
+    split_labels,
+    split_labels_unscaled,
+    delay,
+    slow_worker_1,
+    delay_intensity,
+    delay_type,
+):
     suffix = ""
     if val:
         suffix += "_val"
@@ -687,8 +736,17 @@ def get_base_name(
     delay_intensity=None,
     delay_type=None,
 ):
-    
-    suffix = get_suffix(val, alt_model, split_dataset, split_labels, split_labels_unscaled, delay, slow_worker_1, delay_intensity, delay_type)
+    suffix = get_suffix(
+        val,
+        alt_model,
+        split_dataset,
+        split_labels,
+        split_labels_unscaled,
+        delay,
+        slow_worker_1,
+        delay_intensity,
+        delay_type,
+    )
 
     base_name = f"{dataset_name}_{mode}_{world_size}_{str(float(train_split)*10).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}"
 
@@ -700,7 +758,6 @@ def _save_model(
     subfolder,
     model,
 ):
-    
     filename = base_name + "_model.pt"
 
     if len(subfolder) > 0:
@@ -717,7 +774,6 @@ def save_weights(
     subfolder,
     weights_matrix,
 ):
-    
     filename = base_name + "_weights.npy"
 
     flat_weights = [
@@ -744,7 +800,7 @@ def compute_weights_l2_norm(model):
     return total_norm
 
 
-def _delay(intensity= DEFAULT_DELAY_INTENSITY, _type= DEFAULT_DELAY_TYPE, worker_1=False):
+def _delay(intensity=DEFAULT_DELAY_INTENSITY, _type=DEFAULT_DELAY_TYPE, worker_1=False):
     delay_mean, delay_std = DELAY_VALUES[intensity]
     if worker_1:
         delay_mean *= DELAY_WORKER_1_FACTOR

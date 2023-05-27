@@ -58,7 +58,18 @@ def run(
 
     scheduler = get_scheduler(lrs, optimizer, len(train_loader), epochs)
 
-    base_name = get_base_name("classic", dataset_name, 0, train_split, learning_rate, momentum, batch_size, epochs, val, alt_model=alt_model)
+    base_name = get_base_name(
+        "classic",
+        dataset_name,
+        0,
+        train_split,
+        learning_rate,
+        momentum,
+        batch_size,
+        epochs,
+        val,
+        alt_model=alt_model,
+    )
 
     logger = setup_simple_logger(subfolder, base_name)
     logger.info("Start non distributed SGD training")
