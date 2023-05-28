@@ -1,5 +1,6 @@
 import argparse
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import normalize
 import plotly.io as pio
 import plotly.graph_objs as go
 import numpy as np
@@ -8,29 +9,23 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_BORDER = 5
-DEFAULT_GRID_SIZE = 15
+DEFAULT_GRID_SIZE = 25
 DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
 
 
-def set_weights(model, flat_weights):
+def set_weights(model, weights):
+    weight_dict = {}
     idx = 0
-    state_dict = model.state_dict()
+    for key, param in model.state_dict().items():
+        size = np.prod(param.shape)
+        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
+            param.shape
+        )
+        idx += size
 
-    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    assert total_params == len(
-        flat_weights
-    ), f"Number of model parameters ({total_params}) doesn't match length of weights array ({len(flat_weights)})"
-
-    for key, param in state_dict.items():
-        if param.requires_grad:
-            param_size = torch.prod(torch.tensor(param.shape)).item()
-            param_flat = flat_weights[idx : idx + param_size]
-            state_dict[key] = param_flat.view(param.shape)
-            idx += param_size
-
-    model.load_state_dict(state_dict)
+    model.load_state_dict(weight_dict)
+    return model
 
 
 def main(
@@ -39,7 +34,7 @@ def main(
     model_path,
     subfolder,
     grid_size,
-    grid_border,
+    grid_border=None,
 ):
     loader = create_testloader(model_path, batch_size)
     if "alt_model" in model_path:
@@ -53,32 +48,44 @@ def main(
     weights_matrix_np = np.load(weights_path)
 
     print(f"Saved weights shape: {weights_matrix_np.shape}")
+    for i in range(weights_matrix_np.shape[0]):  # Loop over each row (epoch)
+        norm = np.linalg.norm(weights_matrix_np[i, :])
+        print(f"Norm of weights for epoch {i+1}: {norm}")
 
     pca = PCA(n_components=2)
-    reduced_weights = pca.fit_transform(weights_matrix_np)
+    reduced_weights = pca.fit_transform(weights_matrix_np) 
 
-    max_abs_reduced_weight = np.max(np.abs(reduced_weights))
+    print(f"PCA reduced weights shape: {reduced_weights.shape}")
+    max_reduced_weight = np.max(reduced_weights, axis = 0)
+    min_reduced_weight = np.min(reduced_weights, axis = 0)
     print(
-        f"Norm of largest weights in the PCA space: {max_abs_reduced_weight}, grid border is: {grid_border}"
+        f"Norm of largest weights in the PCA space: {max_reduced_weight, min_reduced_weight}"
     )
-    # Check if the grid is too small
-    if max_abs_reduced_weight > grid_border:
-        print(
-            f"Warning: The grid might be too small. The maximum absolute value of the reduced weights ({max_abs_reduced_weight}) is outside the grid border ({grid_border})."
-        )
+    grid_center = np.array([np.mean(max_reduced_weight), np.mean(min_reduced_weight)])
+    if grid_border is None:
+        grid_border = 5*np.max(max_reduced_weight-min_reduced_weight)
+    
+    else:
+        # Check if the grid is too small
+        if np.max(max_reduced_weight-min_reduced_weight) > grid_border:
+            print(
+                f"Warning: The grid might be too small. The maximum absolute value of the reduced weights is outside the grid border ({grid_border})."
+            )
 
-    # Check if the grid is too big
-    if np.abs(max_abs_reduced_weight - grid_border) > DEFAULT_GRID_WARNING:
-        print(
-            f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights ({max_abs_reduced_weight}) to the grid border ({grid_border}) is greater than 10."
-        )
+        # Check if the grid is too big
+        if np.abs(np.max(max_reduced_weight-min_reduced_weight) - grid_border) > DEFAULT_GRID_WARNING:
+            print(
+                f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights to the grid border ({grid_border}) is greater than 10."
+            )
 
-    grid_range = np.linspace(-grid_border, grid_border, grid_size)
+    grid_range = np.linspace(-grid_border+grid_center[0], grid_border+grid_center[1], grid_size)
     xx, yy = np.meshgrid(grid_range, grid_range)
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
+    #print(grid_points)
     grid_weights = pca.inverse_transform(grid_points)
-
+    """for gw in grid_weights:
+        print(np.linalg.norm(gw))"""
     grid_losses = []
 
     progress_bar = tqdm(
@@ -89,15 +96,27 @@ def main(
 
     with torch.no_grad():
         for weights in grid_weights:
-            weights_torch = torch.tensor(weights).float()
-            set_weights(model, weights_torch)
+            """print("Before setting weights:")
+            for name, param in model.named_parameters():
+                if param.requires_grad:
+                    print(f"{name} norm: {param.data.norm()}")"""
+
+
+            model = set_weights(model, weights)
+            
+            """print("\nAfter setting weights:")
+            for name, param in model.named_parameters():
+                if param.requires_grad:
+                    print(f"{name} norm: {param.data.norm()}")"""
 
             running_loss = 0.0
             for inputs, labels in loader:
                 outputs = model(inputs)
                 loss = LOSS_FUNC(outputs, labels)
+                #print(outputs.norm(), inputs.norm(), loss)
                 running_loss += loss.item() * inputs.size(0)
-
+                
+            #print(running_loss, running_loss / len(loader.dataset))
             grid_losses.append(running_loss / len(loader.dataset))
             progress_bar.update(1)
             progress_bar.set_postfix(grid_loss=grid_losses[-1])
@@ -105,7 +124,7 @@ def main(
     progress_bar.close()
 
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
-
+    #print(grid_losses)
     trajectory_loss_reevaluted = []
 
     progress_bar2 = tqdm(
@@ -116,8 +135,7 @@ def main(
 
     with torch.no_grad():
         for weights in weights_matrix_np:
-            weights_torch = torch.tensor(weights).float()
-            set_weights(model, weights_torch)
+            model = set_weights(model, weights)
 
             running_loss = 0.0
             for inputs, labels in loader:
@@ -197,7 +215,7 @@ if __name__ == "__main__":
         "--grid_border",
         type=int,
         default=None,
-        help="""The grid will be created between [-grid_border, grid_border]x[-grid_border, grid_border].""",
+        help="""The grid will be created between [-grid_border+center, grid_border+center]x[-grid_border+center, grid_border+center].""",
     )
     parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(
@@ -226,10 +244,7 @@ if __name__ == "__main__":
         print("Forbidden value !!! grid_size must be > 1")
         exit()
 
-    if args.grid_border is None:
-        args.grid_border = DEFAULT_GRID_BORDER
-        print(f"Using default grid_border: {DEFAULT_GRID_BORDER}")
-    elif args.grid_border <= 0:
+    if not(args.grid_border is None) and args.grid_border <= 0:
         print("Forbidden value !!! grid_border must be > 0")
         exit()
 
