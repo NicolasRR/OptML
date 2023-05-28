@@ -1,6 +1,5 @@
 import argparse
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import normalize # normalize
 import plotly.io as pio
 import plotly.graph_objs as go
 import numpy as np
@@ -50,9 +49,8 @@ def main(
 
     print(f"Saved weights shape: {weights_matrix_np.shape}")
 
-    pca = PCA(n_components=2) # reduced_weights = pca.fit_transform(weights_matrix_np)
-    pca = pca.fit(normalize(weights_matrix_np, axis=0)) # normalize
-    reduced_weights = pca.transform(weights_matrix_np) # normalize
+    pca = PCA(n_components=2) 
+    reduced_weights = pca.fit_transform(weights_matrix_np)
 
     max_abs_reduced_weight = np.max(np.abs(reduced_weights))
     print(
@@ -75,7 +73,6 @@ def main(
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
     grid_weights = pca.inverse_transform(grid_points)
-    traj_points = pca.inverse_transform(reduced_weights) # normalize
 
     grid_losses = []
 
@@ -112,7 +109,7 @@ def main(
     )
 
     with torch.no_grad():
-        for weights in traj_points:
+        for weights in weights_matrix_np:
             model = set_weights(model, weights)
 
             running_loss = 0.0
