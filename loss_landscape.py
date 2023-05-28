@@ -32,7 +32,6 @@ def main(
     model_path,
     subfolder,
     grid_size,
-    grid_border,
 ):
     loader = create_testloader(model_path, batch_size)
     if "alt_model" in model_path:
@@ -177,12 +176,6 @@ if __name__ == "__main__":
         default=None,
         help="""grid_size^2 amount of points to populate the 2D space to evaluate the loss.""",
     )
-    parser.add_argument(
-        "--grid_border",
-        type=int,
-        default=None,
-        help="""The grid will be created between [-grid_border, grid_border]x[-grid_border, grid_border].""",
-    )
     parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(
         "weights_path", type=str, help="""Weights of the trained model."""
@@ -239,5 +232,4 @@ if __name__ == "__main__":
         args.model_path,
         args.subfolder,
         args.grid_size,
-        args.grid_border,
     )
