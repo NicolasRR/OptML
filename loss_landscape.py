@@ -47,9 +47,6 @@ def main(
     weights_matrix_np = np.load(weights_path)
 
     print(f"Saved weights shape: {weights_matrix_np.shape}")
-    for i in range(weights_matrix_np.shape[0]):  # Loop over each row (epoch)
-        norm = np.linalg.norm(weights_matrix_np[i, :])
-        print(f"Norm of weights for each save {i+1}: {norm}")
 
     pca = PCA(n_components=2)
     reduced_weights = pca.fit_transform(weights_matrix_np)
