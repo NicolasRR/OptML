@@ -17,9 +17,7 @@ def set_weights(model, weights):
     idx = 0
     for key, param in model.state_dict().items():
         size = int(np.prod(param.shape))
-        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
-            param.shape
-        )
+        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(param.shape)
         idx += size
 
     model.load_state_dict(weight_dict)
@@ -46,13 +44,12 @@ def main(
 
     print(f"Saved weights shape: {weights_matrix_np.shape}")
 
-    pca = PCA(n_components=2) 
+    pca = PCA(n_components=2)
     reduced_weights = pca.fit_transform(weights_matrix_np)
 
-
     # Compute the grid border based on the reduced weights
-    _min = np.min(reduced_weights) -1
-    _max = np.max(reduced_weights) +1
+    _min = np.min(reduced_weights) - 1
+    _max = np.max(reduced_weights) + 1
 
     # Compute grid_range_x and grid_range_y
     grid_range_x = np.linspace(_min, _max, grid_size)

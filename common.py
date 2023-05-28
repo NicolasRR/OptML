@@ -23,8 +23,8 @@ DEFAULT_LR = 1e-2
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-# LOSS_FUNC = nn.functional.cross_entropy  
-LOSS_FUNC = nn.functional.nll_loss # add softmax layer if nll
+# LOSS_FUNC = nn.functional.cross_entropy
+LOSS_FUNC = nn.functional.nll_loss  # add softmax layer if nll
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DEFAULT_DELAY_INTENSITY = "small"
@@ -267,9 +267,7 @@ def check_args(args, mode):
             print("Please use --delay_intensity with --delay or --slow_worker_1")
             exit()
 
-        if args.delay_type is not None and (
-            not args.delay and not args.slow_worker_1
-        ):
+        if args.delay_type is not None and (not args.delay and not args.slow_worker_1):
             print("Please use --delay_type with --delay or --slow_worker_1")
             exit()
 
@@ -728,8 +726,7 @@ def get_suffix(
         suffix += f"_{delay_intensity}"
     if delay_type is not None:
         suffix += f"_{delay_type}"
-    
-        
+
     return suffix
 
 
