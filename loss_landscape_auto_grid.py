@@ -17,7 +17,7 @@ def set_weights(model, weights):
     weight_dict = {}
     idx = 0
     for key, param in model.state_dict().items():
-        size = np.prod(param.shape)
+        size = int(np.prod(param.shape))
         weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
             param.shape
         )
