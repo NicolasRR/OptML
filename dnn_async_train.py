@@ -106,10 +106,7 @@ class ParameterServer_async(object):
                     self.global_batch_counter / self.nb_workers - 1
                 ) % total_batches_to_run
                 if relative_batch_idx in self.save_idx:
-                    weights = [
-                        w.detach().clone().cpu().numpy()
-                        for w in self.model.parameters()
-                    ]
+                    weights = np.concatenate([w.detach().clone().cpu().numpy().ravel() for w in self.model.state_dict().values()])
                     self.weights_matrix.append(weights)
 
             if self.scheduler is not None or self.val:
