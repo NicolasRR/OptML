@@ -43,22 +43,51 @@ python3 $nn_train_py --dataset $dataset --model_accuracy --seed --lr $lr --momen
 sleep 0.1
 echo
 
-mode2=""
 mode1="--split_dataset"
-mode3="--split_labels"
-
-model1=""
-model2="--alt_model"
+mode2="--split_labels"
 
 for file in $dnn_sync_train_py $dnn_async_train_py; do
-  for mode in $mode1 $mode2 $mode3;do
+  for mode in $mode1 $mode2;do
     for world_size in $world_size_1 $world_size_2 $world_size_3; do
-    for model in $model1 $model2;do
-      echo $file $mode $world_size $model
-      python3 $file --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split $mode $model
-      sleep 0.1
-      echo 
+        echo $file $mode $world_size $model2
+        python3 $file --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split $mode
+        sleep 0.1
+        echo 
 done
 done
+done
+
+# Alt_model
+
+for file in $dnn_sync_train_py $dnn_async_train_py; do
+  for mode in $mode1 $mode2;do
+    for world_size in $world_size_1 $world_size_2 $world_size_3; do
+        echo $file $mode $world_size $model2 "--alt_model"
+        python3 $file --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split $mode --alt_model
+        sleep 0.1
+        echo 
+done
+done
+done
+
+# Classic model and no_splitting
+
+for file in $dnn_sync_train_py $dnn_async_train_py; do
+    for world_size in $world_size_1 $world_size_2 $world_size_3; do
+        echo $file  $world_size 
+        python3 $file --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split
+        sleep 0.1
+        echo 
+done
+done
+
+# Alt model and no_splitting
+
+for file in $dnn_sync_train_py $dnn_async_train_py; do
+    for world_size in $world_size_1 $world_size_2 $world_size_3; do
+        echo $file  $world_size 
+        python3 $file --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split --alt_model
+        sleep 0.1
+        echo 
 done
 done
