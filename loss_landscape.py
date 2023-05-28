@@ -9,16 +9,25 @@ from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
 DEFAULT_GRID_BORDER = 5
-DEFAULT_GRID_SIZE = 15
+DEFAULT_GRID_SIZE = 10
 DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
 
+def print_model_info(model):
+    total_params = 0
+    for key, value in model.state_dict().items():
+        # print(f"Key: {key}")
+        # print(f"Shape: {value.shape}")
+        num_params = torch.numel(value)
+        # print(f"Number of parameters: {num_params}")
+        total_params += num_params
+    print(f"Total parameters in the model: {total_params}")
 
 def set_weights(model, weights):
     weight_dict = {}
     idx = 0
     for key, param in model.state_dict().items():
-        size = np.prod(param.shape)
+        size = int(np.prod(param.shape))
         weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
             param.shape
         )
@@ -44,6 +53,8 @@ def main(
 
     model.load_state_dict(torch.load(model_path))
     model.eval()
+
+    print_model_info(model)
 
     weights_matrix_np = np.load(weights_path)
 

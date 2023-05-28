@@ -8,7 +8,7 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_SIZE = 25
+DEFAULT_GRID_SIZE = 10
 DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
 
