@@ -82,7 +82,6 @@ def main(
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
     grid_weights = pca.inverse_transform(grid_points)
-    traj_weights_new = pca.inverse_transform(reduced_weights)
     grid_losses = []
 
     progress_bar = tqdm(
@@ -117,7 +116,7 @@ def main(
     )
 
     with torch.no_grad():
-        for weights in traj_weights_new:
+        for weights in weights_matrix_np:
             model = set_weights(model, weights)
 
             running_loss = 0.0
