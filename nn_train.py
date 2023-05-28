@@ -34,7 +34,7 @@ def run(
     alt_model,
 ):
     loss_func = LOSS_FUNC
-
+    
     model = _get_model(dataset_name, loss_func, alt_model)
     optimizer = get_optimizer(model, learning_rate, momentum, use_alr)
 
