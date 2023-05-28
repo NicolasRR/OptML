@@ -8,6 +8,7 @@ from common import (
     get_optimizer,
     get_scheduler,
     compute_accuracy_loss,
+    get_base_name,
     _save_model,
     save_weights,
     compute_weights_l2_norm,
@@ -57,7 +58,23 @@ def run(
 
     scheduler = get_scheduler(lrs, optimizer, len(train_loader), epochs)
 
-    logger = setup_simple_logger(subfolder)
+    base_name = get_base_name(
+        "classic",
+        dataset_name,
+        0,
+        train_split,
+        learning_rate,
+        momentum,
+        batch_size,
+        epochs,
+        val,
+        use_alr,
+        lrs,
+        saves_per_epoch,
+        alt_model=alt_model,
+    )
+
+    logger = setup_simple_logger(subfolder, base_name)
     logger.info("Start non distributed SGD training")
 
     if saves_per_epoch is not None:
@@ -129,31 +146,16 @@ def run(
 
     if save_model:
         _save_model(
-            "classic",
-            dataset_name,
-            model,
-            -1,
-            train_split,
-            learning_rate,
-            momentum,
-            batch_size,
-            epochs,
+            base_name,
             subfolder,
-            alt_model=alt_model,
+            model,
         )
 
     if saves_per_epoch is not None:
         save_weights(
-            weights_matrix,
-            "classic",
-            dataset_name,
-            train_split,
-            learning_rate,
-            momentum,
-            batch_size,
-            epochs,
+            base_name,
             subfolder,
-            alt_model=alt_model,
+            weights_matrix,
         )
 
 

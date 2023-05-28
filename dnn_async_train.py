@@ -10,6 +10,7 @@ from common import (
     get_optimizer,
     get_scheduler,
     compute_accuracy_loss,
+    get_base_name,
     _save_model,
     save_weights,
     compute_weights_l2_norm,
@@ -166,8 +167,8 @@ class Worker_async(object):
         self.worker_name = rpc.get_worker_info().name
         self.worker_accuracy = worker_accuracy
         self.delay = delay
-        self.delay_intensity= delay_intensity
-        self.delay_type= delay_type
+        self.delay_intensity = delay_intensity
+        self.delay_type = delay_type
         self.slow_worker_1 = slow_worker_1
         self.dataset_name = dataset_name
         self.logger.debug(
@@ -202,9 +203,15 @@ class Worker_async(object):
             self.batch_count += 1
 
             if self.worker_name == "Worker_1" and self.slow_worker_1:
-                _delay(intensity=self.delay_intensity, _type= self.delay_type, worker_1= True)
+                _delay(
+                    intensity=self.delay_intensity, _type=self.delay_type, worker_1=True
+                )
             elif self.delay:
-                _delay(intensity=self.delay_intensity, _type= self.delay_type, worker_1= False)
+                _delay(
+                    intensity=self.delay_intensity,
+                    _type=self.delay_type,
+                    worker_1=False,
+                )
 
             # in asynchronous we send the parameters to the server asynchronously and then we update the worker model synchronously
             rpc.rpc_async(
@@ -336,6 +343,14 @@ def run_parameter_server_async(
         )
     else:
         train_loader = train_loaders
+        if split_dataset or split_labels:
+            len_train_loader = len(train_loader[0])
+        elif split_labels_unscaled:
+            len_train_loader = np.ceil(
+                len(train_loader[0].dataset) / len(workers) / batch_size
+            )
+        else:
+            len_train_loader = len(train_loader)
         ps_rref = rpc.RRef(
             ParameterServer_async(
                 len(workers),
@@ -344,7 +359,7 @@ def run_parameter_server_async(
                 learning_rate,
                 momentum,
                 use_alr,
-                len(train_loader),
+                len_train_loader,
                 epochs,
                 lrs,
                 saves_per_epoch,
@@ -413,49 +428,41 @@ def run_parameter_server_async(
             f"Final train accuracy: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
         )
 
+    base_name = get_base_name(
+        "async",
+        dataset_name,
+        len(workers) + 1,
+        train_split,
+        learning_rate,
+        momentum,
+        batch_size,
+        epochs,
+        val,
+        use_alr,
+        lrs,
+        saves_per_epoch,
+        alt_model=alt_model,
+        split_dataset=split_dataset,
+        split_labels=split_labels,
+        split_labels_unscaled=split_labels_unscaled,
+        delay=delay,
+        slow_worker_1=slow_worker_1,
+        delay_intensity=delay_intensity,
+        delay_type=delay_type,
+    )
+
     if save_model:
         _save_model(
-            "async",
-            dataset_name,
-            ps_rref.to_here().model,
-            len(workers),
-            train_split,
-            learning_rate,
-            momentum,
-            batch_size,
-            epochs,
+            base_name,
             subfolder,
-            val,
-            alt_model=alt_model,
-            split_dataset=split_dataset,
-            split_labels=split_labels,
-            split_labels_unscaled=split_labels_unscaled,
-            delay_intensity=delay_intensity,
-            delay_type=delay_type,
-            delay=delay,
-            slow_worker_1=slow_worker_1,
+            ps_rref.to_here().model,
         )
 
     if saves_per_epoch is not None:
         save_weights(
-            ps_rref.to_here().weights_matrix,
-            "async",
-            dataset_name,
-            train_split,
-            learning_rate,
-            momentum,
-            batch_size,
-            epochs,
+            base_name,
             subfolder,
-            val,
-            alt_model=alt_model,
-            split_dataset=split_dataset,
-            split_labels=split_labels,
-            split_labels_unscaled=split_labels_unscaled,
-            delay_intensity=delay_intensity,
-            delay_type=delay_type,
-            delay=delay,
-            slow_worker_1=slow_worker_1,
+            ps_rref.to_here().weights_matrix,
         )
 
 
