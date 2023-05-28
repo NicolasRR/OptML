@@ -15,7 +15,7 @@ momentum=0.9
 batch_size=32
 world_size_1=3 # 2 workers
 world_size_2=6 # 5 workers
-world_size_2=11 # 10 workers
+world_size_3=11 # 10 workers
 train_split=1
 
 # Parse command-line arguments using flags
