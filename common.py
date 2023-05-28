@@ -261,6 +261,32 @@ def check_args(args, mode):
             print("Please use --split_labels without --split_dataset")
             exit()
 
+        if args.delay_intensity is not None and (
+            not args.delay and not args.slow_worker_1
+        ):
+            print("Please use --delay_intensity with --delay or --slow_worker_1")
+            exit()
+
+        if args.delay_type is not None and (
+            not args.delay and not args.slow_worker_1
+        ):
+            print("Please use --delay_type with --delay or --slow_worker_1")
+            exit()
+
+        if args.delay:
+            print("Adding delay to all workers")
+
+        if args.slow_worker_1:
+            print("Slowing down worker 1 with larger delay")
+
+        if (args.delay or args.slow_worker_1) and args.delay_intensity is None:
+            args.delay_intensity = DEFAULT_DELAY_INTENSITY
+            print(f"Using the default delay intensity: {args.delay_intensity}")
+
+        if (args.delay or args.slow_worker_1) and args.delay_type is None:
+            args.delay_type = DEFAULT_DELAY_TYPE
+            print(f"Using the default delay type: {args.delay_type}")
+
         if mode == "async":
             if args.split_labels_unscaled and args.split_dataset:
                 print("Please use --split_labels_unscaled without --split_dataset")
@@ -271,32 +297,6 @@ def check_args(args, mode):
                     "Please do not use --split_labels and --split_labels_unscaled together"
                 )
                 exit()
-
-            if args.delay_intensity is not None and (
-                not args.delay and not args.slow_worker_1
-            ):
-                print("Please use --delay_intensity with --delay or --slow_worker_1")
-                exit()
-
-            if args.delay_type is not None and (
-                not args.delay and not args.slow_worker_1
-            ):
-                print("Please use --delay_type with --delay or --slow_worker_1")
-                exit()
-
-            if args.delay:
-                print("Adding delay to all workers")
-
-            if args.slow_worker_1:
-                print("Slowing down worker 1 with larger delay")
-
-            if (args.delay or args.slow_worker_1) and args.delay_intensity is None:
-                args.delay_intensity = DEFAULT_DELAY_INTENSITY
-                print(f"Using the default delay intensity: {args.delay_intensity}")
-
-            if (args.delay or args.slow_worker_1) and args.delay_type is None:
-                args.delay_type = DEFAULT_DELAY_TYPE
-                print(f"Using the default delay type: {args.delay_type}")
 
         if args.dataset == "mnist":
             valid_world_sizes = {3, 6, 11}
@@ -827,12 +827,12 @@ def _delay(intensity=DEFAULT_DELAY_INTENSITY, _type=DEFAULT_DELAY_TYPE, worker_1
     if worker_1:
         delay_mean *= DELAY_WORKER_1_FACTOR
         delay_std *= DELAY_WORKER_1_FACTOR
-
     if _type == "gaussian":
         delay_time = np.random.normal(delay_mean, delay_std)
         delay_time = max(0, delay_time)  # Ensure the delay is not negative
     elif _type == "constant":
         delay_time = delay_mean
+    print(delay_time)
     time.sleep(delay_time)
 
 
