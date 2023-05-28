@@ -1,5 +1,6 @@
 import argparse
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import normalize
 import plotly.io as pio
 import plotly.graph_objs as go
 import numpy as np
@@ -13,15 +14,6 @@ DEFAULT_GRID_SIZE = 10
 DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
 
-def print_model_info(model):
-    total_params = 0
-    for key, value in model.state_dict().items():
-        # print(f"Key: {key}")
-        # print(f"Shape: {value.shape}")
-        num_params = torch.numel(value)
-        # print(f"Number of parameters: {num_params}")
-        total_params += num_params
-    print(f"Total parameters in the model: {total_params}")
 
 def set_weights(model, weights):
     weight_dict = {}
@@ -54,14 +46,13 @@ def main(
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    print_model_info(model)
-
     weights_matrix_np = np.load(weights_path)
 
     print(f"Saved weights shape: {weights_matrix_np.shape}")
 
     pca = PCA(n_components=2)
-    reduced_weights = pca.fit_transform(weights_matrix_np)
+    pca = pca.fit(normalize(weights_matrix_np, axis=0))
+    reduced_weights = pca.transform(weights_matrix_np)
 
     max_abs_reduced_weight = np.max(np.abs(reduced_weights))
     print(
@@ -84,6 +75,7 @@ def main(
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
     grid_weights = pca.inverse_transform(grid_points)
+    traj_points = pca.inverse_transform(reduced_weights)
 
     grid_losses = []
 
@@ -120,7 +112,7 @@ def main(
     )
 
     with torch.no_grad():
-        for weights in weights_matrix_np:
+        for weights in traj_points:
             model = set_weights(model, weights)
 
             running_loss = 0.0
