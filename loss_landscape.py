@@ -8,10 +8,8 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_BORDER = 5
 DEFAULT_GRID_SIZE = 10
 DEFAULT_BATCH_SIZE = 100
-DEFAULT_GRID_WARNING = 10
 
 
 def set_weights(model, weights):
@@ -52,24 +50,17 @@ def main(
     pca = PCA(n_components=2) 
     reduced_weights = pca.fit_transform(weights_matrix_np)
 
-    max_abs_reduced_weight = np.max(np.abs(reduced_weights))
-    print(
-        f"Norm of largest weights in the PCA space: {max_abs_reduced_weight}, grid border is: {grid_border}"
-    )
-    # Check if the grid is too small
-    if max_abs_reduced_weight > grid_border:
-        print(
-            f"Warning: The grid might be too small. The maximum absolute value of the reduced weights ({max_abs_reduced_weight}) is outside the grid border ({grid_border})."
-        )
 
-    # Check if the grid is too big
-    if np.abs(max_abs_reduced_weight - grid_border) > DEFAULT_GRID_WARNING:
-        print(
-            f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights ({max_abs_reduced_weight}) to the grid border ({grid_border}) is greater than 10."
-        )
+    # Compute the grid border based on the reduced weights
+    _min = np.min(reduced_weights) -1
+    _max = np.max(reduced_weights) +1
 
-    grid_range = np.linspace(-grid_border, grid_border, grid_size)
-    xx, yy = np.meshgrid(grid_range, grid_range)
+    # Compute grid_range_x and grid_range_y
+    grid_range_x = np.linspace(_min, _max, grid_size)
+    grid_range_y = np.linspace(_min, _max, grid_size)
+
+    # Replace xx, yy with grid_range_x, grid_range_y respectively
+    xx, yy = np.meshgrid(grid_range_x, grid_range_y)
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
     grid_weights = pca.inverse_transform(grid_points)
@@ -217,13 +208,6 @@ if __name__ == "__main__":
         print(f"Using default grid_size: {DEFAULT_GRID_SIZE}")
     elif args.grid_size < 1:
         print("Forbidden value !!! grid_size must be > 1")
-        exit()
-
-    if args.grid_border is None:
-        args.grid_border = DEFAULT_GRID_BORDER
-        print(f"Using default grid_border: {DEFAULT_GRID_BORDER}")
-    elif args.grid_border <= 0:
-        print("Forbidden value !!! grid_border must be > 0")
         exit()
 
     if len(args.subfolder) > 0:
