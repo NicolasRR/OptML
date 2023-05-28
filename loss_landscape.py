@@ -14,23 +14,18 @@ DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
 
 
-def set_weights(model, flat_weights):
+def set_weights(model, weights):
+    weight_dict = {}
     idx = 0
-    state_dict = model.state_dict()
+    for key, param in model.state_dict().items():
+        size = np.prod(param.shape)
+        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
+            param.shape
+        )
+        idx += size
 
-    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    assert total_params == len(
-        flat_weights
-    ), f"Number of model parameters ({total_params}) doesn't match length of weights array ({len(flat_weights)})"
-
-    for key, param in state_dict.items():
-        if param.requires_grad:
-            param_size = torch.prod(torch.tensor(param.shape)).item()
-            param_flat = flat_weights[idx : idx + param_size]
-            state_dict[key] = param_flat.view(param.shape)
-            idx += param_size
-
-    model.load_state_dict(state_dict)
+    model.load_state_dict(weight_dict)
+    return model
 
 
 def main(
@@ -89,8 +84,7 @@ def main(
 
     with torch.no_grad():
         for weights in grid_weights:
-            weights_torch = torch.tensor(weights).float()
-            set_weights(model, weights_torch)
+            model = set_weights(model, weights)
 
             running_loss = 0.0
             for inputs, labels in loader:
@@ -116,8 +110,7 @@ def main(
 
     with torch.no_grad():
         for weights in weights_matrix_np:
-            weights_torch = torch.tensor(weights).float()
-            set_weights(model, weights_torch)
+            model = set_weights(model, weights)
 
             running_loss = 0.0
             for inputs, labels in loader:
