@@ -6,7 +6,6 @@ import plotly.graph_objs as go
 import numpy as np
 import torch
 import os
-import plotly.graph_objs as go
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
@@ -15,23 +14,18 @@ DEFAULT_BATCH_SIZE = 100
 DEFAULT_GRID_WARNING = 10
 
 
-def set_weights(model, flat_weights):
+def set_weights(model, weights):
+    weight_dict = {}
     idx = 0
-    state_dict = model.state_dict()
+    for key, param in model.state_dict().items():
+        size = np.prod(param.shape)
+        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
+            param.shape
+        )
+        idx += size
 
-    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    assert total_params == len(
-        flat_weights
-    ), f"Number of model parameters ({total_params}) doesn't match length of weights array ({len(flat_weights)})"
-
-    for key, param in state_dict.items():
-        if param.requires_grad:
-            param_size = torch.prod(torch.tensor(param.shape)).item()
-            param_flat = flat_weights[idx : idx + param_size]
-            state_dict[key] = param_flat.view(param.shape)
-            idx += param_size
-
-    model.load_state_dict(state_dict)
+    model.load_state_dict(weight_dict)
+    return model
 
 
 def main(
@@ -54,11 +48,14 @@ def main(
     weights_matrix_np = np.load(weights_path)
 
     print(f"Saved weights shape: {weights_matrix_np.shape}")
+    for i in range(weights_matrix_np.shape[0]):  # Loop over each row (epoch)
+        norm = np.linalg.norm(weights_matrix_np[i, :])
+        print(f"Norm of weights for each save {i+1}: {norm}")
 
     pca = PCA(n_components=2)
-    pca = pca.fit(normalize(weights_matrix_np, axis=0))
-    reduced_weights = pca.transform(weights_matrix_np)
-    print(reduced_weights.shape)
+    reduced_weights = pca.fit_transform(weights_matrix_np) 
+
+    print(f"PCA reduced weights shape: {reduced_weights.shape}")
     max_reduced_weight = np.max(reduced_weights, axis = 0)
     min_reduced_weight = np.min(reduced_weights, axis = 0)
     print(
@@ -85,9 +82,10 @@ def main(
     xx, yy = np.meshgrid(grid_range, grid_range)
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
-    print(grid_points)
+    #print(grid_points)
     grid_weights = pca.inverse_transform(grid_points)
-
+    """for gw in grid_weights:
+        print(np.linalg.norm(gw))"""
     grid_losses = []
 
     progress_bar = tqdm(
@@ -98,15 +96,27 @@ def main(
 
     with torch.no_grad():
         for weights in grid_weights:
-            weights_torch = torch.tensor(weights).float()
-            set_weights(model, weights_torch)
+            """print("Before setting weights:")
+            for name, param in model.named_parameters():
+                if param.requires_grad:
+                    print(f"{name} norm: {param.data.norm()}")"""
+
+
+            model = set_weights(model, weights)
+            
+            """print("\nAfter setting weights:")
+            for name, param in model.named_parameters():
+                if param.requires_grad:
+                    print(f"{name} norm: {param.data.norm()}")"""
 
             running_loss = 0.0
             for inputs, labels in loader:
                 outputs = model(inputs)
                 loss = LOSS_FUNC(outputs, labels)
+                #print(outputs.norm(), inputs.norm(), loss)
                 running_loss += loss.item() * inputs.size(0)
-
+                
+            #print(running_loss, running_loss / len(loader.dataset))
             grid_losses.append(running_loss / len(loader.dataset))
             progress_bar.update(1)
             progress_bar.set_postfix(grid_loss=grid_losses[-1])
@@ -114,7 +124,7 @@ def main(
     progress_bar.close()
 
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
-
+    #print(grid_losses)
     trajectory_loss_reevaluted = []
 
     progress_bar2 = tqdm(
@@ -125,8 +135,7 @@ def main(
 
     with torch.no_grad():
         for weights in weights_matrix_np:
-            weights_torch = torch.tensor(weights).float()
-            set_weights(model, weights_torch)
+            model = set_weights(model, weights)
 
             running_loss = 0.0
             for inputs, labels in loader:
