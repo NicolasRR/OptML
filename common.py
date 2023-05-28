@@ -23,8 +23,8 @@ DEFAULT_LR = 1e-2
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-LOSS_FUNC = nn.functional.cross_entropy  
-# LOSS_FUNC = nn.functional.nll_loss # add softmax layer if nll
+# LOSS_FUNC = nn.functional.cross_entropy  
+LOSS_FUNC = nn.functional.nll_loss # add softmax layer if nll
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DEFAULT_DELAY_INTENSITY = "small"
@@ -832,7 +832,6 @@ def _delay(intensity=DEFAULT_DELAY_INTENSITY, _type=DEFAULT_DELAY_TYPE, worker_1
         delay_time = max(0, delay_time)  # Ensure the delay is not negative
     elif _type == "constant":
         delay_time = delay_mean
-    print(delay_time)
     time.sleep(delay_time)
 
 
