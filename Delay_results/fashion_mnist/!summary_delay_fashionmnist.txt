@@ -20,7 +20,7 @@ Average train loss: 0.1188
 Average test accuracy: 89.10 % (8910/10000)
 Average test loss: 0.8658
 
---- Constant delay (all workers slowed)
+--- Constant delay (all workers slowed & async)
 - small delay:
 training time: 68:06:094
 Average train accuracy: 97.78 % (58670/60000)
@@ -42,7 +42,7 @@ Average train loss: 0.1187
 Average test accuracy: 88.84 % (8884/10000)
 Average test loss: 0.8222
 
---- Constant delay (worker1 slowed):
+--- Constant delay (worker1 slowed & async):
 - small delay:
 training time: 85:49:475
 Average train accuracy: 97.94 % (58764/60000)
@@ -64,7 +64,7 @@ Average train loss: 0.1020
 Average test accuracy: 88.98 % (8898/10000)
 Average test loss: 0.9051
 
---- Gaussian delay (all workers slowed)
+--- Gaussian delay (all workers slowed & async)
 - small delay:
 training time: 67:59:383
 Average train accuracy: 98.02 % (58812/60000)
@@ -86,7 +86,7 @@ Average train loss: 0.1158
 Average test accuracy: 88.77 % (8877/10000)
 Average test loss: 0.7788
 
---- Gaussian delay (worker1 slowed)
+--- Gaussian delay (worker1 slowed & async)
 - small delay:
 training time: 85:44:199
 Average train accuracy: 98.12 % (58874/60000)
