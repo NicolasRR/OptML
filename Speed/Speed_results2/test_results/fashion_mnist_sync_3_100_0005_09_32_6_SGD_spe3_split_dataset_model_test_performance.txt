@@ -1,0 +1,47 @@
+Testing performance of ../Speed_results/fashion_mnist_sync_3_100_0005_09_32_6_SGD_spe3_split_dataset_model.pt
+Synchronous training time: 02:29:080
+Saved fig at ../Speed_results//test_results/fashion_mnist_sync_3_100_0005_09_32_6_SGD_spe3_split_dataset_model_training_plots.png
+Train Performance
+Average train accuracy: 89.21 % (53525/60000)
+Average train loss: 0.2843
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.91      0.74      0.82      6000
+           1       0.99      0.98      0.98      6000
+           2       0.92      0.70      0.80      6000
+           3       0.90      0.93      0.91      6000
+           4       0.76      0.89      0.82      6000
+           5       0.97      0.98      0.97      6000
+           6       0.67      0.81      0.73      6000
+           7       0.93      0.97      0.95      6000
+           8       0.98      0.97      0.98      6000
+           9       0.98      0.94      0.96      6000
+
+    accuracy                           0.89     60000
+   macro avg       0.90      0.89      0.89     60000
+weighted avg       0.90      0.89      0.89     60000
+
+Test Performance
+Average test accuracy: 87.54 % (8754/10000)
+Average test loss: 0.3365
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.89      0.72      0.79      1000
+           1       0.99      0.97      0.98      1000
+           2       0.89      0.69      0.77      1000
+           3       0.87      0.90      0.89      1000
+           4       0.75      0.88      0.81      1000
+           5       0.97      0.97      0.97      1000
+           6       0.63      0.76      0.69      1000
+           7       0.91      0.97      0.94      1000
+           8       0.98      0.97      0.97      1000
+           9       0.98      0.92      0.95      1000
+
+    accuracy                           0.88     10000
+   macro avg       0.88      0.88      0.88     10000
+weighted avg       0.88      0.88      0.88     10000
+
