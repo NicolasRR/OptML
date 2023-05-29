@@ -85,7 +85,11 @@ def main(
 
     progress_bar.close()
 
+    # Clipping the grid loss to the maximum loss so it don't goes to infinity
+    grid_losses = np.array(grid_losses)
+    grid_losses = np.clip(grid_losses, None, 10*grid_losses.min())
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
+
 
     trajectory_loss_reevaluted = []
 
@@ -111,6 +115,8 @@ def main(
 
     progress_bar2.close()
 
+
+
     surface = go.Surface(
         x=xx,
         y=yy,
@@ -121,6 +127,8 @@ def main(
         colorscale="Viridis",
     )
 
+
+    
     colors = ["blue"] + ["red"] * (len(reduced_weights) - 2) + ["green"]
     sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
 
@@ -134,9 +142,15 @@ def main(
         name="Training Trajectory",
     )
 
+    # adding a log scale on Z
     layout = go.Layout(
-        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss"),
-        coloraxis=dict(colorbar=dict(title="Loss magnitude"), colorscale="Viridis"),
+        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
+        coloraxis=dict(
+            colorbar=dict(title="Loss magnitude", tickformat=".2e"),  # Format tick labels as scientific notation
+            colorscale="Viridis",
+            cmin=np.log10(grid_losses.min()),  # Set minimum value on color axis to log10(min(z))
+            cmax=np.log10(grid_losses.max()),  # Set maximum value on color axis to log10(max(z))
+    ),
     )
 
     fig = go.Figure(data=[surface, trajectory], layout=layout)
