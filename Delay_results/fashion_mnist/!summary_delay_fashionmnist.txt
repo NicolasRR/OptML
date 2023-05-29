@@ -1,3 +1,10 @@
+dataset= fashion_mnist
+lr= 0.005
+momentum= 0.9
+batch_size= 32
+world_size= 4 (3 workers)
+epochs= 30
+
 --- Baselines (no delay):
 - classic
 training time: 10:11:255
