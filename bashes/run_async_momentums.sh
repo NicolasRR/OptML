@@ -2,7 +2,7 @@
 cd ..
 
 dataset="fashion_mnist"
-world_size=3
+world_size=4
 lr=0.005
 batch_size=32
 epochs=6
@@ -28,7 +28,7 @@ formatted_momentum=$(echo $momentum | tr -d '.')
 
 # async baseline
 momentum=0.99
-python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
+python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
 sleep 0.1
 echo
 model_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_val.pt"
@@ -38,7 +38,7 @@ echo
 
 # async baseline
 momentum=0.95
-python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
+python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
 sleep 0.1
 echo
 model_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_val.pt"
@@ -49,7 +49,7 @@ echo
 
 # async baseline
 momentum=0.9
-python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
+python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
 sleep 0.1
 echo
 model_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_val.pt"
@@ -60,7 +60,7 @@ echo
 
 # async baseline
 momentum=0.5
-python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
+python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
 sleep 0.1
 echo
 model_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_val.pt"
@@ -70,7 +70,7 @@ echo
 
 # async baseline
 momentum=0
-python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
+python3 dnn_async_train.py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder_name
 sleep 0.1
 echo
 model_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_val.pt"
