@@ -1,0 +1,49 @@
+Testing performance of /mnt/c/Users/_/Desktop/OML/Delay_results/fashion_mnist_async_4_100_0005_09_32_30_SGD_spe3_val_delay_long_constant_model.pt
+Asynchronous training time: 37:52:214
+Saved fig at /mnt/c/Users/_/Desktop/OML/Delay_results/fashion_mnist_async_4_100_0005_09_32_30_SGD_spe3_val_delay_long_constant_model_training_plots.png
+The early stopping epoch is epoch 5
+Saved fig at /mnt/c/Users/_/Desktop/OML/Delay_results/fashion_mnist_async_4_100_0005_09_32_30_SGD_spe3_val_delay_long_constant_model_validation_plots.png
+Train Performance
+Average train accuracy: 97.28 % (58365/60000)
+Average train loss: 0.1187
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.95      0.96      0.96      6000
+           1       0.99      1.00      0.99      6000
+           2       0.96      0.95      0.95      6000
+           3       0.98      0.97      0.98      6000
+           4       0.94      0.96      0.95      6000
+           5       0.99      1.00      1.00      6000
+           6       0.94      0.91      0.93      6000
+           7       0.99      0.99      0.99      6000
+           8       0.99      1.00      0.99      6000
+           9       0.99      0.99      0.99      6000
+
+    accuracy                           0.97     60000
+   macro avg       0.97      0.97      0.97     60000
+weighted avg       0.97      0.97      0.97     60000
+
+Test Performance
+Average test accuracy: 88.84 % (8884/10000)
+Average test loss: 0.8222
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.81      0.84      0.83      1000
+           1       0.98      0.98      0.98      1000
+           2       0.82      0.83      0.82      1000
+           3       0.88      0.88      0.88      1000
+           4       0.79      0.83      0.81      1000
+           5       0.98      0.98      0.98      1000
+           6       0.72      0.65      0.68      1000
+           7       0.95      0.95      0.95      1000
+           8       0.96      0.98      0.97      1000
+           9       0.97      0.96      0.97      1000
+
+    accuracy                           0.89     10000
+   macro avg       0.89      0.89      0.89     10000
+weighted avg       0.89      0.89      0.89     10000
+

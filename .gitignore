@@ -8,7 +8,12 @@ __pycache__/
 *.pt
 *.npy
 *.log
+*html
 
 !KFold_results/*
 !Speed_results/*
 !Validation_results/**/*
+!Speed/**/*
+!Speed/**/**/*
+!Results_AsyncMomentum/*
+!Delay_results/**/**/*
