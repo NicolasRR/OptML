@@ -247,7 +247,7 @@ Average train loss: 0.1809
 Average test accuracy: 88.20 % (8820/10000)
 Average test loss: 0.3932
 
-# Pytorch CNN model world_size 11 model missing
+# Pytorch CNN world_size 11 model missing
 
 
 --async world_size= 11 split_labels (Lenet5)
