@@ -1,0 +1,47 @@
+Testing performance of ../Speed_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_split_dataset_model.pt
+Asynchronous training time: 01:39:807
+Saved fig at ../Speed_results//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_split_dataset_model_training_plots.png
+Train Performance
+Average train accuracy: 90.84 % (54504/60000)
+Average train loss: 0.2474
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.82      0.90      0.86      6000
+           1       0.99      0.99      0.99      6000
+           2       0.87      0.84      0.85      6000
+           3       0.89      0.95      0.92      6000
+           4       0.80      0.89      0.84      6000
+           5       1.00      0.96      0.98      6000
+           6       0.82      0.63      0.71      6000
+           7       0.96      0.96      0.96      6000
+           8       0.99      0.99      0.99      6000
+           9       0.96      0.98      0.97      6000
+
+    accuracy                           0.91     60000
+   macro avg       0.91      0.91      0.91     60000
+weighted avg       0.91      0.91      0.91     60000
+
+Test Performance
+Average test accuracy: 89.01 % (8901/10000)
+Average test loss: 0.3083
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.81      0.89      0.85      1000
+           1       0.99      0.97      0.98      1000
+           2       0.83      0.81      0.82      1000
+           3       0.88      0.92      0.90      1000
+           4       0.78      0.87      0.82      1000
+           5       0.98      0.95      0.97      1000
+           6       0.76      0.59      0.66      1000
+           7       0.94      0.95      0.95      1000
+           8       0.97      0.97      0.97      1000
+           9       0.96      0.97      0.96      1000
+
+    accuracy                           0.89     10000
+   macro avg       0.89      0.89      0.89     10000
+weighted avg       0.89      0.89      0.89     10000
+

@@ -85,7 +85,7 @@ done
 
 for file in $dnn_sync_train_py $dnn_async_train_py; do
     for world_size in $world_size_1 $world_size_2 $world_size_3; do
-        echo $file  $world_size 
+        echo $file  $world_size "--alt_model"
         python3 $file --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split --alt_model
         sleep 0.1
         echo 

@@ -1,0 +1,47 @@
+Testing performance of ../Speed_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_alt_model_labels_model.pt
+Asynchronous training time: 06:00:836
+Saved fig at ../Speed_results//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_alt_model_labels_model_training_plots.png
+Train Performance
+Average train accuracy: 86.84 % (52101/60000)
+Average train loss: 0.3809
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.81      0.94      0.87      6000
+           1       1.00      0.98      0.99      6000
+           2       1.00      0.30      0.46      6000
+           3       0.98      0.76      0.86      6000
+           4       0.71      0.95      0.81      6000
+           5       1.00      0.95      0.97      6000
+           6       0.60      0.87      0.71      6000
+           7       0.94      0.97      0.96      6000
+           8       1.00      0.99      0.99      6000
+           9       0.96      0.98      0.97      6000
+
+    accuracy                           0.87     60000
+   macro avg       0.90      0.87      0.86     60000
+weighted avg       0.90      0.87      0.86     60000
+
+Test Performance
+Average test accuracy: 84.19 % (8419/10000)
+Average test loss: 0.4879
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.77      0.90      0.83      1000
+           1       1.00      0.96      0.98      1000
+           2       0.99      0.27      0.43      1000
+           3       0.97      0.72      0.82      1000
+           4       0.67      0.93      0.78      1000
+           5       0.99      0.92      0.96      1000
+           6       0.54      0.79      0.64      1000
+           7       0.93      0.96      0.95      1000
+           8       0.98      0.98      0.98      1000
+           9       0.94      0.98      0.96      1000
+
+    accuracy                           0.84     10000
+   macro avg       0.88      0.84      0.83     10000
+weighted avg       0.88      0.84      0.83     10000
+
