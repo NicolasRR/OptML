@@ -34,7 +34,7 @@ def run(
     alt_model,
 ):
     loss_func = LOSS_FUNC
-    
+
     model = _get_model(dataset_name, loss_func, alt_model)
     optimizer = get_optimizer(model, learning_rate, momentum, use_alr)
 
@@ -105,7 +105,12 @@ def run(
             )
             if saves_per_epoch is not None:
                 if batch_idx in save_idx:
-                    weights = np.concatenate([w.detach().clone().cpu().numpy().ravel() for w in model.state_dict().values()])
+                    weights = np.concatenate(
+                        [
+                            w.detach().clone().cpu().numpy().ravel()
+                            for w in model.state_dict().values()
+                        ]
+                    )
                     weights_matrix.append(weights)
 
             progress_bar.update(1)

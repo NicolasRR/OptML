@@ -23,16 +23,16 @@ DEFAULT_LR = 1e-2
 DEFAULT_MOMENTUM = 0.0
 DEFAULT_EPOCHS = 1
 DEFAULT_SEED = 614310
-# LOSS_FUNC = nn.functional.cross_entropy  
-LOSS_FUNC = nn.functional.nll_loss # add softmax layer if nll
+# LOSS_FUNC = nn.functional.cross_entropy
+LOSS_FUNC = nn.functional.nll_loss  # add softmax layer if nll
 EXPO_DECAY = 0.9  # for exponential learning rate scheduler
 DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DEFAULT_DELAY_INTENSITY = "small"
 DEFAULT_DELAY_TYPE = "gaussian"
 DELAY_VALUES = {
-    "small": (0.01, 0.002),  # 10 ms, 2 ms std
-    "medium": (0.02, 0.004),  # 20 ms, 4 ms std
-    "long": (0.03, 0.006),  # 30 ms, 6 ms std
+    "small": (0.01, 0.001),  # 10 ms, 1 ms std
+    "medium": (0.02, 0.001),  # 20 ms, 1 ms std
+    "long": (0.03, 0.001),  # 30 ms, 1 ms std
 }
 DELAY_WORKER_1_FACTOR = 2
 DEFAULT_VAL_SPLIT = 0.1
@@ -261,6 +261,30 @@ def check_args(args, mode):
             print("Please use --split_labels without --split_dataset")
             exit()
 
+        if args.delay_intensity is not None and (
+            not args.delay and not args.slow_worker_1
+        ):
+            print("Please use --delay_intensity with --delay or --slow_worker_1")
+            exit()
+
+        if args.delay_type is not None and (not args.delay and not args.slow_worker_1):
+            print("Please use --delay_type with --delay or --slow_worker_1")
+            exit()
+
+        if args.delay:
+            print("Adding delay to all workers")
+
+        if args.slow_worker_1:
+            print("Slowing down worker 1 with larger delay")
+
+        if (args.delay or args.slow_worker_1) and args.delay_intensity is None:
+            args.delay_intensity = DEFAULT_DELAY_INTENSITY
+            print(f"Using the default delay intensity: {args.delay_intensity}")
+
+        if (args.delay or args.slow_worker_1) and args.delay_type is None:
+            args.delay_type = DEFAULT_DELAY_TYPE
+            print(f"Using the default delay type: {args.delay_type}")
+
         if mode == "async":
             if args.split_labels_unscaled and args.split_dataset:
                 print("Please use --split_labels_unscaled without --split_dataset")
@@ -271,32 +295,6 @@ def check_args(args, mode):
                     "Please do not use --split_labels and --split_labels_unscaled together"
                 )
                 exit()
-
-            if args.delay_intensity is not None and (
-                not args.delay and not args.slow_worker_1
-            ):
-                print("Please use --delay_intensity with --delay or --slow_worker_1")
-                exit()
-
-            if args.delay_type is not None and (
-                not args.delay and not args.slow_worker_1
-            ):
-                print("Please use --delay_type with --delay or --slow_worker_1")
-                exit()
-
-            if args.delay:
-                print("Adding delay to all workers")
-
-            if args.slow_worker_1:
-                print("Slowing down worker 1 with larger delay")
-
-            if (args.delay or args.slow_worker_1) and args.delay_intensity is None:
-                args.delay_intensity = DEFAULT_DELAY_INTENSITY
-                print(f"Using the default delay intensity: {args.delay_intensity}")
-
-            if (args.delay or args.slow_worker_1) and args.delay_type is None:
-                args.delay_type = DEFAULT_DELAY_TYPE
-                print(f"Using the default delay type: {args.delay_type}")
 
         if args.dataset == "mnist":
             valid_world_sizes = {3, 6, 11}
@@ -728,8 +726,7 @@ def get_suffix(
         suffix += f"_{delay_intensity}"
     if delay_type is not None:
         suffix += f"_{delay_type}"
-    
-        
+
     return suffix
 
 
@@ -827,7 +824,6 @@ def _delay(intensity=DEFAULT_DELAY_INTENSITY, _type=DEFAULT_DELAY_TYPE, worker_1
     if worker_1:
         delay_mean *= DELAY_WORKER_1_FACTOR
         delay_std *= DELAY_WORKER_1_FACTOR
-
     if _type == "gaussian":
         delay_time = np.random.normal(delay_mean, delay_std)
         delay_time = max(0, delay_time)  # Ensure the delay is not negative

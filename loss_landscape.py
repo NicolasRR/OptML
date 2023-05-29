@@ -10,7 +10,6 @@ from common import _get_model, create_testloader, LOSS_FUNC
 
 DEFAULT_GRID_SIZE = 10
 DEFAULT_BATCH_SIZE = 100
-DEFAULT_GRID_WARNING = 10
 
 
 def set_weights(model, weights):
@@ -18,9 +17,7 @@ def set_weights(model, weights):
     idx = 0
     for key, param in model.state_dict().items():
         size = int(np.prod(param.shape))
-        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(
-            param.shape
-        )
+        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(param.shape)
         idx += size
 
     model.load_state_dict(weight_dict)
@@ -33,7 +30,6 @@ def main(
     model_path,
     subfolder,
     grid_size,
-    grid_border=None,
 ):
     loader = create_testloader(model_path, batch_size)
     if "alt_model" in model_path:
@@ -51,34 +47,20 @@ def main(
     pca = PCA(n_components=2)
     reduced_weights = pca.fit_transform(weights_matrix_np)
 
-    print(f"PCA reduced weights shape: {reduced_weights.shape}")
-    max_reduced_weight = np.max(reduced_weights, axis = 0)
-    min_reduced_weight = np.min(reduced_weights, axis = 0)
-    print(
-        f"Norm of largest weights in the PCA space: {max_reduced_weight, min_reduced_weight}"
-    )
-    grid_center = np.array([np.mean(max_reduced_weight), np.mean(min_reduced_weight)])
-    if grid_border is None:
-        grid_border = 5*np.max(max_reduced_weight-min_reduced_weight)
-    
-    else:
-        # Check if the grid is too small
-        if np.max(max_reduced_weight-min_reduced_weight) > grid_border:
-            print(
-                f"Warning: The grid might be too small. The maximum absolute value of the reduced weights is outside the grid border ({grid_border})."
-            )
+    # Compute the grid border based on the reduced weights
+    _min = np.min(reduced_weights) - 1
+    _max = np.max(reduced_weights) + 1
 
-        # Check if the grid is too big
-        if np.abs(np.max(max_reduced_weight-min_reduced_weight) - grid_border) > DEFAULT_GRID_WARNING:
-            print(
-                f"Warning: The grid might be too big. The distance from the maximum absolute value of the reduced weights to the grid border ({grid_border}) is greater than 10."
-            )
+    # Compute grid_range_x and grid_range_y
+    grid_range_x = np.linspace(_min, _max, grid_size)
+    grid_range_y = np.linspace(_min, _max, grid_size)
 
-    grid_range = np.linspace(-grid_border+grid_center[0], grid_border+grid_center[1], grid_size)
-    xx, yy = np.meshgrid(grid_range, grid_range)
+    # Replace xx, yy with grid_range_x, grid_range_y respectively
+    xx, yy = np.meshgrid(grid_range_x, grid_range_y)
 
     grid_points = np.column_stack((xx.ravel(), yy.ravel()))
     grid_weights = pca.inverse_transform(grid_points)
+
     grid_losses = []
 
     progress_bar = tqdm(
@@ -90,20 +72,25 @@ def main(
     with torch.no_grad():
         for weights in grid_weights:
             model = set_weights(model, weights)
-            
+
             running_loss = 0.0
             for inputs, labels in loader:
                 outputs = model(inputs)
                 loss = LOSS_FUNC(outputs, labels)
                 running_loss += loss.item() * inputs.size(0)
-                
+
             grid_losses.append(running_loss / len(loader.dataset))
             progress_bar.update(1)
             progress_bar.set_postfix(grid_loss=grid_losses[-1])
 
     progress_bar.close()
 
+    # Clipping the grid loss to the maximum loss so it don't goes to infinity
+    grid_losses = np.array(grid_losses)
+    grid_losses = np.clip(grid_losses, None, 10*grid_losses.min())
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
+
+
     trajectory_loss_reevaluted = []
 
     progress_bar2 = tqdm(
@@ -128,6 +115,8 @@ def main(
 
     progress_bar2.close()
 
+
+
     surface = go.Surface(
         x=xx,
         y=yy,
@@ -138,6 +127,8 @@ def main(
         colorscale="Viridis",
     )
 
+
+    
     colors = ["blue"] + ["red"] * (len(reduced_weights) - 2) + ["green"]
     sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
 
@@ -151,9 +142,15 @@ def main(
         name="Training Trajectory",
     )
 
+    # adding a log scale on Z
     layout = go.Layout(
-        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss"),
-        coloraxis=dict(colorbar=dict(title="Loss magnitude"), colorscale="Viridis"),
+        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
+        coloraxis=dict(
+            colorbar=dict(title="Loss magnitude", tickformat=".2e"),  # Format tick labels as scientific notation
+            colorscale="Viridis",
+            cmin=np.log10(grid_losses.min()),  # Set minimum value on color axis to log10(min(z))
+            cmax=np.log10(grid_losses.max()),  # Set maximum value on color axis to log10(max(z))
+    ),
     )
 
     fig = go.Figure(data=[surface, trajectory], layout=layout)
@@ -190,12 +187,6 @@ if __name__ == "__main__":
         default=None,
         help="""grid_size^2 amount of points to populate the 2D space to evaluate the loss.""",
     )
-    parser.add_argument(
-        "--grid_border",
-        type=int,
-        default=None,
-        help="""The grid will be created between [-grid_border+center, grid_border+center]x[-grid_border+center, grid_border+center].""",
-    )
     parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(
         "weights_path", type=str, help="""Weights of the trained model."""
@@ -221,10 +212,6 @@ if __name__ == "__main__":
         print(f"Using default grid_size: {DEFAULT_GRID_SIZE}")
     elif args.grid_size < 1:
         print("Forbidden value !!! grid_size must be > 1")
-        exit()
-
-    if not(args.grid_border is None) and args.grid_border <= 0:
-        print("Forbidden value !!! grid_border must be > 0")
         exit()
 
     if len(args.subfolder) > 0:
@@ -256,5 +243,4 @@ if __name__ == "__main__":
         args.model_path,
         args.subfolder,
         args.grid_size,
-        args.grid_border,
     )
