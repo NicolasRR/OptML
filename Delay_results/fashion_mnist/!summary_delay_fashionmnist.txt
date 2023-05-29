@@ -1,0 +1,21 @@
+Baselines:
+-classic
+training time: 10:11:255
+Average train accuracy: 95.76 % (57456/60000)
+Average train loss: 0.1371
+Average test accuracy: 89.17 % (8917/10000)
+Average test loss: 0.4815
+
+-sync
+training time: 74:10:967
+Average train accuracy: 98.27 % (58962/60000)
+Average train loss: 0.1000
+Average test accuracy: 89.90 % (8990/10000)
+Average test loss: 0.8022
+
+-async
+training time: 101:33:923
+Average train accuracy: 97.65 % (58588/60000)
+Average train loss: 0.1188
+Average test accuracy: 89.10 % (8910/10000)
+Average test loss: 0.8658
