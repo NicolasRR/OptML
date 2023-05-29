@@ -113,10 +113,12 @@ class ParameterServer_sync(object):
                 )
                 if self.saves_per_epoch is not None:
                     if relative_batch_idx in self.save_idx:
-                        weights = [
-                            w.detach().clone().cpu().numpy()
-                            for w in self.model.parameters()
-                        ]
+                        weights = np.concatenate(
+                            [
+                                w.detach().clone().cpu().numpy().ravel()
+                                for w in self.model.state_dict().values()
+                            ]
+                        )
                         self.weights_matrix.append(weights)
                 if relative_batch_idx + 1 == total_batches_to_run:
                     if self.scheduler is not None:

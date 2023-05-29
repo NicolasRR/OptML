@@ -1,0 +1,47 @@
+Testing performance of ../Speed_results/fashion_mnist_sync_11_100_0005_09_32_6_SGD_spe3_labels_model.pt
+Synchronous training time: 24:54:381
+Saved fig at ../Speed_results//test_results/fashion_mnist_sync_11_100_0005_09_32_6_SGD_spe3_labels_model_training_plots.png
+Train Performance
+Average train accuracy: 86.66 % (51997/60000)
+Average train loss: 0.3759
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.80      0.84      0.82      6000
+           1       0.99      0.96      0.97      6000
+           2       0.77      0.81      0.79      6000
+           3       0.85      0.89      0.87      6000
+           4       0.78      0.79      0.79      6000
+           5       0.97      0.94      0.95      6000
+           6       0.70      0.59      0.64      6000
+           7       0.93      0.92      0.93      6000
+           8       0.95      0.96      0.95      6000
+           9       0.93      0.97      0.95      6000
+
+    accuracy                           0.87     60000
+   macro avg       0.87      0.87      0.87     60000
+weighted avg       0.87      0.87      0.87     60000
+
+Test Performance
+Average test accuracy: 85.59 % (8559/10000)
+Average test loss: 0.4060
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.80      0.80      0.80      1000
+           1       0.98      0.95      0.97      1000
+           2       0.75      0.79      0.77      1000
+           3       0.83      0.88      0.86      1000
+           4       0.77      0.77      0.77      1000
+           5       0.97      0.92      0.95      1000
+           6       0.67      0.59      0.63      1000
+           7       0.91      0.93      0.92      1000
+           8       0.94      0.96      0.95      1000
+           9       0.92      0.95      0.94      1000
+
+    accuracy                           0.86     10000
+   macro avg       0.85      0.86      0.85     10000
+weighted avg       0.85      0.86      0.85     10000
+

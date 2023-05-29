@@ -105,9 +105,12 @@ def run(
             )
             if saves_per_epoch is not None:
                 if batch_idx in save_idx:
-                    weights = [
-                        w.detach().clone().cpu().numpy() for w in model.parameters()
-                    ]
+                    weights = np.concatenate(
+                        [
+                            w.detach().clone().cpu().numpy().ravel()
+                            for w in model.state_dict().values()
+                        ]
+                    )
                     weights_matrix.append(weights)
 
             progress_bar.update(1)

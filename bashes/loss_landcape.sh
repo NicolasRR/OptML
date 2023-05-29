@@ -16,8 +16,17 @@ for str in $models; do
   names+=("$name")
 done
 
+index=1
+alt="alt_model"
 # Iterate through the modified file names and run the Python script
 for name in "${names[@]}"; do
-  python "$py/loss_landscape.py" "$name""_model.pt" "$name""_weights.npy" --subfolder "$training_directory/plots"
+  if ((index%5==0)) || [[ "$name" == *"$alt"* ]]; then
+    python "$py/loss_landscape.py" "$name""_model.pt" "$name""_weights.npy" --subfolder "$training_directory/plots" 
+  else
+    python "$py/loss_landscape.py" "$name""_model.pt" "$name""_weights.npy" --subfolder "$training_directory/plots" &
+  fi
+  ((index++))
 done
+
+echo "finished creating the plots"
 
