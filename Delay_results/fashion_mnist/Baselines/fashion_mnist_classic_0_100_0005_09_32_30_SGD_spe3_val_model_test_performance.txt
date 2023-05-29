@@ -1,0 +1,49 @@
+Testing performance of fashion_mnist_classic_0_100_0005_09_32_30_SGD_spe3_val_model.pt
+Classic training time: 10:11:255
+Saved fig at fashion_mnist_classic_0_100_0005_09_32_30_SGD_spe3_val_model_training_plots.png
+The early stopping epoch is epoch 9
+Saved fig at fashion_mnist_classic_0_100_0005_09_32_30_SGD_spe3_val_model_validation_plots.png
+Train Performance
+Average train accuracy: 95.76 % (57456/60000)
+Average train loss: 0.1371
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.97      0.93      0.95      6000
+           1       1.00      0.98      0.99      6000
+           2       0.97      0.86      0.91      6000
+           3       0.96      0.98      0.97      6000
+           4       0.82      0.99      0.89      6000
+           5       1.00      0.99      1.00      6000
+           6       0.92      0.88      0.90      6000
+           7       0.98      0.99      0.99      6000
+           8       0.99      0.99      0.99      6000
+           9       0.99      0.98      0.99      6000
+
+    accuracy                           0.96     60000
+   macro avg       0.96      0.96      0.96     60000
+weighted avg       0.96      0.96      0.96     60000
+
+Test Performance
+Average test accuracy: 89.17 % (8917/10000)
+Average test loss: 0.4815
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.86      0.79      0.82      1000
+           1       1.00      0.96      0.98      1000
+           2       0.88      0.76      0.82      1000
+           3       0.89      0.91      0.90      1000
+           4       0.72      0.94      0.82      1000
+           5       0.99      0.97      0.98      1000
+           6       0.72      0.68      0.70      1000
+           7       0.95      0.97      0.96      1000
+           8       0.98      0.98      0.98      1000
+           9       0.97      0.96      0.96      1000
+
+    accuracy                           0.89     10000
+   macro avg       0.90      0.89      0.89     10000
+weighted avg       0.90      0.89      0.89     10000
+
