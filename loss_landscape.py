@@ -8,8 +8,8 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_SIZE = 10
-DEFAULT_BATCH_SIZE = 100
+DEFAULT_GRID_SIZE = 20
+DEFAULT_BATCH_SIZE = 1024
 
 
 def set_weights(model, weights):
@@ -85,9 +85,7 @@ def main(
 
     progress_bar.close()
 
-    # Clipping the grid loss to the maximum loss so it don't goes to infinity
     grid_losses = np.array(grid_losses)
-    grid_losses = np.clip(grid_losses, None, 10*grid_losses.min())
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
 
@@ -132,10 +130,9 @@ def main(
     colors = ["blue"] + ["red"] * (len(reduced_weights) - 2) + ["green"]
     sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
 
-    trajectory = go.Scatter3d(
+    trajectory = go.Scatter(
         x=reduced_weights[:, 0],
         y=reduced_weights[:, 1],
-        z=trajectory_loss_reevaluted,
         mode="markers+lines",
         line=dict(color="red"),
         marker=dict(color=colors, size=sizes),
@@ -153,7 +150,21 @@ def main(
     ),
     )
 
-    fig = go.Figure(data=[surface, trajectory], layout=layout)
+    fig = go.Figure(data=[surface], layout=layout)
+    
+    fig.update_traces(contours_z=dict(show=True, usecolormap=True,
+                                  highlightcolor="limegreen", project_z=True))
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=grid_losses.flatten(), colorscale='Viridis')])
+
+    # Add labels and title
+    fig2.update_layout(
+        title='Contour Plot with Trajectory Projection',
+        xaxis_title='X',
+        yaxis_title='Y'
+    )
+    # Add scatter trace for the trajectory projection
+
+    fig2.add_trace(trajectory)
     # fig.show()
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
@@ -164,9 +175,15 @@ def main(
             subfolder, f"{model_basename}_loss_landscape.html"
         )
         pio.write_html(fig, output_file_path)
+        output_file_path_contour = os.path.join(
+            subfolder, f"{model_basename}_loss_landscape_contour.html"
+        )
+        pio.write_html(fig2, output_file_path_contour)
     else:
         output_file_path = f"{model_basename}_loss_landscape.html"
         pio.write_html(fig, output_file_path)
+        output_file_path_contour = f"{model_basename}_loss_landscape_contour.html"
+        pio.write_html(fig2, output_file_path_contour)
 
     print(f"Saved 3D figure at: {output_file_path}")
 
