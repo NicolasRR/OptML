@@ -54,8 +54,8 @@ Average test loss: 0.9309
 training time: 86:32:244
 Average train accuracy: 97.59 % (58555/60000)
 Average train loss: 0.1225
-Average train accuracy: 97.59 % (58555/60000)
-Average train loss: 0.1225
+Average test accuracy: 88.75 % (8875/10000)
+Average test loss: 0.9073
 
 - long delay:
 training time: 95:38:403
