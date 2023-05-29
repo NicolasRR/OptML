@@ -1,21 +1,109 @@
-Baselines:
--classic
+--- Baselines (no delay):
+- classic
 training time: 10:11:255
 Average train accuracy: 95.76 % (57456/60000)
 Average train loss: 0.1371
 Average test accuracy: 89.17 % (8917/10000)
 Average test loss: 0.4815
 
--sync
+- sync
 training time: 74:10:967
 Average train accuracy: 98.27 % (58962/60000)
 Average train loss: 0.1000
 Average test accuracy: 89.90 % (8990/10000)
 Average test loss: 0.8022
 
--async
+- async
 training time: 101:33:923
 Average train accuracy: 97.65 % (58588/60000)
 Average train loss: 0.1188
 Average test accuracy: 89.10 % (8910/10000)
 Average test loss: 0.8658
+
+--- Constant delay (all workers slowed)
+- small delay:
+training time: 68:06:094
+Average train accuracy: 97.78 % (58670/60000)
+Average train loss: 0.1078
+Average test accuracy: 88.48 % (8848/10000)
+Average test loss: 0.8587
+
+- medium delay:
+training time: 32:01:948
+Average train accuracy: 97.85 % (58710/60000)
+Average train loss: 0.1076
+Average test accuracy: 88.92 % (8892/10000)
+Average test loss: 0.9029
+
+- long delay:
+training time: 37:52:214
+Average train accuracy: 97.28 % (58365/60000)
+Average train loss: 0.1187
+Average test accuracy: 88.84 % (8884/10000)
+Average test loss: 0.8222
+
+--- Constant delay (worker1 slowed):
+- small delay:
+training time: 85:49:475
+Average train accuracy: 97.94 % (58764/60000)
+Average train loss: 0.1181
+Average test accuracy: 89.14 % (8914/10000)
+Average test loss: 0.9309
+
+- medium delay:
+training time: 86:32:244
+Average train accuracy: 97.59 % (58555/60000)
+Average train loss: 0.1225
+Average train accuracy: 97.59 % (58555/60000)
+Average train loss: 0.1225
+
+- long delay:
+training time: 95:38:403
+Average train accuracy: 98.25 % (58947/60000)
+Average train loss: 0.1020
+Average test accuracy: 88.98 % (8898/10000)
+Average test loss: 0.9051
+
+--- Gaussian delay (all workers slowed)
+- small delay:
+training time: 67:59:383
+Average train accuracy: 98.02 % (58812/60000)
+Average train loss: 0.1153
+Average test accuracy: 89.32 % (8932/10000)
+Average test loss: 0.9595
+
+- medium delay:
+training time: 35:15:635
+Average train accuracy: 96.45 % (57868/60000)
+Average train loss: 0.1414
+Average test accuracy: 88.64 % (8864/10000)
+Average test loss: 0.7524
+
+- long delay:
+training time: 37:53:361
+Average train accuracy: 97.40 % (58443/60000)
+Average train loss: 0.1158
+Average test accuracy: 88.77 % (8877/10000)
+Average test loss: 0.7788
+
+--- Gaussian delay (worker1 slowed)
+- small delay:
+training time: 85:44:199
+Average train accuracy: 98.12 % (58874/60000)
+Average train loss: 0.1188
+Average test accuracy: 89.23 % (8923/10000)
+Average test loss: 1.0567
+
+- medium delay:
+training time: 86:20:173
+Average train accuracy: 97.36 % (58417/60000)
+Average train loss: 0.1410
+Average test accuracy: 88.84 % (8884/10000)
+Average test loss: 0.9568
+
+- long delay:
+training time: 96:56:998
+Average train accuracy: 97.39 % (58434/60000)
+Average train loss: 0.1305
+Average test accuracy: 88.70 % (8870/10000)
+Average test loss: 0.8926
