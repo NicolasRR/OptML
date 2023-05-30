@@ -92,27 +92,27 @@ def main(
 
     trajectory_loss_reevaluted = []
 
-    # progress_bar2 = tqdm(
-    #     total=len(weights_matrix_np),
-    #     desc="Computing loss of trajectory weights",
-    #     unit="model_weights",
-    # )
+    progress_bar2 = tqdm(
+        total=len(weights_matrix_np),
+        desc="Computing loss of trajectory weights",
+        unit="model_weights",
+    )
 
-    # with torch.no_grad():
-    #     for weights in weights_matrix_np:
-    #         model = set_weights(model, weights)
+    with torch.no_grad():
+        for weights in weights_matrix_np:
+            model = set_weights(model, weights)
 
-    #         running_loss = 0.0
-    #         for inputs, labels in loader:
-    #             outputs = model(inputs)
-    #             loss = LOSS_FUNC(outputs, labels)
-    #             running_loss += loss.item() * inputs.size(0)
+            running_loss = 0.0
+            for inputs, labels in loader:
+                outputs = model(inputs)
+                loss = LOSS_FUNC(outputs, labels)
+                running_loss += loss.item() * inputs.size(0)
 
-    #         trajectory_loss_reevaluted.append(running_loss / len(loader.dataset))
-    #         progress_bar2.update(1)
-    #         progress_bar2.set_postfix(trajectory_loss=trajectory_loss_reevaluted[-1])
+            trajectory_loss_reevaluted.append(running_loss / len(loader.dataset))
+            progress_bar2.update(1)
+            progress_bar2.set_postfix(trajectory_loss=trajectory_loss_reevaluted[-1])
 
-    # progress_bar2.close()
+    progress_bar2.close()
 
 
 
@@ -194,7 +194,7 @@ def main(
         np.savetxt(f"{model_basename}_grid_losses.npy"
         ,np.vstack([xx.flatten(), yy.flatten(), grid_losses.flatten()]))
         np.savetxt(f"{model_basename}_trajectory_losses.npy"
-        ,np.vstack([reduced_weights[:, 0], reduced_weights[:, 1]]))
+        ,np.vstack([reduced_weights[:, 0], reduced_weights[:, 1], trajectory_loss_reevaluted]))
 
     print(f"Saved 3D figure at: {output_file_path}")
 
