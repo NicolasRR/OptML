@@ -86,7 +86,7 @@ def main(
     progress_bar.close()
 
     grid_losses = np.array(grid_losses)
-    grid_losses = np.clip(grid_losses, None, 2*grid_losses.nanmax())
+    grid_losses = np.clip(grid_losses, None, 2*np.nanmax(grid_losses))
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
 
