@@ -52,8 +52,8 @@ def main(
     _max = np.max(reduced_weights) + 1
 
     # Compute grid_range_x and grid_range_y
-    grid_range_x = np.linspace(_min-2*(_max-_min), _max+2*(_max-_min), grid_size)
-    grid_range_y = np.linspace(_min-2*(_max-_min), _max+2*(_max-_min), grid_size)
+    grid_range_x = np.linspace(_min-1*(_max-_min), _max+1*(_max-_min), grid_size)
+    grid_range_y = np.linspace(_min-1*(_max-_min), _max+1*(_max-_min), grid_size)
 
     # Replace xx, yy with grid_range_x, grid_range_y respectively
     xx, yy = np.meshgrid(grid_range_x, grid_range_y)
@@ -86,7 +86,7 @@ def main(
     progress_bar.close()
 
     grid_losses = np.array(grid_losses)
-    grid_losses = np.clip(grid_losses, None, 5*grid_losses.nanmax())
+    grid_losses = np.clip(grid_losses, None, 2*grid_losses.nanmax())
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
 
