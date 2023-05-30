@@ -10,12 +10,12 @@ then
         # python3 -u $kfold_py --dataset mnist --alr
         # sleep 0.1
         # echo
-        # python3 -u $kfold_py --dataset fashion_mnist --alr
-        # sleep 0.1
-        # echo
-        python3 -u $kfold_py --dataset cifar10 --alr
+        python3 -u $kfold_py --dataset fashion_mnist --alr --alt_model
         sleep 0.1
         echo
+        # python3 -u $kfold_py --dataset cifar10 --alr
+        # sleep 0.1
+        #echo
         # python3 -u kfold_py --dataset cifar100 --alr
         # sleep 0.1
         # echo
@@ -25,12 +25,12 @@ else
         # python3 -u kfold_py --dataset mnist --momentum
         # sleep 0.1
         # echo
-        # python3 -u kfold_py --dataset fashion_mnist --momentum
-        # sleep 0.1
-        # echo
-        python3 -u $kfold_py --dataset cifar10 --momentum
+        python3 -u $kfold_py --dataset fashion_mnist --alt_model
         sleep 0.1
         echo
+        # python3 -u $kfold_py --dataset cifar10 --momentum
+        # sleep 0.1
+        # echo
         # python3 -u $kfold_py --dataset cifar100
         # sleep 0.1
         # echo
