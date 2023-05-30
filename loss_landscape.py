@@ -8,7 +8,7 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_SIZE = 20
+DEFAULT_GRID_SIZE = 25
 DEFAULT_BATCH_SIZE = 1024
 
 
@@ -52,8 +52,8 @@ def main(
     _max = np.max(reduced_weights) + 1
 
     # Compute grid_range_x and grid_range_y
-    grid_range_x = np.linspace(_min, _max, grid_size)
-    grid_range_y = np.linspace(_min, _max, grid_size)
+    grid_range_x = np.linspace(_min-2*(_max-_min), _max+2*(_max-_min), grid_size)
+    grid_range_y = np.linspace(_min-2*(_max-_min), _max+2*(_max-_min), grid_size)
 
     # Replace xx, yy with grid_range_x, grid_range_y respectively
     xx, yy = np.meshgrid(grid_range_x, grid_range_y)
@@ -86,32 +86,33 @@ def main(
     progress_bar.close()
 
     grid_losses = np.array(grid_losses)
+    grid_losses = np.clip(grid_losses, None, 5*grid_losses.nanmax())
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
 
     trajectory_loss_reevaluted = []
 
-    progress_bar2 = tqdm(
-        total=len(weights_matrix_np),
-        desc="Computing loss of trajectory weights",
-        unit="model_weights",
-    )
+    # progress_bar2 = tqdm(
+    #     total=len(weights_matrix_np),
+    #     desc="Computing loss of trajectory weights",
+    #     unit="model_weights",
+    # )
 
-    with torch.no_grad():
-        for weights in weights_matrix_np:
-            model = set_weights(model, weights)
+    # with torch.no_grad():
+    #     for weights in weights_matrix_np:
+    #         model = set_weights(model, weights)
 
-            running_loss = 0.0
-            for inputs, labels in loader:
-                outputs = model(inputs)
-                loss = LOSS_FUNC(outputs, labels)
-                running_loss += loss.item() * inputs.size(0)
+    #         running_loss = 0.0
+    #         for inputs, labels in loader:
+    #             outputs = model(inputs)
+    #             loss = LOSS_FUNC(outputs, labels)
+    #             running_loss += loss.item() * inputs.size(0)
 
-            trajectory_loss_reevaluted.append(running_loss / len(loader.dataset))
-            progress_bar2.update(1)
-            progress_bar2.set_postfix(trajectory_loss=trajectory_loss_reevaluted[-1])
+    #         trajectory_loss_reevaluted.append(running_loss / len(loader.dataset))
+    #         progress_bar2.update(1)
+    #         progress_bar2.set_postfix(trajectory_loss=trajectory_loss_reevaluted[-1])
 
-    progress_bar2.close()
+    # progress_bar2.close()
 
 
 
@@ -154,7 +155,7 @@ def main(
     
     fig.update_traces(contours_z=dict(show=True, usecolormap=True,
                                   highlightcolor="limegreen", project_z=True))
-    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=grid_losses.flatten(), colorscale='Viridis')])
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log(grid_losses.flatten()), colorscale='Viridis')])
 
     # Add labels and title
     fig2.update_layout(
