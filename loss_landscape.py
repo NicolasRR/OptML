@@ -180,11 +180,21 @@ def main(
             subfolder, f"{model_basename}_loss_landscape_contour.html"
         )
         pio.write_html(fig2, output_file_path_contour)
+        np.savetxt(os.path.join(
+            subfolder, f"{model_basename}_grid_losses.npy"
+        ),np.vstack([xx.flatten(), yy.flatten(), grid_losses.flatten()]))
+        np.savetxt(os.path.join(
+            subfolder, f"{model_basename}_trajectory_losses.npy"
+        ),np.vstack([reduced_weights[:, 0], reduced_weights[:, 1]]))
     else:
         output_file_path = f"{model_basename}_loss_landscape.html"
         pio.write_html(fig, output_file_path)
         output_file_path_contour = f"{model_basename}_loss_landscape_contour.html"
         pio.write_html(fig2, output_file_path_contour)
+        np.savetxt(f"{model_basename}_grid_losses.npy"
+        ,np.vstack([xx.flatten(), yy.flatten(), grid_losses.flatten()]))
+        np.savetxt(f"{model_basename}_trajectory_losses.npy"
+        ,np.vstack([reduced_weights[:, 0], reduced_weights[:, 1]]))
 
     print(f"Saved 3D figure at: {output_file_path}")
 
