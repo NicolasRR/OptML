@@ -1,6 +1,8 @@
 # OptML
 Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nicolas Reategui
 
+[GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with the results
+
 # Objective
 
 **<ins>Asynchronous SGD: How do different delays affect convergence? How does it interplay with momentum?
