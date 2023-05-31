@@ -81,7 +81,7 @@ if args.alr is False:
 else:
     learning_rates = [0.0005, 0.001, 0.005, 0.01, 0.05]
 if args.momentum is None and args.alr is False:
-    momentums = [0.9, 0.95, 0.99]
+    momentums = [0, 0.9]
 else:
     momentums = [args.momentum]
 batch_sizes = [32, 64, 128]
