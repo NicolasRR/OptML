@@ -1,0 +1,2302 @@
+Using SGD as optimizer.
+Using CNN models (alternative).
+Running Kfold for fashion_mnist, using 5 splits.
+Created FashionMNIST trainloaders
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.6627552480697632
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.671278999209404
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.6777946424484252
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.6727372113068899
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.6593546726703644
+Step: 1/135, avg loss: 0.6687841547409693, epoch:2, lr:0.001, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4283876891334852
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.44699147909879683
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4555761311848958
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.45689137538274127
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4679919898907344
+Step: 2/135, avg loss: 0.4511677329381307, epoch:2, lr:0.001, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3627928008437157
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3694847160577774
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.35427802099784217
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3549108935991923
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.37274025893211366
+Step: 3/135, avg loss: 0.36284133808612823, epoch:2, lr:0.001, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.513969105442365
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5052557373841604
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4805424631436666
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.513139045159022
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.49285033643245696
+Step: 4/135, avg loss: 0.5011513375123341, epoch:2, lr:0.005, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3505182592670123
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3590466611981392
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3494138889511426
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3450679508050283
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3539796296556791
+Step: 5/135, avg loss: 0.3516052779754003, epoch:2, lr:0.005, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.3075361518859863
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.3082027206420896
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.395136438369751
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.30687629254659
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.308436591466268
+Step: 6/135, avg loss: 2.325237638982137, epoch:2, lr:0.005, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4484463733434677
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4467303410768509
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4321792226632436
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.45721832327047984
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.45841766421000163
+Step: 7/135, avg loss: 0.4485983849128087, epoch:2, lr:0.01, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3517361970345179
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3582435759305954
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.32960095075766244
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3314987868467967
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.35403095267216367
+Step: 8/135, avg loss: 0.34502209264834727, epoch:2, lr:0.01, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.305896910985311
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.3119356575012207
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.307136926015218
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.308007363637288
+Step: 9/135, avg loss: nan, epoch:2, lr:0.01, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3423779554367065
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.35601898801326753
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3368707181016604
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3599765136043231
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.34659148412942886
+Step: 10/135, avg loss: 0.3483671318570773, epoch:2, lr:0.05, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 11/135, avg loss: nan, epoch:2, lr:0.05, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 12/135, avg loss: nan, epoch:2, lr:0.05, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.32567697419722874
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.32905809381604195
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3390605412920316
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.33959083066384
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.35106162987152734
+Step: 13/135, avg loss: 0.3368896139681339, epoch:2, lr:0.1, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 14/135, avg loss: nan, epoch:2, lr:0.1, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 15/135, avg loss: nan, epoch:2, lr:0.1, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.7941797033269354
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.8326965817745696
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.8265075911866858
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.8282723496568963
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.8083265721797943
+Step: 16/135, avg loss: 0.8179965596249763, epoch:2, lr:0.001, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4974167565716074
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.48685727807435586
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.49655946336211043
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.509726808426228
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4929724787460997
+Step: 17/135, avg loss: 0.4967065570360803, epoch:2, lr:0.001, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.35308107091708385
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.36486186372472884
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3631213037098976
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.36707092932564145
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3584689999672961
+Step: 18/135, avg loss: 0.3613208335289296, epoch:2, lr:0.001, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5523871568606255
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5603358796302308
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5472798715246484
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5529569170259415
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5664854449160556
+Step: 19/135, avg loss: 0.5558890539915003, epoch:2, lr:0.005, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.37393024559826293
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.38925175408416607
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3842139180670393
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3803994945706205
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.38974858963109077
+Step: 20/135, avg loss: 0.38350880039023594, epoch:2, lr:0.005, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.8818873595050041
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 1.3108119939235932
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.9044110028350607
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.8849582641999773
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.6801784450703479
+Step: 21/135, avg loss: 0.9324494131067965, epoch:2, lr:0.005, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5125249757411632
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5096811379523988
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5110255939529297
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.49892350096017757
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5193080461405694
+Step: 22/135, avg loss: 0.5102926509494476, epoch:2, lr:0.01, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3504690001619623
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.34482287044854876
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3442300386885379
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3557082723746908
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3413998895186059
+Step: 23/135, avg loss: 0.34732601423846915, epoch:2, lr:0.01, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.306298318061423
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.308067910214688
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.3072862612440233
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.3090956375953997
+Step: 24/135, avg loss: nan, epoch:2, lr:0.01, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.38394746057530665
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.38743923144771697
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3726205959757592
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3978347672109908
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3891958477015191
+Step: 25/135, avg loss: 0.38620758058225857, epoch:2, lr:0.05, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5093643077193423
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.44615239380521976
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.46438532362275936
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.46004488691687584
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.44718795499586045
+Step: 26/135, avg loss: 0.4654269734120115, epoch:2, lr:0.05, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 27/135, avg loss: nan, epoch:2, lr:0.05, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.35001089114775047
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3446707320498659
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3525202764951168
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.35919097799094435
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3541110690603865
+Step: 28/135, avg loss: 0.3521007893488128, epoch:2, lr:0.1, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 29/135, avg loss: nan, epoch:2, lr:0.1, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 30/135, avg loss: nan, epoch:2, lr:0.1, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 1.009808600582975
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 1.0543375934692139
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 1.1243024341603542
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 1.0157005901032305
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 1.0301838035279132
+Step: 31/135, avg loss: 1.0468666043687374, epoch:2, lr:0.001, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5592343867459195
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5557887173713522
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5648048187189914
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5563309005600341
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5661870177755964
+Step: 32/135, avg loss: 0.5604691682343786, epoch:2, lr:0.001, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.40856133718439874
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4260518062621989
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3918268542657507
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4021566671893952
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.42016331788073197
+Step: 33/135, avg loss: 0.4097519965564951, epoch:2, lr:0.001, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.6208196897455986
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.6406976422096821
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.6447350037224749
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.6282224281037108
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.640507199979843
+Step: 34/135, avg loss: 0.6349963927522618, epoch:2, lr:0.005, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4339373875805672
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.43404218395973776
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.423473892059732
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.42761384140937886
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.42777760548794524
+Step: 35/135, avg loss: 0.4293689820994723, epoch:2, lr:0.005, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.41688121030939385
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4519318107594835
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4346346918572771
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4187447599908139
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4444392700778677
+Step: 36/135, avg loss: 0.43332634859896724, epoch:2, lr:0.005, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5478337562464654
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5810273996693023
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5520108732137274
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5570413587575264
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5595164917250897
+Step: 37/135, avg loss: 0.5594859759224222, epoch:2, lr:0.01, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3780366057094107
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4059919603961579
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.39136835124264374
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.38627669468839115
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3939234950440995
+Step: 38/135, avg loss: 0.3911194214161406, epoch:2, lr:0.01, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.7237966498161884
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 1.2452968523857442
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.8778041309498726
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.8532834966131981
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.8614259045174781
+Step: 39/135, avg loss: 0.9123214068564962, epoch:2, lr:0.01, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4290311377733312
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4533862531819242
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.43996883453206814
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4279552679112617
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.43005887498246864
+Step: 40/135, avg loss: 0.43608007367621077, epoch:2, lr:0.05, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3547573056309781
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3653778023225196
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.35478472218234486
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3750157743058306
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.37981852508605796
+Step: 41/135, avg loss: 0.36595082590554623, epoch:2, lr:0.05, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 42/135, avg loss: nan, epoch:2, lr:0.05, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.38628084640553656
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3813397231254172
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.37511056994504116
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.385445607310914
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3796531488286688
+Step: 43/135, avg loss: 0.3815659791231155, epoch:2, lr:0.1, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5591029068256946
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.6626512341676875
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.6546749599436497
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.631562092519821
+Step: 44/135, avg loss: nan, epoch:2, lr:0.1, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 45/135, avg loss: nan, epoch:2, lr:0.1, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.6016968100865682
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.6425103722016017
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.6012286434173584
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.6046820951302846
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5956689973672231
+Step: 46/135, avg loss: 0.6091573836406072, epoch:3, lr:0.001, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4104268389542898
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4228966794411341
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.39255258717139563
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4053958348830541
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4127525235017141
+Step: 47/135, avg loss: 0.4088048927903176, epoch:3, lr:0.001, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3448336285551389
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.34715272090832394
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3465597300430139
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.33567481899261475
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3325757091840108
+Step: 48/135, avg loss: 0.34135932153662046, epoch:3, lr:0.001, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4690203809142113
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.46097617979844413
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.47232629724343617
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4569181139469147
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4554080638885498
+Step: 49/135, avg loss: 0.4629298071583112, epoch:3, lr:0.005, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.32393816352883975
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3333758158882459
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3147624707122644
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3261309071977933
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3256703094045321
+Step: 50/135, avg loss: 0.3247755333463351, epoch:3, lr:0.005, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 3.3763283913930255
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.3064295463562012
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.3058801555633544
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 3.51781157430013
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.3065958614349364
+Step: 51/135, avg loss: 2.762609105809529, epoch:3, lr:0.005, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4081184788942337
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4021602859099706
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.40659920960664747
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4035215009053548
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.41034118221203486
+Step: 52/135, avg loss: 0.40614813150564827, epoch:3, lr:0.01, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.31945615593592325
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.330838515162468
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.33579631593823434
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.32237401336431504
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3370339596370856
+Step: 53/135, avg loss: 0.32909979200760525, epoch:3, lr:0.01, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.310333699544271
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.3118727302551267
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.3063224029541014
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.311640166600545
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.309630262374878
+Step: 54/135, avg loss: 2.3099598523457847, epoch:3, lr:0.01, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.32365328017870587
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.33547198855876925
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3304664461016655
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.33067534640431406
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.34800395275155704
+Step: 55/135, avg loss: 0.3336542027990023, epoch:3, lr:0.05, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 56/135, avg loss: nan, epoch:3, lr:0.05, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 57/135, avg loss: nan, epoch:3, lr:0.05, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3065646351377169
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.32004369160532953
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3076439218521118
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3169861262937387
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3165016630788644
+Step: 58/135, avg loss: 0.3135480075935523, epoch:3, lr:0.1, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 59/135, avg loss: nan, epoch:3, lr:0.1, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 60/135, avg loss: nan, epoch:3, lr:0.1, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.7459034349056001
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.718846434291373
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.7250518037917766
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.7168150767683983
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.7040662537229821
+Step: 61/135, avg loss: 0.7221366006960259, epoch:3, lr:0.001, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4628847406265583
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.47613590987438853
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.45200504838152133
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.45922724625214617
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4637039742095673
+Step: 62/135, avg loss: 0.46279138386883634, epoch:3, lr:0.001, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.326601335224002
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3439072659041019
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.32595979965272104
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3366502510740402
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.36218125943807844
+Step: 63/135, avg loss: 0.3390599822585887, epoch:3, lr:0.001, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.500421932640862
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.507808655183366
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5054900306970516
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4972483293807253
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5191801921167272
+Step: 64/135, avg loss: 0.5060298280037465, epoch:3, lr:0.005, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3569325698499984
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.36792366777328733
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3400108129420179
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.34740721426428633
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.34772348447524487
+Step: 65/135, avg loss: 0.35199954986096693, epoch:3, lr:0.005, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 1.107140652993892
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.324229934114091
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 1.6453635305800336
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.9999227587212908
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 1.636800284081317
+Step: 66/135, avg loss: 1.5426914320981249, epoch:3, lr:0.005, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4589332807412807
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.47922985049638345
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.45903144372587507
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.45050628808267573
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.452537051065171
+Step: 67/135, avg loss: 0.46004758282227726, epoch:3, lr:0.01, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3264064090524582
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.32643700795287783
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.31460085194161597
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3215666338801384
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.31776638432069026
+Step: 68/135, avg loss: 0.3213554574295562, epoch:3, lr:0.01, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.3057140720651503
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.306394968895202
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.3077209160683
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.3070838552840214
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.3078397867527416
+Step: 69/135, avg loss: 2.306950719813083, epoch:3, lr:0.01, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.34845542123026035
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.36749585963627124
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.34267779011675653
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.35738399767495216
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3493169308342832
+Step: 70/135, avg loss: 0.35306599989850473, epoch:3, lr:0.05, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4957846092416885
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4865102357369788
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5108638194171672
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5509521196338725
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5012038752753684
+Step: 71/135, avg loss: 0.509062931861015, epoch:3, lr:0.05, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 72/135, avg loss: nan, epoch:3, lr:0.05, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3197201139273796
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3278600753859637
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.31168282773107925
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.31926226639684213
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3149909891108883
+Step: 73/135, avg loss: 0.3187032545104306, epoch:3, lr:0.1, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 74/135, avg loss: nan, epoch:3, lr:0.1, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 75/135, avg loss: nan, epoch:3, lr:0.1, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.870227575936216
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.9028725249970213
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.8653031828555655
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.9431409569496804
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.9103541894161955
+Step: 76/135, avg loss: 0.8983796860309358, epoch:3, lr:0.001, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5180344388205954
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5183963455418323
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5105783134064776
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5056348731543155
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5159813530267553
+Step: 77/135, avg loss: 0.5137250647899952, epoch:3, lr:0.001, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3658730348056935
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3805610428148128
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.36508177839061046
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.37759098600833974
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.36104556553541345
+Step: 78/135, avg loss: 0.37003048151097395, epoch:3, lr:0.001, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5782296372220871
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5937082079496789
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5869873546539469
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5613491474948031
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5830459661306219
+Step: 79/135, avg loss: 0.5806640626902275, epoch:3, lr:0.005, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.402371365656244
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.40017375017100193
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3958807592379286
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.39135298656022294
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.40228072474611565
+Step: 80/135, avg loss: 0.3984119172743026, epoch:3, lr:0.005, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.39039907208148467
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.39742816746868986
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3891790436303362
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.38388397687293113
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.40271692675478915
+Step: 81/135, avg loss: 0.3927214373616462, epoch:3, lr:0.005, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5083497220531423
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5311977324333597
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.506190927738839
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5056035052588645
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5140990323208748
+Step: 82/135, avg loss: 0.5130881839610161, epoch:3, lr:0.01, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3513149249743908
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3601169510090605
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.35102249380755934
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3501470516970817
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3668575938394729
+Step: 83/135, avg loss: 0.35589180306551305, epoch:3, lr:0.01, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.7459681370156876
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 1.405051200947863
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 1.289456806918408
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 3.192881340676166
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 1.4099012924001573
+Step: 84/135, avg loss: 1.6086517555916564, epoch:3, lr:0.01, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.39784217641708697
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4003112297108833
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.38747008572867575
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3852775090552391
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.40489696822267895
+Step: 85/135, avg loss: 0.39515959382691285, epoch:3, lr:0.05, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3387146714202901
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.32732304296594983
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3483601665877281
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3714724615850347
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.34710897695510945
+Step: 86/135, avg loss: 0.34659586390282243, epoch:3, lr:0.05, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 87/135, avg loss: nan, epoch:3, lr:0.05, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3548248234264394
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.35287310563503427
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3519458344325106
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.36634799742952306
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3500297503902557
+Step: 88/135, avg loss: 0.3552043022627526, epoch:3, lr:0.1, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 89/135, avg loss: nan, epoch:3, lr:0.1, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 90/135, avg loss: nan, epoch:3, lr:0.1, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.561797238389651
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5704004356861114
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.5688899199565252
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5709597140153249
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5610689301490783
+Step: 91/135, avg loss: 0.5666232476393381, epoch:4, lr:0.001, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3826272231737773
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.39440949441989265
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.37974764772256214
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.37723746649424234
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3908521512746811
+Step: 92/135, avg loss: 0.38497479661703105, epoch:4, lr:0.001, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.30064694057901703
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3255267968078454
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3393883935411771
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.34694273576140405
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3119036714732647
+Step: 93/135, avg loss: 0.3248817076325417, epoch:4, lr:0.001, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.44070512360334396
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.44578208271662395
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4030780186255773
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4273715358177821
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4514576335748037
+Step: 94/135, avg loss: 0.4336788788676261, epoch:4, lr:0.005, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3047412891983986
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3164976920684179
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.2970579216380914
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.30453728984793027
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.305317895680666
+Step: 95/135, avg loss: 0.3056304176867008, epoch:4, lr:0.005, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.3042246131896973
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.3068585421244303
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.30456699180603
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.3076702804565428
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.306001506169637
+Step: 96/135, avg loss: 2.305864386749268, epoch:4, lr:0.005, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.384556706349055
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.38641238941748934
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3780382724603017
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3743935463031133
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3852792300581932
+Step: 97/135, avg loss: 0.3817360289176305, epoch:4, lr:0.01, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3102894368171692
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.32140728639562927
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3104042224387328
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.32442803552746774
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3226092334191004
+Step: 98/135, avg loss: 0.3178276429196199, epoch:4, lr:0.01, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.307087636311849
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.3056259117126463
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.3124962933858235
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.313169105529785
+Step: 99/135, avg loss: nan, epoch:4, lr:0.01, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.30068848342696824
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3285107287267844
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.30667996088663735
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3219350752532482
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.30353162725766497
+Step: 100/135, avg loss: 0.3122691751102606, epoch:4, lr:0.05, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.304813414891561
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 101/135, avg loss: nan, epoch:4, lr:0.05, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 102/135, avg loss: nan, epoch:4, lr:0.05, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.313081926604112
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3269414003690084
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3127733327249686
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.327703171312809
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.30537934151291846
+Step: 103/135, avg loss: 0.31717583450476333, epoch:4, lr:0.1, batch_size: 32, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 104/135, avg loss: nan, epoch:4, lr:0.1, batch_size: 32, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 105/135, avg loss: nan, epoch:4, lr:0.1, batch_size: 32, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.6529343289897797
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.6676042106874446
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.6828373594486967
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.6809509921264141
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.6464911249089749
+Step: 106/135, avg loss: 0.666163603232262, epoch:4, lr:0.001, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4306575074157816
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.43767361675805233
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4447213280549709
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.44246375766840385
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.42307499312656993
+Step: 107/135, avg loss: 0.4357182406047557, epoch:4, lr:0.001, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3017037757375139
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3265811798578881
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.31702240013537253
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3108244675429577
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3102781443678318
+Step: 108/135, avg loss: 0.31328199352831276, epoch:4, lr:0.001, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.47583487986567174
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.49528746845874383
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.480019211927627
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4817029873424388
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4826144690209247
+Step: 109/135, avg loss: 0.4830918033230812, epoch:4, lr:0.005, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3378569243594687
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.33197172937241004
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3287947597180275
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.34701700651265205
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3311580930777053
+Step: 110/135, avg loss: 0.3353597026080527, epoch:4, lr:0.005, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.3906670415655094
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.1504305981575174
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 1.4094115514704522
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.304879184733046
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 1.8663525695496417
+Step: 111/135, avg loss: 2.0243481890952335, epoch:4, lr:0.005, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.42939775880981
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4345187555919302
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4291798839385205
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.42725293045031265
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.43478113381152456
+Step: 112/135, avg loss: 0.4310260925204196, epoch:4, lr:0.01, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3006238164974654
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.32047476516442097
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3003556026106185
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.2999216698585673
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3027365340038817
+Step: 113/135, avg loss: 0.3048224776269908, epoch:4, lr:0.01, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.3053965276860175
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 2.30670908917772
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.304937055770387
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.3049956281134425
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.3085253441587406
+Step: 114/135, avg loss: 2.3061127289812613, epoch:4, lr:0.01, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3134954647022359
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3257696399504834
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3272249361381252
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3208259136039526
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.32671926035842996
+Step: 115/135, avg loss: 0.32280704295064544, epoch:4, lr:0.05, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5779417875282308
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4964217182169569
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.48005890418240366
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5221357744266378
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.48980645518353644
+Step: 116/135, avg loss: 0.5132729279075531, epoch:4, lr:0.05, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 117/135, avg loss: nan, epoch:4, lr:0.05, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.31852654225014626
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3243052908318474
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.32222896053435957
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.34277174352331363
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.31141093995501384
+Step: 118/135, avg loss: 0.32384869541893613, epoch:4, lr:0.1, batch_size: 64, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.3065469531302756
+Step: 119/135, avg loss: nan, epoch:4, lr:0.1, batch_size: 64, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 120/135, avg loss: nan, epoch:4, lr:0.1, batch_size: 64, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.7943738255094974
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.8559876173100573
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.8323865393374829
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.8009019050192325
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.8228286549131921
+Step: 121/135, avg loss: 0.8212957084178925, epoch:4, lr:0.001, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.49083923817949093
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.4842803760411892
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.49837708663433156
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4884042289662868
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.48295488763362804
+Step: 122/135, avg loss: 0.4889711634909853, epoch:4, lr:0.001, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.34370971724708027
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3402545856351548
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3388788371961168
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3390540857898428
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.34187204596844123
+Step: 123/135, avg loss: 0.3407538543673272, epoch:4, lr:0.001, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.5650070785207951
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5457332378372233
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.552644949010078
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.5363546654264978
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.5639411715116907
+Step: 124/135, avg loss: 0.5527362204612569, epoch:4, lr:0.005, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3650574674631687
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.37504959835651075
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3620339221459754
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3694236154886002
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.36857975543813504
+Step: 125/135, avg loss: 0.368028871778478, epoch:4, lr:0.005, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3563104520769829
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3979141602807857
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.36566236298134985
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4007415901473228
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4039027543461069
+Step: 126/135, avg loss: 0.3849062639665096, epoch:4, lr:0.005, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.4753123052576755
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.5137444709209685
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.4847397851817151
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.4914228190132912
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.4819029753512524
+Step: 127/135, avg loss: 0.48942447114498056, epoch:4, lr:0.01, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.31986861913762193
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.34264023538599625
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3279260813872865
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3187549099960226
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3350079603334691
+Step: 128/135, avg loss: 0.3288395612480793, epoch:4, lr:0.01, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 2.2291695944806365
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 1.3918688132407817
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 2.311903935797671
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 2.3063520776464586
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 2.105451380952876
+Step: 129/135, avg loss: 2.068949160423685, epoch:4, lr:0.01, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.36303187431173123
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3774837862620962
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.38251723444208185
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.37226411795362513
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.37152638476579747
+Step: 130/135, avg loss: 0.3733646795470663, epoch:4, lr:0.05, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.31887447041399936
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.3553066854464247
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.33400756675512233
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3543431907892227
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3339540568437982
+Step: 131/135, avg loss: 0.3392971940497135, epoch:4, lr:0.05, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 132/135, avg loss: nan, epoch:4, lr:0.05, batch_size: 128, momentum: 0.99
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: 0.3201100315819395
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: 0.33824837667510865
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: 0.3336841042371506
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: 0.3394343765809181
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: 0.3180561542828032
+Step: 133/135, avg loss: 0.32990660867158395, epoch:4, lr:0.1, batch_size: 128, momentum: 0
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 134/135, avg loss: nan, epoch:4, lr:0.1, batch_size: 128, momentum: 0.9
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 1/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 2/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 3/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 4/5, fold_loss: nan
+Created MNIST/FASHION_MNIST CNN (alternative)
+CNN using loss: <function nll_loss at 0x7f24c99c8a60>
+Fold: 5/5, fold_loss: nan
+Step: 135/135, avg loss: nan, epoch:4, lr:0.1, batch_size: 128, momentum: 0.99
+
+Best parameters for fashion_mnist (SGD): epochs=4, batch_size=64, learning_rate=0.01, momentum=0.9, loss=0.3048224776269908
+ epochs  batch_size  learning_rate  momentum  Average Loss
+      2          32          0.001      0.00      0.668784
+      2          32          0.001      0.90      0.451168
+      2          32          0.001      0.99      0.362841
+      2          32          0.005      0.00      0.501151
+      2          32          0.005      0.90      0.351605
+      2          32          0.005      0.99      2.325238
+      2          32          0.010      0.00      0.448598
+      2          32          0.010      0.90      0.345022
+      2          32          0.010      0.99           NaN
+      2          32          0.050      0.00      0.348367
+      2          32          0.050      0.90           NaN
+      2          32          0.050      0.99           NaN
+      2          32          0.100      0.00      0.336890
+      2          32          0.100      0.90           NaN
+      2          32          0.100      0.99           NaN
+      2          64          0.001      0.00      0.817997
+      2          64          0.001      0.90      0.496707
+      2          64          0.001      0.99      0.361321
+      2          64          0.005      0.00      0.555889
+      2          64          0.005      0.90      0.383509
+      2          64          0.005      0.99      0.932449
+      2          64          0.010      0.00      0.510293
+      2          64          0.010      0.90      0.347326
+      2          64          0.010      0.99           NaN
+      2          64          0.050      0.00      0.386208
+      2          64          0.050      0.90      0.465427
+      2          64          0.050      0.99           NaN
+      2          64          0.100      0.00      0.352101
+      2          64          0.100      0.90           NaN
+      2          64          0.100      0.99           NaN
+      2         128          0.001      0.00      1.046867
+      2         128          0.001      0.90      0.560469
+      2         128          0.001      0.99      0.409752
+      2         128          0.005      0.00      0.634996
+      2         128          0.005      0.90      0.429369
+      2         128          0.005      0.99      0.433326
+      2         128          0.010      0.00      0.559486
+      2         128          0.010      0.90      0.391119
+      2         128          0.010      0.99      0.912321
+      2         128          0.050      0.00      0.436080
+      2         128          0.050      0.90      0.365951
+      2         128          0.050      0.99           NaN
+      2         128          0.100      0.00      0.381566
+      2         128          0.100      0.90           NaN
+      2         128          0.100      0.99           NaN
+      3          32          0.001      0.00      0.609157
+      3          32          0.001      0.90      0.408805
+      3          32          0.001      0.99      0.341359
+      3          32          0.005      0.00      0.462930
+      3          32          0.005      0.90      0.324776
+      3          32          0.005      0.99      2.762609
+      3          32          0.010      0.00      0.406148
+      3          32          0.010      0.90      0.329100
+      3          32          0.010      0.99      2.309960
+      3          32          0.050      0.00      0.333654
+      3          32          0.050      0.90           NaN
+      3          32          0.050      0.99           NaN
+      3          32          0.100      0.00      0.313548
+      3          32          0.100      0.90           NaN
+      3          32          0.100      0.99           NaN
+      3          64          0.001      0.00      0.722137
+      3          64          0.001      0.90      0.462791
+      3          64          0.001      0.99      0.339060
+      3          64          0.005      0.00      0.506030
+      3          64          0.005      0.90      0.352000
+      3          64          0.005      0.99      1.542691
+      3          64          0.010      0.00      0.460048
+      3          64          0.010      0.90      0.321355
+      3          64          0.010      0.99      2.306951
+      3          64          0.050      0.00      0.353066
+      3          64          0.050      0.90      0.509063
+      3          64          0.050      0.99           NaN
+      3          64          0.100      0.00      0.318703
+      3          64          0.100      0.90           NaN
+      3          64          0.100      0.99           NaN
+      3         128          0.001      0.00      0.898380
+      3         128          0.001      0.90      0.513725
+      3         128          0.001      0.99      0.370030
+      3         128          0.005      0.00      0.580664
+      3         128          0.005      0.90      0.398412
+      3         128          0.005      0.99      0.392721
+      3         128          0.010      0.00      0.513088
+      3         128          0.010      0.90      0.355892
+      3         128          0.010      0.99      1.608652
+      3         128          0.050      0.00      0.395160
+      3         128          0.050      0.90      0.346596
+      3         128          0.050      0.99           NaN
+      3         128          0.100      0.00      0.355204
+      3         128          0.100      0.90           NaN
+      3         128          0.100      0.99           NaN
+      4          32          0.001      0.00      0.566623
+      4          32          0.001      0.90      0.384975
+      4          32          0.001      0.99      0.324882
+      4          32          0.005      0.00      0.433679
+      4          32          0.005      0.90      0.305630
+      4          32          0.005      0.99      2.305864
+      4          32          0.010      0.00      0.381736
+      4          32          0.010      0.90      0.317828
+      4          32          0.010      0.99           NaN
+      4          32          0.050      0.00      0.312269
+      4          32          0.050      0.90           NaN
+      4          32          0.050      0.99           NaN
+      4          32          0.100      0.00      0.317176
+      4          32          0.100      0.90           NaN
+      4          32          0.100      0.99           NaN
+      4          64          0.001      0.00      0.666164
+      4          64          0.001      0.90      0.435718
+      4          64          0.001      0.99      0.313282
+      4          64          0.005      0.00      0.483092
+      4          64          0.005      0.90      0.335360
+      4          64          0.005      0.99      2.024348
+      4          64          0.010      0.00      0.431026
+      4          64          0.010      0.90      0.304822
+      4          64          0.010      0.99      2.306113
+      4          64          0.050      0.00      0.322807
+      4          64          0.050      0.90      0.513273
+      4          64          0.050      0.99           NaN
+      4          64          0.100      0.00      0.323849
+      4          64          0.100      0.90           NaN
+      4          64          0.100      0.99           NaN
+      4         128          0.001      0.00      0.821296
+      4         128          0.001      0.90      0.488971
+      4         128          0.001      0.99      0.340754
+      4         128          0.005      0.00      0.552736
+      4         128          0.005      0.90      0.368029
+      4         128          0.005      0.99      0.384906
+      4         128          0.010      0.00      0.489424
+      4         128          0.010      0.90      0.328840
+      4         128          0.010      0.99      2.068949
+      4         128          0.050      0.00      0.373365
+      4         128          0.050      0.90      0.339297
+      4         128          0.050      0.99           NaN
+      4         128          0.100      0.00      0.329907
+      4         128          0.100      0.90           NaN
+      4         128          0.100      0.99           NaN
