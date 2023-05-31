@@ -13,6 +13,10 @@ Best parameters for fashion_mnist (SGD): epochs=6, batch_size=32, learning_rate=
 Best parameters for fashion_mnist (ADAM): epochs=6, batch_size=32, learning_rate=0.001, loss=0.2805232353051504
 Best parameters for fashion_mnist (ADAM): epochs=4, batch_size=32, learning_rate=0.001, loss=0.2888044432282448
 
+cnn_alt fashion_mnist
+Best parameters for fashion_mnist (SGD): epochs=4, batch_size=64, learning_rate=0.01, momentum=0.9, loss=0.3048224776269908
+Best parameters for fashion_mnist (ADAM): epochs=4, batch_size=32, learning_rate=0.0005, loss=0.2903933030168216
+
 resnet18 cifar10:
 Best parameters for cifar10 (SGD): epochs=3, batch_size=32, learning_rate=0.005, momentum=0.9, loss=0.8991112561554325
 Best parameters for cifar10 (ADAM): epochs=3, batch_size=64, learning_rate=0.0005, loss=0.8359136792774104
