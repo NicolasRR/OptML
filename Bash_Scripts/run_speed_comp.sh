@@ -11,8 +11,8 @@ subfolder="$project_dir/Speed_results"
 dataset="fashion_mnist"
 epochs=6 # from !summary_kfold_.txt
 lr_sgd_l5=0.005
-lr_sgd_pc=0.001 # pc sgd should be 0.01
-lr_alr_l5=0.01 # l5 alr should be 0.001
+lr_sgd_pc=0.01 # pc sgd should be 0.01
+lr_alr_l5=0.001 # l5 alr should be 0.001
 lr_alr_pc=0.0005
 momentum1=0.0
 momentum2=0.9
@@ -39,7 +39,7 @@ formatted_momentum1=$(echo $momentum1 | tr -d '.')
 formatted_momentum2=$(echo $momentum2 | tr -d '.')
 
 
-# async Lenet5 SGD momentum=0.0 1/8
+# async Lenet5 SGD momentum=0.0 1/6
 python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_sgd_l5 --momentum $momentum1 --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --val --train_split $train_split
 sleep 0.1
 echo
@@ -68,7 +68,7 @@ sleep 0.1
 echo
 
 
-# async Lenet5 SGD momentum=0.9 2/8
+# async Lenet5 SGD momentum=0.9 2/6
 python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_sgd_l5 --momentum $momentum2 --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --val --train_split $train_split
 sleep 0.1
 echo
@@ -97,7 +97,7 @@ sleep 0.1
 echo
 
 
-# async Lenet5 ADAM momentum=0.0 3/8
+# async Lenet5 ADAM momentum=0.0 (dosen't matter) 3/6
 python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_alr_l5 --momentum $momentum1 --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --val --train_split $train_split --alr
 sleep 0.1
 echo
@@ -126,36 +126,7 @@ sleep 0.1
 echo
 
 
-# async Lenet5 ADAM momentum=0.9 4/8
-python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_alr_l5 --momentum $momentum2 --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --val --train_split $train_split --alr
-sleep 0.1
-echo
-model_name="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr_alr_l5}_${formatted_momentum2}_${batch_size}_${epochs}_ADAM_spe3_val_model.pt" 
-log_name="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr_alr_l5}_${formatted_momentum2}_${batch_size}_${epochs}_ADAM_spe3_val_log.log" 
-python3 $test_model_py $model_name $log_name --classification_report --training_time --pics --subfolder $subfolder
-sleep 0.1
-echo
-
-python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_alr_l5 --momentum $momentum2 --batch_size $batch_size --epochs $epochs --split_dataset --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split --alr
-sleep 0.1
-echo
-model_name="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr_alr_l5}_${formatted_momentum2}_${batch_size}_${epochs}_ADAM_spe3_split_dataset_model.pt" 
-log_name="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr_alr_l5}_${formatted_momentum2}_${batch_size}_${epochs}_ADAM_spe3_split_dataset_log.log" 
-python3 $test_model_py $model_name $log_name --classification_report --training_time --pics --subfolder $subfolder
-sleep 0.1
-echo
-
-python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_alr_l5 --momentum $momentum2 --batch_size $batch_size --epochs $epochs --split_labels --subfolder $subfolder --saves_per_epoch 3 --train_split $train_split --alr
-sleep 0.1
-echo
-model_name="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr_alr_l5}_${formatted_momentum2}_${batch_size}_${epochs}_ADAM_spe3_labels_model.pt" 
-log_name="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr_alr_l5}_${formatted_momentum2}_${batch_size}_${epochs}_ADAM_spe3_labels_log.log" 
-python3 $test_model_py $model_name $log_name --classification_report --training_time --pics --subfolder $subfolder
-sleep 0.1
-echo
-
-
-# async PC SGD momentum=0.0 5/8
+# async PC SGD momentum=0.0 4/6
 python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_sgd_pc --momentum $momentum1 --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --val --train_split $train_split --alt_model
 sleep 0.1
 echo
@@ -184,7 +155,7 @@ sleep 0.1
 echo
 
 
-# async PC SGD momentum=0.9 6/8
+# async PC SGD momentum=0.9 5/8
 python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_sgd_pc --momentum $momentum2 --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --val --train_split $train_split --alt_model
 sleep 0.1 
 echo
@@ -213,7 +184,7 @@ sleep 0.1
 echo
 
 
-# async PC ADAM momentum=0.0 7/8
+# async PC ADAM momentum=0.0 (doesn't matter) 6/6
 python3 $dnn_async_train_py --dataset $dataset --model_accuracy --seed --world_size $world_size --lr $lr_alr_pc --momentum $momentum1 --batch_size $batch_size --epochs $epochs --subfolder $subfolder --saves_per_epoch 3 --val --train_split $train_split --alr --alt_model
 sleep 0.1
 echo
