@@ -1,0 +1,215 @@
+dataset="fashion_mnist"
+async mode
+epochs=6 # from !summary_kfold_.txt
+lr_sgd_l5=0.005 #lenet5 sgd optimizer
+lr_sgd_pc=0.001 #pytorch cnn sgd optimizer
+lr_alr_l5=0.01 #lenet5 adam optimizer
+lr_alr_pc=0.0005 #pytorch cnn adam optimizer
+momentum1=0.0
+momentum2=0.9
+batch_size=32
+world_size=6 # 5 workers
+train_split=1
+
+
+## Lenet5 SGD momentum = 0.0
+
+6_100_0005_00_32_6_SGD_spe3_labels
+training time: 34:59:106
+Average train accuracy: 67.08 % (40250/60000)
+Average train loss: 0.9612
+Average test accuracy: 65.93 % (6593/10000)
+Average test loss: 1.0068
+
+6_100_0005_00_32_6_SGD_spe3_split_dataset
+training time: 34:18:467
+Average train accuracy: 85.40 % (51243/60000)
+Average train loss: 0.4087
+Average test accuracy: 84.46 % (8446/10000)
+Average test loss: 0.4389
+
+6_100_0005_00_32_6_SGD_spe3_val_model
+training time: 157:11:185
+Average train accuracy: 91.68 % (55005/60000)
+Average train loss: 0.2268
+Average test accuracy: 89.60 % (8960/10000)
+Average test loss: 0.2953
+
+## Lenet5 SGD momentum = 0.9
+
+6_100_0005_09_32_6_SGD_spe3_labels
+training time: 33:56:551
+Average train accuracy: 75.39 % (45234/60000)
+Average train loss: 0.7203
+Average test accuracy: 74.45 % (7445/10000)
+Average test loss: 0.7738
+
+6_100_0005_09_32_6_SGD_spe3_split_dataset
+training time: 33:45:114
+Average train accuracy: 89.66 % (53796/60000)
+Average train loss: 0.2687
+Average test accuracy: 88.16 % (8816/10000)
+Average test loss: 0.3113
+
+6_100_0005_09_32_6_SGD_spe3_val_model
+training time: 156:45:868
+Average train accuracy: 96.04 % (57624/60000)
+Average train loss: 0.1143
+Average test accuracy: 90.33 % (9033/10000)
+Average test loss: 0.3856
+
+## Lenet5 Adam (for momentum 0.0 and 0.9, which doesn't matter in fact because ADAM)
+
+6_100_001_00_32_6_ADAM_spe3_labels
+training time: 34:11:121
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 2.4313
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 2.4313
+
+6_100_001_00_32_6_ADAM_spe3_split_dataset
+training time: 34:46:280
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 2.3034
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 2.3034
+
+6_100_001_00_32_6_ADAM_spe3_val_model
+training time: 156:51:329
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 2.3047
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 2.3047
+
+
+6_100_001_09_32_6_ADAM_spe3_labels
+training time: 34:17:567
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 2.4169
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 2.4169
+
+6_100_001_09_32_6_ADAM_spe3_split_dataset
+training time: 34:43:828
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 2.3038
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 2.3038
+
+6_100_001_09_32_6_ADAM_spe3_val_model
+training time: 157:02:457
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 2.3043
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 2.3043
+
+## Pytorch CNN SGD momentum = 0.0
+
+6_100_0001_00_32_6_SGD_spe3_alt_model_labels
+training time: 39:22:507
+Average train accuracy: 81.85 % (49112/60000)
+Average train loss: 0.4807
+Average test accuracy: 81.15 % (8115/10000)
+Average test loss: 0.5063
+
+6_100_0001_00_32_6_SGD_spe3_alt_model_split_dataset
+training time: 39:21:595
+Average train accuracy: 84.69 % (50817/60000)
+Average train loss: 0.4253
+Average test accuracy: 83.51 % (8351/10000)
+Average test loss: 0.4514
+
+6_100_0001_00_32_6_SGD_spe3_val_alt_model_model
+training time: 164:47:718
+Average train accuracy: 89.76 % (53857/60000)
+Average train loss: 0.2762
+Average test accuracy: 88.33 % (8833/10000)
+Average test loss: 0.3203
+
+## Pytorch CNN SGD momentum = 0.9
+
+6_100_0001_09_32_6_SGD_spe3_alt_model_labels
+training time: 39:21:739
+Average train accuracy: 76.76 % (46057/60000)
+Average train loss: 0.6392
+Average test accuracy: 76.11 % (7611/10000)
+Average test loss: 0.6885
+
+6_100_0001_09_32_6_SGD_spe3_alt_model_split_dataset
+training time: 39:13:211
+Average train accuracy: 90.34 % (54206/60000)
+Average train loss: 0.2621
+Average test accuracy: 89.06 % (8906/10000)
+Average test loss: 0.3034
+
+6_100_0001_09_32_6_SGD_spe3_val_alt_model_model
+training time: 165:10:423
+Average train accuracy: 98.96 % (59375/60000)
+Average train loss: 0.0454
+Average test accuracy: 91.25 % (9125/10000)
+Average test loss: 0.4027
+
+## Pytorch CNN Adam (for momentum 0.0 and 0.9, which doesn't matter in fact because ADAM)
+
+6_100_00005_00_32_6_ADAM_spe3_alt_model_labels
+training time: 39:48:660
+Average train accuracy: 90.19 % (54114/60000)
+Average train loss: 0.2503
+Average test accuracy: 88.11 % (8811/10000)
+Average test loss: 0.3460
+
+6_100_00005_00_32_6_ADAM_spe3_alt_model_split_dataset
+training time: 39:30:196
+Average train accuracy: 94.41 % (56645/60000)
+Average train loss: 0.1471
+Average test accuracy: 91.37 % (9137/10000)
+Average test loss: 0.2385
+
+6_100_00005_00_32_6_ADAM_spe3_val_alt_model_model
+training time: 165:58:549
+Average train accuracy: 98.88 % (59328/60000)
+Average train loss: 0.0841
+Average test accuracy: 90.96 % (9096/10000)
+Average test loss: 0.8759
+
+
+6_100_00005_09_32_6_ADAM_spe3_alt_model_labels
+training time: 39:44:542
+Average train accuracy: 89.51 % (53708/60000)
+Average train loss: 0.2841
+Average test accuracy: 87.21 % (8721/10000)
+Average test loss: 0.3788
+
+6_100_00005_09_32_6_ADAM_spe3_alt_model_split_dataset
+training time: 39:17:440
+Average train accuracy: 94.16 % (56497/60000)
+Average train loss: 0.1540
+Average test accuracy: 91.09 % (9109/10000)
+Average test loss: 0.2476
+
+6_100_00005_09_32_6_ADAM_spe3_val_alt_model_model
+training time: 165:57:651
+Average train accuracy: 98.88 % (59328/60000)
+Average train loss: 0.0859
+Average test accuracy: 91.08 % (9108/10000)
+Average test loss: 0.8089
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
