@@ -11,11 +11,10 @@ __pycache__/
 *.png
 *html
 
-!KFold_results/*
-!Speed_results/*
-!Validation_results/**/*
-!Speed/**/*
-!Speed/**/**/*
-!Results_AsyncMomentum/*
-!Results_AsyncMomentum/**/*
-!Delay_results/**/**/*
+KFold_results/
+Speed_results/
+Validation_results/
+Speed/
+Results_AsyncMomentum/
+Results_AsyncMomentum/
+Delay_results/*
