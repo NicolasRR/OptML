@@ -147,11 +147,11 @@ def main(
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
         output_file_path = os.path.join(
-            subfolder, f"{model_basename}_loss_landscape.html"
+            subfolder, f"{model_basename}_loss_landscape_{grid_size}.html"
         )
         pio.write_html(fig, output_file_path)
     else:
-        output_file_path = f"{model_basename}_loss_landscape.html"
+        output_file_path = f"{model_basename}_loss_landscape_{grid_size}.html"
         pio.write_html(fig, output_file_path)
 
     print(f"Saved 3D figure at: {output_file_path}")
