@@ -97,8 +97,6 @@ class ParameterServer_async(object):
             for param, grad in zip(self.model.parameters(), grads):
                 param.grad = grad
 
-            print(f"PS, {worker_name} {worker_batch_count} {compute_weights_l2_norm(self.model)}")
-
             self.optimizer.step()
             self.optimizer.zero_grad()
 
@@ -176,40 +174,32 @@ class Worker_async(object):
         self.logger.debug(
             f"{self.worker_name} is working on a dataset of size {len(train_loader.sampler)}"
         )
-        """self.progress_bar = tqdm(
+        self.progress_bar = tqdm(
             position=int(self.worker_name.split("_")[1]) - 1,
             desc=f"{self.worker_name}",
             unit="batch",
             total=len(self.train_loader) * self.epochs,
             leave=True,
-        )"""
+        )
 
     def get_next_batch_async(self):
         for epoch in range(self.epochs):
             self.current_epoch = epoch + 1
             current_lr = self.ps_rref.rpc_sync().get_current_lr_async()
-            """self.progress_bar.set_postfix(
+            self.progress_bar.set_postfix(
                 epoch=f"{self.current_epoch}/{self.epochs}", lr=f"{current_lr:.5f}"
-            )"""
+            )
             for inputs, labels in self.train_loader:
                 yield inputs, labels
-        """self.progress_bar.clear()
-        self.progress_bar.close()"""
+        self.progress_bar.clear()
+        self.progress_bar.close()
 
     def train_async(self):
         worker_model = self.ps_rref.rpc_sync().get_model_async()
 
         for inputs, labels in self.get_next_batch_async():
             loss = self.loss_func(worker_model(inputs), labels)
-            if torch.isnan(loss).any():
-                print(f"{self.worker_name} {self.batch_count} Loss is nan, stopping training.")
-                exit()
             loss.backward()
-            sum__ = 0
-            for param in worker_model.parameters():
-                if param.grad is not None:
-                    sum__ += param.grad.norm().item()
-            print(f"{self.worker_name} {self.batch_count +1} Gradient L2 Norm: {sum__}")
             self.batch_count += 1
 
             if self.worker_name == "Worker_1" and self.slow_worker_1:
@@ -240,7 +230,7 @@ class Worker_async(object):
             )
             worker_model = self.ps_rref.rpc_sync().get_model_async()
 
-            """self.progress_bar.update(1)"""
+            self.progress_bar.update(1)
 
         if self.worker_accuracy:
             (
