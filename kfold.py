@@ -77,9 +77,9 @@ indices = np.array(indices)
 kf = KFold(n_splits=args.k_splits)
 
 if args.alr is False:
-    learning_rates = [0.001, 0.005, 0.01, 0.05, 0.1]
+    learning_rates = [0.001, 0.005, 0.01, 0.05, 0.1] #SGD
 else:
-    learning_rates = [0.0005, 0.001, 0.005, 0.01, 0.05]
+    learning_rates = [0.0005, 0.001, 0.005, 0.01, 0.05] #ADAM
 if args.momentum is None and args.alr is False:
     momentums = [0, 0.9]
 else:

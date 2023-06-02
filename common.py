@@ -831,6 +831,8 @@ def _delay(intensity=DEFAULT_DELAY_INTENSITY, _type=DEFAULT_DELAY_TYPE, worker_1
         delay_time = delay_mean
     time.sleep(delay_time)
 
+# constant small 10 ms
+# gaussian small 10 ms + 1ms / 0.1ms std
 
 #################################### NET ####################################
 class CNN_MNIST(nn.Module):  # LeNet 5 for MNIST and Fashion MNIST
