@@ -204,7 +204,7 @@ def main(
         "Async SGD m=0.99",
         "Async ADAM",
     ]
-    trajectory_names = trajectory_names[::-1] 
+    trajectory_names = trajectory_names[::-1] #uncomment if you reversed above
     trajectory_colors = ['red', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta']  # Define more colors if you have more trajectories
     trajectories = []
     for i, (rw, tl) in enumerate(zip(reduced_weights, trajectories_loss_reevaluted)):
@@ -229,9 +229,25 @@ def main(
     )   
 
     fig = go.Figure(data=[surface]+ trajectories, layout=layout)
+
+    fig.update_traces(contours_z=dict(show=True, usecolormap=True,
+                                  highlightcolor="limegreen", project_z=True))
     
     fig.update_layout(legend=dict(orientation="v", x=0, y=0.5))
-    
+
+
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log(grid_losses.flatten()), colorscale='Viridis')])
+
+    for traj in trajectories:
+        fig2.add_trace(traj)
+
+    fig2.update_layout(
+        title='Contour Plot with trajectories Projection',
+        xaxis_title='X',
+        yaxis_title='Y',
+        legend=dict(orientation="v", x=0, y=0.5)
+    )
+
     model_filename = os.path.basename(classic_model)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
@@ -240,10 +256,16 @@ def main(
         output_file_path = os.path.join(
             subfolder, f"{model_basename}_loss_landscape_compare_{grid_size}.html"
         )
+        output_file_path_2 = os.path.join(
+            subfolder, f"{model_basename}_loss_landscape_compare_2_{grid_size}.html"
+        )
         pio.write_html(fig, output_file_path)
+        pio.write_html(fig2, output_file_path_2)
     else:
         output_file_path = f"{model_basename}_loss_landscape_compare_{grid_size}.html"
+        output_file_path_2 = f"{model_basename}_loss_landscape_compare_2_{grid_size}.html"
         pio.write_html(fig, output_file_path)
+        pio.write_html(fig2, output_file_path_2)
 
     print(f"Saved 3D figure at: {output_file_path}")
 
