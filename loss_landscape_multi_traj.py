@@ -37,6 +37,9 @@ def main(
     classic_model="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_model.pt"
     classic_weights="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_weights.npy"
 
+    #async_m00_model = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
+    #classic_model = async_m00_model
+
     async_m00_weights= "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
     async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
     async_m90_weights= "fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
@@ -45,6 +48,8 @@ def main(
     async_alr_weights= "fashion_mnist_async_4_100_0001_09_32_6_ADAM_spe3_val_weights.npy"
 
     weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
+    #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights,]
+    #weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
 
     loaded_weights_np = []
     for wp in weights_paths:
@@ -58,11 +63,14 @@ def main(
 
     _min_w = 99999999
     _max_w = 0
-    for i, w in enumerate(loaded_weights_np):
-        if i == 0:
-            reduced_weights.append(pca.fit_transform(w))
-        else:
-            reduced_weights.append(pca.transform(w))
+    #for i, w in enumerate(loaded_weights_np):
+    for i, w in enumerate(reversed(loaded_weights_np)):
+        #if i == 0:
+        #    reduced_weights.append(pca.fit_transform(w))
+        #else:
+        #    reduced_weights.append(pca.transform(w))
+
+        reduced_weights.append(pca.fit_transform(w))
 
         _min = np.min(reduced_weights[-1])
         _max = np.max(reduced_weights[-1])
@@ -86,6 +94,7 @@ def main(
 
     for i, rw in enumerate(reduced_weights):
         #if i != 0:
+            #loaded_weights_np[i] = pca.inverse_transform(rw)
         loaded_weights_np[i] = pca.inverse_transform(rw)
 
     loader = create_testloader(classic_model, batch_size)
@@ -195,6 +204,7 @@ def main(
         "Async SGD m=0.99",
         "Async ADAM",
     ]
+    trajectory_names = trajectory_names[::-1] 
     trajectory_colors = ['red', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta']  # Define more colors if you have more trajectories
     trajectories = []
     for i, (rw, tl) in enumerate(zip(reduced_weights, trajectories_loss_reevaluted)):
@@ -210,10 +220,13 @@ def main(
         trajectories.append(traj)
 
     layout = go.Layout(
-        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss"),
-        coloraxis=dict(colorbar=dict(title="Loss magnitude"), colorscale="Viridis"),
-    )
-
+        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
+        coloraxis=dict(colorbar=dict(title="Loss magnitude"), 
+                       colorscale="Viridis",
+                       cmin=np.log10(grid_losses.min()),  
+                        cmax=np.log10(grid_losses.max()),
+        ),
+    )   
 
     fig = go.Figure(data=[surface]+ trajectories, layout=layout)
     
