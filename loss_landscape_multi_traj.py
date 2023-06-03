@@ -230,13 +230,26 @@ def main(
 
     fig = go.Figure(data=[surface]+ trajectories, layout=layout)
 
-    fig.update_traces(contours_z=dict(show=True, usecolormap=True,
+    fig.data[0].update(contours_z=dict(show=True, usecolormap=True,
                                   highlightcolor="limegreen", project_z=True))
+
     
     fig.update_layout(legend=dict(orientation="v", x=0, y=0.5))
 
 
     fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log(grid_losses.flatten()), colorscale='Viridis')])
+
+    trajectories = []
+    for i, rw in enumerate(reduced_weights):
+        traj = go.Scatter(
+            x=rw[:, 0],  # x-axis
+            y=rw[:, 1],  # y-axis
+            mode="markers+lines",
+            line=dict(color=trajectory_colors[i % len(trajectory_colors)]),
+            marker=dict(color=trajectory_colors[i % len(trajectory_colors)], size=5),
+            name=trajectory_names[i],
+        )
+        trajectories.append(traj)
 
     for traj in trajectories:
         fig2.add_trace(traj)
@@ -257,17 +270,18 @@ def main(
             subfolder, f"{model_basename}_loss_landscape_compare_{grid_size}.html"
         )
         output_file_path_2 = os.path.join(
-            subfolder, f"{model_basename}_loss_landscape_compare_2_{grid_size}.html"
+            subfolder, f"{model_basename}_contour_landscape_compare_{grid_size}.html"
         )
         pio.write_html(fig, output_file_path)
         pio.write_html(fig2, output_file_path_2)
     else:
         output_file_path = f"{model_basename}_loss_landscape_compare_{grid_size}.html"
-        output_file_path_2 = f"{model_basename}_loss_landscape_compare_2_{grid_size}.html"
+        output_file_path_2 = f"{model_basename}_contour_landscape_compare_{grid_size}.html"
         pio.write_html(fig, output_file_path)
         pio.write_html(fig2, output_file_path_2)
 
     print(f"Saved 3D figure at: {output_file_path}")
+    print(f"Saved 2D figure at: {output_file_path_2}")
 
 
 if __name__ == "__main__":
