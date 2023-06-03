@@ -181,7 +181,7 @@ if __name__ == "__main__":
         "--subfolder",
         type=str,
         default="",
-        help="""Subfolder name where the test results and plots will be saved.""",
+        help="""Subfolder name where the .npy and plots will be saved.""",
     )
 
     args = parser.parse_args()

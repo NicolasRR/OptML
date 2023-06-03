@@ -28,6 +28,10 @@ def main(
     batch_size,
     subfolder,
     grid_size,
+    path_grid_losses,
+    path_grid_xx,
+    path_grid_yy,
+    grid_save=True,
 ):
     
     classic_model="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_model.pt"
@@ -47,13 +51,13 @@ def main(
         loaded_weights_np.append(np.load(wp))
         if "classic" in wp:
             print(f"Saved weights shape: {loaded_weights_np[-1].shape}")
-
-    _min_w = 99999999
-    _max_w = 0
     
     # perform PCA on the classic weights loaded_weights_np[0], remember the transformation to apply it to the other saved weights
     pca = PCA(n_components=2)
     reduced_weights = []
+
+    _min_w = 99999999
+    _max_w = 0
     for i, w in enumerate(loaded_weights_np):
         if i == 0:
             reduced_weights.append(pca.fit_transform(w))
@@ -71,19 +75,19 @@ def main(
     _min_w = _min_w -1
     _max_w = _max_w +1
 
-    grid_range_x = np.linspace(_min_w, _max_w, grid_size)
-    grid_range_y = np.linspace(_min_w, _max_w, grid_size)
+    if path_grid_losses is None and path_grid_xx is None and path_grid_yy is None:
+        grid_range_x = np.linspace(_min_w, _max_w, grid_size)
+        grid_range_y = np.linspace(_min_w, _max_w, grid_size)
 
-    xx, yy = np.meshgrid(grid_range_x, grid_range_y)
+        xx, yy = np.meshgrid(grid_range_x, grid_range_y)
 
-    grid_points = np.column_stack((xx.ravel(), yy.ravel()))
-    grid_weights = pca.inverse_transform(grid_points)
+        grid_points = np.column_stack((xx.ravel(), yy.ravel()))
+        grid_weights = pca.inverse_transform(grid_points)
 
     for i, rw in enumerate(reduced_weights):
-        if i != 0:
-            loaded_weights_np[i] = pca.inverse_transform(rw)
+        #if i != 0:
+        loaded_weights_np[i] = pca.inverse_transform(rw)
 
-    # Grid training
     loader = create_testloader(classic_model, batch_size)
     if "alt_model" in classic_model:
         model = _get_model(classic_model, LOSS_FUNC, alt_model=True)
@@ -93,31 +97,56 @@ def main(
     model.load_state_dict(torch.load(classic_model))
     model.eval()
 
-    grid_losses = []
+    # Grid training
+    if path_grid_losses is None and path_grid_xx is None and path_grid_yy is None:
+        
 
-    progress_bar = tqdm(
-        total=len(grid_weights),
-        desc="Computing loss of grid weights",
-        unit="model_weights",
-    )
+        grid_losses = []
 
-    with torch.no_grad():
-        for weights in grid_weights:
-            model = set_weights(model, weights)
+        progress_bar = tqdm(
+            total=len(grid_weights),
+            desc="Computing loss of grid weights",
+            unit="model_weights",
+        )
 
-            running_loss = 0.0
-            for inputs, labels in loader:
-                outputs = model(inputs)
-                loss = LOSS_FUNC(outputs, labels)
-                running_loss += loss.item() * inputs.size(0)
+        with torch.no_grad():
+            for weights in grid_weights:
+                model = set_weights(model, weights)
 
-            grid_losses.append(running_loss / len(loader.dataset))
-            progress_bar.update(1)
-            progress_bar.set_postfix(grid_loss=grid_losses[-1])
+                running_loss = 0.0
+                for inputs, labels in loader:
+                    outputs = model(inputs)
+                    loss = LOSS_FUNC(outputs, labels)
+                    running_loss += loss.item() * inputs.size(0)
 
-    progress_bar.close()
+                grid_losses.append(running_loss / len(loader.dataset))
+                progress_bar.update(1)
+                progress_bar.set_postfix(grid_loss=grid_losses[-1])
 
-    grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
+        progress_bar.close()
+
+        grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
+
+        if grid_save:
+            
+            model_filename = os.path.basename(classic_model)
+            model_basename, _ = os.path.splitext(model_filename)
+
+            if len(subfolder) > 0:
+                if not os.path.exists(subfolder):
+                    os.makedirs(subfolder)
+
+            np.save(f"{model_basename}_grid_losses.npy", grid_losses)
+            np.save(f"{model_basename}_grid_xx.npy", xx)
+            np.save(f"{model_basename}_grid_yy.npy", yy)
+            print(f"Saved grid losses to: {f'{model_basename}_grid_losses.npy'}")
+            print(f"Saved grid xx to: {f'{model_basename}_grid_xx.npy'}")
+            print(f"Saved grid yy to: {f'{model_basename}_grid_yy.npy'}")
+    else:
+        xx = np.load(path_grid_xx)
+        yy = np.load(path_grid_yy)
+        grid_losses = np.load(path_grid_losses)
+        print("Loadded grid_losses, grid_xx and grid_yy")
 
     # trajectories evaluationa
     trajectories_loss_reevaluted = []
@@ -222,12 +251,34 @@ if __name__ == "__main__":
         default=None,
         help="""grid_size^2 amount of points to populate the 2D space to evaluate the loss.""",
     )
-
     parser.add_argument(
         "--subfolder",
         type=str,
         default="",
-        help="""Subfolder name where the test results and plots will be saved.""",
+        help="""Subfolder name where the .npy and plots will be saved.""",
+    )
+    parser.add_argument(
+        "--grid_losses",
+        type=str,
+        default=None,
+        help="""Path of the grid losses.""",
+    )
+    parser.add_argument(
+        "--grid_xx",
+        type=str,
+        default=None,
+        help="""Path of the grid xx.""",
+    )
+    parser.add_argument(
+        "--grid_yy",
+        type=str,
+        default=None,
+        help="""Path of the grid yy.""",
+    )
+    parser.add_argument(
+        "--no_grid_save",
+        action="store_true",
+        help="""Will not save grid xx, grid yy and grid losses.""",
     )
 
     args = parser.parse_args()
@@ -239,6 +290,9 @@ if __name__ == "__main__":
         print("Forbidden value !!! batch_size must be between [1,len(test set)]")
         exit()
 
+    if args.grid_size is not None and (args.grid_xx is not None or args.grid_yy is not None or args.grid_losses is not None):
+        print("--grid_size will not be taken into account as the grid_losses, grid_xx and grid_yy are provided.")
+
     if args.grid_size is None:
         args.grid_size = DEFAULT_GRID_SIZE
         print(f"Using default grid_size: {DEFAULT_GRID_SIZE}")
@@ -249,9 +303,30 @@ if __name__ == "__main__":
     if len(args.subfolder) > 0:
         print(f"Outputs will be saved to {args.subfolder}/")
 
+    if args.grid_losses is not None:
+        if args.grid_xx is None or args.grid_yy is None:
+            print("Please provide the three paths.")
+            exit()
+    elif args.grid_xx is not None:
+        if args.grid_losses is None or args.grid_yy is None:
+            print("Please provide the three paths.")
+            exit()
+    elif args.grid_yy is not None:
+        if args.grid_losses is None or args.grid_xx is None:
+            print("Please provide the three paths.")
+            exit()
+
+    if not args.no_grid_save:
+        print("Saving grid_losses, grid_xx, grid_yy")
+    else:
+        print("Not saving grid_losses, grid_xx, grid_yy")
 
     main(
         args.batch_size,
         args.subfolder,
         args.grid_size,
+        args.grid_losses,
+        args.grid_xx,
+        args.grid_yy,
+        not args.no_grid_save,
     )
