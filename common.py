@@ -30,9 +30,9 @@ DEFAULT_BATCH_SIZE = 32  # 1 == SGD, >1 MINI BATCH SGD
 DEFAULT_DELAY_INTENSITY = "small"
 DEFAULT_DELAY_TYPE = "gaussian"
 DELAY_VALUES = {
-    "small": (0.01, 0.001),  # 10 ms, 1 ms std
-    "medium": (0.02, 0.001),  # 20 ms, 1 ms std
-    "long": (0.03, 0.001),  # 30 ms, 1 ms std
+    "small": (0.03, 0.001),  # 10 ms, 1 ms std
+    "medium": (0.06, 0.001),  # 20 ms, 1 ms std
+    "long": (0.09, 0.001),  # 30 ms, 1 ms std
 }
 DELAY_WORKER_1_FACTOR = 2
 DEFAULT_VAL_SPLIT = 0.1

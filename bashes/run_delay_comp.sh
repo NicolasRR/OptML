@@ -16,7 +16,7 @@ world_size3=11
 lr=0.005 
 momentum=0.9
 batch_size=32
-epochs=30
+epochs=6
 
 # Parse command-line arguments using flags
 while [ "$#" -gt 0 ]; do
@@ -36,31 +36,40 @@ formatted_train_split=$(printf "%.1f\n" $(echo "$train_split * 10" | bc) | tr -d
 formatted_lr=$(echo $lr | tr -d '.')
 formatted_momentum=$(echo $momentum | tr -d '.')
 
-for world_size in $world_size1 $world_size2 $world_size3; do
-  python3 $dnn_sync_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3
-  python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3
-done
 delay1="small"
 delay2="medium"
 delay3="long"
 type1="constant"
 type2="gaussian"
+mode1="--split_labels"
+mode2="--split_dataset"
+
+for delay in $delay1 $delay2 $delay3; do
+for world_size in $world_size1 $world_size2 $world_size3; do
+  python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type1 --slow_worker_1
+done
+done
 
 
-for type in $type1 $type2;do
-  for world_size in $world_size1 $world_size2 $world_size3; do
-    for delay in $delay1 $delay2 $delay3; do
-      python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type --split_labels 
+for world_size in $world_size1 $world_size2 $world_size3; do
+  for delay in $delay1 $delay2 $delay3; do
+    for mode in $mode1 $mode2; do
+      echo $world_size $delay $mode
+      python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type1 $mode 
       sleep 0.1
       echo
 done
 done
 done
 
-for type in $type1 $type2;do
-  for world_size in $world_size1 $world_size2 $world_size3; do
-    for delay in $delay1 $delay2 $delay3; do
-      python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type --slow_worker_1 --split_labels
+echo "slow worker 1"
+
+for world_size in $world_size1 $world_size2 $world_size3; do
+  for delay in $delay1 $delay2 $delay3; do
+    for mode in $mode1 $mode2; do
+      echo $world_size $delay $mode
+
+      python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type1 --slow_worker_1 $mode
       sleep 0.1
       echo
 done
