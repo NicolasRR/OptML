@@ -39,6 +39,7 @@ class ParameterServer_async(object):
         alt_model,
         train_loader=None,
         val_loader=None,
+        compensation=False,
     ):
         self.model = _get_model(dataset_name, LOSS_FUNC, alt_model)
         self.logger = logger
@@ -63,8 +64,20 @@ class ParameterServer_async(object):
             self.val_loader = val_loader
         for params in self.model.parameters():
             params.grad = torch.zeros_like(params)
+        self.compensation = compensation
+        if compensation:
+            self.backups = [
+                [
+                    torch.randn_like(param, requires_grad=False)
+                    for param in self.model.parameters()
+                ]
+                for _ in range(nb_workers)
+            ]
 
-    def get_model_async(self):
+    def get_model_async(self, id):
+        if self.compensation:
+            id = int(id.split("_")[1])-1
+            self.backups[id] = [param for param in self.model.parameters()]
         return self.model
 
     def get_current_lr_async(self):
@@ -95,8 +108,11 @@ class ParameterServer_async(object):
                 or self.val
             ):
                 self.global_batch_counter += 1
-            for param, grad in zip(self.model.parameters(), grads):
-                param.grad = grad
+            for i, (param, grad) in enumerate(zip(self.model.parameters(), grads)):
+                if self.compensation:
+                    param.grad = grad + 5* grad * grad * (param - self.backups[int(worker_name.split("_")[1])-1][i])
+                else:
+                    param.grad = grad
 
             self.optimizer.step()
             self.optimizer.zero_grad()
@@ -197,7 +213,7 @@ class Worker_async(object):
         self.progress_bar.close()
 
     def train_async(self):
-        worker_model = self.ps_rref.rpc_sync().get_model_async()
+        worker_model = self.ps_rref.rpc_sync().get_model_async(self.worker_name)
 
         for inputs, labels in self.get_next_batch_async():
             loss = self.loss_func(worker_model(inputs), labels)
@@ -230,7 +246,7 @@ class Worker_async(object):
                     loss.detach(),
                 ),
             )
-            worker_model = self.ps_rref.rpc_sync().get_model_async()
+            worker_model = self.ps_rref.rpc_sync().get_model_async(self.worker_name)
 
             self.progress_bar.update(1)
 
@@ -305,6 +321,7 @@ def run_parameter_server_async(
     slow_worker_1,
     val,
     alt_model,
+    compensation,
 ):
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
@@ -341,6 +358,7 @@ def run_parameter_server_async(
                 alt_model,
                 train_loader=train_loader,
                 val_loader=val_loader,
+                compensation=compensation
             )
         )
     else:
@@ -367,6 +385,7 @@ def run_parameter_server_async(
                 saves_per_epoch,
                 val,
                 alt_model,
+                compensation,
             )
         )
 
@@ -451,6 +470,7 @@ def run_parameter_server_async(
         slow_worker_1=slow_worker_1,
         delay_intensity=delay_intensity,
         delay_type=delay_type,
+        compensation=compensation,
     )
 
     if save_model:
