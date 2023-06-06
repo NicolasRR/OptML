@@ -85,6 +85,7 @@ def start(args, mode, run_parameter_server):
             slow_worker_1=args.slow_worker_1,
             delay_intensity=args.delay_intensity,
             delay_type=args.delay_type,
+            compensation=args.compensation
         )
 
     log_name = f"{base_name}_log.log"
@@ -125,6 +126,7 @@ def start(args, mode, run_parameter_server):
                 args.slow_worker_1,
                 args.val,
                 args.alt_model,
+                args.compensation,
                 run_parameter_server,
             ),
             nprocs=args.world_size,
@@ -161,6 +163,7 @@ def run(
     slow_woker_1,
     val,
     alt_model,
+    compensation,
     run_parameter_server,
 ):
     logger = setup_logger(log_queue)
@@ -233,6 +236,7 @@ def run(
                 slow_woker_1,
                 val,
                 alt_model,
+                compensation,
             )
     rpc.shutdown()
 
@@ -488,6 +492,11 @@ def read_parser(parser, mode=None):
             action="store_true",
             help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch. Please use --val without --split_dataset or --split_labels or --split_labels_unscaled.""",
         )
+        parser.add_argument(
+            "--compensation",
+            action="store_true",
+            help="""If set, enable aSGD delay compensation""",
+        )
     if mode is not None:
         parser.add_argument(
             "--master_port",
@@ -698,6 +707,7 @@ def get_suffix(
     use_alr,
     lrs,
     saves_per_epoch,
+    compensation
 ):
     suffix = ""
     if use_alr:
@@ -726,6 +736,8 @@ def get_suffix(
         suffix += f"_{delay_intensity}"
     if delay_type is not None:
         suffix += f"_{delay_type}"
+    if compensation:
+        suffix += "_comp"
 
     return suffix
 
@@ -751,6 +763,7 @@ def get_base_name(
     slow_worker_1=False,
     delay_intensity=None,
     delay_type=None,
+    compensation=False
 ):
     suffix = get_suffix(
         val,
@@ -765,6 +778,7 @@ def get_base_name(
         use_alr,
         lrs,
         saves_per_epoch,
+        compensation,
     )
 
     base_name = f"{dataset_name}_{mode}_{world_size}_{str(float(train_split)*10).replace('.', '')}_{str(learning_rate).replace('.', '')}_{str(momentum).replace('.', '')}_{batch_size}_{epochs}{suffix}"
@@ -1597,7 +1611,7 @@ def fashion_mnist_testloader(batch_size, test=True):
             ),
         )
         test_loader = torch.utils.data.DataLoader(
-            fashion_mnist_test, batch_size=batch_size, shuffle=False
+            fashion_mnist_test, batch_size=batch_size, shuffle=False, pin_memory=True
         )
     else:
         fashion_mnist_train = torchvision.datasets.FashionMNIST(
