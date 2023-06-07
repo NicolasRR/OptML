@@ -49,6 +49,14 @@ class ParameterServer_async(object):
         self.optimizer = get_optimizer(self.model, learning_rate, momentum, use_alr)
         self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
         self.weights_matrix = []
+        if saves_per_epoch is not None:
+            weights = np.concatenate(
+                            [
+                                w.detach().clone().cpu().numpy().ravel()
+                                for w in self.model.state_dict().values()
+                            ]
+                        )
+            self.weights_matrix.append(weights)
         self.saves_per_epoch = saves_per_epoch
         if lrs is not None or saves_per_epoch is not None or val:
             self.global_batch_counter = 0
@@ -110,7 +118,7 @@ class ParameterServer_async(object):
                 self.global_batch_counter += 1
             for i, (param, grad) in enumerate(zip(self.model.parameters(), grads)):
                 if self.compensation:
-                    param.grad = grad + 5* grad * grad * (param - self.backups[int(worker_name.split("_")[1])-1][i])
+                    param.grad = grad + 2* grad * grad * (param - self.backups[int(worker_name.split("_")[1])-1][i])
                 else:
                     param.grad = grad
 

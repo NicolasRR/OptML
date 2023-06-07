@@ -114,8 +114,7 @@ def main(
 
     progress_bar2.close()
 
-
-
+    # figure 1: loss landscape
     surface = go.Surface(
         x=xx,
         y=yy,
@@ -125,22 +124,8 @@ def main(
         coloraxis="coloraxis",
         colorscale="Viridis",
     )
-
-
     
-    colors = ["blue"] + ["red"] * (len(reduced_weights) - 2) + ["green"]
-    sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
-
-    trajectory = go.Scatter(
-        x=reduced_weights[:, 0],
-        y=reduced_weights[:, 1],
-        mode="markers+lines",
-        line=dict(color="red"),
-        marker=dict(color=colors, size=sizes),
-        name="Training Trajectory",
-    )
-
-    # adding a log scale on Z
+    # adding a log10 scale on Z
     layout = go.Layout(
         scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
         coloraxis=dict(
@@ -155,29 +140,73 @@ def main(
     
     fig.update_traces(contours_z=dict(show=True, usecolormap=True,
                                   highlightcolor="limegreen", project_z=True))
-    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log(grid_losses.flatten()), colorscale='Viridis')])
+    
+    # figure 2: trajectory on contour
+    colors = ["blue"] + ["orange"] * (len(reduced_weights) - 2) + ["green"]
+    sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
+    labels = ["Start Point"] + ["Trajectory Point"] * (len(reduced_weights) - 2) + ["End Point"]
 
-    # Add labels and title
+    layout = go.Layout(
+        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
+        coloraxis=dict(
+            colorbar=dict(title="Loss magnitude", tickformat=".2e"), 
+            colorscale="Viridis",
+            cmin=np.log10(np.min(trajectory_loss_reevaluted)),  
+            cmax=np.log10(np.max(trajectory_loss_reevaluted)), 
+        ),
+    )
+
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), name="grid point", colorscale='Viridis')])
+
     fig2.update_layout(
         title='Contour Plot with Trajectory Projection',
-        xaxis_title='X',
-        yaxis_title='Y'
+        xaxis_title='PC1',
+        yaxis_title='PC2',
+        legend=dict(orientation="v", x=0, y=0.0),
+
     )
-    # Add scatter trace for the trajectory projection
+
+    trajectory = go.Scatter(
+            x=reduced_weights[:, 0],
+            y=reduced_weights[:, 1],
+            mode="markers+lines",
+            line=dict(color="orange"),
+            marker=dict(color=colors, size=sizes),
+            name="Training Trajectory",
+            text=[f"{label}<br>Loss: {loss}" for label, loss in zip(labels, trajectory_loss_reevaluted)],
+            hovertemplate='%{text}',
+    )
 
     fig2.add_trace(trajectory)
-    # fig.show()
+
+    x_gm, y_gm = np.unravel_index(np.argmin(grid_losses), grid_losses.shape)
+    min_point = go.Scatter(
+        x=[xx[x_gm, y_gm]],
+        y=[yy[x_gm, y_gm]],
+        mode='markers',
+        marker=dict(
+            size=7,
+            color='red',
+            symbol='star',
+        ),
+        name="global minimum",
+        text=[str(np.min(grid_losses))],
+        hovertemplate='Loss: %{text}'
+    )
+
+    fig2.add_trace(min_point)
+
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
         output_file_path = os.path.join(
-            subfolder, f"{model_basename}_loss_landscape.html"
+            subfolder, f"{model_basename}_loss_landscape_{grid_size}.html"
         )
         pio.write_html(fig, output_file_path)
         output_file_path_contour = os.path.join(
-            subfolder, f"{model_basename}_loss_landscape_contour.html"
+            subfolder, f"{model_basename}_loss_landscape_contour_{grid_size}.html"
         )
         pio.write_html(fig2, output_file_path_contour)
         np.savetxt(os.path.join(
@@ -187,9 +216,9 @@ def main(
             subfolder, f"{model_basename}_trajectory_losses.npy"
         ),np.vstack([reduced_weights[:, 0], reduced_weights[:, 1]]))
     else:
-        output_file_path = f"{model_basename}_loss_landscape.html"
+        output_file_path = f"{model_basename}_loss_landscape_{grid_size}.html"
         pio.write_html(fig, output_file_path)
-        output_file_path_contour = f"{model_basename}_loss_landscape_contour.html"
+        output_file_path_contour = f"{model_basename}_loss_landscape_contour_{grid_size}.html"
         pio.write_html(fig2, output_file_path_contour)
         np.savetxt(f"{model_basename}_grid_losses.npy"
         ,np.vstack([xx.flatten(), yy.flatten(), grid_losses.flatten()]))
@@ -223,7 +252,7 @@ if __name__ == "__main__":
         "--subfolder",
         type=str,
         default="",
-        help="""Subfolder name where the test results and plots will be saved.""",
+        help="""Subfolder name where the .npy and plots will be saved.""",
     )
 
     args = parser.parse_args()

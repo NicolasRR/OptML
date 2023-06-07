@@ -1,7 +1,7 @@
 # OptML
 Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nicolas Reategui
 
-[GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with the results
+[GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of result data including models, weights during training, classification reports, loss landscape plots and contour plots.
 
 # Objective
 

@@ -79,6 +79,13 @@ def run(
 
     if saves_per_epoch is not None:
         weights_matrix = []
+        weights = np.concatenate(
+                            [
+                                w.detach().clone().cpu().numpy().ravel()
+                                for w in model.state_dict().values()
+                            ]
+                        )
+        weights_matrix.append(weights)
         save_idx = np.linspace(0, len(train_loader) - 1, saves_per_epoch, dtype=int)
         unique_idx = set(save_idx)
         if len(unique_idx) < saves_per_epoch:
