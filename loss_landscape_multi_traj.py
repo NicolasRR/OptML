@@ -78,7 +78,7 @@ def main(
         if _min < _min_w:
             _min_w = _min
         if _max > _max_w:
-            _max_w = _max
+            _max_w = _max 
 
     _min_w = _min_w -1
     _max_w = _max_w +1
@@ -195,6 +195,7 @@ def main(
         coloraxis="coloraxis",
         colorscale="Viridis",
     )
+
     trajectory_names = [
         "Classic SGD m=0.0",
         "Async SGD m=0.0",
@@ -205,7 +206,7 @@ def main(
         "Async ADAM",
     ]
     trajectory_names = trajectory_names[::-1] #uncomment if you reversed above
-    trajectory_colors = ['red', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta']  # Define more colors if you have more trajectories
+    trajectory_colors = ['orange', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta']  # Define more colors if you have more trajectories
     trajectories = []
     for i, (rw, tl) in enumerate(zip(reduced_weights, trajectories_loss_reevaluted)):
         traj = go.Scatter3d(
@@ -233,6 +234,20 @@ def main(
     fig.data[0].update(contours_z=dict(show=True, usecolormap=True,
                                   highlightcolor="limegreen", project_z=True))
 
+    _min_x, _min_y = np.unravel_index(np.argmin(grid_losses), grid_losses.shape)
+    min_point = go.Scatter3d(
+        x=[xx[_min_x, _min_y]],
+        y=[yy[_min_x, _min_y]],
+        z=[grid_losses[_min_x, _min_y]],
+        mode='markers',
+        marker=dict(
+            size=5,
+            color='red',
+        ),
+        name="global minimum"
+    )
+
+    fig.add_trace(min_point)
     
     fig.update_layout(legend=dict(orientation="v", x=0, y=0.5))
 
