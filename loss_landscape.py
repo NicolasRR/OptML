@@ -8,8 +8,8 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_SIZE = 20
-DEFAULT_BATCH_SIZE = 128
+DEFAULT_GRID_SIZE = 25
+DEFAULT_BATCH_SIZE = 1024
 
 
 def set_weights(model, weights):
@@ -52,8 +52,8 @@ def main(
     _max = np.max(reduced_weights) + 1
 
     # Compute grid_range_x and grid_range_y
-    grid_range_x = np.linspace(_min, _max, grid_size)
-    grid_range_y = np.linspace(_min, _max, grid_size)
+    grid_range_x = np.linspace(_min-1*(_max-_min), _max+1*(_max-_min), grid_size)
+    grid_range_y = np.linspace(_min-1*(_max-_min), _max+1*(_max-_min), grid_size)
 
     # Replace xx, yy with grid_range_x, grid_range_y respectively
     xx, yy = np.meshgrid(grid_range_x, grid_range_y)
@@ -85,7 +85,10 @@ def main(
 
     progress_bar.close()
 
+    grid_losses = np.array(grid_losses)
+    grid_losses = np.clip(grid_losses, None, 2*np.nanmax(grid_losses))
     grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
+
 
     trajectory_loss_reevaluted = []
 
@@ -111,6 +114,7 @@ def main(
 
     progress_bar2.close()
 
+    # figure 1: loss landscape
     surface = go.Surface(
         x=xx,
         y=yy,
@@ -120,27 +124,78 @@ def main(
         coloraxis="coloraxis",
         colorscale="Viridis",
     )
-
-    colors = ["blue"] + ["red"] * (len(reduced_weights) - 2) + ["green"]
-    sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
-
-    trajectory = go.Scatter3d(
-        x=reduced_weights[:, 0],
-        y=reduced_weights[:, 1],
-        z=trajectory_loss_reevaluted,
-        mode="markers+lines",
-        line=dict(color="red"),
-        marker=dict(color=colors, size=sizes),
-        name="Training Trajectory",
+    
+    # adding a log10 scale on Z
+    layout = go.Layout(
+        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
+        coloraxis=dict(
+            colorbar=dict(title="Loss magnitude", tickformat=".2e"),  # Format tick labels as scientific notation
+            colorscale="Viridis",
+            cmin=np.log10(grid_losses.min()),  # Set minimum value on color axis to log10(min(z))
+            cmax=np.log10(grid_losses.max()),  # Set maximum value on color axis to log10(max(z))
+    ),
     )
+
+    fig = go.Figure(data=[surface], layout=layout)
+    
+    fig.update_traces(contours_z=dict(show=True, usecolormap=True,
+                                  highlightcolor="limegreen", project_z=True))
+    
+    # figure 2: trajectory on contour
+    colors = ["blue"] + ["orange"] * (len(reduced_weights) - 2) + ["green"]
+    sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
+    labels = ["Start Point"] + ["Trajectory Point"] * (len(reduced_weights) - 2) + ["End Point"]
 
     layout = go.Layout(
-        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss"),
-        coloraxis=dict(colorbar=dict(title="Loss magnitude"), colorscale="Viridis"),
+        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
+        coloraxis=dict(
+            colorbar=dict(title="Loss magnitude", tickformat=".2e"), 
+            colorscale="Viridis",
+            cmin=np.log10(np.min(trajectory_loss_reevaluted)),  
+            cmax=np.log10(np.max(trajectory_loss_reevaluted)), 
+        ),
     )
 
-    fig = go.Figure(data=[surface, trajectory], layout=layout)
-    # fig.show()
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), colorscale='Viridis')])
+
+    fig2.update_layout(
+        title='Contour Plot with Trajectory Projection',
+        xaxis_title='PC1',
+        yaxis_title='PC2',
+        legend=dict(orientation="v", x=0, y=0.0),
+
+    )
+
+    trajectory = go.Scatter(
+            x=reduced_weights[:, 0],
+            y=reduced_weights[:, 1],
+            mode="markers+lines",
+            line=dict(color="orange"),
+            marker=dict(color=colors, size=sizes),
+            name="Training Trajectory",
+            text=[f"{label}<br>Loss: {loss}" for label, loss in zip(labels, trajectory_loss_reevaluted)],
+            hovertemplate='%{text}',
+    )
+
+    fig2.add_trace(trajectory)
+
+    x_gm, y_gm = np.unravel_index(np.argmin(grid_losses), grid_losses.shape)
+    min_point = go.Scatter(
+        x=[xx[x_gm, y_gm]],
+        y=[yy[x_gm, y_gm]],
+        mode='markers',
+        marker=dict(
+            size=7,
+            color='red',
+            symbol='star',
+        ),
+        name="global minimum",
+        text=str(np.min(grid_losses)),
+        hovertemplate='Loss: %{text}'
+    )
+
+    fig2.add_trace(min_point)
+
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
@@ -150,9 +205,25 @@ def main(
             subfolder, f"{model_basename}_loss_landscape_{grid_size}.html"
         )
         pio.write_html(fig, output_file_path)
+        output_file_path_contour = os.path.join(
+            subfolder, f"{model_basename}_loss_landscape_contour_{grid_size}.html"
+        )
+        pio.write_html(fig2, output_file_path_contour)
+        np.savetxt(os.path.join(
+            subfolder, f"{model_basename}_grid_losses.npy"
+        ),np.vstack([xx.flatten(), yy.flatten(), grid_losses.flatten()]))
+        np.savetxt(os.path.join(
+            subfolder, f"{model_basename}_trajectory_losses.npy"
+        ),np.vstack([reduced_weights[:, 0], reduced_weights[:, 1]]))
     else:
         output_file_path = f"{model_basename}_loss_landscape_{grid_size}.html"
         pio.write_html(fig, output_file_path)
+        output_file_path_contour = f"{model_basename}_loss_landscape_contour_{grid_size}.html"
+        pio.write_html(fig2, output_file_path_contour)
+        np.savetxt(f"{model_basename}_grid_losses.npy"
+        ,np.vstack([xx.flatten(), yy.flatten(), grid_losses.flatten()]))
+        np.savetxt(f"{model_basename}_trajectory_losses.npy"
+        ,np.vstack([reduced_weights[:, 0], reduced_weights[:, 1], trajectory_loss_reevaluted]))
 
     print(f"Saved 3D figure at: {output_file_path}")
 
