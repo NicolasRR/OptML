@@ -82,7 +82,7 @@ def run(
         weights = np.concatenate(
                             [
                                 w.detach().clone().cpu().numpy().ravel()
-                                for w in self.model.state_dict().values()
+                                for w in model.state_dict().values()
                             ]
                         )
         weights_matrix.append(weights)
