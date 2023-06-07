@@ -1,3 +1,4 @@
+#%%
 import argparse
 from sklearn.decomposition import PCA
 import plotly.io as pio
@@ -10,6 +11,22 @@ from common import _get_model, create_testloader, LOSS_FUNC
 
 DEFAULT_GRID_SIZE = 20
 DEFAULT_BATCH_SIZE = 128
+
+
+#%% Learn how PCA works with sklearn
+import numpy as np
+from sklearn.decomposition import PCA
+X = np.array([[-1, -1], 
+              [-2, -1], 
+              [-3, -2], 
+              [1, 1], 
+              [2, 1], 
+              [3, 2]])
+pca = PCA(n_components=2)
+pca.fit(X)
+
+#%%
+
 
 
 def set_weights(model, weights):
@@ -34,22 +51,23 @@ def main(
     grid_save=True,
 ):
     
-    classic_model="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_model.pt"
-    classic_weights="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_weights.npy"
+    # classic_model="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_model.pt"
+    #%% classic_weights="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_weights.npy"
 
-    #async_m00_model = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
-    #classic_model = async_m00_model
+    async_m00_model = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
+    classic_model = async_m00_model
 
     async_m00_weights= "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
-    async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
+    #async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
     async_m90_weights= "fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
-    async_m95_weights= "fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
-    async_m99_weights= "fashion_mnist_async_4_100_0005_099_32_6_SGD_spe3_val_weights.npy"
-    async_alr_weights= "fashion_mnist_async_4_100_0001_09_32_6_ADAM_spe3_val_weights.npy"
+    #async_m95_weights= "fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
+    #async_m99_weights= "fashion_mnist_async_4_100_0005_099_32_6_SGD_spe3_val_weights.npy"
+    #async_alr_weights= "fashion_mnist_async_4_100_0001_09_32_6_ADAM_spe3_val_weights.npy"
 
-    weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
+    #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
     #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights,]
     #weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
+    weights_paths = [async_m00_weights, async_m90_weights,]
 
     loaded_weights_np = []
     for wp in weights_paths:
@@ -59,18 +77,23 @@ def main(
     
     # perform PCA on the classic weights loaded_weights_np[0], remember the transformation to apply it to the other saved weights
     pca = PCA(n_components=2)
+    
+    # Convert the 3D list to a NumPy array
+    matrix_array = np.array(loaded_weights_np)
+    # Reshape the array to combine the matrices horizontally
+    combined_matrix = np.vstack(matrix_array)
+    pca.fit(combined_matrix)
+    
+    
     reduced_weights = []
-
     _min_w = 99999999
     _max_w = 0
     #for i, w in enumerate(loaded_weights_np):
     for i, w in enumerate(reversed(loaded_weights_np)):
         #if i == 0:
-        #    reduced_weights.append(pca.fit_transform(w))
-        #else:
-        #    reduced_weights.append(pca.transform(w))
+        #    reduced_weights.append(pca.fit(w))
 
-        reduced_weights.append(pca.fit_transform(w))
+        reduced_weights.append(pca.transform(w))
 
         _min = np.min(reduced_weights[-1])
         _max = np.max(reduced_weights[-1])
@@ -79,6 +102,7 @@ def main(
             _min_w = _min
         if _max > _max_w:
             _max_w = _max
+
 
     _min_w = _min_w -1
     _max_w = _max_w +1
@@ -196,13 +220,13 @@ def main(
         colorscale="Viridis",
     )
     trajectory_names = [
-        "Classic SGD m=0.0",
+        #"Classic SGD m=0.0",
         "Async SGD m=0.0",
-        "Async SGD m=0.50",
+        #"Async SGD m=0.50",
         "Async SGD m=0.90",
-        "Async SGD m=0.95",
-        "Async SGD m=0.99",
-        "Async ADAM",
+        #"Async SGD m=0.95",
+        # "Async SGD m=0.99",
+        #"Async ADAM",
     ]
     trajectory_names = trajectory_names[::-1] #uncomment if you reversed above
     trajectory_colors = ['red', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta']  # Define more colors if you have more trajectories
@@ -379,3 +403,5 @@ if __name__ == "__main__":
         args.grid_yy,
         not args.no_grid_save,
     )
+
+# %%
