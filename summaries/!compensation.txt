@@ -1,13 +1,8 @@
-
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7fd1a7606f80>
+## All use Slow worker 1, lambda = 5
+######## 6 workers - 0.9 ms 
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model.pt
-Asynchronous training time: 15:00:505
-Saved fig at ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_training_plots.png
-Train Performance
+
 Average train accuracy: 62.43 % (37458/60000)
 Average train loss: 1.9786
 
@@ -52,15 +47,11 @@ Classification test report:
 weighted avg       0.83      0.62      0.57     10000
 
 
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7f9bc2ca6f80>
+######## 6 workers - 0.6 ms
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model.pt
-Asynchronous training time: 15:34:760
-Saved fig at ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_training_plots.png
-Train Performance
+
+
 Average train accuracy: 75.47 % (45283/60000)
 Average train loss: 0.7184
 
@@ -105,15 +96,11 @@ Classification test report:
 weighted avg       0.79      0.74      0.73     10000
 
 
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7f85d36f6f80>
+######## 11 workers - 0.3 ms
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model.pt
-Asynchronous training time: 20:17:485
-Saved fig at ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_training_plots.png
-Train Performance
+
+
 Average train accuracy: 10.00 % (6000/60000)
 Average train loss: 2.3912
 
@@ -158,15 +145,10 @@ Classification test report:
 weighted avg       0.01      0.10      0.02     10000
 
 
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7f6fcfbd6f80>
+######## 3 workers - 0.6 ms 
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model.pt
-Asynchronous training time: 12:23:662
-Saved fig at ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_training_plots.png
-Train Performance
+
 Average train accuracy: 59.33 % (35598/60000)
 Average train loss: 2.0195
 
@@ -211,15 +193,11 @@ Classification test report:
 weighted avg       0.76      0.59      0.52     10000
 
 
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7f161c6cef80>
+######## 3 workers - 0.3 ms
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model.pt
-Asynchronous training time: 07:08:270
-Saved fig at ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_training_plots.png
-Train Performance
+
+
 Average train accuracy: 59.83 % (35901/60000)
 Average train loss: 2.2816
 
@@ -263,16 +241,11 @@ Classification test report:
    macro avg       0.73      0.59      0.52     10000
 weighted avg       0.73      0.59      0.52     10000
 
-
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7fb151e0ef80>
+######## 6 workers - 0.3 ms
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model.pt
-Asynchronous training time: 16:36:047
-Saved fig at ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_training_plots.png
-Train Performance
+
+
 Average train accuracy: 50.98 % (30589/60000)
 Average train loss: 3.2206
 
@@ -317,15 +290,11 @@ Classification test report:
 weighted avg       0.78      0.50      0.45     10000
 
 
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7f5eee0def80>
+######## 3 workers - 0.9 ms
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model.pt
-Asynchronous training time: 17:59:786
-Saved fig at ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_training_plots.png
-Train Performance
+
+
 Average train accuracy: 63.88 % (38325/60000)
 Average train loss: 1.7504
 
@@ -370,15 +339,11 @@ Classification test report:
 weighted avg       0.67      0.63      0.57     10000
 
 
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7fc611366f80>
+######## 11 workers - 0.6 ms
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model.pt
-Asynchronous training time: 21:04:939
-Saved fig at ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_training_plots.png
-Train Performance
+
+
 Average train accuracy: 68.41 % (41047/60000)
 Average train loss: 1.1198
 
@@ -423,15 +388,11 @@ Classification test report:
 weighted avg       0.74      0.68      0.64     10000
 
 
-Using default batch_size: 500
-Outputs will be saved to ../Compensation//test_results/
-Created MNIST/FASHION_MNIST CNN
-LeNet5 using loss: <function nll_loss at 0x7f2cdcf7af80>
+######## 11 workers - 0.9 ms
 Saving to outputs to ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_test_performance.txt
 Testing performance of ../Compensation/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model.pt
-Asynchronous training time: 21:37:726
-Saved fig at ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_training_plots.png
-Train Performance
+
+
 Average train accuracy: 54.31 % (32585/60000)
 Average train loss: 2.2800
 
@@ -474,4 +435,442 @@ Classification test report:
     accuracy                           0.54     10000
    macro avg       0.81      0.54      0.54     10000
 weighted avg       0.81      0.54      0.54     10000
+
+### lambda = 2
+
+######### 6 workers - 0.9 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model.pt
+
+Average train accuracy: 34.44 % (20663/60000)
+Average train loss: 4.5656
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00      6000
+           1       1.00      0.56      0.72      6000
+           2       0.29      0.00      0.00      6000
+           3       0.98      0.03      0.06      6000
+           4       1.00      0.00      0.00      6000
+           5       0.33      1.00      0.50      6000
+           6       0.18      1.00      0.31      6000
+           7       1.00      0.00      0.00      6000
+           8       1.00      0.72      0.83      6000
+           9       0.99      0.14      0.24      6000
+
+    accuracy                           0.34     60000
+   macro avg       0.68      0.34      0.27     60000
+weighted avg       0.68      0.34      0.27     60000
+
+Test Performance
+Average test accuracy: 34.42 % (3442/10000)
+Average test loss: 4.6199
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00      1000
+           1       1.00      0.55      0.71      1000
+           2       0.00      0.00      0.00      1000
+           3       0.95      0.02      0.04      1000
+           4       1.00      0.00      0.00      1000
+           5       0.33      1.00      0.50      1000
+           6       0.18      1.00      0.30      1000
+           7       0.00      0.00      0.00      1000
+           8       0.99      0.72      0.84      1000
+           9       0.99      0.15      0.27      1000
+
+    accuracy                           0.34     10000
+   macro avg       0.55      0.34      0.27     10000
+weighted avg       0.55      0.34      0.27     10000
+
+
+######### 6 workers - 0.6 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model.pt
+
+Average train accuracy: 43.23 % (25936/60000)
+Average train loss: 3.3160
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.78      0.01      0.02      6000
+           1       0.99      0.19      0.32      6000
+           2       0.98      0.08      0.14      6000
+           3       0.24      1.00      0.38      6000
+           4       0.78      0.47      0.59      6000
+           5       0.36      1.00      0.53      6000
+           6       0.46      0.45      0.46      6000
+           7       0.98      0.06      0.10      6000
+           8       1.00      0.86      0.93      6000
+           9       0.99      0.20      0.34      6000
+
+    accuracy                           0.43     60000
+   macro avg       0.76      0.43      0.38     60000
+weighted avg       0.76      0.43      0.38     60000
+
+Test Performance
+Average test accuracy: 43.02 % (4302/10000)
+Average test loss: 3.3127
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.75      0.01      0.02      1000
+           1       0.98      0.18      0.30      1000
+           2       0.96      0.08      0.14      1000
+           3       0.24      1.00      0.39      1000
+           4       0.78      0.48      0.59      1000
+           5       0.36      1.00      0.53      1000
+           6       0.45      0.46      0.45      1000
+           7       0.95      0.04      0.08      1000
+           8       0.99      0.86      0.92      1000
+           9       1.00      0.21      0.34      1000
+
+    accuracy                           0.43     10000
+   macro avg       0.75      0.43      0.38     10000
+weighted avg       0.75      0.43      0.38     10000
+
+
+######### 11 workers - 0.3 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model.pt
+
+
+Average train accuracy: 64.49 % (38694/60000)
+Average train loss: 1.0386
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.03      0.06      6000
+           1       0.93      0.96      0.94      6000
+           2       0.51      0.88      0.64      6000
+           3       0.97      0.53      0.68      6000
+           4       0.51      0.72      0.60      6000
+           5       0.84      0.82      0.83      6000
+           6       0.25      0.30      0.27      6000
+           7       0.56      1.00      0.72      6000
+           8       0.94      0.91      0.92      6000
+           9       1.00      0.30      0.47      6000
+
+    accuracy                           0.64     60000
+   macro avg       0.75      0.64      0.61     60000
+weighted avg       0.75      0.64      0.61     60000
+
+Test Performance
+Average test accuracy: 64.02 % (6402/10000)
+Average test loss: 1.0773
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.02      0.04      1000
+           1       0.92      0.96      0.94      1000
+           2       0.50      0.89      0.64      1000
+           3       0.96      0.52      0.67      1000
+           4       0.49      0.69      0.57      1000
+           5       0.84      0.83      0.83      1000
+           6       0.26      0.31      0.28      1000
+           7       0.56      1.00      0.72      1000
+           8       0.92      0.91      0.91      1000
+           9       1.00      0.28      0.44      1000
+
+    accuracy                           0.64     10000
+   macro avg       0.75      0.64      0.61     10000
+weighted avg       0.75      0.64      0.61     10000
+
+
+######### 3 workers - 0.6 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model.pt
+
+
+Average train accuracy: 57.44 % (34462/60000)
+Average train loss: 2.1228
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.90      0.48      0.62      6000
+           1       0.57      1.00      0.72      6000
+           2       0.82      0.01      0.02      6000
+           3       0.71      0.00      0.00      6000
+           4       0.31      1.00      0.47      6000
+           5       1.00      0.31      0.47      6000
+           6       0.74      0.02      0.03      6000
+           7       0.65      0.99      0.79      6000
+           8       0.69      1.00      0.82      6000
+           9       0.81      0.94      0.87      6000
+
+    accuracy                           0.57     60000
+   macro avg       0.72      0.57      0.48     60000
+weighted avg       0.72      0.57      0.48     60000
+
+Test Performance
+Average test accuracy: 56.99 % (5699/10000)
+Average test loss: 2.2094
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.88      0.46      0.60      1000
+           1       0.58      0.99      0.74      1000
+           2       0.69      0.01      0.02      1000
+           3       0.00      0.00      0.00      1000
+           4       0.30      0.99      0.46      1000
+           5       0.99      0.32      0.48      1000
+           6       0.81      0.02      0.03      1000
+           7       0.65      0.99      0.78      1000
+           8       0.68      0.99      0.80      1000
+           9       0.81      0.93      0.86      1000
+
+    accuracy                           0.57     10000
+   macro avg       0.64      0.57      0.48     10000
+weighted avg       0.64      0.57      0.48     10000
+
+
+######### 3 workers - 0.3 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model.pt
+
+Average train accuracy: 60.50 % (36301/60000)
+Average train loss: 1.9851
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.90      0.01      0.01      6000
+           1       0.99      0.98      0.99      6000
+           2       0.39      0.96      0.56      6000
+           3       0.62      0.97      0.76      6000
+           4       0.65      0.79      0.71      6000
+           5       1.00      0.38      0.55      6000
+           6       1.00      0.00      0.00      6000
+           7       0.41      1.00      0.58      6000
+           8       1.00      0.74      0.85      6000
+           9       0.98      0.21      0.35      6000
+
+    accuracy                           0.61     60000
+   macro avg       0.79      0.61      0.54     60000
+weighted avg       0.79      0.61      0.54     60000
+
+Test Performance
+Average test accuracy: 59.74 % (5974/10000)
+Average test loss: 2.0387
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.01      0.01      1000
+           1       0.99      0.98      0.98      1000
+           2       0.38      0.94      0.54      1000
+           3       0.63      0.96      0.76      1000
+           4       0.63      0.76      0.69      1000
+           5       1.00      0.39      0.56      1000
+           6       1.00      0.00      0.00      1000
+           7       0.41      1.00      0.58      1000
+           8       1.00      0.74      0.85      1000
+           9       0.98      0.20      0.33      1000
+
+    accuracy                           0.60     10000
+   macro avg       0.80      0.60      0.53     10000
+weighted avg       0.80      0.60      0.53     10000
+
+
+######### 6 workers - 0.3 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_6_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_small_constant_comp_model.pt
+
+
+Average train accuracy: 59.59 % (35755/60000)
+Average train loss: 2.1427
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.12      0.22      6000
+           1       0.51      1.00      0.68      6000
+           2       0.99      0.05      0.09      6000
+           3       0.97      0.15      0.26      6000
+           4       0.30      0.99      0.47      6000
+           5       0.85      0.98      0.91      6000
+           6       0.24      0.15      0.19      6000
+           7       0.86      0.98      0.92      6000
+           8       0.99      0.83      0.91      6000
+           9       1.00      0.71      0.83      6000
+
+    accuracy                           0.60     60000
+   macro avg       0.77      0.60      0.55     60000
+weighted avg       0.77      0.60      0.55     60000
+
+Test Performance
+Average test accuracy: 59.42 % (5942/10000)
+Average test loss: 2.2165
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.98      0.12      0.21      1000
+           1       0.52      1.00      0.69      1000
+           2       1.00      0.05      0.09      1000
+           3       0.97      0.16      0.27      1000
+           4       0.30      0.99      0.46      1000
+           5       0.86      0.98      0.92      1000
+           6       0.25      0.14      0.18      1000
+           7       0.85      0.98      0.91      1000
+           8       0.99      0.81      0.89      1000
+           9       1.00      0.72      0.83      1000
+
+    accuracy                           0.59     10000
+   macro avg       0.77      0.59      0.54     10000
+weighted avg       0.77      0.59      0.54     10000
+
+
+######### 3 workers - 0.9 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_3_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model.pt
+
+
+Average train accuracy: 60.89 % (36536/60000)
+Average train loss: 1.6682
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.42      0.96      0.59      6000
+           1       0.96      0.99      0.97      6000
+           2       0.78      0.24      0.37      6000
+           3       0.61      0.99      0.75      6000
+           4       0.90      0.32      0.48      6000
+           5       0.41      1.00      0.59      6000
+           6       0.93      0.05      0.09      6000
+           7       0.96      0.14      0.24      6000
+           8       0.73      0.99      0.85      6000
+           9       0.98      0.41      0.58      6000
+
+    accuracy                           0.61     60000
+   macro avg       0.77      0.61      0.55     60000
+weighted avg       0.77      0.61      0.55     60000
+
+Test Performance
+Average test accuracy: 60.46 % (6046/10000)
+Average test loss: 1.7064
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.41      0.95      0.57      1000
+           1       0.97      0.97      0.97      1000
+           2       0.77      0.26      0.39      1000
+           3       0.62      0.97      0.75      1000
+           4       0.86      0.28      0.43      1000
+           5       0.42      1.00      0.59      1000
+           6       0.87      0.04      0.08      1000
+           7       0.93      0.15      0.26      1000
+           8       0.70      0.98      0.82      1000
+           9       0.98      0.43      0.60      1000
+
+    accuracy                           0.60     10000
+   macro avg       0.75      0.60      0.55     10000
+weighted avg       0.75      0.60      0.55     10000
+
+
+######### 11 workers - 0.6 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_medium_constant_comp_model.pt
+
+
+Average train accuracy: 71.76 % (43057/60000)
+Average train loss: 1.0117
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.61      0.96      0.75      6000
+           1       0.98      0.97      0.98      6000
+           2       0.43      0.97      0.59      6000
+           3       0.95      0.69      0.80      6000
+           4       0.76      0.25      0.38      6000
+           5       0.98      0.78      0.86      6000
+           6       0.93      0.13      0.22      6000
+           7       0.99      0.48      0.65      6000
+           8       0.99      0.95      0.97      6000
+           9       0.57      1.00      0.73      6000
+
+    accuracy                           0.72     60000
+   macro avg       0.82      0.72      0.69     60000
+weighted avg       0.82      0.72      0.69     60000
+
+Test Performance
+Average test accuracy: 71.21 % (7121/10000)
+Average test loss: 1.0599
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.60      0.95      0.74      1000
+           1       0.98      0.97      0.98      1000
+           2       0.42      0.97      0.59      1000
+           3       0.94      0.66      0.77      1000
+           4       0.74      0.23      0.35      1000
+           5       0.97      0.76      0.85      1000
+           6       0.91      0.13      0.23      1000
+           7       0.98      0.51      0.67      1000
+           8       0.98      0.95      0.96      1000
+           9       0.58      1.00      0.73      1000
+
+    accuracy                           0.71     10000
+   macro avg       0.81      0.71      0.69     10000
+weighted avg       0.81      0.71      0.69     10000
+
+
+######### 11 workers - 0.9 ms
+Saving to outputs to ../Compensation//test_results/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model_test_performance.txt
+Testing performance of ../Compensation/fashion_mnist_async_11_100_0005_09_32_6_SGD_spe3_labels_delay_slow_worker_1_long_constant_comp_model.pt
+
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 3.8196
+
+Classification train report:
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00      6000
+           1       0.00      0.00      0.00      6000
+           2       0.00      0.00      0.00      6000
+           3       0.10      1.00      0.18      6000
+           4       0.00      0.00      0.00      6000
+           5       0.00      0.00      0.00      6000
+           6       0.00      0.00      0.00      6000
+           7       0.00      0.00      0.00      6000
+           8       0.00      0.00      0.00      6000
+           9       0.00      0.00      0.00      6000
+
+    accuracy                           0.10     60000
+   macro avg       0.01      0.10      0.02     60000
+weighted avg       0.01      0.10      0.02     60000
+
+Test Performance
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 3.8196
+
+Classification test report:
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00      1000
+           1       0.00      0.00      0.00      1000
+           2       0.00      0.00      0.00      1000
+           3       0.10      1.00      0.18      1000
+           4       0.00      0.00      0.00      1000
+           5       0.00      0.00      0.00      1000
+           6       0.00      0.00      0.00      1000
+           7       0.00      0.00      0.00      1000
+           8       0.00      0.00      0.00      1000
+           9       0.00      0.00      0.00      1000
+
+    accuracy                           0.10     10000
+   macro avg       0.01      0.10      0.02     10000
+weighted avg       0.01      0.10      0.02     10000
 
