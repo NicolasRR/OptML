@@ -190,7 +190,7 @@ def main(
             symbol='star',
         ),
         name="global minimum",
-        text=str(np.min(grid_losses)),
+        text=[str(np.min(grid_losses))],
         hovertemplate='Loss: %{text}'
     )
 
