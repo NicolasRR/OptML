@@ -78,7 +78,7 @@ def main(
         if _min < _min_w:
             _min_w = _min
         if _max > _max_w:
-            _max_w = _max
+            _max_w = _max 
 
     _min_w = _min_w -1
     _max_w = _max_w +1

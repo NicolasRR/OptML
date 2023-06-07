@@ -128,18 +128,6 @@ def main(
 
 
     
-    colors = ["blue"] + ["red"] * (len(reduced_weights) - 2) + ["green"]
-    sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
-
-    trajectory = go.Scatter(
-        x=reduced_weights[:, 0],
-        y=reduced_weights[:, 1],
-        mode="markers+lines",
-        line=dict(color="red"),
-        marker=dict(color=colors, size=sizes),
-        name="Training Trajectory",
-    )
-
     # adding a log scale on Z
     layout = go.Layout(
         scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
@@ -155,6 +143,35 @@ def main(
     
     fig.update_traces(contours_z=dict(show=True, usecolormap=True,
                                   highlightcolor="limegreen", project_z=True))
+    
+    _min_x, _min_y = np.unravel_index(np.argmin(grid_losses), grid_losses.shape)
+    min_point = go.Scatter3d(
+        x=[xx[_min_x, _min_y]],
+        y=[yy[_min_x, _min_y]],
+        z=[grid_losses[_min_x, _min_y]],
+        mode='markers',
+        marker=dict(
+            size=5,
+            color='red',
+        ),
+        name="global minimum"
+    )
+
+    fig.add_trace(min_point)
+    
+
+    #fig2
+    colors = ["blue"] + ["orange"] * (len(reduced_weights) - 2) + ["green"]
+    sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
+
+    trajectory = go.Scatter(
+        x=reduced_weights[:, 0],
+        y=reduced_weights[:, 1],
+        mode="markers+lines",
+        line=dict(color="orange"),
+        marker=dict(color=colors, size=sizes),
+        name="Training Trajectory",
+    )
     fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log(grid_losses.flatten()), colorscale='Viridis')])
 
     # Add labels and title
@@ -173,11 +190,11 @@ def main(
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
         output_file_path = os.path.join(
-            subfolder, f"{model_basename}_loss_landscape.html"
+            subfolder, f"{model_basename}_loss_landscape_{grid_size}.html"
         )
         pio.write_html(fig, output_file_path)
         output_file_path_contour = os.path.join(
-            subfolder, f"{model_basename}_loss_landscape_contour.html"
+            subfolder, f"{model_basename}_loss_landscape_contour_{grid_size}.html"
         )
         pio.write_html(fig2, output_file_path_contour)
         np.savetxt(os.path.join(
@@ -187,9 +204,9 @@ def main(
             subfolder, f"{model_basename}_trajectory_losses.npy"
         ),np.vstack([reduced_weights[:, 0], reduced_weights[:, 1]]))
     else:
-        output_file_path = f"{model_basename}_loss_landscape.html"
+        output_file_path = f"{model_basename}_loss_landscape_{grid_size}.html"
         pio.write_html(fig, output_file_path)
-        output_file_path_contour = f"{model_basename}_loss_landscape_contour.html"
+        output_file_path_contour = f"{model_basename}_loss_landscape_contour_{grid_size}.html"
         pio.write_html(fig2, output_file_path_contour)
         np.savetxt(f"{model_basename}_grid_losses.npy"
         ,np.vstack([xx.flatten(), yy.flatten(), grid_losses.flatten()]))
