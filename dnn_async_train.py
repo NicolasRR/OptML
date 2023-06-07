@@ -110,7 +110,7 @@ class ParameterServer_async(object):
                 self.global_batch_counter += 1
             for i, (param, grad) in enumerate(zip(self.model.parameters(), grads)):
                 if self.compensation:
-                    param.grad = grad + 5* grad * grad * (param - self.backups[int(worker_name.split("_")[1])-1][i])
+                    param.grad = grad + 2* grad * grad * (param - self.backups[int(worker_name.split("_")[1])-1][i])
                 else:
                     param.grad = grad
 
