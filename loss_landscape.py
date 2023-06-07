@@ -125,8 +125,6 @@ def main(
         coloraxis="coloraxis",
         colorscale="Viridis",
     )
-
-
     
     # adding a log scale on Z
     layout = go.Layout(
@@ -183,7 +181,8 @@ def main(
     # Add scatter trace for the trajectory projection
 
     fig2.add_trace(trajectory)
-    # fig.show()
+
+
     model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
