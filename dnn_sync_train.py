@@ -51,6 +51,14 @@ class ParameterServer_sync(object):
         self.optimizer = get_optimizer(self.model, learning_rate, momentum, use_alr)
         self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
         self.weights_matrix = []
+        if saves_per_epoch is not None:
+            weights = np.concatenate(
+                            [
+                                w.detach().clone().cpu().numpy().ravel()
+                                for w in self.model.state_dict().values()
+                            ]
+                        )
+            self.weights_matrix.append(weights)
         self.saves_per_epoch = saves_per_epoch
         if saves_per_epoch is not None:
             save_idx = np.linspace(0, len_trainloader - 1, saves_per_epoch, dtype=int)
