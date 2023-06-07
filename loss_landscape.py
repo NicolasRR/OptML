@@ -156,7 +156,7 @@ def main(
         ),
     )
 
-    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), colorscale='Viridis')])
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), name="grid point", colorscale='Viridis')])
 
     fig2.update_layout(
         title='Contour Plot with Trajectory Projection',
