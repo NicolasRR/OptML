@@ -42,6 +42,20 @@ class ParameterServer_async(object):
         compensation=False,
     ):
         self.model = _get_model(dataset_name, LOSS_FUNC, alt_model)
+        # TODO UNCOMMENT TO lOAD A COMMON WEIGHT TO HAVE SAME STARTING POINT
+        #def set_weights(model):
+        #    loaded_weights_np = np.load("fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy")
+        #    weights = loaded_weights_np[0]
+        #    weight_dict = {}
+        #    idx = 0
+        #    for key, param in model.state_dict().items():
+        #        size = int(np.prod(param.shape))
+        #        weight_dict[key] = torch.tensor(weights[idx : idx + size]).view(param.shape)
+        #        idx += size
+        #    model.load_state_dict(weight_dict)
+        #    return model
+        #self.model = set_weights(self.model)
+                
         self.logger = logger
         self.model_lock = threading.Lock()
         self.nb_workers = nb_workers
@@ -49,14 +63,14 @@ class ParameterServer_async(object):
         self.optimizer = get_optimizer(self.model, learning_rate, momentum, use_alr)
         self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
         self.weights_matrix = []
-        if saves_per_epoch is not None:
-            weights = np.concatenate(
-                            [
-                                w.detach().clone().cpu().numpy().ravel()
-                                for w in self.model.state_dict().values()
-                            ]
-                        )
-            self.weights_matrix.append(weights)
+        # if saves_per_epoch is not None:
+        #     weights = np.concatenate(
+        #                     [
+        #                         w.detach().clone().cpu().numpy().ravel()
+        #                         for w in self.model.state_dict().values()
+        #                     ]
+        #                 )
+        #     self.weights_matrix.append(weights)
         self.saves_per_epoch = saves_per_epoch
         if lrs is not None or saves_per_epoch is not None or val:
             self.global_batch_counter = 0

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 cd ..
 
 dataset="fashion_mnist"

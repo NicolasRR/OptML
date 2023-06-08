@@ -9,23 +9,9 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_SIZE = 20
+DEFAULT_GRID_SIZE = 50
 DEFAULT_BATCH_SIZE = 128
 
-
-#%% Learn how PCA works with sklearn
-import numpy as np
-from sklearn.decomposition import PCA
-X = np.array([[-1, -1], 
-              [-2, -1], 
-              [-3, -2], 
-              [1, 1], 
-              [2, 1], 
-              [3, 2]])
-pca = PCA(n_components=2)
-pca.fit(X)
-
-#%%
 
 
 
@@ -58,23 +44,22 @@ def main(
     classic_model = async_m00_model
 
     async_m00_weights= "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
-    #async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
+    async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
     async_m90_weights= "fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
-    #async_m95_weights= "fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
+    async_m95_weights= "fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
     #async_m99_weights= "fashion_mnist_async_4_100_0005_099_32_6_SGD_spe3_val_weights.npy"
     #async_alr_weights= "fashion_mnist_async_4_100_0001_09_32_6_ADAM_spe3_val_weights.npy"
 
     #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
     #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights,]
     #weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
-    weights_paths = [async_m00_weights, async_m90_weights,]
-
+    weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, ]
     loaded_weights_np = []
     for wp in weights_paths:
         loaded_weights_np.append(np.load(wp))
         if "classic" in wp:
             print(f"Saved weights shape: {loaded_weights_np[-1].shape}")
-    
+    #%%
     # perform PCA on the classic weights loaded_weights_np[0], remember the transformation to apply it to the other saved weights
     pca = PCA(n_components=2)
     
@@ -223,10 +208,10 @@ def main(
     trajectory_names = [
         #"Classic SGD m=0.0",
         "Async SGD m=0.0",
-        #"Async SGD m=0.50",
+        "Async SGD m=0.50",
         "Async SGD m=0.90",
-        #"Async SGD m=0.95",
-        # "Async SGD m=0.99",
+        "Async SGD m=0.95",
+        #"Async SGD m=0.99",
         #"Async ADAM",
     ]
     trajectory_names = trajectory_names[::-1] #uncomment if you reversed above
