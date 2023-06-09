@@ -31,16 +31,16 @@ done
 formatted_train_split=$(printf "%.1f\n" $(echo "$train_split * 10" | bc) | tr -d '.')
 formatted_lr=$(echo $lr | tr -d '.')
 
-momentum=0.99
-formatted_momentum=$(echo $momentum | tr -d '.')
-python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder
-sleep 0.1
-echo
-model_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_SGD_spe3_val_model.pt"
-log_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epochs}_SGD_spe3_val_log.log"
-python3 $test_model_py $model_async $log_async --classification_report --training_time --pics --subfolder $subfolder
-sleep 0.1
-echo
+#momentum=0.99
+#formatted_momentum=$(echo $momentum | tr -d '.')
+#python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder
+#sleep 0.1
+#echo
+#model_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epoch}_SGD_spe3_val_model.pt"
+#log_async="${subfolder}/${dataset}_async_${world_size}_${formatted_train_split}_${formatted_lr}_${formatted_momentum}_${batch_size}_${epochs}_SGD_spe3_val_log.log"
+#python3 $test_model_py $model_async $log_async --classification_report --training_time --pics --subfolder $subfolder
+#sleep 0.1
+#echo
 
 momentum=0.95
 formatted_momentum=$(echo $momentum | tr -d '.')
@@ -88,4 +88,4 @@ python3 $test_model_py $model_async $log_async --classification_report --trainin
 sleep 0.1
 echo
 
-python3 $loss_landscape_multi_traj_py --grid_size $grid_size
+python3 $loss_landscape_multi_traj_py --grid_size $grid_size --subfolder $subfolder

@@ -289,6 +289,7 @@ def main(
         "orange",
         "magenta",
         "yellow",
+        "cyan",
     ]
     trajectories = []
     labels = (
