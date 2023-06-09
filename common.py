@@ -592,7 +592,7 @@ def _get_model(dataset_name, loss_func, alt_model=DEFAULT_ALTERNATE_MODELS):
     if alt_model == False:
         if "mnist" in dataset_name:
             print("Created MNIST/FASHION_MNIST CNN")
-            return CNN_MNIST(loss_func=loss_func)  # global model
+            return CNN_MNIST(loss_func=loss_func)
         elif "cifar100" in dataset_name:
             print("Created CIFAR100 CNN")
             return CNN_CIFAR100(loss_func=loss_func)
@@ -605,7 +605,7 @@ def _get_model(dataset_name, loss_func, alt_model=DEFAULT_ALTERNATE_MODELS):
     else:
         if "mnist" in dataset_name:
             print("Created MNIST/FASHION_MNIST CNN (alternative)")
-            return CNN_MNIST_alt(loss_func=loss_func)  # global model
+            return CNN_MNIST_alt(loss_func=loss_func)
         elif "cifar100" in dataset_name:
             print("Created CIFAR100 CNN (alternative)")
             return CNN_CIFAR100_alt(loss_func=loss_func)
@@ -624,7 +624,7 @@ def get_optimizer(model, learning_rate, momentum, use_alr):
         else:
             return optim.Adam(
                 model.parameters(), lr=learning_rate, betas=(max(momentum, 0.99), 0.999)
-            )  # weight decay if weights too large
+            )
     else:
         return optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
 
