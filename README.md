@@ -114,7 +114,7 @@ Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_traj.py` use `-h` or `--help` to see the available flags and required arguments to give. For example: `python3 kfold.py -h` or `python3 test_model.py --help`.
 
 ### Data Partioning Strategies
-The following image illustrates the different data partioning strategies implemented on the MNIST train dataset:
+The following image illustrates the different data partioning strategies implemented on the MNIST train dataset for distributed learning on two workers:
 <div align="center">
   
 <img src="https://i.postimg.cc/3wDjBZrd/image-2023-06-09-190947367.png" width="575">
