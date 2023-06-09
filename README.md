@@ -108,6 +108,12 @@ Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 
 For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_traj.py` use `-h` or `--help` to see the available flags and required arguments to give. For example: `python3 kfold.py -h` or `python3 test_model.py --help`.
 
+### Data Partioning Strategies
+<div align="center">
+  
+<img src="https://i.postimg.cc/3wDjBZrd/image-2023-06-09-190947367.png" width="575">
+
+</div>
 ### Some examples
 - The following command will train two workers synchronously, on 10% of MNIST train dataset, trainloaders will use a batch size of 64, and the SGD optimizer a learning rate of $10^{-2}$ and momentum of $0.5$, at the end of training the global accuracy of the model will be printed and the model will not be saved. As `--epochs EPOCHS` is not precised, the default value of epochs will be used: $1$. <br>
 `python3 dnn_sync_train.py --dataset mnist --world_size 3 --train_split 0.1 --lr 0.01 --momentum 0.5 --batch_size 64 --model_accuracy --no_save_model --dataset mnist`
