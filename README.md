@@ -10,7 +10,9 @@ Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nico
 ## Background
 
 <div align="center">
+  
 ![alt text](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png "Asynchronous SGD vs Synchronous SGD")
+
 </div>
 
 Source: [Truly Sparse Neural Networks at Scale](https://www.researchgate.net/publication/348508649_Truly_Sparse_Neural_Networks_at_Scale/download)
@@ -47,7 +49,9 @@ Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
 - `common.py`: all the common functions used by the other scripts
 
 <div align="center">
+  
 ![alt text](https://i.postimg.cc/JnvgvSrW/image-2023-06-09-172517991.png "Data flow diagram")
+
 </div>
 
 ### Bash Scripts
