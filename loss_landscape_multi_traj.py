@@ -34,20 +34,12 @@ def main(
     grid_save=True,
 ):
     # Hardcoded paths
-    model_path = "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
+    model_path = "Results_AsyncMomentum/fashion_mnist_async_2_100_0005_00_32_1_SGD_spe3_val_model.pt"
 
-    async_m00_weights = (
-        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
-    )
-    async_m50_weights = (
-        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
-    )
-    async_m90_weights = (
-        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
-    )
-    async_m95_weights = (
-        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
-    )
+    async_m00_weights = "Results_AsyncMomentum/fashion_mnist_async_2_100_0005_00_32_1_SGD_spe3_val_weights.npy"
+    async_m50_weights = "Results_AsyncMomentum/fashion_mnist_async_2_100_0005_05_32_1_SGD_spe3_val_weights.npy"
+    async_m90_weights = "Results_AsyncMomentum/fashion_mnist_async_2_100_0005_09_32_1_SGD_spe3_val_weights.npy"
+    async_m95_weights = "Results_AsyncMomentum/fashion_mnist_async_2_100_0005_095_32_1_SGD_spe3_val_weights.npy"
 
     weights_paths = [
         async_m00_weights,
@@ -163,31 +155,6 @@ def main(
                     ),
                     yy,
                 )
-                np.save(
-                    os.path.join(
-                        subfolder,
-                        f"{model_basename}_trajectories_losses_{grid_size}.npy",
-                    ),
-                    np.vstack(
-                        [
-                            reduced_weights[0][:, 0],
-                            reduced_weights[0][:, 1],
-                            trajectories_loss_reevaluted[0],
-                            reduced_weights[1][:, 0],
-                            reduced_weights[1][:, 1],
-                            trajectories_loss_reevaluted[1],
-                            reduced_weights[2][:, 0],
-                            reduced_weights[2][:, 1],
-                            trajectories_loss_reevaluted[2],
-                            reduced_weights[3][:, 0],
-                            reduced_weights[3][:, 1],
-                            trajectories_loss_reevaluted[3],
-                        ]
-                    ),
-                )
-                print(
-                    f"Saved trajectories losses to: {os.path.join(subfolder, f'{model_basename}_trajectories_losses_{grid_size}.npy')}"
-                )
                 print(
                     f"Saved grid losses to: {os.path.join(subfolder, f'{model_basename}_grid_losses_{grid_size}.npy')}"
                 )
@@ -201,28 +168,6 @@ def main(
                 np.save(f"{model_basename}_grid_losses_{grid_size}.npy", grid_losses)
                 np.save(f"{model_basename}_grid_xx_{grid_size}.npy", xx)
                 np.save(f"{model_basename}_grid_yy_{grid_size}.npy", yy)
-                np.save(
-                    f"{model_basename}_trajectories_losses_{grid_size}.npy",
-                    np.vstack(
-                        [
-                            reduced_weights[0][:, 0],
-                            reduced_weights[0][:, 1],
-                            trajectories_loss_reevaluted[0],
-                            reduced_weights[1][:, 0],
-                            reduced_weights[1][:, 1],
-                            trajectories_loss_reevaluted[1],
-                            reduced_weights[2][:, 0],
-                            reduced_weights[2][:, 1],
-                            trajectories_loss_reevaluted[2],
-                            reduced_weights[3][:, 0],
-                            reduced_weights[3][:, 1],
-                            trajectories_loss_reevaluted[3],
-                        ]
-                    ),
-                )
-                print(
-                    f"Saved trajectories losses to: {f'{model_basename}_trajectories_losses_{grid_size}.npy'}"
-                )
                 print(
                     f"Saved grid losses to: {f'{model_basename}_grid_losses_{grid_size}.npy'}"
                 )
@@ -267,6 +212,57 @@ def main(
 
         progress_bar2.close()
         trajectories_loss_reevaluted.append(trajectory_loss_reevaluted)
+
+    if grid_save:
+        if len(subfolder) > 0:
+            np.save(
+                os.path.join(
+                    subfolder,
+                    f"{model_basename}_trajectories_losses_{grid_size}.npy",
+                ),
+                np.vstack(
+                    [
+                        reduced_weights[0][:, 0],
+                        reduced_weights[0][:, 1],
+                        trajectories_loss_reevaluted[0],
+                        reduced_weights[1][:, 0],
+                        reduced_weights[1][:, 1],
+                        trajectories_loss_reevaluted[1],
+                        reduced_weights[2][:, 0],
+                        reduced_weights[2][:, 1],
+                        trajectories_loss_reevaluted[2],
+                        reduced_weights[3][:, 0],
+                        reduced_weights[3][:, 1],
+                        trajectories_loss_reevaluted[3],
+                    ]
+                ),
+            )
+            print(
+                f"Saved trajectories losses to: {os.path.join(subfolder, f'{model_basename}_trajectories_losses_{grid_size}.npy')}"
+            )
+        else:
+            np.save(
+                f"{model_basename}_trajectories_losses_{grid_size}.npy",
+                np.vstack(
+                    [
+                        reduced_weights[0][:, 0],
+                        reduced_weights[0][:, 1],
+                        trajectories_loss_reevaluted[0],
+                        reduced_weights[1][:, 0],
+                        reduced_weights[1][:, 1],
+                        trajectories_loss_reevaluted[1],
+                        reduced_weights[2][:, 0],
+                        reduced_weights[2][:, 1],
+                        trajectories_loss_reevaluted[2],
+                        reduced_weights[3][:, 0],
+                        reduced_weights[3][:, 1],
+                        trajectories_loss_reevaluted[3],
+                    ]
+                ),
+            )
+            print(
+                f"Saved trajectories losses to: {f'{model_basename}_trajectories_losses_{grid_size}.npy'}"
+            )
 
     surface = go.Surface(
         x=xx,

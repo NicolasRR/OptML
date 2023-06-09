@@ -17,6 +17,7 @@ from common import (
     read_parser,
     start,
     _delay,
+    set_seeds,
     LOSS_FUNC,
 )
 
@@ -30,6 +31,7 @@ class ParameterServer_sync(object):
         dataset_name,
         learning_rate,
         momentum,
+        seed,
         use_alr,
         len_trainloader,
         epochs,
@@ -40,6 +42,8 @@ class ParameterServer_sync(object):
         train_loader=None,
         val_loader=None,
     ):
+        if seed:
+            set_seeds()
         self.model = _get_model(dataset_name, LOSS_FUNC, alt_model)
         self.logger = logger
         self.lock = threading.Lock()
@@ -281,6 +285,7 @@ def run_parameter_server_sync(
     train_split,
     batch_size,
     epochs,
+    seed,
     model_accuracy,
     save_model,
     subfolder,
@@ -318,6 +323,7 @@ def run_parameter_server_sync(
                 dataset_name,
                 learning_rate,
                 momentum,
+                seed,
                 use_alr,
                 len(train_loader),
                 epochs,
@@ -342,6 +348,7 @@ def run_parameter_server_sync(
                 dataset_name,
                 learning_rate,
                 momentum,
+                seed,
                 use_alr,
                 len_train_loader,
                 epochs,

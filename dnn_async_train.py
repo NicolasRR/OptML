@@ -17,6 +17,7 @@ from common import (
     read_parser,
     start,
     _delay,
+    set_seeds,
     LOSS_FUNC,
 )
 
@@ -30,6 +31,7 @@ class ParameterServer_async(object):
         dataset_name,
         learning_rate,
         momentum,
+        seed,
         use_alr,
         len_trainloader,
         epochs,
@@ -41,6 +43,8 @@ class ParameterServer_async(object):
         val_loader=None,
         compensation=False,
     ):
+        if seed:
+            set_seeds()
         self.model = _get_model(dataset_name, LOSS_FUNC, alt_model)
 
         self.logger = logger
@@ -298,6 +302,7 @@ def run_parameter_server_async(
     train_split,
     batch_size,
     epochs,
+    seed,
     model_accuracy,
     save_model,
     subfolder,
@@ -338,6 +343,7 @@ def run_parameter_server_async(
                 dataset_name,
                 learning_rate,
                 momentum,
+                seed,
                 use_alr,
                 len(train_loader),
                 epochs,
@@ -367,6 +373,7 @@ def run_parameter_server_async(
                 dataset_name,
                 learning_rate,
                 momentum,
+                seed,
                 use_alr,
                 len_train_loader,
                 epochs,

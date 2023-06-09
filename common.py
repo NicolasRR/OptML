@@ -113,6 +113,7 @@ def start(args, mode, run_parameter_server):
                 args.train_split,
                 args.batch_size,
                 args.epochs,
+                args.seed,
                 args.model_accuracy,
                 not args.no_save_model,
                 args.subfolder,
@@ -149,6 +150,7 @@ def run(
     train_split,
     batch_size,
     epochs,
+    seed,
     model_accuracy,
     save_model,
     subfolder,
@@ -194,6 +196,7 @@ def run(
                 train_split,
                 batch_size,
                 epochs,
+                seed,
                 model_accuracy,
                 save_model,
                 subfolder,
@@ -220,6 +223,7 @@ def run(
                 train_split,
                 batch_size,
                 epochs,
+                seed,
                 model_accuracy,
                 save_model,
                 subfolder,
@@ -361,8 +365,7 @@ def check_args(args, mode):
             print(f"Saving model weights {args.saves_per_epoch} times during one epoch")
 
     if args.seed:
-        torch.manual_seed(DEFAULT_SEED)
-        np.random.seed(DEFAULT_SEED)
+        set_seeds()
 
     if len(args.subfolder) > 0:
         print(f"Saving model and log file to {args.subfolder}")
@@ -839,6 +842,11 @@ def _delay(intensity=DEFAULT_DELAY_INTENSITY, _type=DEFAULT_DELAY_TYPE, worker_1
     elif _type == "constant":
         delay_time = delay_mean
     time.sleep(delay_time)
+
+
+def set_seeds():
+    torch.manual_seed(DEFAULT_SEED)
+    np.random.seed(DEFAULT_SEED)
 
 
 #################################### NET ####################################
