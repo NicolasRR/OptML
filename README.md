@@ -1,25 +1,27 @@
-# OptML
+# OptML CS-439 EPFL
 Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nicolas Reategui
 
-[GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of result data including models, weights during training, classification reports, loss landscape plots and contour plots.
+## Objective
 
-# Objective
+* How do varying delays impact the convergence of distributed asynchronous SGD?
+* Does the partitioning of data among workers enhance convergence during the training process? Is it beneficial to distribute labels among workers as well?
+* What is the influence of momentum on asynchronous SGD? Does it serve as a regularization factor?
 
-**<ins>Asynchronous SGD: How do different delays affect convergence? How does it interplay with momentum?
-Does it act as a regularizer, like drop-out?</ins>**
+## Background
+    
+![alt text](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png "Asynchronous SGD vs Synchronous SGD")
+Source: [Truly Sparse Neural Networks at Scale](https://www.researchgate.net/publication/348508649_Truly_Sparse_Neural_Networks_at_Scale/download)
 
-Asynchronous SGD: What role does momentum plays? Does it act as regularizer as well SGD? 
-We can then analyze the shape of the minima using perhaps the two techniques in summary? What impact do different delays or learning schedulers have on the minima and converge time?
-
-Local minima for deep learning: Can you find differences between the ‘shape’ of local minima that SGD
-finds, depending on different step-sizes or mini-batch size, vs e.g. AdaGrad or full gradient descent?
-
+- Asynchronous SGD: workers update and fetch the global model without waiting for other workers.
+- Synchronous SGD: workers send their gradient to the parameter server, once the gradients of each worker are received, the parameter server averages them and update the global model and workers fetch the same global model. 
+- Parameter server: master responsible for the global model and  coordination among workers. 
+- Workers: training nodes.
 ## Installation
 Option 1 (Docker conda OS independant):
-In order to avoid compatibility issues, you can use docker. This will allow you to use a lightweight Linux image in your computer for CLI programs which is enough for the scope of this project as we don't need a GUI. First install Docker or [Docker desktop](https://docs.docker.com/desktop/install/windows-install/) which will enable the docker service. Once docker is installed run the following command PS `docker build --pull --rm -f "docker/Dockerfile" -t optml "docker"  --shm-size=1g` from the repo folder, this will create the image. It is necessary to use a Linux distribution in order to use the **PyTorch RPC** functionalities. After building the image run `docker run -v path_to_your_repo:mount_path --rm --shm-size=5g -it optml` this will initialize the container, mount your repo to the specified path to use it within the container and the `--rm` will remove everything from your container after killing it to avoid waisting memory. To use VS Code with your container, download the Docker extension and once the container is running attach VS to it. Activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python.
+In order to avoid compatibility issues, you can use docker. This will allow you to use a lightweight Linux image in your computer for CLI programs which is enough for the scope of this project as we don't need a GUI. First install Docker or [Docker desktop](https://docs.docker.com/desktop/install/windows-install/) which will enable the docker service. Once docker is installed run the following command PS: `docker build --pull --rm -f "docker/Dockerfile" -t optml "docker"  --shm-size=1g` from the repo folder, this will create the image. It is necessary to use a Linux distribution in order to use the **PyTorch RPC** functionalities. After building the image run `docker run -v path_to_your_repo:mount_path --rm --shm-size=5g -it optml` this will initialize the container, mount your repo to the specified path to use it within the container and the `--rm` will remove everything from your container after killing it to avoid waisting memory. To use VS Code with your container, download the Docker extension and once the container is running attach VS to it. Activate the base environment inside the container, to do so you can execute `conda activate`. It may be necessary to execute `conda init bash` in a terminal inside the container and then open a new one to be able to use conda. Once the base environment is activated you can run python.
 
-Option 2 (WSL pip Windows only):
-Use Windows Subsystem for Linux (WSL). To install WSL take the following steps:
+Option 2 (WSL Windows only):
+Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
 - Open PowerShell or Windows Command Prompt in administrator and run `wsl install`
 - Install the default Ubuntu distribution `wsl --install -d Ubuntu`
 - In bash run (**disable firewall** if needed):
@@ -28,6 +30,34 @@ Use Windows Subsystem for Linux (WSL). To install WSL take the following steps:
   - `sudo apt install python3-pip dos2unix bc`
   - `pip3 install torch torchvision torchaudio tqdm --index-url https://download.pytorch.org/whl/cpu`
   - `pip3 install matplotlib scikit-learn papermill plotly`
+
+## Files
+### Python Scripts
+- `nn_train.py`: implements non distributed training
+- `dnn_sync_train.py`: simulates distributed synchronous SGD on CPU
+- `dnn_async_train.py`: simulates distributed asynchronous SGD on CPU
+- `test_model.py`: computes the train and test performance and generates training plots
+- `loss_landscape.py`: generates a 3D plot of the loss landscape and 2D contour plot with the training trajectory 
+- `loss_landscape_multi_traj.py`: generates a 3D plot of the loss landscape with multiple training trajectories and 2D contour plot with multiple training trajectories
+- `kfold.py`: implements grid search on hyperparameters to find the optimal ones 
+- `models_size.py`: prints the number of parameters of the available models
+- `common.py`: all the common functions used by the other scripts
+### Bash Scripts
+- loss_landcape.sh
+- run_async_momentums.sh
+- run_delay_comp.sh
+- run_kfold.sh
+- run_kfold_full.sh
+- run_speed_comp.sh
+- run_val.sh
+- run_val_full.sh
+- test_model.sh
+
+### Results
+Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
+
+## Flags
+`nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`
 
 ## How to use our scripts
 We created bash scripts to run and test the SGD variants together effectively. `compare.sh` will run and test the variants one time, `compare_loop.sh` will do the same but multiple times and loops other predefined
