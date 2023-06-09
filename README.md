@@ -10,8 +10,8 @@ Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nico
 ## Background
 
 <div align="center">
-  
-![alt text](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png "Asynchronous SGD vs Synchronous SGD")
+
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png" width="500">
 
 </div>
 
@@ -48,6 +48,7 @@ Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
 - `models_size.py`: prints the number of parameters of the available models
 - `common.py`: all the common functions used by the other scripts
 
+Here below is the data flow diagram:
 <div align="center">
   
 <img src="https://i.postimg.cc/JnvgvSrW/image-2023-06-09-172517991.png" width="500">
