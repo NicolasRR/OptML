@@ -164,7 +164,6 @@ class Worker_sync(object):
         logger,
         train_loader,
         epochs,
-        worker_accuracy,
         delay,
         delay_intensity,
         delay_type,
@@ -179,7 +178,6 @@ class Worker_sync(object):
         self.current_epoch = 0
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
-        self.worker_accuracy = worker_accuracy
         self.delay = delay
         self.delay_intensity = delay_intensity
         self.delay_type = delay_type
@@ -244,22 +242,6 @@ class Worker_sync(object):
                     loss.detach(),
                 ),
             )
-        if self.worker_accuracy:
-            (
-                final_train_accuracy,
-                correct_predictions,
-                total_predictions,
-            ) = compute_accuracy_loss(
-                worker_model,
-                self.train_loader,
-                loss_func=LOSS_FUNC,
-                worker_mode=True,
-                dataset_name=self.dataset_name,
-                worker_name=self.worker_name,
-            )
-            print(
-                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_predictions})"
-            )
 
 
 #################################### GLOBAL FUNCTIONS ####################################
@@ -268,7 +250,6 @@ def run_worker_sync(
     logger,
     train_loader,
     epochs,
-    worker_accuracy,
     delay,
     delay_intensity,
     delay_type,
@@ -280,7 +261,6 @@ def run_worker_sync(
         logger,
         train_loader,
         epochs,
-        worker_accuracy,
         delay,
         delay_intensity,
         delay_type,
@@ -301,7 +281,6 @@ def run_parameter_server_sync(
     train_split,
     batch_size,
     epochs,
-    worker_accuracy,
     model_accuracy,
     save_model,
     subfolder,
@@ -385,7 +364,6 @@ def run_parameter_server_sync(
                         logger,
                         train_loader,
                         epochs,
-                        worker_accuracy,
                         delay,
                         delay_intensity,
                         delay_type,
@@ -405,7 +383,6 @@ def run_parameter_server_sync(
                         logger,
                         train_loader[idx],
                         epochs,
-                        worker_accuracy,
                         delay,
                         delay_intensity,
                         delay_type,

@@ -171,7 +171,7 @@ def run(
 
 #################################### MAIN ####################################
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Classic non distributed SGD training")
+    parser = argparse.ArgumentParser(description="Non distributed SGD training")
     args = read_parser(parser)
 
     run(

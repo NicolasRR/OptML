@@ -113,7 +113,6 @@ def start(args, mode, run_parameter_server):
                 args.train_split,
                 args.batch_size,
                 args.epochs,
-                args.worker_accuracy,
                 args.model_accuracy,
                 not args.no_save_model,
                 args.subfolder,
@@ -150,7 +149,6 @@ def run(
     train_split,
     batch_size,
     epochs,
-    worker_accuracy,
     model_accuracy,
     save_model,
     subfolder,
@@ -196,7 +194,6 @@ def run(
                 train_split,
                 batch_size,
                 epochs,
-                worker_accuracy,
                 model_accuracy,
                 save_model,
                 subfolder,
@@ -223,7 +220,6 @@ def run(
                 train_split,
                 batch_size,
                 epochs,
-                worker_accuracy,
                 model_accuracy,
                 save_model,
                 subfolder,
@@ -413,10 +409,16 @@ def read_parser(parser, mode=None):
         help="""Fraction of the training dataset to be used for training (0,1].""",
     )
     parser.add_argument(
-        "--lr", type=float, default=None, help="""Learning rate of SGD  (0,+inf)."""
+        "--lr",
+        type=float,
+        default=None,
+        help="""Learning rate of optimizer  (0,+inf).""",
     )
     parser.add_argument(
-        "--momentum", type=float, default=None, help="""Momentum of SGD  [0,+inf)."""
+        "--momentum",
+        type=float,
+        default=None,
+        help="""Momentum of SGD optimizer [0,+inf).""",
     )
     parser.add_argument(
         "--batch_size",
@@ -443,7 +445,7 @@ def read_parser(parser, mode=None):
     parser.add_argument(
         "--seed",
         action="store_true",
-        help="""If set, it will set seeds on torch, numpy and random for reproducibility purposes.""",
+        help="""If set, it will set seeds on torch and numpy random for reproducibility purposes.""",
     )
     parser.add_argument(
         "--subfolder",
@@ -467,7 +469,7 @@ def read_parser(parser, mode=None):
         type=str,
         choices=["exponential", "cosine_annealing"],
         default=None,
-        help="""Choose a learning rate scheduler: exponential or cosine_annealing.""",
+        help="""Applies a learning rate scheduler: exponential or cosine_annealing.""",
     )
     parser.add_argument(
         "--alt_model",
@@ -492,11 +494,6 @@ def read_parser(parser, mode=None):
             action="store_true",
             help="""If set, will create a validation loader and compute the loss and accuracy of train and val at the end of each epoch. Please use --val without --split_dataset or --split_labels or --split_labels_unscaled.""",
         )
-        parser.add_argument(
-            "--compensation",
-            action="store_true",
-            help="""If set, enable aSGD delay compensation""",
-        )
     if mode is not None:
         parser.add_argument(
             "--master_port",
@@ -520,11 +517,6 @@ def read_parser(parser, mode=None):
             master node and all training nodes [2,+inf].""",
         )
         parser.add_argument(
-            "--worker_accuracy",
-            action="store_true",
-            help="""If set, will compute the train accuracy of each worker after training (useful when --split_dataset).""",
-        )
-        parser.add_argument(
             "--delay",
             action="store_true",
             help="""Add a delay to all workers at each mini-batch update.""",
@@ -539,23 +531,22 @@ def read_parser(parser, mode=None):
             type=str,
             choices=["small", "medium", "long"],
             default=None,
-            help="""Choose the delay intensity: small 10ms, medium 20ms, long 30ms.""",
+            help="""Applies a delay intensity of: small 10ms, medium 20ms, long 30ms.""",
         )
         parser.add_argument(
             "--delay_type",
             type=str,
             choices=["constant", "gaussian"],
             default=None,
-            help="""Choose the delay type: constant or gaussian.""",
+            help="""Applies a delay of type: constant or gaussian.""",
         )
-        if mode is not None:
+        if mode == "sync":
             parser.add_argument(
                 "--split_dataset",
                 action="store_true",
                 help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
-                shared between workers).""",
+                shared between workers). Do not use with --split_labels.""",
             )
-        if mode == "sync":
             parser.add_argument(
                 "--split_labels",
                 action="store_true",
@@ -564,6 +555,12 @@ def read_parser(parser, mode=None):
                 Don't use with --split_dataset. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
             )
         elif mode == "async":
+            parser.add_argument(
+                "--split_dataset",
+                action="store_true",
+                help="""After applying train_split, each worker will train on a unique distinct dataset (samples will not be 
+                shared between workers). Do not use with --split_labels or --split_labels_unscaled.""",
+            )
             parser.add_argument(
                 "--split_labels",
                 action="store_true",
@@ -577,6 +574,11 @@ def read_parser(parser, mode=None):
                 help="""If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. 
                 Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has.
                 Don't use --split_dataset or split_labels. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded.""",
+            )
+            parser.add_argument(
+                "--compensation",
+                action="store_true",
+                help="""If set, enable delay compensation.""",
             )
 
     args = parser.parse_args()
@@ -649,8 +651,6 @@ def compute_accuracy_loss(
     loss_func,
     return_loss=False,
     test_mode=False,
-    worker_mode=False,
-    worker_name=None,
 ):
     average_loss = 0
     correct_predictions = 0
@@ -673,11 +673,6 @@ def compute_accuracy_loss(
 
     average_loss /= total_predictions
     average_accuracy = correct_predictions / total_predictions
-
-    if worker_mode:
-        print(f"Train CR of {worker_name}:")
-        report = CR(targets, predictions, zero_division=0)
-        print(report)
 
     if test_mode:
         return (
