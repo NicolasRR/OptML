@@ -61,10 +61,10 @@ Here is the list of our bash scripts, they are meants to be run from the termina
 - `run_async_momentums.sh`: for different momentum values: train asynchrounously save the model and weights during training. Then, generates the loss landscape with the different training trajectories 
 
 - `run_delay_exps.sh`: runs mulitple experiences associated with the delay:
-  1. For `world_size`$=[2,6,11]$, different delay intensities (small, medium, long), different data partitioning strategies (`--split_dataset` and `--split_labels`), constant delay being applied to all workers and for some cases worker 1 being slowded down additionally, train asynchronously.
-  2. For `world_size`$=[2,6,11]$, different delay intensities (small, medium, long), using `--split_labels` and constant delay being applied to all workers and worker 1 being slowed even more, train asynchronously.
-  3. For `world_size`$=[2,6,11]$, for `momentum`$=[0,0.5,0.99]$, different delay intensities (small, medium, long), using `--split_labels`, and constant delay being applied to all workers and worker 1 being slowed even more, train asynchronously.
-  4. For `world_size`$=[2,6,11]$, for `momentum`$=[0,0.5,0.9,0.99]$, different delay intensities (small, medium, long), different data partioning strategies (`--split_dataset` or `--split_labels`), and gaussian delay being applied to all workers, with or without delay compension, train asynchronously.
+  - For `world_size`$=[2,6,11]$, different delay intensities (small, medium, long), different data partitioning strategies (`--split_dataset` and `--split_labels`), constant delay being applied to all workers and for some cases worker 1 being slowded down additionally, train asynchronously.
+  - For `world_size`$=[2,6,11]$, different delay intensities (small, medium, long), using `--split_labels` and constant delay being applied to all workers and worker 1 being slowed even more, train asynchronously.
+  - For `world_size`$=[2,6,11]$, for `momentum`$=[0,0.5,0.99]$, different delay intensities (small, medium, long), using `--split_labels`, and constant delay being applied to all workers and worker 1 being slowed even more, train asynchronously.
+  - For `world_size`$=[2,6,11]$, for `momentum`$=[0,0.5,0.9,0.99]$, different delay intensities (small, medium, long), different data partioning strategies (`--split_dataset` or `--split_labels`), and gaussian delay being applied to all workers, with or without delay compension, train asynchronously.
 - `run_kfold.sh`: K Fold Cross Validation for chosen datasets and optimizer
 - `run_kfold_full.sh`: executes `run_kfold.sh` for both SGD and Adam optimizers
 - `run_speed_comp.sh`: compares the performance of synchronous SGD vs asynchronous SGD for `world_size`$=[2,6,11]$, different data partioning strategies (default, `--split_dataset`, `--split_labels`) and different network architectures (Lenet5 vs PyTorch CNN)
