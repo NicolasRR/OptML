@@ -106,43 +106,6 @@ For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_tra
 ## How to use our scripts
 We created bash scripts to run and test the SGD variants together effectively. `compare.sh` will run and test the variants one time, `compare_loop.sh` will do the same but multiple times and loops other predefined
 couples of parameters such as the number of workers, the learning rate, momentum, ... Both scripts accept various command lines arguments, here is the list:
-- `bash compare.sh [flags]`
-
-<div align="center">
-
-| Flag | Description |
-| --------------- | --------------- |
-| --model_classic | To include vanilla non distributed SGD to compare with distributed synchronous parallel SGD and asynchronous parallel SGD. |
-| --classification_report | To include a classification report at testing, usefull for class performance analysis. |
-| --notebook | Uses a jupyter notebook to compute the training time for each variants, produce plots, and tests the models performance. |
-| --dataset {mnist,fashion_mnist,cifar10,cifar100} | Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100. |
-| --world_size WORLD_SIZE | Total number of participating processes. Should be the sum of master node and all training nodes [2,+inf]. |
-| --train_split TRAIN_SPLIT| Fraction of the training dataset to be used for training (0,1&#93;. |
-| --lr LR | Learning rate of SGD  (0,+inf)." |
-| --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
-| --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |     
-| --epochs EPOCHS | Number of epochs for training &#91;1,+inf&#41;. |
-
-</div>
-
-- `bash compare_loop.sh`
-
-<div align="center">
-
-| Flag | Description |
-| --------------- | --------------- |
-| --model_classic | To include vanilla non distributed SGD to compare with distributed synchronous parallel SGD and asynchronous parallel SGD. |
-| --classification_report | To include a classification report at testing, usefull for class performance analysis. |
-| --dataset {mnist,fashion_mnist,cifar10,cifar100} | Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100. |
-| --world_size WORLD_SIZE | Total number of participating processes. Should be the sum of master node and all training nodes [2,+inf]. |
-| --train_split TRAIN_SPLIT| Fraction of the training dataset to be used for training (0,1&#93;. |
-| --lr LR | Learning rate of SGD  (0,+inf)." |
-| --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
-| --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |     
-| --epochs EPOCHS | Number of epochs for training &#91;1,+inf&#41;. |
-
-</div>
-
 
 
 ### Some examples
