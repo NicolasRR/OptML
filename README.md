@@ -67,7 +67,7 @@ Here below is the data flow diagram:
 ### Results
 Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
 
-## Flags
+### Flags
 Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 
 <div align="center">
@@ -103,10 +103,6 @@ Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 </div>
 
 For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_traj.py` use `-h` or `--help` to see the available flags and required arguments to give. For example: `python3 kfold.py -h` or `python3 test_model.py --help`.
-## How to use our scripts
-We created bash scripts to run and test the SGD variants together effectively. `compare.sh` will run and test the variants one time, `compare_loop.sh` will do the same but multiple times and loops other predefined
-couples of parameters such as the number of workers, the learning rate, momentum, ... Both scripts accept various command lines arguments, here is the list:
-
 
 ### Some examples
 - The following command will train two workers synchronously, on 10% of MNIST train dataset, trainloaders will use a batch size of 64, and the SGD optimizer a learning rate of $10^{-2}$ and momentum of $0.5$, at the end of training the global accuracy of the model will be printed and the model will not be saved. As `--epochs EPOCHS` is not precised, the default value of epochs will be used: $1$. <br>
