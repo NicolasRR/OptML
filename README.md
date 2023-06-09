@@ -50,7 +50,7 @@ Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
 
 <div align="center">
   
-![alt text](https://i.postimg.cc/JnvgvSrW/image-2023-06-09-172517991.png "Data flow diagram")
+<img src="https://i.postimg.cc/JnvgvSrW/image-2023-06-09-172517991.png" width="500">
 
 </div>
 
