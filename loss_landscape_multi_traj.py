@@ -1,4 +1,3 @@
-#%%
 import argparse
 from sklearn.decomposition import PCA
 import plotly.io as pio
@@ -11,8 +10,6 @@ from common import _get_model, create_testloader, LOSS_FUNC
 
 DEFAULT_GRID_SIZE = 50
 DEFAULT_BATCH_SIZE = 128
-
-
 
 
 def set_weights(model, weights):
@@ -36,48 +33,48 @@ def main(
     path_grid_yy,
     grid_save=True,
 ):
-    
-    # classic_model="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_model.pt"
-    #%% classic_weights="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_weights.npy"
+    # Hardcoded paths
+    model_path = "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
 
-    async_m00_model = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
-    classic_model = async_m00_model
+    async_m00_weights = (
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
+    )
+    async_m50_weights = (
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
+    )
+    async_m90_weights = (
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
+    )
+    async_m95_weights = (
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
+    )
 
-    async_m00_weights= "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
-    async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
-    async_m90_weights= "fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
-    async_m95_weights= "fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
-    #async_m99_weights= "fashion_mnist_async_4_100_0005_099_32_6_SGD_spe3_val_weights.npy"
-    #async_alr_weights= "fashion_mnist_async_4_100_0001_09_32_6_ADAM_spe3_val_weights.npy"
+    weights_paths = [
+        async_m00_weights,
+        async_m50_weights,
+        async_m90_weights,
+        async_m95_weights,
+    ]
 
-    #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
-    #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights,]
-    #weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
-    weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, ]
     loaded_weights_np = []
     for wp in weights_paths:
         loaded_weights_np.append(np.load(wp))
-        if "classic" in wp:
+        if "fashion_mnist_async_4_100_0005_00" in wp:
             print(f"Saved weights shape: {loaded_weights_np[-1].shape}")
-    #%%
-    # perform PCA on the classic weights loaded_weights_np[0], remember the transformation to apply it to the other saved weights
+
+    # perform PCA, remember the transformation to apply it to the other saved weights
     pca = PCA(n_components=2)
-    
+
     # Convert the 3D list to a NumPy array
     matrix_array = np.array(loaded_weights_np)
     # Reshape the array to combine the matrices horizontally
     combined_matrix = np.vstack(matrix_array)
     pca.fit(combined_matrix)
-    
-    
+
     reduced_weights = []
     _min_w = 99999999
     _max_w = 0
-    #for i, w in enumerate(loaded_weights_np):
-    for i, w in enumerate(reversed(loaded_weights_np)):
-        #if i == 0:
-        #    reduced_weights.append(pca.fit(w))
-
+    for w in loaded_weights_np:
         reduced_weights.append(pca.transform(w))
 
         _min = np.min(reduced_weights[-1])
@@ -86,11 +83,10 @@ def main(
         if _min < _min_w:
             _min_w = _min
         if _max > _max_w:
-            _max_w = _max 
+            _max_w = _max
 
-
-    _min_w = _min_w -1
-    _max_w = _max_w +1
+    _min_w = _min_w - 1
+    _max_w = _max_w + 1
 
     if path_grid_losses is None and path_grid_xx is None and path_grid_yy is None:
         grid_range_x = np.linspace(_min_w, _max_w, grid_size)
@@ -102,23 +98,20 @@ def main(
         grid_weights = pca.inverse_transform(grid_points)
 
     for i, rw in enumerate(reduced_weights):
-        #if i != 0:
-            #loaded_weights_np[i] = pca.inverse_transform(rw)
         loaded_weights_np[i] = pca.inverse_transform(rw)
 
-    loader = create_testloader(classic_model, batch_size)
-    if "alt_model" in classic_model:
-        model = _get_model(classic_model, LOSS_FUNC, alt_model=True)
+    # loading model
+    loader = create_testloader(model_path, batch_size)
+    if "alt_model" in model_path:
+        model = _get_model(model_path, LOSS_FUNC, alt_model=True)
     else:
-        model = _get_model(classic_model, LOSS_FUNC, alt_model=False)
+        model = _get_model(model_path, LOSS_FUNC, alt_model=False)
 
-    model.load_state_dict(torch.load(classic_model))
+    model.load_state_dict(torch.load(model_path))
     model.eval()
 
     # Grid training
     if path_grid_losses is None and path_grid_xx is None and path_grid_yy is None:
-        
-
         grid_losses = []
 
         progress_bar = tqdm(
@@ -146,27 +139,107 @@ def main(
         grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
         if grid_save:
-            
-            model_filename = os.path.basename(classic_model)
+            model_filename = os.path.basename(model_path)
             model_basename, _ = os.path.splitext(model_filename)
 
             if len(subfolder) > 0:
                 if not os.path.exists(subfolder):
                     os.makedirs(subfolder)
+                np.save(
+                    os.path.join(
+                        subfolder, f"{model_basename}_grid_losses_{grid_size}.npy"
+                    ),
+                    grid_losses,
+                )
+                np.save(
+                    os.path.join(
+                        subfolder, f"{model_basename}_grid_xx_{grid_size}.npy"
+                    ),
+                    xx,
+                )
+                np.save(
+                    os.path.join(
+                        subfolder, f"{model_basename}_grid_yy_{grid_size}.npy"
+                    ),
+                    yy,
+                )
+                np.save(
+                    os.path.join(
+                        subfolder,
+                        f"{model_basename}_trajectories_losses_{grid_size}.npy",
+                    ),
+                    np.vstack(
+                        [
+                            reduced_weights[0][:, 0],
+                            reduced_weights[0][:, 1],
+                            trajectories_loss_reevaluted[0],
+                            reduced_weights[1][:, 0],
+                            reduced_weights[1][:, 1],
+                            trajectories_loss_reevaluted[1],
+                            reduced_weights[2][:, 0],
+                            reduced_weights[2][:, 1],
+                            trajectories_loss_reevaluted[2],
+                            reduced_weights[3][:, 0],
+                            reduced_weights[3][:, 1],
+                            trajectories_loss_reevaluted[3],
+                        ]
+                    ),
+                )
+                print(
+                    f"Saved trajectories losses to: {os.path.join(subfolder, f'{model_basename}_trajectories_losses_{grid_size}.npy')}"
+                )
+                print(
+                    f"Saved grid losses to: {os.path.join(subfolder, f'{model_basename}_grid_losses_{grid_size}.npy')}"
+                )
+                print(
+                    f"Saved grid xx to: {os.path.join(subfolder, f'{model_basename}_grid_xx_{grid_size}.npy')}"
+                )
+                print(
+                    f"Saved grid yy to: {os.path.join(subfolder, f'{model_basename}_grid_yy_{grid_size}.npy')}"
+                )
+            else:
+                np.save(f"{model_basename}_grid_losses_{grid_size}.npy", grid_losses)
+                np.save(f"{model_basename}_grid_xx_{grid_size}.npy", xx)
+                np.save(f"{model_basename}_grid_yy_{grid_size}.npy", yy)
+                np.save(
+                    f"{model_basename}_trajectories_losses_{grid_size}.npy",
+                    np.vstack(
+                        [
+                            reduced_weights[0][:, 0],
+                            reduced_weights[0][:, 1],
+                            trajectories_loss_reevaluted[0],
+                            reduced_weights[1][:, 0],
+                            reduced_weights[1][:, 1],
+                            trajectories_loss_reevaluted[1],
+                            reduced_weights[2][:, 0],
+                            reduced_weights[2][:, 1],
+                            trajectories_loss_reevaluted[2],
+                            reduced_weights[3][:, 0],
+                            reduced_weights[3][:, 1],
+                            trajectories_loss_reevaluted[3],
+                        ]
+                    ),
+                )
+                print(
+                    f"Saved trajectories losses to: {f'{model_basename}_trajectories_losses_{grid_size}.npy'}"
+                )
+                print(
+                    f"Saved grid losses to: {f'{model_basename}_grid_losses_{grid_size}.npy'}"
+                )
+                print(
+                    f"Saved grid xx to: {f'{model_basename}_grid_xx_{grid_size}.npy'}"
+                )
+                print(
+                    f"Saved grid yy to: {f'{model_basename}_grid_yy_{grid_size}.npy'}"
+                )
 
-            np.save(f"{model_basename}_grid_losses.npy", grid_losses)
-            np.save(f"{model_basename}_grid_xx.npy", xx)
-            np.save(f"{model_basename}_grid_yy.npy", yy)
-            print(f"Saved grid losses to: {f'{model_basename}_grid_losses.npy'}")
-            print(f"Saved grid xx to: {f'{model_basename}_grid_xx.npy'}")
-            print(f"Saved grid yy to: {f'{model_basename}_grid_yy.npy'}")
     else:
         xx = np.load(path_grid_xx)
         yy = np.load(path_grid_yy)
         grid_losses = np.load(path_grid_losses)
         print("Loadded grid_losses, grid_xx and grid_yy")
 
-    # trajectories evaluationa
+    # trajectories evaluation
     trajectories_loss_reevaluted = []
     for w in loaded_weights_np:
         trajectory_loss_reevaluted = []
@@ -188,12 +261,12 @@ def main(
 
                 trajectory_loss_reevaluted.append(running_loss / len(loader.dataset))
                 progress_bar2.update(1)
-                progress_bar2.set_postfix(trajectory_loss=trajectory_loss_reevaluted[-1])
+                progress_bar2.set_postfix(
+                    trajectory_loss=trajectory_loss_reevaluted[-1]
+                )
 
         progress_bar2.close()
         trajectories_loss_reevaluted.append(trajectory_loss_reevaluted)
-
-
 
     surface = go.Surface(
         x=xx,
@@ -206,17 +279,25 @@ def main(
     )
 
     trajectory_names = [
-        #"Classic SGD m=0.0",
         "Async SGD m=0.0",
         "Async SGD m=0.50",
         "Async SGD m=0.90",
         "Async SGD m=0.95",
-        #"Async SGD m=0.99",
-        #"Async ADAM",
     ]
-    trajectory_names = trajectory_names[::-1] #uncomment if you reversed above
-    trajectory_colors = ['orange', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta']  # Define more colors if you have more trajectories
+
+    trajectory_colors = [
+        "orange",
+        "magenta",
+        "yellow",
+        "cyan",
+    ]
     trajectories = []
+    labels = (
+        ["Start Point"]
+        + ["Trajectory Point"] * (len(trajectory_loss_reevaluted) - 2)
+        + ["End Point"]
+    )
+    sizes = [8] + [5] * (len(trajectory_loss_reevaluted) - 2) + [8]
     for i, (rw, tl) in enumerate(zip(reduced_weights, trajectories_loss_reevaluted)):
         traj = go.Scatter3d(
             x=rw[:, 0],
@@ -224,54 +305,87 @@ def main(
             z=tl,
             mode="markers+lines",
             line=dict(color=trajectory_colors[i % len(trajectory_colors)]),
-            marker=dict(color=trajectory_colors[i % len(trajectory_colors)], size=5),
+            marker=dict(
+                color=trajectory_colors[i % len(trajectory_colors)], size=sizes
+            ),
             name=trajectory_names[i],
+            text=[
+                f"{label}<br>Loss: {loss}"
+                for label, loss in zip(labels, trajectories_loss_reevaluted[i])
+            ],
+            hovertemplate="%{text}",
         )
         trajectories.append(traj)
 
     layout = go.Layout(
-        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
-        coloraxis=dict(colorbar=dict(title="Loss magnitude"), 
-                       colorscale="Viridis",
-                       cmin=np.log10(grid_losses.min()),  
-                        cmax=np.log10(grid_losses.max()),
+        scene=dict(
+            xaxis_title="PC1",
+            yaxis_title="PC2",
+            zaxis_title=" Loss",
+            zaxis=dict(type="log"),
         ),
-    )   
+        coloraxis=dict(
+            colorbar=dict(title="Loss magnitude"),
+            colorscale="Viridis",
+            cmin=np.log10(grid_losses.min()),
+            cmax=np.log10(grid_losses.max()),
+        ),
+    )
 
-    fig = go.Figure(data=[surface]+ trajectories, layout=layout)
+    fig = go.Figure(data=[surface] + trajectories, layout=layout)
 
-    fig.data[0].update(contours_z=dict(show=True, usecolormap=True,
-                                  highlightcolor="limegreen", project_z=True))
+    fig.data[0].update(
+        contours_z=dict(
+            show=True, usecolormap=True, highlightcolor="limegreen", project_z=True
+        )
+    )
 
     _min_x, _min_y = np.unravel_index(np.argmin(grid_losses), grid_losses.shape)
     min_point = go.Scatter3d(
         x=[xx[_min_x, _min_y]],
         y=[yy[_min_x, _min_y]],
         z=[grid_losses[_min_x, _min_y]],
-        mode='markers',
+        mode="markers",
         marker=dict(
             size=5,
-            color='red',
+            color="red",
         ),
-        name="global minimum"
+        name="global minimum",
     )
 
     fig.add_trace(min_point)
-    
+
     fig.update_layout(legend=dict(orientation="v", x=0, y=0.5))
 
-
-    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log(grid_losses.flatten()), colorscale='Viridis')])
+    fig2 = go.Figure(
+        data=[
+            go.Contour(
+                x=xx.flatten(),
+                y=yy.flatten(),
+                z=np.log10(grid_losses.flatten()),
+                colorscale="Viridis",
+                name="grid point",
+                coloraxis="coloraxis",
+            )
+        ]
+    )
 
     trajectories = []
     for i, rw in enumerate(reduced_weights):
         traj = go.Scatter(
-            x=rw[:, 0],  # x-axis
-            y=rw[:, 1],  # y-axis
+            x=rw[:, 0],
+            y=rw[:, 1],
             mode="markers+lines",
             line=dict(color=trajectory_colors[i % len(trajectory_colors)]),
-            marker=dict(color=trajectory_colors[i % len(trajectory_colors)], size=5),
+            marker=dict(
+                color=trajectory_colors[i % len(trajectory_colors)], size=sizes
+            ),
             name=trajectory_names[i],
+            text=[
+                f"{label}<br>Loss: {loss}"
+                for label, loss in zip(labels, trajectories_loss_reevaluted[i])
+            ],
+            hovertemplate="%{text}",
         )
         trajectories.append(traj)
 
@@ -279,13 +393,29 @@ def main(
         fig2.add_trace(traj)
 
     fig2.update_layout(
-        title='Contour Plot with trajectories Projection',
-        xaxis_title='X',
-        yaxis_title='Y',
-        legend=dict(orientation="v", x=0, y=0.5)
+        title="Contour Plot with trajectories Projection",
+        xaxis_title="PC1",
+        yaxis_title="PC2",
+        legend=dict(orientation="v", x=1, y=1),
     )
 
-    model_filename = os.path.basename(classic_model)
+    min_point = go.Scatter(
+        x=[xx[_min_x, _min_y]],
+        y=[yy[_min_x, _min_y]],
+        mode="markers",
+        marker=dict(
+            size=7,
+            color="red",
+            symbol="star",
+        ),
+        name="global minimum",
+        text=[str(np.min(grid_losses))],
+        hovertemplate="Loss: %{text}",
+    )
+
+    fig2.add_trace(min_point)
+
+    model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
@@ -300,7 +430,9 @@ def main(
         pio.write_html(fig2, output_file_path_2)
     else:
         output_file_path = f"{model_basename}_loss_landscape_compare_{grid_size}.html"
-        output_file_path_2 = f"{model_basename}_contour_landscape_compare_{grid_size}.html"
+        output_file_path_2 = (
+            f"{model_basename}_contour_landscape_compare_{grid_size}.html"
+        )
         pio.write_html(fig, output_file_path)
         pio.write_html(fig2, output_file_path_2)
 
@@ -316,13 +448,13 @@ if __name__ == "__main__":
         "--batch_size",
         type=int,
         default=None,
-        help="""Batch size to forward the test dataset.""",
+        help="""Batch size to evalute the test dataset.""",
     )
     parser.add_argument(
         "--grid_size",
         type=int,
         default=None,
-        help="""grid_size^2 amount of points to populate the 2D space to evaluate the loss.""",
+        help="""grid_size^2 amount of points to populate the 2D PCA space to evaluate the loss.""",
     )
     parser.add_argument(
         "--subfolder",
@@ -351,7 +483,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--no_grid_save",
         action="store_true",
-        help="""Will not save grid xx, grid yy and grid losses.""",
+        help="""Will not save grid xx, grid yy, grid losses and trajectories_losses.""",
     )
 
     args = parser.parse_args()
@@ -363,8 +495,14 @@ if __name__ == "__main__":
         print("Forbidden value !!! batch_size must be between [1,len(test set)]")
         exit()
 
-    if args.grid_size is not None and (args.grid_xx is not None or args.grid_yy is not None or args.grid_losses is not None):
-        print("--grid_size will not be taken into account as the grid_losses, grid_xx and grid_yy are provided.")
+    if args.grid_size is not None and (
+        args.grid_xx is not None
+        or args.grid_yy is not None
+        or args.grid_losses is not None
+    ):
+        print(
+            "--grid_size will not be taken into account as the grid_losses, grid_xx and grid_yy are provided."
+        )
 
     if args.grid_size is None:
         args.grid_size = DEFAULT_GRID_SIZE
@@ -390,9 +528,9 @@ if __name__ == "__main__":
             exit()
 
     if not args.no_grid_save:
-        print("Saving grid_losses, grid_xx, grid_yy")
+        print("Saving trajectories_losses, grid_losses, grid_xx, grid_yy")
     else:
-        print("Not saving grid_losses, grid_xx, grid_yy")
+        print("Not saving trajectories_losses, grid_losses, grid_xx, grid_yy")
 
     main(
         args.batch_size,
@@ -403,5 +541,3 @@ if __name__ == "__main__":
         args.grid_yy,
         not args.no_grid_save,
     )
-
-# %%

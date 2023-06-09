@@ -42,7 +42,7 @@ class ParameterServer_async(object):
         compensation=False,
     ):
         self.model = _get_model(dataset_name, LOSS_FUNC, alt_model)
-                
+
         self.logger = logger
         self.model_lock = threading.Lock()
         self.nb_workers = nb_workers
@@ -51,13 +51,13 @@ class ParameterServer_async(object):
         self.scheduler = get_scheduler(lrs, self.optimizer, len_trainloader, epochs)
         self.weights_matrix = []
         if saves_per_epoch is not None:
-             weights = np.concatenate(
-                             [
-                                 w.detach().clone().cpu().numpy().ravel()
-                                 for w in self.model.state_dict().values()
-                             ]
-                         )
-             self.weights_matrix.append(weights)
+            weights = np.concatenate(
+                [
+                    w.detach().clone().cpu().numpy().ravel()
+                    for w in self.model.state_dict().values()
+                ]
+            )
+            self.weights_matrix.append(weights)
         self.saves_per_epoch = saves_per_epoch
         if lrs is not None or saves_per_epoch is not None or val:
             self.global_batch_counter = 0
@@ -85,7 +85,7 @@ class ParameterServer_async(object):
 
     def get_model_async(self, id):
         if self.compensation:
-            id = int(id.split("_")[1])-1
+            id = int(id.split("_")[1]) - 1
             self.backups[id] = [param for param in self.model.parameters()]
         return self.model
 
@@ -119,7 +119,9 @@ class ParameterServer_async(object):
                 self.global_batch_counter += 1
             for i, (param, grad) in enumerate(zip(self.model.parameters(), grads)):
                 if self.compensation:
-                    param.grad = grad + 2* grad * grad * (param - self.backups[int(worker_name.split("_")[1])-1][i])
+                    param.grad = grad + 2 * grad * grad * (
+                        param - self.backups[int(worker_name.split("_")[1]) - 1][i]
+                    )
                 else:
                     param.grad = grad
 
@@ -177,7 +179,6 @@ class Worker_async(object):
         logger,
         train_loader,
         epochs,
-        worker_accuracy,
         delay,
         delay_intensity,
         delay_type,
@@ -192,7 +193,6 @@ class Worker_async(object):
         self.current_epoch = 0
         self.epochs = epochs
         self.worker_name = rpc.get_worker_info().name
-        self.worker_accuracy = worker_accuracy
         self.delay = delay
         self.delay_intensity = delay_intensity
         self.delay_type = delay_type
@@ -259,23 +259,6 @@ class Worker_async(object):
 
             self.progress_bar.update(1)
 
-        if self.worker_accuracy:
-            (
-                final_train_accuracy,
-                correct_predictions,
-                total_preidctions,
-            ) = compute_accuracy_loss(
-                worker_model,
-                self.train_loader,
-                loss_func=LOSS_FUNC,
-                worker_mode=True,
-                dataset_name=self.dataset_name,
-                worker_name=self.worker_name,
-            )
-            print(
-                f"Accuracy of {self.worker_name}: {final_train_accuracy*100} % ({correct_predictions}/{total_preidctions})"
-            )
-
 
 #################################### GLOBAL FUNCTIONS ####################################
 def run_worker_async(
@@ -283,7 +266,6 @@ def run_worker_async(
     logger,
     train_loader,
     epochs,
-    worker_accuracy,
     delay,
     delay_intensity,
     delay_type,
@@ -295,7 +277,6 @@ def run_worker_async(
         logger,
         train_loader,
         epochs,
-        worker_accuracy,
         delay,
         delay_intensity,
         delay_type,
@@ -317,7 +298,6 @@ def run_parameter_server_async(
     train_split,
     batch_size,
     epochs,
-    worker_accuracy,
     model_accuracy,
     save_model,
     subfolder,
@@ -367,7 +347,7 @@ def run_parameter_server_async(
                 alt_model,
                 train_loader=train_loader,
                 val_loader=val_loader,
-                compensation=compensation
+                compensation=compensation,
             )
         )
     else:
@@ -413,7 +393,6 @@ def run_parameter_server_async(
                         logger,
                         train_loader,
                         epochs,
-                        worker_accuracy,
                         delay,
                         delay_intensity,
                         delay_type,
@@ -433,7 +412,6 @@ def run_parameter_server_async(
                         logger,
                         train_loader[idx],
                         epochs,
-                        worker_accuracy,
                         delay,
                         delay_intensity,
                         delay_type,

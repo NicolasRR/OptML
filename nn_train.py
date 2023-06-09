@@ -80,11 +80,11 @@ def run(
     if saves_per_epoch is not None:
         weights_matrix = []
         weights = np.concatenate(
-                            [
-                                w.detach().clone().cpu().numpy().ravel()
-                                for w in model.state_dict().values()
-                            ]
-                        )
+            [
+                w.detach().clone().cpu().numpy().ravel()
+                for w in model.state_dict().values()
+            ]
+        )
         weights_matrix.append(weights)
         save_idx = np.linspace(0, len(train_loader) - 1, saves_per_epoch, dtype=int)
         unique_idx = set(save_idx)
@@ -171,7 +171,7 @@ def run(
 
 #################################### MAIN ####################################
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Classic non distributed SGD training")
+    parser = argparse.ArgumentParser(description="Non distributed SGD training")
     args = read_parser(parser)
 
     run(
