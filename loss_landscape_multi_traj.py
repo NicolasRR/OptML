@@ -447,13 +447,13 @@ if __name__ == "__main__":
         "--batch_size",
         type=int,
         default=None,
-        help="""Batch size to forward the test dataset.""",
+        help="""Batch size to evalute the test dataset.""",
     )
     parser.add_argument(
         "--grid_size",
         type=int,
         default=None,
-        help="""grid_size^2 amount of points to populate the 2D space to evaluate the loss.""",
+        help="""grid_size^2 amount of points to populate the 2D PCA space to evaluate the loss.""",
     )
     parser.add_argument(
         "--subfolder",
@@ -482,7 +482,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--no_grid_save",
         action="store_true",
-        help="""Will not save grid xx, grid yy and grid losses.""",
+        help="""Will not save grid xx, grid yy, grid losses and trajectories_losses.""",
     )
 
     args = parser.parse_args()

@@ -448,7 +448,7 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Computing train and test performance, reading .log and generating images"
+        description="Computing train and test performance and generating plots"
     )
     parser.add_argument(
         "--batch_size",
@@ -471,7 +471,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--pics",
         action="store_true",
-        help="""If set, will compute and save plots from the .log file.""",
+        help="""If set, will compute and save plots from the .log file. Requires --training_time.""",
     )
     parser.add_argument(
         "--subfolder",

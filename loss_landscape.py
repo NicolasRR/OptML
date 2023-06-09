@@ -322,19 +322,19 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Computing the loss landscape with the training trajectory, please model path (.pt) first, weights (.npy) second"
+        description="Computing the loss landscape with the training trajectory, please pass model path (.pt) first, weights (.npy) second"
     )
     parser.add_argument(
         "--batch_size",
         type=int,
         default=None,
-        help="""Batch size to forward the test dataset.""",
+        help="""Batch size to evaluate the test dataset.""",
     )
     parser.add_argument(
         "--grid_size",
         type=int,
         default=None,
-        help="""grid_size^2 amount of points to populate the 2D space to evaluate the loss.""",
+        help="""grid_size^2 amount of points to populate the 2D PCA space to evaluate the loss.""",
     )
     parser.add_argument("model_path", type=str, help="""Path of the model.""")
     parser.add_argument(

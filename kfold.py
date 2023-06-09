@@ -28,7 +28,7 @@ parser.add_argument(
 parser.add_argument(
     "--alr",
     action="store_true",
-    help="""Adam instead of vanilla SGD.""",
+    help="""Adam instead of SGD optimizer.""",
 )
 parser.add_argument(
     "--momentum",
@@ -36,7 +36,7 @@ parser.add_argument(
     default=None,
     nargs="?",
     const=DEFAULT_MOMENTUM,
-    help="""For SGD optimizer, use this momentum for KFold CV.""",
+    help="""For SGD optimizer, use this momentum for KFold CV (no momentum grid search).""",
 )
 parser.add_argument(
     "--alt_model",
