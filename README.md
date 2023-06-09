@@ -38,6 +38,7 @@ Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
 
 ## Files
 ### Python Scripts
+Here is the list of our python scripts, they are meants to be run from the terminal: `python script.py --flags` or `python3 script.py --flags`
 - `nn_train.py`: implements non distributed training
 - `dnn_sync_train.py`: simulates distributed synchronous SGD on CPU
 - `dnn_async_train.py`: simulates distributed asynchronous SGD on CPU
@@ -56,6 +57,7 @@ Here below is the data flow diagram:
 </div>
 
 ### Bash Scripts
+Here is the list of our bash scripts, they are meants to be run from the terminal: `bash script.sh`
 - `run_async_momentums.sh`: for different momentum values: train asynchrounously save the model and weights during training. Then, generates the loss landscape with the different training trajectories 
 - `run_delay_comp.sh`: for `world_size`$=[2,6,11]$ train asynchronously for different delay types (constant and gaussian), different delay intensities (small, medium, long) and different data partitioning strategies (`--split_dataset` and `--split_labels`), delay is applied to all workers and for some cases worker 1 is slowded down additionally
 - `run_kfold.sh`: K Fold Cross Validation for chosen datasets and optimizer
@@ -63,6 +65,8 @@ Here below is the data flow diagram:
 - `run_speed_comp.sh`: compares the performance of synchronous SGD vs asynchronous SGD for `world_size`$=[2,6,11]$, different data partioning strategies (default, `--split_dataset`, `--split_labels`) and different network architectures (Lenet5 vs PyTorch CNN)
 - `loss_landcape.sh`: computes the loss landscape for all the `.pt` (models) and associated `.npy` (saved weights during training) located in a folder
 - `test_model.sh`: computes the test performance for all the `.pt` (models) and associated `.log` (log file with training logs) located in a folder 
+
+On WSL, when modifying the scripts you may encounter the following error: `line 2: $'\r': command not found`, to solve this issue run: `dos2unix script.sh`
 
 ### Results
 Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
