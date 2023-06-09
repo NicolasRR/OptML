@@ -35,7 +35,7 @@ def main(
 ):
     
     # Hardcoded paths
-    async_m00_model = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
+    model_path = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
 
     async_m00_weights= "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
     async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
@@ -90,13 +90,13 @@ def main(
         loaded_weights_np[i] = pca.inverse_transform(rw)
 
     # loading model
-    loader = create_testloader(classic_model, batch_size)
-    if "alt_model" in classic_model:
-        model = _get_model(classic_model, LOSS_FUNC, alt_model=True)
+    loader = create_testloader(model_path, batch_size)
+    if "alt_model" in model_path:
+        model = _get_model(model_path, LOSS_FUNC, alt_model=True)
     else:
-        model = _get_model(classic_model, LOSS_FUNC, alt_model=False)
+        model = _get_model(model_path, LOSS_FUNC, alt_model=False)
 
-    model.load_state_dict(torch.load(classic_model))
+    model.load_state_dict(torch.load(model_path))
     model.eval()
 
     # Grid training
@@ -130,7 +130,7 @@ def main(
 
         if grid_save:
             
-            model_filename = os.path.basename(classic_model)
+            model_filename = os.path.basename(model_path)
             model_basename, _ = os.path.splitext(model_filename)
 
             if len(subfolder) > 0:
@@ -238,7 +238,10 @@ def main(
     
     fig.update_layout(legend=dict(orientation="v", x=0, y=0.5))
 
-    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), colorscale='Viridis')])
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), colorscale='Viridis', name= "grid point")])
+
+    labels = ["Start Point"] + ["Trajectory Point"] * (len(trajectory_loss_reevaluted) - 2) + ["End Point"]
+    sizes = [8] + [5] * (len(trajectory_loss_reevaluted) - 2) + [8]
 
     trajectories = []
     for i, rw in enumerate(reduced_weights):
@@ -247,8 +250,10 @@ def main(
             y=rw[:, 1],  
             mode="markers+lines",
             line=dict(color=trajectory_colors[i % len(trajectory_colors)]),
-            marker=dict(color=trajectory_colors[i % len(trajectory_colors)], size=5),
+            marker=dict(color=trajectory_colors[i % len(trajectory_colors)], size=sizes),
             name=trajectory_names[i],
+            text=[f"{label}<br>Loss: {loss}" for label, loss in zip(labels, trajectories_loss_reevaluted[i])],
+            hovertemplate='%{text}',
         )
         trajectories.append(traj)
 
@@ -257,12 +262,28 @@ def main(
 
     fig2.update_layout(
         title='Contour Plot with trajectories Projection',
-        xaxis_title='X',
-        yaxis_title='Y',
+        xaxis_title='PC1',
+        yaxis_title='PC2',
         legend=dict(orientation="v", x=1, y=1)
     )
 
-    model_filename = os.path.basename(classic_model)
+    min_point = go.Scatter(
+    x=[xx[_min_x, _min_y]],
+    y=[yy[_min_x, _min_y]],
+    mode='markers',
+    marker=dict(
+        size=7,
+        color='red',
+        symbol='star',
+    ),
+    name="global minimum",
+    text=[str(np.min(grid_losses))],
+    hovertemplate='Loss: %{text}'
+)
+
+    fig2.add_trace(min_point)
+
+    model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):
