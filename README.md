@@ -34,7 +34,7 @@ Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
   - `sudo apt upgrade`
   - `sudo apt install python3-pip dos2unix bc`
   - `pip3 install torch torchvision torchaudio tqdm --index-url https://download.pytorch.org/whl/cpu`
-  - `pip3 install matplotlib scikit-learn papermill plotly`
+  - `pip3 install matplotlib scikit-learn plotly`
 
 ## Files
 ### Python Scripts
@@ -66,7 +66,7 @@ Here is the list of our bash scripts, they are meants to be run from the termina
 - `loss_landcape.sh`: computes the loss landscape for all the `.pt` (models) and associated `.npy` (saved weights during training) located in a folder
 - `test_model.sh`: computes the test performance for all the `.pt` (models) and associated `.log` (log file with training logs) located in a folder 
 
-On WSL, when modifying the scripts you may encounter the following error: `line 2: $'\r': command not found`, to solve this issue run: `dos2unix script.sh`
+On WSL, when modifying the scripts you may encounter a similar error: `line 2: $'\r': command not found`, to solve this issue run: `dos2unix script.sh`
 
 ### Results
 Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
