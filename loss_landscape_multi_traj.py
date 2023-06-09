@@ -8,7 +8,7 @@ import os
 from tqdm import tqdm
 from common import _get_model, create_testloader, LOSS_FUNC
 
-DEFAULT_GRID_SIZE = 20
+DEFAULT_GRID_SIZE = 50
 DEFAULT_BATCH_SIZE = 128
 
 
@@ -34,43 +34,37 @@ def main(
     grid_save=True,
 ):
     
-    classic_model="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_model.pt"
-    classic_weights="fashion_mnist_classic_0_100_0005_00_32_6_SGD_spe3_val_weights.npy"
-
-    #async_m00_model = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
-    #classic_model = async_m00_model
+    # Hardcoded paths
+    model_path = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
 
     async_m00_weights= "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
     async_m50_weights= "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
     async_m90_weights= "fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
     async_m95_weights= "fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
-    async_m99_weights= "fashion_mnist_async_4_100_0005_099_32_6_SGD_spe3_val_weights.npy"
-    async_alr_weights= "fashion_mnist_async_4_100_0001_09_32_6_ADAM_spe3_val_weights.npy"
 
-    weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
-    #weights_paths = [classic_weights, async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights,]
-    #weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, async_m99_weights, async_alr_weights,]
-
+    weights_paths = [async_m00_weights, async_m50_weights, async_m90_weights, async_m95_weights, ]
+    
     loaded_weights_np = []
     for wp in weights_paths:
         loaded_weights_np.append(np.load(wp))
-        if "classic" in wp:
+        if "fashion_mnist_async_4_100_0005_00" in wp:
             print(f"Saved weights shape: {loaded_weights_np[-1].shape}")
-    
-    # perform PCA on the classic weights loaded_weights_np[0], remember the transformation to apply it to the other saved weights
-    pca = PCA(n_components=2)
-    reduced_weights = []
 
+    # perform PCA, remember the transformation to apply it to the other saved weights
+    pca = PCA(n_components=2)
+    
+    # Convert the 3D list to a NumPy array
+    matrix_array = np.array(loaded_weights_np)
+    # Reshape the array to combine the matrices horizontally
+    combined_matrix = np.vstack(matrix_array)
+    pca.fit(combined_matrix)
+    
+    
+    reduced_weights = []
     _min_w = 99999999
     _max_w = 0
-    #for i, w in enumerate(loaded_weights_np):
-    for i, w in enumerate(reversed(loaded_weights_np)):
-        #if i == 0:
-        #    reduced_weights.append(pca.fit_transform(w))
-        #else:
-        #    reduced_weights.append(pca.transform(w))
-
-        reduced_weights.append(pca.fit_transform(w))
+    for w in loaded_weights_np:
+        reduced_weights.append(pca.transform(w))
 
         _min = np.min(reduced_weights[-1])
         _max = np.max(reduced_weights[-1])
@@ -93,23 +87,21 @@ def main(
         grid_weights = pca.inverse_transform(grid_points)
 
     for i, rw in enumerate(reduced_weights):
-        #if i != 0:
-            #loaded_weights_np[i] = pca.inverse_transform(rw)
         loaded_weights_np[i] = pca.inverse_transform(rw)
 
-    loader = create_testloader(classic_model, batch_size)
-    if "alt_model" in classic_model:
-        model = _get_model(classic_model, LOSS_FUNC, alt_model=True)
+    # loading model
+    loader = create_testloader(model_path, batch_size)
+    if "alt_model" in model_path:
+        model = _get_model(model_path, LOSS_FUNC, alt_model=True)
     else:
-        model = _get_model(classic_model, LOSS_FUNC, alt_model=False)
+        model = _get_model(model_path, LOSS_FUNC, alt_model=False)
 
-    model.load_state_dict(torch.load(classic_model))
+    model.load_state_dict(torch.load(model_path))
     model.eval()
 
     # Grid training
     if path_grid_losses is None and path_grid_xx is None and path_grid_yy is None:
         
-
         grid_losses = []
 
         progress_bar = tqdm(
@@ -138,7 +130,7 @@ def main(
 
         if grid_save:
             
-            model_filename = os.path.basename(classic_model)
+            model_filename = os.path.basename(model_path)
             model_basename, _ = os.path.splitext(model_filename)
 
             if len(subfolder) > 0:
@@ -157,7 +149,7 @@ def main(
         grid_losses = np.load(path_grid_losses)
         print("Loadded grid_losses, grid_xx and grid_yy")
 
-    # trajectories evaluationa
+    # trajectories evaluation
     trajectories_loss_reevaluted = []
     for w in loaded_weights_np:
         trajectory_loss_reevaluted = []
@@ -184,8 +176,6 @@ def main(
         progress_bar2.close()
         trajectories_loss_reevaluted.append(trajectory_loss_reevaluted)
 
-
-
     surface = go.Surface(
         x=xx,
         y=yy,
@@ -197,16 +187,13 @@ def main(
     )
 
     trajectory_names = [
-        "Classic SGD m=0.0",
         "Async SGD m=0.0",
         "Async SGD m=0.50",
         "Async SGD m=0.90",
         "Async SGD m=0.95",
-        "Async SGD m=0.99",
-        "Async ADAM",
     ]
-    trajectory_names = trajectory_names[::-1] #uncomment if you reversed above
-    trajectory_colors = ['orange', 'green', 'blue', 'yellow', 'purple', 'cyan', 'magenta']  # Define more colors if you have more trajectories
+
+    trajectory_colors = ['orange', 'magenta', 'yellow', ]
     trajectories = []
     for i, (rw, tl) in enumerate(zip(reduced_weights, trajectories_loss_reevaluted)):
         traj = go.Scatter3d(
@@ -251,18 +238,22 @@ def main(
     
     fig.update_layout(legend=dict(orientation="v", x=0, y=0.5))
 
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), colorscale='Viridis', name= "grid point")])
 
-    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log(grid_losses.flatten()), colorscale='Viridis')])
+    labels = ["Start Point"] + ["Trajectory Point"] * (len(trajectory_loss_reevaluted) - 2) + ["End Point"]
+    sizes = [8] + [5] * (len(trajectory_loss_reevaluted) - 2) + [8]
 
     trajectories = []
     for i, rw in enumerate(reduced_weights):
         traj = go.Scatter(
-            x=rw[:, 0],  # x-axis
-            y=rw[:, 1],  # y-axis
+            x=rw[:, 0],  
+            y=rw[:, 1],  
             mode="markers+lines",
             line=dict(color=trajectory_colors[i % len(trajectory_colors)]),
-            marker=dict(color=trajectory_colors[i % len(trajectory_colors)], size=5),
+            marker=dict(color=trajectory_colors[i % len(trajectory_colors)], size=sizes),
             name=trajectory_names[i],
+            text=[f"{label}<br>Loss: {loss}" for label, loss in zip(labels, trajectories_loss_reevaluted[i])],
+            hovertemplate='%{text}',
         )
         trajectories.append(traj)
 
@@ -271,12 +262,28 @@ def main(
 
     fig2.update_layout(
         title='Contour Plot with trajectories Projection',
-        xaxis_title='X',
-        yaxis_title='Y',
-        legend=dict(orientation="v", x=0, y=0.5)
+        xaxis_title='PC1',
+        yaxis_title='PC2',
+        legend=dict(orientation="v", x=1, y=1)
     )
 
-    model_filename = os.path.basename(classic_model)
+    min_point = go.Scatter(
+    x=[xx[_min_x, _min_y]],
+    y=[yy[_min_x, _min_y]],
+    mode='markers',
+    marker=dict(
+        size=7,
+        color='red',
+        symbol='star',
+    ),
+    name="global minimum",
+    text=[str(np.min(grid_losses))],
+    hovertemplate='Loss: %{text}'
+)
+
+    fig2.add_trace(min_point)
+
+    model_filename = os.path.basename(model_path)
     model_basename, _ = os.path.splitext(model_filename)
     if len(subfolder) > 0:
         if not os.path.exists(subfolder):

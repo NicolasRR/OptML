@@ -146,17 +146,7 @@ def main(
     sizes = [8] + [5] * (len(reduced_weights) - 2) + [8]
     labels = ["Start Point"] + ["Trajectory Point"] * (len(reduced_weights) - 2) + ["End Point"]
 
-    layout = go.Layout(
-        scene=dict(xaxis_title="PC1", yaxis_title="PC2", zaxis_title=" Loss", zaxis=dict(type='log')),
-        coloraxis=dict(
-            colorbar=dict(title="Loss magnitude", tickformat=".2e"), 
-            colorscale="Viridis",
-            cmin=np.log10(np.min(trajectory_loss_reevaluted)),  
-            cmax=np.log10(np.max(trajectory_loss_reevaluted)), 
-        ),
-    )
-
-    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), colorscale='Viridis')])
+    fig2 = go.Figure(data=[go.Contour(x=xx.flatten(), y=yy.flatten(), z=np.log10(grid_losses.flatten()), colorscale='Viridis', name= "grid point")], layout=layout)
 
     fig2.update_layout(
         title='Contour Plot with Trajectory Projection',
@@ -190,7 +180,7 @@ def main(
             symbol='star',
         ),
         name="global minimum",
-        text=str(np.min(grid_losses)),
+        text=[str(np.min(grid_losses))],
         hovertemplate='Loss: %{text}'
     )
 
