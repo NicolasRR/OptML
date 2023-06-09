@@ -34,19 +34,19 @@ def main(
     grid_save=True,
 ):
     # Hardcoded paths
-    model_path = "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
+    model_path = "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
 
     async_m00_weights = (
-        "fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_weights.npy"
     )
     async_m50_weights = (
-        "fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_05_32_6_SGD_spe3_val_weights.npy"
     )
     async_m90_weights = (
-        "fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_09_32_6_SGD_spe3_val_weights.npy"
     )
     async_m95_weights = (
-        "fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
+        "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_095_32_6_SGD_spe3_val_weights.npy"
     )
 
     weights_paths = [
