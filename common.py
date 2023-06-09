@@ -578,7 +578,7 @@ def read_parser(parser, mode=None):
             parser.add_argument(
                 "--compensation",
                 action="store_true",
-                help="""If set, enable delay compensation.""",
+                help="""If set, enables delay compensation.""",
             )
 
     args = parser.parse_args()
