@@ -145,37 +145,94 @@ def main(
             if len(subfolder) > 0:
                 if not os.path.exists(subfolder):
                     os.makedirs(subfolder)
+                np.save(
+                    os.path.join(
+                        subfolder, f"{model_basename}_grid_losses_{grid_size}.npy"
+                    ),
+                    grid_losses,
+                )
+                np.save(
+                    os.path.join(
+                        subfolder, f"{model_basename}_grid_xx_{grid_size}.npy"
+                    ),
+                    xx,
+                )
+                np.save(
+                    os.path.join(
+                        subfolder, f"{model_basename}_grid_yy_{grid_size}.npy"
+                    ),
+                    yy,
+                )
+                np.save(
+                    os.path.join(
+                        subfolder,
+                        f"{model_basename}_trajectories_losses_{grid_size}.npy",
+                    ),
+                    np.vstack(
+                        [
+                            reduced_weights[0][:, 0],
+                            reduced_weights[0][:, 1],
+                            trajectories_loss_reevaluted[0],
+                            reduced_weights[1][:, 0],
+                            reduced_weights[1][:, 1],
+                            trajectories_loss_reevaluted[1],
+                            reduced_weights[2][:, 0],
+                            reduced_weights[2][:, 1],
+                            trajectories_loss_reevaluted[2],
+                            reduced_weights[3][:, 0],
+                            reduced_weights[3][:, 1],
+                            trajectories_loss_reevaluted[3],
+                        ]
+                    ),
+                )
+                print(
+                    f"Saved trajectories losses to: {os.path.join(subfolder, f'{model_basename}_trajectories_losses_{grid_size}.npy')}"
+                )
+                print(
+                    f"Saved grid losses to: {os.path.join(subfolder, f'{model_basename}_grid_losses_{grid_size}.npy')}"
+                )
+                print(
+                    f"Saved grid xx to: {os.path.join(subfolder, f'{model_basename}_grid_xx_{grid_size}.npy')}"
+                )
+                print(
+                    f"Saved grid yy to: {os.path.join(subfolder, f'{model_basename}_grid_yy_{grid_size}.npy')}"
+                )
+            else:
+                np.save(f"{model_basename}_grid_losses_{grid_size}.npy", grid_losses)
+                np.save(f"{model_basename}_grid_xx_{grid_size}.npy", xx)
+                np.save(f"{model_basename}_grid_yy_{grid_size}.npy", yy)
+                np.save(
+                    f"{model_basename}_trajectories_losses_{grid_size}.npy",
+                    np.vstack(
+                        [
+                            reduced_weights[0][:, 0],
+                            reduced_weights[0][:, 1],
+                            trajectories_loss_reevaluted[0],
+                            reduced_weights[1][:, 0],
+                            reduced_weights[1][:, 1],
+                            trajectories_loss_reevaluted[1],
+                            reduced_weights[2][:, 0],
+                            reduced_weights[2][:, 1],
+                            trajectories_loss_reevaluted[2],
+                            reduced_weights[3][:, 0],
+                            reduced_weights[3][:, 1],
+                            trajectories_loss_reevaluted[3],
+                        ]
+                    ),
+                )
+                print(
+                    f"Saved trajectories losses to: {f'{model_basename}_trajectories_losses_{grid_size}.npy'}"
+                )
+                print(
+                    f"Saved grid losses to: {f'{model_basename}_grid_losses_{grid_size}.npy'}"
+                )
+                print(
+                    f"Saved grid xx to: {f'{model_basename}_grid_xx_{grid_size}.npy'}"
+                )
+                print(
+                    f"Saved grid yy to: {f'{model_basename}_grid_yy_{grid_size}.npy'}"
+                )
 
-            np.save(f"{model_basename}_grid_losses_{grid_size}.npy", grid_losses)
-            np.save(f"{model_basename}_grid_xx_{grid_size}.npy", xx)
-            np.save(f"{model_basename}_grid_yy_{grid_size}.npy", yy)
-            np.save(
-                f"{model_basename}_trajectories_losses_{grid_size}.npy",
-                np.vstack(
-                    [
-                        reduced_weights[0][:, 0],
-                        reduced_weights[0][:, 1],
-                        trajectories_loss_reevaluted[0],
-                        reduced_weights[1][:, 0],
-                        reduced_weights[1][:, 1],
-                        trajectories_loss_reevaluted[1],
-                        reduced_weights[2][:, 0],
-                        reduced_weights[2][:, 1],
-                        trajectories_loss_reevaluted[2],
-                        reduced_weights[3][:, 0],
-                        reduced_weights[3][:, 1],
-                        trajectories_loss_reevaluted[3],
-                    ]
-                ),
-            )
-            print(
-                f"Saved trajectories losses to: {f'{model_basename}_trajectories_losses_{grid_size}.npy'}"
-            )
-            print(
-                f"Saved grid losses to: {f'{model_basename}_grid_losses_{grid_size}.npy'}"
-            )
-            print(f"Saved grid xx to: {f'{model_basename}_grid_xx_{grid_size}.npy'}")
-            print(f"Saved grid yy to: {f'{model_basename}_grid_yy_{grid_size}.npy'}")
     else:
         xx = np.load(path_grid_xx)
         yy = np.load(path_grid_yy)
@@ -470,9 +527,9 @@ if __name__ == "__main__":
             exit()
 
     if not args.no_grid_save:
-        print("Saving grid_losses, grid_xx, grid_yy")
+        print("Saving trajectories_losses, grid_losses, grid_xx, grid_yy")
     else:
-        print("Not saving grid_losses, grid_xx, grid_yy")
+        print("Not saving trajectories_losses, grid_losses, grid_xx, grid_yy")
 
     main(
         args.batch_size,

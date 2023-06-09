@@ -276,7 +276,19 @@ def main(
             os.path.join(
                 subfolder, f"{model_basename}_trajectory_losses_{grid_size}.npy"
             ),
-            np.vstack([reduced_weights[:, 0], reduced_weights[:, 1]]),
+            np.vstack(
+                [
+                    reduced_weights[:, 0],
+                    reduced_weights[:, 1],
+                    trajectory_loss_reevaluted,
+                ]
+            ),
+        )
+        print(
+            f"Saved grid data at: {os.path.join(subfolder, f'{model_basename}_grid_losses_{grid_size}.npy')}"
+        )
+        print(
+            f"Saved trajectory data at: {os.path.join(subfolder, f'{model_basename}_trajectory_losses_{grid_size}.npy')}"
         )
     else:
         output_file_path = f"{model_basename}_loss_landscape_{grid_size}.html"
@@ -299,8 +311,13 @@ def main(
                 ]
             ),
         )
+        print(f"Saved grid data at: {model_basename}_grid_losses_{grid_size}.npy")
+        print(
+            f"Saved trajectory data at: {model_basename}_trajectory_losses_{grid_size}.npy"
+        )
 
     print(f"Saved 3D figure at: {output_file_path}")
+    print(f"Saved 2D figure at: {output_file_path_contour}")
 
 
 if __name__ == "__main__":
