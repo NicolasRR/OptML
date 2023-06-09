@@ -8,8 +8,11 @@ Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nico
 * What is the influence of momentum on asynchronous SGD? Does it serve as a regularization factor?
 
 ## Background
-    
+
+<div align="center">
 ![alt text](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png "Asynchronous SGD vs Synchronous SGD")
+</div>
+
 Source: [Truly Sparse Neural Networks at Scale](https://www.researchgate.net/publication/348508649_Truly_Sparse_Neural_Networks_at_Scale/download)
 
 - Asynchronous SGD: workers update and fetch the global model without waiting for other workers. <br>
@@ -42,6 +45,11 @@ Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
 - `kfold.py`: implements grid search on hyperparameters to find the optimal ones 
 - `models_size.py`: prints the number of parameters of the available models
 - `common.py`: all the common functions used by the other scripts
+
+<div align="center">
+![alt text](https://i.postimg.cc/JnvgvSrW/image-2023-06-09-172517991.png "Data flow diagram")
+</div>
+
 ### Bash Scripts
 - `loss_landcape.sh`:
 - `run_async_momentums.sh`:
