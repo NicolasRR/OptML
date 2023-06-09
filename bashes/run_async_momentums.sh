@@ -33,7 +33,7 @@ formatted_train_split=$(printf "%.1f\n" $(echo "$train_split * 10" | bc) | tr -d
 formatted_lr=$(echo $lr | tr -d '.')
 
 momentum=0.99
-formatted_momentum=$(echo "scale=2; $momentum/1" | bc | tr -d '.')
+formatted_momentum=$(echo $momentum | tr -d '.')
 python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed  --val --saves_per_epoch 3 --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder
 sleep 0.1
 echo
