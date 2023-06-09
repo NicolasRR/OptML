@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y software-properties-common &&\
     apt-get update &&\
-    apt-get install -y wget build-essential python3.10 git htop
+    apt-get install -y wget build-essential python3.10 git htop dos2unix bc
 
 ENV CONDA_DIR /opt/conda 
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
@@ -15,6 +15,7 @@ RUN conda install -y pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch
 RUN conda install -y matplotlib jupyter && \
     conda install -y -c conda-forge tqdm ipykernel && \
     conda install -c anaconda pandas seaborn && \
+    pip install matplotlib scikit-learn papermill plotly && \
     python -m ipykernel install --user --name base --display-name "Python (base)"
 
 
