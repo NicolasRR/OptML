@@ -85,7 +85,7 @@ def start(args, mode, run_parameter_server):
             slow_worker_1=args.slow_worker_1,
             delay_intensity=args.delay_intensity,
             delay_type=args.delay_type,
-            compensation=args.compensation
+            compensation=args.compensation,
         )
 
     log_name = f"{base_name}_log.log"
@@ -707,7 +707,7 @@ def get_suffix(
     use_alr,
     lrs,
     saves_per_epoch,
-    compensation
+    compensation,
 ):
     suffix = ""
     if use_alr:
@@ -763,7 +763,7 @@ def get_base_name(
     slow_worker_1=False,
     delay_intensity=None,
     delay_type=None,
-    compensation=False
+    compensation=False,
 ):
     suffix = get_suffix(
         val,

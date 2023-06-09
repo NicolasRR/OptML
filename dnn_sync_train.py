@@ -53,11 +53,11 @@ class ParameterServer_sync(object):
         self.weights_matrix = []
         if saves_per_epoch is not None:
             weights = np.concatenate(
-                            [
-                                w.detach().clone().cpu().numpy().ravel()
-                                for w in self.model.state_dict().values()
-                            ]
-                        )
+                [
+                    w.detach().clone().cpu().numpy().ravel()
+                    for w in self.model.state_dict().values()
+                ]
+            )
             self.weights_matrix.append(weights)
         self.saves_per_epoch = saves_per_epoch
         if saves_per_epoch is not None:
