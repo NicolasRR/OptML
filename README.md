@@ -11,7 +11,7 @@ Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nico
 
 <div align="center">
 
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png" width="650">
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png" width="1000">
 
 </div>
 
