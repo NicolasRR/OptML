@@ -57,10 +57,10 @@ Here below is the data flow diagram:
 
 ### Bash Scripts
 - `run_async_momentums.sh`: for different momentum values: train asynchrounously save the model and weights during training. Then, generates the loss landscape with the different training trajectories 
-- `run_delay_comp.sh`: for `world_size`=$[=2,6,11]$ train asynchronously for different delay types (constant and gaussian), different delay intensities (small, medium, long) and different data partitioning strategies (--split_dataset --split_labels), delay is applied to all workers and for some cases worker 1 is slowded down additionally
+- `run_delay_comp.sh`: for `world_size`$=[2,6,11]$ train asynchronously for different delay types (constant and gaussian), different delay intensities (small, medium, long) and different data partitioning strategies (`--split_dataset` and `--split_labels`), delay is applied to all workers and for some cases worker 1 is slowded down additionally
 - `run_kfold.sh`: K Fold Cross Validation for chosen datasets and optimizer
 - `run_kfold_full.sh`: executes `run_kfold.sh` for both SGD and Adam optimizers
-- `run_speed_comp.sh`: compares the performance of synchronous SGD vs asynchronous SGD for `world_size`$[=2,6,11]$, different data partioning strategies (default, --split_dataset, --split_labels) and different network architectures (Lenet5 vs PyTorch CNN)
+- `run_speed_comp.sh`: compares the performance of synchronous SGD vs asynchronous SGD for `world_size`$=[2,6,11]$, different data partioning strategies (default, `--split_dataset`, `--split_labels`) and different network architectures (Lenet5 vs PyTorch CNN)
 - `loss_landcape.sh`: computes the loss landscape for all the `.pt` (models) and associated `.npy` (saved weights during training) located in a folder
 - `test_model.sh`: computes the test performance for all the `.pt` (models) and associated `.log` (log file with training logs) located in a folder 
 
