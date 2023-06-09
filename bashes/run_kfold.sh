@@ -10,29 +10,29 @@ then
         # python3 -u $kfold_py --dataset mnist --alr
         # sleep 0.1
         # echo
-        # python3 -u $kfold_py --dataset fashion_mnist --alr
-        # sleep 0.1
-        # echo
-        python3 -u $kfold_py --dataset cifar10 --alr
+        python3 -u $kfold_py --dataset fashion_mnist --alr
         sleep 0.1
         echo
+        # python3 -u $kfold_py --dataset cifar10 --alr
+        # sleep 0.1
+        # echo
         # python3 -u kfold_py --dataset cifar100 --alr
         # sleep 0.1
         # echo
-    } |& tee "$project_dir/kfold_alr.txt"
+    } |& tee "$project_dir/kfold_alr_results.txt"
 else
     {
         # python3 -u kfold_py --dataset mnist --momentum
         # sleep 0.1
         # echo
-        # python3 -u kfold_py --dataset fashion_mnist --momentum
-        # sleep 0.1
-        # echo
-        python3 -u $kfold_py --dataset cifar10 --momentum
+        python3 -u kfold_py --dataset fashion_mnist --momentum
         sleep 0.1
         echo
+        # python3 -u $kfold_py --dataset cifar10 --momentum
+        # sleep 0.1
+        # echo
         # python3 -u $kfold_py --dataset cifar100
         # sleep 0.1
         # echo
-    } |& tee "$project_dir/kfold.txt"
+    } |& tee "$project_dir/kfold_sgd_results.txt"
 fi
