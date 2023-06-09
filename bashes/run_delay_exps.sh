@@ -71,7 +71,7 @@ for world_size in $world_size1 $world_size2 $world_size3; do
     for mode in $mode1; do
 
       echo $world_size $delay $mode "slow worker1" "compensation"
-      python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type1 $mode --slow_worker_1 --comp
+      python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type1 $mode --slow_worker_1 --compensation
       sleep 0.1
       echo
 done
@@ -102,8 +102,8 @@ for world_size in $world_size1 $world_size2 $world_size3; do
         python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type2 $mode
         sleep 0.1
         echo
-        echo $world_size $delay $mode $momentum "--comp"
-        python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type2 $mode --comp
+        echo $world_size $delay $mode $momentum "--compensation"
+        python3 $dnn_async_train_py --dataset $dataset --world_size $world_size --model_accuracy --seed --lr $lr --momentum $momentum --batch_size $batch_size --epochs $epochs --subfolder $subfolder --train_split $train_split --saves_per_epoch 3 --delay --delay_intensity $delay --delay_type $type2 $mode --compensation
         sleep 0.1
         echo
 done

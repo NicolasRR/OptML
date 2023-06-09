@@ -317,6 +317,8 @@ def run_parameter_server_async(
     alt_model,
     compensation,
 ):
+    if seed:
+        set_seeds()
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
         train_split,

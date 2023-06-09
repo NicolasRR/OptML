@@ -299,6 +299,8 @@ def run_parameter_server_sync(
     val,
     alt_model,
 ):
+    if seed:
+        set_seeds()
     train_loaders, batch_size = create_worker_trainloaders(
         dataset_name,
         train_split,
