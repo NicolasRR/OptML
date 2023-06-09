@@ -45,7 +45,7 @@ mode1="--split_labels"
 mode2="--split_dataset"
 
 
-echo "Delay, splitting and Worlsize experiments"
+echo "Delay, splitting and Worldsize experiments"
 
 for world_size in $world_size1 $world_size2 $world_size3; do
   for delay in $delay1 $delay2 $delay3; do
