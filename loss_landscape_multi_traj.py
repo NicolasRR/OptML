@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import os
 from tqdm import tqdm
-from common import _get_model, create_testloader, LOSS_FUNC
+from common import _get_model, create_testloader, set_seeds, LOSS_FUNC
 
 DEFAULT_GRID_SIZE = 50
 DEFAULT_BATCH_SIZE = 128
@@ -33,6 +33,8 @@ def main(
     path_grid_yy,
     grid_save=True,
 ):
+    set_seeds()
+
     # Hardcoded paths
     model_path = "Results_AsyncMomentum/fashion_mnist_async_4_100_0005_00_32_6_SGD_spe3_val_model.pt"
 
