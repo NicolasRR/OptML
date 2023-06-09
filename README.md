@@ -12,7 +12,7 @@ Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nico
 ![alt text](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*RWmAPFhueGd4Ec2C_w61JQ.png "Asynchronous SGD vs Synchronous SGD")
 Source: [Truly Sparse Neural Networks at Scale](https://www.researchgate.net/publication/348508649_Truly_Sparse_Neural_Networks_at_Scale/download)
 
-- Asynchronous SGD: workers update and fetch the global model without waiting for other workers.
+- Asynchronous SGD: workers update and fetch the global model without waiting for other workers. <br>
 - Synchronous SGD: workers send their gradient to the parameter server, once the gradients of each worker are received, the parameter server averages them and update the global model and workers fetch the same global model. 
 - Parameter server: master responsible for the global model and  coordination among workers. 
 - Workers: training nodes.
@@ -43,22 +43,55 @@ Use Windows Subsystem for Linux (WSL). To install WSL2 take the following steps:
 - `models_size.py`: prints the number of parameters of the available models
 - `common.py`: all the common functions used by the other scripts
 ### Bash Scripts
-- loss_landcape.sh
-- run_async_momentums.sh
-- run_delay_comp.sh
-- run_kfold.sh
-- run_kfold_full.sh
-- run_speed_comp.sh
-- run_val.sh
-- run_val_full.sh
-- test_model.sh
+- `loss_landcape.sh`:
+- `run_async_momentums.sh`:
+- `run_delay_comp.sh`:
+- `run_kfold.sh`:
+- `run_kfold_full.sh`:
+- `run_speed_comp.sh`:
+- `run_val.sh`:
+- `run_val_full.sh`:
+- `test_model.sh`:
 
 ### Results
 Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
 
 ## Flags
-`nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`
+Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 
+<div align="center">
+
+| Flag | Description |Note |
+| --------------- | --------------- | --------------- |
+|--dataset {mnist,fashion_mnist,cifar10,cifar100}|Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100.||
+|--train_split TRAIN_SPLIT |Fraction of the training dataset to be used for training (0,1].  | |
+| --lr LR |Learning rate of optimizer (0,+inf).  | |
+| --momentum MOMENTUM | Momentum of SGD optimizer [0,+inf). | Not used with Adam optimizer.|
+| --batch_size BATCH_SIZE  | Batch size of Mini batch SGD [1,len(train set)]. |  |
+| --epochs EPOCHS  | Number of epochs for training [1,+inf). |  |
+| --model_accuracy |If set, will compute the train accuracy of the global model after training.  |  |
+| --no_save_model  |  If set, the trained model will not be saved. |  |
+| --seed  | If set, it will set seeds on torch and numpy for reproducibility purposes. |  |
+| --subfolder SUBFOLDER |  Subfolder where the model and log.log will be saved. |  |
+|--saves_per_epoch SAVES_PER_EPOCH| Number of times the model weights will be saved during one epoch. | The first weights are saved directly after initialization (model has not trained yet). |
+|   --alr |  If set, use adaptive learning rate (Adam optimizer) instead of SGD optimizer. |  |
+|   --lrs {exponential,cosine_annealing} |  Applies a learning rate scheduler: exponential or cosine_annealing. |  |
+|  --alt_model | Will train using alternate CNN models instead of LeNet5 (MNIST & FashionMNIST) or ResNet18 (CIFAR10 & CIFAR100). |  |
+|  --val | If set, will create a validation dataloader and compute the loss and accuracy of train set and val set at the end of each epoch. | For asynchronous, the number of batches received (pseudo epochs) are used instead of epochs.|
+|  --master_port MASTER_PORT |  Port that master is listening on, will default to 29500 if not provided. Master must be able to accept network traffic on the host and port. | Not avaiable for `nn_train.py`. |
+|   --master_addr MASTER_ADDR | Address of master, will default to localhost if not provided. Master must be able to accept network traffic on the address + port. | Not avaiable for `nn_train.py`. |
+|  --world_size WORLD_SIZE | Total number of participating processes. Should be the sum of master node and all training nodes [2,+inf]. | Not avaiable for `nn_train.py`. If `world_size` exceeds the number of available CPU threads, PyTorch RPC will crash.|
+|  --delay | Add a delay to all workers at each mini-batch update. | Not avaiable for `nn_train.py`. |
+|  --slow_worker_1 | Add a longer delay only to worker 1 at each mini-batch update. | Not avaiable for `nn_train.py`. |
+|   --delay_intensity {small,medium,long} |  Applies a delay intensity of: small 10ms, medium 20ms, long 30ms. | Not avaiable for `nn_train.py`. |
+|   --delay_type {constant,gaussian} | Applies a delay of type: constant or gaussian. | Not avaiable for `nn_train.py`. |
+|   --split_dataset | After applying train_split, each worker will train on a unique distinct dataset (samples will not be shared between workers). Do not use with --split_labels or --split_labels_unscaled. | Not avaiable for `nn_train.py`. |
+|   --split_labels |If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned. Don't use with --split_dataset or --split_labels_unscaled. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded. | Not avaiable for `nn_train.py`. |
+|  --split_labels_unscaled | If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned. Note, the training length will be the DIFFERENT for all workers, based on the number of samples each class has. Don't use --split_dataset or split_labels. Depending on the chosen dataset the --world_size should be total_labels mod (world_size-1) = 0, with world_size = 2 excluded. | Not avaiable for `nn_train.py` and `dnn_sync_train.py`. |
+| --compensation | If set, enable delay compensation. | Not avaiable for `nn_train.py` and `dnn_sync_train.py`.  |
+</div>
+
+For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_traj.py` use `-h` or `--help` to see the available flags and required arguments to give. For example: `python3 kfold.py -h` or `python3 test_model.py --help`.
 ## How to use our scripts
 We created bash scripts to run and test the SGD variants together effectively. `compare.sh` will run and test the variants one time, `compare_loop.sh` will do the same but multiple times and loops other predefined
 couples of parameters such as the number of workers, the learning rate, momentum, ... Both scripts accept various command lines arguments, here is the list:
@@ -99,67 +132,6 @@ couples of parameters such as the number of workers, the learning rate, momentum
 
 </div>
 
-- Here is how to run `nn_train.py` (vanilla non distributed SGD): `python3 nn_train.py [flags]`
-
-<div align="center">
-
-| Flag | Description |
-| --------------- | --------------- |
-| --dataset {mnist,fashion_mnist,cifar10,cifar100} | Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100. |
-| --train_split TRAIN_SPLIT| Fraction of the training dataset to be used for training (0,1&#93;. |
-| --lr LR | Learning rate of SGD  (0,+inf)." |
-| --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
-| --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |     
-| --epochs EPOCHS | Number of epochs for training &#91;1,+inf&#41;. |
-| --model_accuracy | If set, will compute the train accuracy of the global model after training. |
-| --no_save_model | If set, the trained model will not be saved. |
-| --seed | If set, it will set seeds on `torch`, `numpy` and `random` for reproducibility purposes. |
-| --subfolder SUBFOLDER | Subfolder where the model and log.log will be saved. |
-
-</div>
-
-- Here is how to run `dnn_sync_train.py` (synchronous parallel SGD) or `dnn_async_train.py` (asynchronous parallel SGD): `python3 dnn_sync_train.py [flags]` `python3 dnn_async_train.py [flags]`
-
-<div align="center">
-
-| Flag | Description |
-| --------------- | --------------- |
-| --master_port MASTER_PORT | Port that master is listening on, will default to 29500 if not provided. Master must be able to accept network traffic on the host and port. |
-| --master_addr MASTER_ADDR | Address of master, will default to localhost if not provided. Master must be able to accept network traffic on the address + port. |
-| --dataset {mnist,fashion_mnist,cifar10,cifar100} | Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100. |
-| --world_size WORLD_SIZE | Total number of participating processes. Should be the sum of master node and all training nodes [2,+inf]. |
-| --split_dataset | After applying train_split, each worker will train on a unique distinct dataset (samples will not be shared between workers). |
-| --split_labels | If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned.  The training length will be the **<u>different</u>** for all workers (like in synchronous SGD). This mode requires --batch_size 1, don't use --split_dataset and --split_labels_unscaled. Depending on the chosen dataset the --world_size should be total_labels $mod$ (world_size-1) = 0, with world_size = 2 excluded. |
-| --split_labels_unscaled | If set, it will split the dataset in {world_size -1} parts, each part corresponding to a distinct set of labels, and each part will be assigned to a worker. Workers will not share samples and the labels are randomly assigned. The training length will be **<u>same</u>** for all workers, based on the number of samples each class has. This mode requires --batch_size 1, don't use --split_dataset and --split_labels. Depending on the chosen dataset the --world_size should be total_labels $mod$ (world_size-1) = 0, with world_size = 2 excluded. ***Only available for asynchronous.***|
-| --train_split TRAIN_SPLIT| Fraction of the training dataset to be used for training (0,1&#93;. |
-| --lr LR | Learning rate of SGD  (0,+inf)." |
-| --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
-| --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |     
-| --epochs EPOCHS | Number of epochs for training &#91;1,+inf&#41;. |
-| --model_accuracy | If set, will compute the train accuracy of the global model after training. |
-| --worker_accuracy | If set, will compute the train accuracy of each worker after training (useful when --split_dataset). |
-| --no_save_model | If set, the trained model will not be saved. |
-| --seed | If set, it will set seeds on `torch`, `numpy` and `random` for reproducibility purposes. |
-| --subfolder SUBFOLDER | Subfolder where the model and log.log will be saved. |
-
-</div>
-
-- Here is how to run `test_model.py` (compute training time, plots and test performance): `python test_model.py [flags]`
-
-<div align="center">
-
-| Flag | Description |
-| --------------- | --------------- |
-| --classification_report | To include a classification report at testing, usefull for class performance analysis. |
-| --training_time | If set, will read the associated log file to compute the training time. |
-| --pics | If set, will compute and save plots from the .log file. |
-| --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |   
-| --subfolder SUBFOLDER | Subfolder where the model and log.log will be saved. |
-
-</div>
-
-
-To see all the flags available for a script: `python3 nn_train.py -h` or `python3 test_model.py --help`
 
 
 ### Some examples
