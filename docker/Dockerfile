@@ -15,7 +15,7 @@ RUN conda install -y pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch
 RUN conda install -y matplotlib jupyter && \
     conda install -y -c conda-forge tqdm ipykernel && \
     conda install -c anaconda pandas seaborn && \
-    pip install matplotlib scikit-learn papermill plotly && \
+    pip install matplotlib scikit-learn plotly && \
     python -m ipykernel install --user --name base --display-name "Python (base)"
 
 
