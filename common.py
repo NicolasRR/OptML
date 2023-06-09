@@ -126,9 +126,7 @@ def start(args, mode, run_parameter_server):
                 args.slow_worker_1,
                 args.val,
                 args.alt_model,
-                args.compensation 
-                if hasattr(args, "compensation")
-                else None,
+                args.compensation if hasattr(args, "compensation") else None,
                 run_parameter_server,
             ),
             nprocs=args.world_size,
