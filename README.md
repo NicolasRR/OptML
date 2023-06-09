@@ -56,20 +56,18 @@ Here below is the data flow diagram:
 </div>
 
 ### Bash Scripts
-- `loss_landcape.sh`:
-- `run_async_momentums.sh`:
-- `run_delay_comp.sh`:
-- `run_kfold.sh`:
-- `run_kfold_full.sh`:
-- `run_speed_comp.sh`:
-- `run_val.sh`:
-- `run_val_full.sh`:
-- `test_model.sh`:
+- `run_async_momentums.sh`: for different momentum values: train asynchrounously save the model and weights during training. Then, generates the loss landscape with the different training trajectories 
+- `run_delay_comp.sh`: for `world_size`=$[=2,6,11]$ train asynchronously for different delay types (constant and gaussian), different delay intensities (small, medium, long) and different data partitioning strategies (--split_dataset --split_labels), delay is applied to all workers and for some cases worker 1 is slowded down additionally
+- `run_kfold.sh`: K Fold Cross Validation for chosen datasets and optimizer
+- `run_kfold_full.sh`: executes `run_kfold.sh` for both SGD and Adam optimizers
+- `run_speed_comp.sh`: compares the performance of synchronous SGD vs asynchronous SGD for `world_size`$[=2,6,11]$, different data partioning strategies (default, --split_dataset, --split_labels) and different network architectures (Lenet5 vs PyTorch CNN)
+- `loss_landcape.sh`: computes the loss landscape for all the `.pt` (models) and associated `.npy` (saved weights during training) located in a folder
+- `test_model.sh`: computes the test performance for all the `.pt` (models) and associated `.log` (log file with training logs) located in a folder 
 
 ### Results
 Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
 
-## Flags
+### Flags
 Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 
 <div align="center">
@@ -105,47 +103,6 @@ Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 </div>
 
 For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_traj.py` use `-h` or `--help` to see the available flags and required arguments to give. For example: `python3 kfold.py -h` or `python3 test_model.py --help`.
-## How to use our scripts
-We created bash scripts to run and test the SGD variants together effectively. `compare.sh` will run and test the variants one time, `compare_loop.sh` will do the same but multiple times and loops other predefined
-couples of parameters such as the number of workers, the learning rate, momentum, ... Both scripts accept various command lines arguments, here is the list:
-- `bash compare.sh [flags]`
-
-<div align="center">
-
-| Flag | Description |
-| --------------- | --------------- |
-| --model_classic | To include vanilla non distributed SGD to compare with distributed synchronous parallel SGD and asynchronous parallel SGD. |
-| --classification_report | To include a classification report at testing, usefull for class performance analysis. |
-| --notebook | Uses a jupyter notebook to compute the training time for each variants, produce plots, and tests the models performance. |
-| --dataset {mnist,fashion_mnist,cifar10,cifar100} | Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100. |
-| --world_size WORLD_SIZE | Total number of participating processes. Should be the sum of master node and all training nodes [2,+inf]. |
-| --train_split TRAIN_SPLIT| Fraction of the training dataset to be used for training (0,1&#93;. |
-| --lr LR | Learning rate of SGD  (0,+inf)." |
-| --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
-| --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |     
-| --epochs EPOCHS | Number of epochs for training &#91;1,+inf&#41;. |
-
-</div>
-
-- `bash compare_loop.sh`
-
-<div align="center">
-
-| Flag | Description |
-| --------------- | --------------- |
-| --model_classic | To include vanilla non distributed SGD to compare with distributed synchronous parallel SGD and asynchronous parallel SGD. |
-| --classification_report | To include a classification report at testing, usefull for class performance analysis. |
-| --dataset {mnist,fashion_mnist,cifar10,cifar100} | Choose a dataset to train on: mnist, fashion_mnist, cifar10, or cifar100. |
-| --world_size WORLD_SIZE | Total number of participating processes. Should be the sum of master node and all training nodes [2,+inf]. |
-| --train_split TRAIN_SPLIT| Fraction of the training dataset to be used for training (0,1&#93;. |
-| --lr LR | Learning rate of SGD  (0,+inf)." |
-| --momentum MOMENTUM | Momentum of SGD  &#91;0,+inf). |
-| --batch_size BATCH_SIZE| Batch size of Mini batch SGD [1,len(train set)]. |     
-| --epochs EPOCHS | Number of epochs for training &#91;1,+inf&#41;. |
-
-</div>
-
-
 
 ### Some examples
 - The following command will train two workers synchronously, on 10% of MNIST train dataset, trainloaders will use a batch size of 64, and the SGD optimizer a learning rate of $10^{-2}$ and momentum of $0.5$, at the end of training the global accuracy of the model will be printed and the model will not be saved. As `--epochs EPOCHS` is not precised, the default value of epochs will be used: $1$. <br>
@@ -167,6 +124,3 @@ couples of parameters such as the number of workers, the learning rate, momentum
 | 5 | 0, 8 |
 
 </div>
-
- 
-
