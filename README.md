@@ -59,7 +59,12 @@ Here below is the data flow diagram:
 ### Bash Scripts
 Here is the list of our bash scripts, they are meants to be run from the terminal: `bash script.sh`
 - `run_async_momentums.sh`: for different momentum values: train asynchrounously save the model and weights during training. Then, generates the loss landscape with the different training trajectories 
-- `run_delay_comp.sh`: for `world_size`$=[2,6,11]$ train asynchronously for different delay types (constant and gaussian), different delay intensities (small, medium, long) and different data partitioning strategies (`--split_dataset` and `--split_labels`), delay is applied to all workers and for some cases worker 1 is slowded down additionally
+
+- `run_delay_exps.sh`: runs mulitple experiences associated with the delay:
+  1. For `world_size`$=[2,6,11]$, different delay intensities (small, medium, long), different data partitioning strategies (`--split_dataset` and `--split_labels`), constant delay being applied to all workers and for some cases worker 1 being slowded down additionally, train asynchronously.
+  2. For `world_size`$=[2,6,11]$, different delay intensities (small, medium, long), using `--split_labels` and constant delay being applied to all workers and worker 1 being slowed even more, train asynchronously.
+  3. For `world_size`$=[2,6,11]$, for `momentum`$=[0,0.5,0.99]$, different delay intensities (small, medium, long), using `--split_labels`, and constant delay being applied to all workers and worker 1 being slowed even more, train asynchronously.
+  4. For `world_size`$=[2,6,11]$, for `momentum`$=[0,0.5,0.9,0.99]$, different delay intensities (small, medium, long), different data partioning strategies (`--split_dataset` or `--split_labels`), and gaussian delay being applied to all workers, with or without delay compension, train asynchronously.
 - `run_kfold.sh`: K Fold Cross Validation for chosen datasets and optimizer
 - `run_kfold_full.sh`: executes `run_kfold.sh` for both SGD and Adam optimizers
 - `run_speed_comp.sh`: compares the performance of synchronous SGD vs asynchronous SGD for `world_size`$=[2,6,11]$, different data partioning strategies (default, `--split_dataset`, `--split_labels`) and different network architectures (Lenet5 vs PyTorch CNN)
@@ -115,12 +120,3 @@ The following image illustrates the different data partioning strategies impleme
 <img src="https://i.postimg.cc/3wDjBZrd/image-2023-06-09-190947367.png" width="575">
 
 </div>
-
-### Some examples
-- The following command will train two workers synchronously, on 10% of MNIST train dataset, trainloaders will use a batch size of 64, and the SGD optimizer a learning rate of $10^{-2}$ and momentum of $0.5$, at the end of training the global accuracy of the model will be printed and the model will not be saved. As `--epochs EPOCHS` is not precised, the default value of epochs will be used: $1$. <br>
-`python3 dnn_sync_train.py --dataset mnist --world_size 3 --train_split 0.1 --lr 0.01 --momentum 0.5 --batch_size 64 --model_accuracy --no_save_model --dataset mnist`
-
-- The following command will train 3 workers synchronously, on 50% of MNIST train dataset, trainloaders will split the 50% of trainset in 3 equal parts for each worker ($60k \Rightarrow 30k \Rightarrow 10k$, $10k$, $10k$), in this configuration workers will not **share** samples (each worker has its distinct trainset). At the end of training, the accuracy of each worker, and global model will be printed, and the model will be saved. <br>
-`python3 dnn_sync_train.py --dataset mnist --train_split 0.5 --model_accuracy --worker_accuracy --dataset mnist` 
-
-- The following command will train 5 workers synchronously, on the full MNIST train dataset, trainloaders will use a batch size of 1, and model accuracy will be printed at the end. With the `--split_labels` flag, the 10 digits will be splitted evenly between the workers. For this example, we have 5 workers, meaning that each worker will train on two randomly chosen digits in $\[0,9\]$, here is an illustrative example: `python3 dnn_sync_train.py --dataset mnist --world_size 6 --model_accuracy --batch_size 1 --split_labels`
