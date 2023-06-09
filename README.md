@@ -109,11 +109,13 @@ Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
 For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_traj.py` use `-h` or `--help` to see the available flags and required arguments to give. For example: `python3 kfold.py -h` or `python3 test_model.py --help`.
 
 ### Data Partioning Strategies
+The following image illustrates the different data partioning strategies implemented on the MNIST train dataset:
 <div align="center">
   
 <img src="https://i.postimg.cc/3wDjBZrd/image-2023-06-09-190947367.png" width="575">
 
 </div>
+
 ### Some examples
 - The following command will train two workers synchronously, on 10% of MNIST train dataset, trainloaders will use a batch size of 64, and the SGD optimizer a learning rate of $10^{-2}$ and momentum of $0.5$, at the end of training the global accuracy of the model will be printed and the model will not be saved. As `--epochs EPOCHS` is not precised, the default value of epochs will be used: $1$. <br>
 `python3 dnn_sync_train.py --dataset mnist --world_size 3 --train_split 0.1 --lr 0.01 --momentum 0.5 --batch_size 64 --model_accuracy --no_save_model --dataset mnist`
@@ -122,15 +124,3 @@ For `kfold.py `, `test_model.py`, `loss_landscape.py`, `loss_landscape_multi_tra
 `python3 dnn_sync_train.py --dataset mnist --train_split 0.5 --model_accuracy --worker_accuracy --dataset mnist` 
 
 - The following command will train 5 workers synchronously, on the full MNIST train dataset, trainloaders will use a batch size of 1, and model accuracy will be printed at the end. With the `--split_labels` flag, the 10 digits will be splitted evenly between the workers. For this example, we have 5 workers, meaning that each worker will train on two randomly chosen digits in $\[0,9\]$, here is an illustrative example: `python3 dnn_sync_train.py --dataset mnist --world_size 6 --model_accuracy --batch_size 1 --split_labels`
-
-<div align="center">
-
-| Worker | Digits |
-| ---- | ---- |
-| 1 | 3, 5 |
-| 2 | 9, 2 |
-| 3 | 7, 4 |
-| 4 | 1, 6 |
-| 5 | 0, 8 |
-
-</div>
