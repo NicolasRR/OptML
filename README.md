@@ -1,7 +1,7 @@
 # OptML CS-439 EPFL
 Optimization for Machine Learning project by Robin Junod, Arthur Lamour and Nicolas Reategui
 
-## Objective
+## Objectives
 
 * How do varying delays impact the convergence of distributed asynchronous SGD?
 * Does the partitioning of data among workers enhance convergence during the training process? Is it beneficial to distribute labels among workers as well?
