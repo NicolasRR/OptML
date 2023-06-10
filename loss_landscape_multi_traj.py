@@ -104,6 +104,9 @@ def main(
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
+    model_filename = os.path.basename(model_path)
+    model_basename, _ = os.path.splitext(model_filename)
+
     # Grid training
     if path_grid_losses is None and path_grid_xx is None and path_grid_yy is None:
         grid_losses = []
@@ -133,9 +136,6 @@ def main(
         grid_losses = np.array(grid_losses).reshape(grid_size, grid_size)
 
         if grid_save:
-            model_filename = os.path.basename(model_path)
-            model_basename, _ = os.path.splitext(model_filename)
-
             if len(subfolder) > 0:
                 if not os.path.exists(subfolder):
                     os.makedirs(subfolder)
@@ -185,6 +185,7 @@ def main(
         yy = np.load(path_grid_yy)
         grid_losses = np.load(path_grid_losses)
         print("Loadded grid_losses, grid_xx and grid_yy")
+        grid_size = path_grid_losses.split(".npy")[0].split("_")[-1]
 
     # trajectories evaluation
     trajectories_loss_reevaluted = []
@@ -353,7 +354,10 @@ def main(
 
     fig.add_trace(min_point)
 
-    fig.update_layout(legend=dict(orientation="v", x=0, y=0.5))
+    fig.update_layout(
+        title="3D Plot of the loss landscape with training trajectories",
+        legend=dict(orientation="v", x=0, y=0.5),
+    )
 
     fig2 = go.Figure(
         data=[
@@ -365,7 +369,8 @@ def main(
                 name="grid point",
                 coloraxis="coloraxis",
             )
-        ]
+        ],
+        layout=layout,
     )
 
     trajectories = []
@@ -391,11 +396,13 @@ def main(
         fig2.add_trace(traj)
 
     fig2.update_layout(
-        title="Contour Plot with trajectories Projection",
+        title="Contour Plot with trajectories projection",
         xaxis_title="PC1",
         yaxis_title="PC2",
-        legend=dict(orientation="v", x=1, y=1),
+        legend=dict(orientation="v", x=0.4, y=1),
     )
+
+    fig2.update_xaxes(range=[xx.min(), xx.max()])
 
     min_point = go.Scatter(
         x=[xx[_min_x, _min_y]],
@@ -525,10 +532,20 @@ if __name__ == "__main__":
             print("Please provide the three paths.")
             exit()
 
-    if not args.no_grid_save:
-        print("Saving trajectories_losses, grid_losses, grid_xx, grid_yy")
-    else:
+    if (
+        args.no_grid_save
+        and args.grid_losses is None
+        and args.grid_xx is None
+        and args.grid_yy is None
+    ):
         print("Not saving trajectories_losses, grid_losses, grid_xx, grid_yy")
+    elif (
+        not args.no_grid_save
+        and args.grid_losses is None
+        and args.grid_xx is None
+        and args.grid_yy is None
+    ):
+        print("Saving trajectories_losses, grid_losses, grid_xx, grid_yy")
 
     main(
         args.batch_size,
