@@ -120,3 +120,23 @@ The following image illustrates the different data partioning strategies impleme
 <img src="https://i.postimg.cc/3wDjBZrd/image-2023-06-09-190947367.png" width="575">
 
 </div>
+
+### Hyperparameters
+After performing KFold Cross Validation, we recommend using the following hyperparameters:
+
+<div align="center">
+
+| Dataset | Model |Optimizer | learning rate |momentum |batch size |epochs |
+| --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
+| MNIST | Lenet5 | SGD | $10^{-2}$| 0.9|64 |6 |
+| MNIST | Lenet5 | ADAM | $10^{-3}$|/ |64 | 6|
+| Fashion MNIST | Lenet5 | SGD|$5*10^{-3}$ |0.9 |32 |6|
+| Fashion MNIST | Lenet5 | ADAM |$10^{-4}$ |/ |32 |6 |
+| Fashion MNIST | CNN1 | SGD|  $10^{-2}$| 0.9|64 |6|
+| Fashion MNIST | CNN1 | ADAM | $5*10^{-4}$ | /| 32|6 |
+| CIFAR10 | ResNet18 | SGD| $5*10^{-3}$ | 0.9 |32 | 6|
+| CIFAR10 | ResNet18 | ADAM | $5*10^{-4}$| /| 64| 6|
+| CIFAR10 | CNN2 | SGD| $10^{-2}$| 0.9| 32|6|
+| CIFAR100 | ResNet18 | SGD|$5*10^{-3}$ | 0.9|32 |6|
+
+</div>
