@@ -138,5 +138,8 @@ After performing KFold Cross Validation, we recommend using the following hyperp
 | CIFAR10 | ResNet18 | ADAM | $5 \cdot 10^{-4}$| /| 64| 6|
 | CIFAR10 | CNN2 | SGD| $10^{-2}$| 0.9| 32|6|
 | CIFAR100 | ResNet18 | SGD|$5 \cdot 10^{-3}$ | 0.9|32 |6|
+  | CIFAR100 | ResNet18 | ADAM |$5 \cdot 10^{-4}$ | /|128 |6|
 
 </div>
+
+Note, for CIFAR10 and CIFAR100 due to training time being very long (without GPU) KFold Cross Valdiation was performed on 2 and 3 epochs.
