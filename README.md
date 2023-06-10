@@ -130,13 +130,13 @@ After performing KFold Cross Validation, we recommend using the following hyperp
 | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
 | MNIST | Lenet5 | SGD | $10^{-2}$| 0.9|64 |6 |
 | MNIST | Lenet5 | ADAM | $10^{-3}$|/ |64 | 6|
-| Fashion MNIST | Lenet5 | SGD|$5*10^{-3}$ |0.9 |32 |6|
+| Fashion MNIST | Lenet5 | SGD|$5 \cdot 10^{-3}$ |0.9 |32 |6|
 | Fashion MNIST | Lenet5 | ADAM |$10^{-4}$ |/ |32 |6 |
 | Fashion MNIST | CNN1 | SGD|  $10^{-2}$| 0.9|64 |6|
-| Fashion MNIST | CNN1 | ADAM | $5*10^{-4}$ | /| 32|6 |
-| CIFAR10 | ResNet18 | SGD| $5*10^{-3}$ | 0.9 |32 | 6|
-| CIFAR10 | ResNet18 | ADAM | $5*10^{-4}$| /| 64| 6|
+| Fashion MNIST | CNN1 | ADAM | $5 \cdot 10^{-4}$ | /| 32|6 |
+| CIFAR10 | ResNet18 | SGD| $5 \cdot 10^{-3}$ | 0.9 |32 | 6|
+| CIFAR10 | ResNet18 | ADAM | $5 \cdot 10^{-4}$| /| 64| 6|
 | CIFAR10 | CNN2 | SGD| $10^{-2}$| 0.9| 32|6|
-| CIFAR100 | ResNet18 | SGD|$5*10^{-3}$ | 0.9|32 |6|
+| CIFAR100 | ResNet18 | SGD|$5 \cdot 10^{-3}$ | 0.9|32 |6|
 
 </div>
