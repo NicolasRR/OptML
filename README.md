@@ -142,4 +142,4 @@ After performing KFold Cross Validation, we recommend using the following hyperp
 
 </div>
 
-Note, for CIFAR10 and CIFAR100 due to training time being very long (without GPU) KFold Cross Valdiation was performed on 2 and 3 epochs. The optimal number of epochs for training was found using $10%$ of the training set for validation, and we computed the training and validation accuracy and loss for 50 epochs, the resutls can be found in the `Validation_results` folder of our [Google Drive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing).
+Note, for CIFAR10 and CIFAR100 due to training time being very long (without GPU) KFold Cross Valdiation was performed on 2 and 3 epochs. The optimal number of epochs for training was found using $10\%$ of the training set for validation, and we computed the training and validation accuracy and loss for 50 epochs, the resutls can be found in the `Validation_results` folder of our [Google Drive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing).
