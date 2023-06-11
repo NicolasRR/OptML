@@ -11,13 +11,6 @@
 data/
 __pycache__/
 .ipynb_checkpoints/
-KFold_results/
-Speed_results/
-Validation_results/
-Speed/
-Results_AsyncMomentum/
-Delay_results/*
-bashes/tmp.sh
 
 !bashes/*
 !summaries/*
