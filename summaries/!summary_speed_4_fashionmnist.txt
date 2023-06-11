@@ -1,0 +1,142 @@
+dataset: fashion mnist
+world size: 6 (5 workers)
+Asynchronous training
+
+
+Async SGD Lenet5 momentum 0
+training time: 158:03:493
+Average train accuracy: 91.19 % (54713/60000)
+Average train loss: 0.2366
+Average test accuracy: 89.21 % (8921/10000)
+Average test loss: 0.3029
+
+
+Async SGD Lenet5 momentum 0 split_dataset
+training time: 34:47:109
+Average train accuracy: 84.95 % (50970/60000)
+Average train loss: 0.4147
+Average test accuracy: 83.85 % (8385/10000)
+Average test loss: 0.4473
+
+Async SGD Lenet5 momentum 0 split_labels
+training time: 34:27:733
+Average train accuracy: 69.75 % (41850/60000)
+Average train loss: 0.9384
+Average test accuracy: 69.57 % (6957/10000)
+Average test loss: 0.9524
+
+
+Async SGD Lenet5 momentum 0.9
+training time: 157:16:003
+Average train accuracy: 94.81 % (56887/60000)
+Average train loss: 0.1441
+Average test accuracy: 89.00 % (8900/10000)
+Average test loss: 0.3931
+
+Async SGD Lenet5 momentum 0.9 split_dataset
+training time: 34:42:534
+Average train accuracy: 90.26 % (54155/60000)
+Average train loss: 0.2566
+Average test accuracy: 88.37 % (8837/10000)
+Average test loss: 0.3164
+
+Async SGD Lenet5 momentum 0.9 split_labels
+training time: 34:56:354
+Average train accuracy: 77.62 % (46572/60000)
+Average train loss: 0.7325
+Average test accuracy: 76.69 % (7669/10000)
+Average test loss: 0.7896
+
+
+Async ADAM Lenet5
+fashion_mnist_async_6_100_0001_00_32_6_ADAM_spe3_val_model
+training time: 158:10:007
+Average train accuracy: 96.05 % (57630/60000)
+Average train loss: 0.1233
+Average test accuracy: 89.20 % (8920/10000)
+Average test loss: 0.5363
+
+Async ADAM Lenet5 split_dataset
+training time: 34:51:145
+Average train accuracy: 90.71 % (54424/60000)
+Average train loss: 0.2467
+Average test accuracy: 88.46 % (8846/10000)
+Average test loss: 0.3086
+
+Async ADAM Lenet5 split_labels
+training time: 35:14:784
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: 2.3027
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: 2.3027
+
+
+
+Async SGD CNN momentum 0.0
+training time: 165:59:035
+Average train accuracy: 98.14 % (58886/60000)
+Average train loss: 0.0662
+Average test accuracy: 90.58 % (9058/10000)
+Average test loss: 0.4230
+
+Async SGD CNN momentum 0.0 split_dataset
+training time: 39:41:208
+Average train accuracy: 90.92 % (54552/60000)
+Average train loss: 0.2476
+Average test accuracy: 89.28 % (8928/10000)
+Average test loss: 0.2942
+
+Async SGD CNN momentum 0.0 split_labels
+training time: 39:31:231
+Average train accuracy: 86.26 % (51753/60000)
+Average train loss: 0.3738
+Average test accuracy: 85.43 % (8543/10000)
+Average test loss: 0.4169
+
+
+Async SGD CNN momentum 0.9
+training time: 165:45:970
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: nan
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: nan
+
+Async SGD CNN momentum 0.9 split_dataset
+training time: 39:26:152
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: nan
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: nan
+
+Async SGD CNN momentum 0.9 split_labels
+training time: 39:34:627
+Average train accuracy: 10.00 % (6000/60000)
+Average train loss: nan
+Average test accuracy: 10.00 % (1000/10000)
+Average test loss: nan
+
+
+Async ADAM CNN
+fashion_mnist_async_6_100_00005_09_32_6_ADAM_spe3_val_alt_model_model
+training time: 167:14:686
+Average train accuracy: 98.86 % (59317/60000)
+Average train loss: 0.0811
+Average test accuracy: 91.47 % (9147/10000)
+Average test loss: 0.8016
+
+Async ADAM CNN split_dataset
+training time: 39:45:502
+Average train accuracy: 94.49 % (56692/60000)
+Average train loss: 0.1456
+Average test accuracy: 91.20 % (9120/10000)
+Average test loss: 0.2506
+
+Async ADAM CNN split_labels
+40:01:162
+Average train accuracy: 91.59 % (54955/60000)
+Average train loss: 0.2213
+Average test accuracy: 89.47 % (8947/10000)
+Average test loss: 0.3099
+
+
+
