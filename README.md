@@ -74,7 +74,7 @@ Here is the list of our bash scripts, they are meants to be run from the termina
 On WSL, when modifying the scripts you may encounter a similar error: `line 2: $'\r': command not found`, to solve this issue run: `dos2unix script.sh`
 
 ### Results
-Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [GDrive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
+Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [Google Drive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
 
 ### Flags
 Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
@@ -142,4 +142,4 @@ After performing KFold Cross Validation, we recommend using the following hyperp
 
 </div>
 
-Note, for CIFAR10 and CIFAR100 due to training time being very long (without GPU) KFold Cross Valdiation was performed on 2 and 3 epochs.
+Note, for CIFAR10 and CIFAR100 due to training time being very long (without GPU) KFold Cross Valdiation was performed on 2 and 3 epochs. The optimal number of epochs for training was found using $10%$ of the training set for validation, and we computed the training and validation accuracy and loss for 50 epochs, the resutls can be found in the `Validation_results` folder of our [Google Drive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing).
