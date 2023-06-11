@@ -74,7 +74,8 @@ Here is the list of our bash scripts, they are meants to be run from the termina
 On WSL, when modifying the scripts you may encounter a similar error: `line 2: $'\r': command not found`, to solve this issue run: `dos2unix script.sh`
 
 ### Results
-Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [Google Drive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots.
+Summaries of some experiences can be found in the summaries folder, to get access to all the results go to our [Google Drive](https://drive.google.com/drive/folders/1rM8yHsevoPhG_gKhCVNJ2S3qwUvvFWgU?usp=sharing) with ~ 10 GB of data including models, weights during training, classification reports, loss landscape plots and contour plots. <br>
+The final plots of the report can be found in the plots folder, the `.html` are interactive figures created with [Plotly](https://plotly.com/).
 
 ### Flags
 Available flags for `nn_train.py`, `dnn_sync_train.py`, `dnn_async_train.py`:
