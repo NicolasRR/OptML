@@ -46,7 +46,7 @@ Here is the list of our python scripts, they are meants to be run from the termi
 - `loss_landscape.py`: generates a 3D plot of the loss landscape and 2D contour plot with the training trajectory 
 - `loss_landscape_multi_traj.py`: generates a 3D plot of the loss landscape with multiple training trajectories and 2D contour plot with multiple training trajectories
 - `kfold.py`: implements grid search on hyperparameters to find the optimal ones 
-- `models_size.py`: prints the number of parameters of the available models
+- `models_size.py`: prints the number of parameters of the available models: Lenet5 and CNN1 for MNIST and Fashion MNIST, Resnet18 and CNN2 for CIFAR10 and CIFAR100 (CNN1 and CNN2 are inspired CNNs from [PyTorch RPC](https://github.com/pytorch/examples/blob/main/distributed/rpc/parameter_server/rpc_parameter_server.py))
 - `common.py`: all the common functions used by the other scripts
 
 Here below is the data flow diagram:
