@@ -84,11 +84,14 @@ def main(
 
     if path_grid_losses is None and path_grid_xx is None and path_grid_yy is None:
         grid_range_x = np.linspace(
-            _min - 1 * (_max - _min), _max + 1 * (_max - _min), grid_size
+            _min_w - 1 * (_max_w - _min_w), _max_w + 1 * (_max_w - _min_w), grid_size
         )
         grid_range_y = np.linspace(
-            _min - 1 * (_max - _min), _max + 1 * (_max - _min), grid_size
+            _min_w - 1 * (_max_w - _min_w), _max_w + 1 * (_max_w - _min_w), grid_size
         )
+        # Smaller grid (better for trajectories on contour plot but worse 3d landscape)
+        # grid_range_x = np.linspace(_min_w, _max_w, grid_size)
+        # grid_range_y = np.linspcace(_min_w, _max_w, grid_size)
 
         xx, yy = np.meshgrid(grid_range_x, grid_range_y)
 
